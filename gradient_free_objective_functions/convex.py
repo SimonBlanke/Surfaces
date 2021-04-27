@@ -1,22 +1,14 @@
-def sphere_function_1d(params):
-    x = params["x1"]
-    score = -(x * x)
+def sphere_function(n_dim, A=1):
+    def _sphere_function_(params):
+        loss = 0
+        for dim in range(n_dim):
+            dim_str = "x" + str(dim)
+            x = params[dim_str]
 
-    return score
+            loss += A * x * x
 
+        score = -loss
+        return score
 
-def sphere_function_2d(params):
-    x = params["x1"]
-    y = params["x2"]
-    score = -(x * x + y * y)
-
-    return score
-
-
-def sphere_function_3d(params):
-    x = params["x1"]
-    y = params["x2"]
-    z = params["x3"]
-    score = -(x * x + y * y + z * z)
-
-    return score
+    _sphere_function_.__name__ = sphere_function.__name__
+    return _sphere_function_
