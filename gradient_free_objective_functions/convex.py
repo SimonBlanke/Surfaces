@@ -1,4 +1,4 @@
-def sphere_function(n_dim, A=1):
+def sphere_function(n_dim, A=1, metric="score"):
     def _sphere_function_(params):
         loss = 0
         for dim in range(n_dim):
@@ -7,8 +7,10 @@ def sphere_function(n_dim, A=1):
 
             loss += A * x * x
 
-        score = -loss
-        return score
+        if metric == "score":
+            return -loss
+        elif metric == "loss":
+            return loss
 
     _sphere_function_.__name__ = sphere_function.__name__
     return _sphere_function_
