@@ -2,18 +2,12 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-
+import numpy as np
 import plotly.graph_objects as go
+import plotly.express as px
 
 
-def plot_surface(
-    objective_function,
-    search_space,
-    title="Objective Function Surface",
-    width=700,
-    height=700,
-    contour=False,
-):
+def _create_grid(objective_function, search_space):
     def objective_function_np(*args):
         para = {}
         for arg, key in zip(args, search_space.keys()):
@@ -24,6 +18,19 @@ def plot_surface(
     (x_all, y_all) = search_space.values()
     xi, yi = np.meshgrid(x_all, y_all)
     zi = objective_function_np(xi, yi)
+
+    return xi, yi, zi
+
+
+def plot_surface(
+    objective_function,
+    search_space,
+    title="Objective Function Surface",
+    width=900,
+    height=900,
+    contour=False,
+):
+    xi, yi, zi = _create_grid(objective_function, search_space)
 
     fig = go.Figure(data=go.Surface(z=zi, x=xi, y=yi))
 
@@ -39,12 +46,29 @@ def plot_surface(
     fig.update_layout(
         title=title,
         scene=dict(
-            xaxis_title="x1",
-            yaxis_title="x2",
+            xaxis_title="X",
+            yaxis_title="Y",
             zaxis_title="metric",
         ),
         width=width,
         height=height,
     )
+    fig.show()
 
+
+def plot_heatmap(
+    objective_function,
+    search_space,
+    title="Objective Function Heatmap",
+    width=900,
+    height=900,
+):
+    xi, yi, zi = _create_grid(objective_function, search_space)
+
+    fig = px.imshow(zi, labels=dict(x="X", y="Y", color="metric"))
+    fig.update_layout(
+        title=title,
+        width=width,
+        height=height,
+    )
     fig.show()

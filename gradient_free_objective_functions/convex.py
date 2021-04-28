@@ -2,20 +2,29 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
+from base_objective_function import ObjectiveFunction
 
-def sphere_function(n_dim, A=1, metric="score"):
-    def _sphere_function_(params):
+
+class SphereFunction(ObjectiveFunction):
+    def __init__(self, n_dim, A=1, metric="score"):
+        super().__init__()
+        self.__name__ = "sphere_function"
+
+        self.n_dim = n_dim
+        self.A = A
+
+    def _objective_function(self, params):
         loss = 0
-        for dim in range(n_dim):
+        for dim in range(self.n_dim):
             dim_str = "x" + str(dim)
             x = params[dim_str]
 
-            loss += A * x * x
+            loss += self.A * x * x
 
-        if metric == "score":
+        if self.metric == "score":
             return -loss
-        elif metric == "loss":
+        elif self.metric == "loss":
             return loss
 
-    _sphere_function_.__name__ = sphere_function.__name__
-    return _sphere_function_
+    def __call__(self, params):
+        return self._objective_function(params)
