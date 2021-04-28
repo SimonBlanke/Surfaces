@@ -1,3 +1,8 @@
+# Author: Simon Blanke
+# Email: simon.blanke@yahoo.com
+# License: MIT License
+
+
 def sphere_function(n_dim, A=1, metric="score"):
     def _sphere_function_(params):
         loss = 0
