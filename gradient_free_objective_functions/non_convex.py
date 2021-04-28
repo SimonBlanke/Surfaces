@@ -5,7 +5,7 @@
 
 import numpy as np
 
-from base_objective_function import ObjectiveFunction
+from .base_objective_function import ObjectiveFunction
 
 
 class AckleyFunction(ObjectiveFunction):
@@ -27,10 +27,7 @@ class AckleyFunction(ObjectiveFunction):
 
         loss = loss1 + loss2 + loss3 + loss4
 
-        if self.metric == "score":
-            return -loss
-        elif self.metric == "loss":
-            return loss
+        return self.return_metric(loss)
 
     def __call__(self, params):
         return self._objective_function(params)
@@ -53,10 +50,7 @@ class RastriginFunction(ObjectiveFunction):
 
             loss += self.A * self.n_dim + (x * x - self.A * np.cos(self.B * x))
 
-        if self.metric == "score":
-            return -loss
-        elif self.metric == "loss":
-            return loss
+        return self.return_metric(loss)
 
     def __call__(self, params):
         return self._objective_function(params)

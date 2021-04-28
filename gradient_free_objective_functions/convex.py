@@ -2,7 +2,7 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from base_objective_function import ObjectiveFunction
+from .base_objective_function import ObjectiveFunction
 
 
 class SphereFunction(ObjectiveFunction):
@@ -21,10 +21,7 @@ class SphereFunction(ObjectiveFunction):
 
             loss += self.A * x * x
 
-        if self.metric == "score":
-            return -loss
-        elif self.metric == "loss":
-            return loss
+        return self.return_metric(loss)
 
     def __call__(self, params):
         return self._objective_function(params)
