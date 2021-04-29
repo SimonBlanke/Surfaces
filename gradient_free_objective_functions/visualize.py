@@ -6,6 +6,8 @@ import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
 
+color_scale = px.colors.sequential.Jet
+
 
 def _create_grid(objective_function, search_space):
     def objective_function_np(*args):
@@ -32,7 +34,7 @@ def plot_surface(
 ):
     xi, yi, zi = _create_grid(objective_function, search_space)
 
-    fig = go.Figure(data=go.Surface(z=zi, x=xi, y=yi))
+    fig = go.Figure(data=go.Surface(z=zi, x=xi, y=yi, colorscale=color_scale))
 
     # add a countour plot
     if contour:
@@ -48,7 +50,7 @@ def plot_surface(
         scene=dict(
             xaxis_title="X",
             yaxis_title="Y",
-            zaxis_title="metric",
+            zaxis_title="Metric",
         ),
         width=width,
         height=height,
@@ -65,7 +67,11 @@ def plot_heatmap(
 ):
     xi, yi, zi = _create_grid(objective_function, search_space)
 
-    fig = px.imshow(zi, labels=dict(x="X", y="Y", color="metric"))
+    fig = px.imshow(
+        zi,
+        labels=dict(x="X", y="Y", color="Metric"),
+        color_continuous_scale=color_scale,
+    )
     fig.update_layout(
         title=title,
         width=width,
