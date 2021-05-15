@@ -26,5 +26,4 @@ class ObjectiveFunction:
         if self.parameter_type == "dictionary":
             return self.objective_function_dict(*input)
         elif self.parameter_type == "arrays":
-            print("\n arrays \n")
             return self.objective_function_np(*input)
