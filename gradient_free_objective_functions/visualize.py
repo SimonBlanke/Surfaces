@@ -5,6 +5,8 @@
 import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 
 color_scale = px.colors.sequential.Jet
 
@@ -24,7 +26,7 @@ def _create_grid(objective_function, search_space):
     return xi, yi, zi
 
 
-def plot_surface(
+def plotly_surface(
     objective_function,
     search_space,
     title="Objective Function Surface",
@@ -34,7 +36,17 @@ def plot_surface(
 ):
     xi, yi, zi = _create_grid(objective_function, search_space)
 
-    fig = go.Figure(data=go.Surface(z=zi, x=xi, y=yi, colorscale=color_scale))
+    print("color_scale", color_scale)
+
+    fig = go.Figure(
+        data=go.Surface(
+            z=zi,
+            x=xi,
+            y=yi,
+            colorscale=color_scale,
+        ),
+        color=np.log10(zi),
+    )
 
     # add a countour plot
     if contour:
@@ -55,10 +67,11 @@ def plot_surface(
         width=width,
         height=height,
     )
-    fig.show()
+    return fig
+    # fig.write_image("surface.png")
 
 
-def plot_heatmap(
+def plotly_heatmap(
     objective_function,
     search_space,
     title="Objective Function Heatmap",
@@ -68,7 +81,9 @@ def plot_heatmap(
     xi, yi, zi = _create_grid(objective_function, search_space)
 
     fig = px.imshow(
-        zi,
+        img=zi,
+        x=search_space["x0"],
+        y=search_space["x1"],
         labels=dict(x="X", y="Y", color="Metric"),
         color_continuous_scale=color_scale,
     )
@@ -77,4 +92,63 @@ def plot_heatmap(
         width=width,
         height=height,
     )
-    fig.show()
+
+    return fig
+
+
+def matplotlib_heatmap(
+    objective_function,
+    search_space,
+    title="Objective Function Heatmap",
+):
+    xi, yi, zi = _create_grid(objective_function, search_space)
+
+    fig, ax = plt.subplots()
+    ax.imshow(
+        zi,
+        cmap=plt.cm.jet,
+        extent=[
+            search_space["x0"][0],
+            search_space["x0"][-1],
+            search_space["x1"][0],
+            search_space["x1"][-1],
+        ],
+        aspect="auto",
+        norm=mpl.colors.LogNorm(),
+    )
+
+    fig.tight_layout()
+    return plt
+
+
+def matplotlib_surface(
+    objective_function,
+    search_space,
+    title="Objective Function Surface",
+):
+    xi, yi, zi = _create_grid(objective_function, search_space)
+
+    fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
+
+    ax.plot_surface(
+        xi,
+        yi,
+        zi,
+        cmap=plt.cm.jet,
+        linewidth=1,
+        # alpha=0.6,
+        cstride=100,
+        rstride=3,
+        antialiased=False,
+        # shade=False,
+        norm=mpl.colors.LogNorm(),
+    )
+    # ax.view_init(-30, -30)
+    """
+    ax.set_xlabel("$X$", fontsize=15, rotation=150)
+    ax.set_ylabel("$Y$", fontsize=15)
+    ax.set_zlabel(objective_function.metric, fontsize=15, rotation=60)
+    ax.zaxis.set_major_formatter(mtick.FormatStrFormatter("%.2e"))
+    """
+    fig.tight_layout()
+    return plt
