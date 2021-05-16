@@ -31,7 +31,7 @@ class AckleyFunction(ObjectiveFunction):
 
 class RastriginFunction(ObjectiveFunction):
     def __init__(
-        self, n_dim, A=1, B=2 * np.pi, metric="score", parameter_type="dictionary"
+        self, n_dim, A=10, B=2 * np.pi, metric="score", parameter_type="dictionary"
     ):
         super().__init__(metric, parameter_type)
         self.__name__ = "rastrigin_function"
