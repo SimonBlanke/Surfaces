@@ -100,7 +100,11 @@ def matplotlib_heatmap(
     objective_function,
     search_space,
     title="Objective Function Heatmap",
+    norm=None,
 ):
+    if norm == "color_log":
+        norm = mpl.colors.LogNorm()
+
     xi, yi, zi = _create_grid(objective_function, search_space)
 
     fig, ax = plt.subplots()
@@ -114,7 +118,7 @@ def matplotlib_heatmap(
             search_space["x1"][-1],
         ],
         aspect="auto",
-        norm=mpl.colors.LogNorm(),
+        norm=norm,
     )
 
     fig.tight_layout()
@@ -125,7 +129,11 @@ def matplotlib_surface(
     objective_function,
     search_space,
     title="Objective Function Surface",
+    norm=None,
 ):
+    if norm == "color_log":
+        norm = mpl.colors.LogNorm()
+
     xi, yi, zi = _create_grid(objective_function, search_space)
 
     fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
@@ -135,20 +143,16 @@ def matplotlib_surface(
         yi,
         zi,
         cmap=plt.cm.jet,
-        linewidth=1,
+        # linewidth=1,
         # alpha=0.6,
-        cstride=100,
+        # cstride=100,
         rstride=3,
         antialiased=False,
         # shade=False,
-        norm=mpl.colors.LogNorm(),
+        norm=norm,
     )
-    # ax.view_init(-30, -30)
-    """
-    ax.set_xlabel("$X$", fontsize=15, rotation=150)
-    ax.set_ylabel("$Y$", fontsize=15)
-    ax.set_zlabel(objective_function.metric, fontsize=15, rotation=60)
-    ax.zaxis.set_major_formatter(mtick.FormatStrFormatter("%.2e"))
-    """
+    ax.view_init(15, 20)
+    ax.dist = 8
+
     fig.tight_layout()
     return plt
