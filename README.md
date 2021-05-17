@@ -18,7 +18,7 @@
   <tr>
     <th> <ins>Sphere function</ins> <br><br> <img src="https://latex.codecogs.com/png.image?\dpi{110}&space;f(\textbf{x})&space;=&space;\sum_{i=0}^{n}x_i^2" title="f(\textbf{x}) = \sum_{i=0}^{n}x_i^2" /> </th>
     <td> <img src="./sphere_function2.png" width="100%"> </td>
-    <td> ... </td>
+    <td> <img src="./sphere_function1.png" width="100%"> </td>
   </tr>
   
 </table>
