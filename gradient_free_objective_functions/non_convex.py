@@ -90,3 +90,23 @@ class BealeFunction(ObjectiveFunction):
         loss = loss1 + loss2 + loss3
 
         return self.return_metric(loss)
+
+
+class HimmelblausFunction(ObjectiveFunction):
+    def __init__(self, A=-11, B=-7, metric="score", parameter_type="dictionary"):
+        super().__init__(metric, parameter_type)
+        self.__name__ = "himmelblaus_function"
+
+        self.A = A
+        self.B = B
+
+    def objective_function_dict(self, params):
+        x = params["x0"]
+        y = params["x1"]
+
+        loss1 = (x ** 2 + y + self.A) ** 2
+        loss2 = (x + y ** 2 + self.B) ** 2
+
+        loss = loss1 + loss2
+
+        return self.return_metric(loss)
