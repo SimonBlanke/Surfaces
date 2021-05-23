@@ -1,5 +1,5 @@
 <H1 align="center">
-    Gradient-Free-Objective-Functions
+    Black-box Objective-functions
 </H1>
 
 <br>
