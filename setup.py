@@ -22,8 +22,8 @@ def find_version(*filepath):
 
 
 setup(
-    name="gradient-free-objective-functions",
-    version=find_version("gradient_free_objective_functions/__init__.py"),
+    name="black-box-objective-functions",
+    version=find_version("bbox_functions/__init__.py"),
     author="Simon Blanke",
     author_email="simon.blanke@yahoo.com",
     license="MIT",

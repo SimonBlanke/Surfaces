@@ -137,6 +137,7 @@ def matplotlib_surface(
     xi, yi, zi = _create_grid(objective_function, search_space)
 
     fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
+
     ax.plot_surface(
         xi,
         yi,
@@ -157,5 +158,6 @@ def matplotlib_surface(
 
     ax.view_init(30, 15)
     ax.dist = 7.5
+
     fig.tight_layout()
     return plt
