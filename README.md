@@ -1,5 +1,5 @@
 <H1 align="center">
-    Gradient-Free-Objective-Functions
+    Black-box Objective-functions
 </H1>
 
 <br>
@@ -8,8 +8,27 @@
     A collection and visualization of black-box objective functions
 </H2>
 
+
 <br>
 
+## Installation
+
+The most recent version of Black-box Objective-functions is available on PyPi:
+
+```console
+pip install black-box-objective-functions
+```
+
+<br>
+
+## API reference
+
+Coming soon
+
+
+<br>
+
+## Overview
 
 <table style="width:100%">
   <tr>
