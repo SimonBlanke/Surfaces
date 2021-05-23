@@ -110,3 +110,23 @@ class HimmelblausFunction(ObjectiveFunction):
         loss = loss1 + loss2
 
         return self.return_metric(loss)
+
+
+class HölderTableFunction(ObjectiveFunction):
+    def __init__(self, A=10, B=1, metric="score", parameter_type="dictionary"):
+        super().__init__(metric, parameter_type)
+        self.__name__ = "hölder_table_function"
+
+        self.A = A
+        self.B = B
+
+    def objective_function_dict(self, params):
+        x = params["x0"]
+        y = params["x1"]
+
+        loss1 = np.sin(self.B * x) * np.cos(self.B * y)
+        loss2 = np.exp(abs(1 - (np.sqrt(x ** 2 + y ** 2) / np.pi)))
+
+        loss = -np.abs(loss1 * loss2)
+
+        return self.return_metric(loss)
