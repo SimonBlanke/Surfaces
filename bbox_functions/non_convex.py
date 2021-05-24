@@ -130,3 +130,26 @@ class HölderTableFunction(ObjectiveFunction):
         loss = -np.abs(loss1 * loss2)
 
         return self.return_metric(loss)
+
+
+class CrossInTrayFunction(ObjectiveFunction):
+    def __init__(
+        self, A=-0.0001, B=100, C=1, metric="score", parameter_type="dictionary"
+    ):
+        super().__init__(metric, parameter_type)
+        self.__name__ = "cross_in_tray_function"
+
+        self.A = A
+        self.B = B
+        self.C = C
+
+    def objective_function_dict(self, params):
+        x = params["x0"]
+        y = params["x1"]
+
+        loss1 = np.sin(self.C * x) * np.sin(self.C * y)
+        loss2 = np.exp(abs(self.B - (np.sqrt(x ** 2 + y ** 2) / np.pi)) + 1)
+
+        loss = -self.A * (np.abs(loss1 * loss2)) ** 0.1
+
+        return self.return_metric(loss)
