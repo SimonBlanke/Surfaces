@@ -4,9 +4,9 @@
 
 
 class ObjectiveFunction:
-    def __init__(self, metric="score", parameter_type="dictionary"):
+    def __init__(self, metric="score", input_type="dictionary"):
         self.metric = metric
-        self.parameter_type = parameter_type
+        self.input_type = input_type
 
     def return_metric(self, loss):
         if self.metric == "score":
@@ -23,7 +23,7 @@ class ObjectiveFunction:
         return self.objective_function_dict(para)
 
     def __call__(self, *input):
-        if self.parameter_type == "dictionary":
+        if self.input_type == "dictionary":
             return self.objective_function_dict(*input)
-        elif self.parameter_type == "arrays":
+        elif self.input_type == "arrays":
             return self.objective_function_np(*input)

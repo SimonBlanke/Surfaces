@@ -8,8 +8,8 @@ from .base_objective_function import ObjectiveFunction
 
 
 class AckleyFunction(ObjectiveFunction):
-    def __init__(self, A=20, B=2 * np.pi, metric="score", parameter_type="dictionary"):
-        super().__init__(metric, parameter_type)
+    def __init__(self, A=20, B=2 * np.pi, metric="score", input_type="dictionary"):
+        super().__init__(metric, input_type)
         self.__name__ = "ackley_function"
 
         self.A = A
@@ -31,9 +31,9 @@ class AckleyFunction(ObjectiveFunction):
 
 class RastriginFunction(ObjectiveFunction):
     def __init__(
-        self, n_dim, A=10, B=2 * np.pi, metric="score", parameter_type="dictionary"
+        self, n_dim, A=10, B=2 * np.pi, metric="score", input_type="dictionary"
     ):
-        super().__init__(metric, parameter_type)
+        super().__init__(metric, input_type)
         self.__name__ = "rastrigin_function"
 
         self.n_dim = n_dim
@@ -52,8 +52,8 @@ class RastriginFunction(ObjectiveFunction):
 
 
 class RosenbrockFunction(ObjectiveFunction):
-    def __init__(self, A=1, B=100, metric="score", parameter_type="dictionary"):
-        super().__init__(metric, parameter_type)
+    def __init__(self, A=1, B=100, metric="score", input_type="dictionary"):
+        super().__init__(metric, input_type)
         self.__name__ = "rosenbrock_function"
 
         self.A = A
@@ -69,10 +69,8 @@ class RosenbrockFunction(ObjectiveFunction):
 
 
 class BealeFunction(ObjectiveFunction):
-    def __init__(
-        self, A=1.5, B=2.25, C=2.652, metric="score", parameter_type="dictionary"
-    ):
-        super().__init__(metric, parameter_type)
+    def __init__(self, A=1.5, B=2.25, C=2.652, metric="score", input_type="dictionary"):
+        super().__init__(metric, input_type)
         self.__name__ = "beale_function"
 
         self.A = A
@@ -93,8 +91,8 @@ class BealeFunction(ObjectiveFunction):
 
 
 class HimmelblausFunction(ObjectiveFunction):
-    def __init__(self, A=-11, B=-7, metric="score", parameter_type="dictionary"):
-        super().__init__(metric, parameter_type)
+    def __init__(self, A=-11, B=-7, metric="score", input_type="dictionary"):
+        super().__init__(metric, input_type)
         self.__name__ = "himmelblaus_function"
 
         self.A = A
@@ -113,8 +111,8 @@ class HimmelblausFunction(ObjectiveFunction):
 
 
 class HölderTableFunction(ObjectiveFunction):
-    def __init__(self, A=10, B=1, metric="score", parameter_type="dictionary"):
-        super().__init__(metric, parameter_type)
+    def __init__(self, A=10, B=1, metric="score", input_type="dictionary"):
+        super().__init__(metric, input_type)
         self.__name__ = "hölder_table_function"
 
         self.A = A
@@ -133,10 +131,8 @@ class HölderTableFunction(ObjectiveFunction):
 
 
 class CrossInTrayFunction(ObjectiveFunction):
-    def __init__(
-        self, A=-0.0001, B=100, C=1, metric="score", parameter_type="dictionary"
-    ):
-        super().__init__(metric, parameter_type)
+    def __init__(self, A=-0.0001, B=100, C=1, metric="score", input_type="dictionary"):
+        super().__init__(metric, input_type)
         self.__name__ = "cross_in_tray_function"
 
         self.A = A
