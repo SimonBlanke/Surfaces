@@ -93,7 +93,7 @@ plotly_surface(ackley_function, search_space).show()
 
 All objective function classes have the following parameters:
 - metric: "score" or "loss"
-- parameter_type: "dictionary" or "arrays"
+- input_type: "dictionary" or "arrays"
 
 Each objective function class has the following parameters:
 
