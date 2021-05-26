@@ -1,18 +1,19 @@
 import os
 import numpy as np
 
-from gradient_free_objective_functions.convex import (
+from bbox_functions.convex import (
     SphereFunction,
 )
-from gradient_free_objective_functions.non_convex import (
+from bbox_functions.non_convex import (
     RastriginFunction,
     AckleyFunction,
     RosenbrockFunction,
     BealeFunction,
     HimmelblausFunction,
     HölderTableFunction,
+    CrossInTrayFunction,
 )
-from gradient_free_objective_functions.visualize import (
+from bbox_functions.visualize import (
     matplotlib_heatmap,
     matplotlib_surface,
 )
@@ -27,9 +28,10 @@ rosenbrock_function = RosenbrockFunction(metric="loss")
 beale_function = BealeFunction(metric="loss")
 himmelblaus_function = HimmelblausFunction(metric="loss")
 hölder_table_function = HölderTableFunction(metric="loss")
+cross_in_tray_function = CrossInTrayFunction(metric="score")
 
 
-resolution = 0.01
+resolution = 0.05
 
 search_space1 = {
     "x0": np.arange(-5, 5, resolution),
@@ -39,6 +41,11 @@ search_space1 = {
 search_space2 = {
     "x0": np.arange(-10, 10, resolution),
     "x1": np.arange(-10, 10, resolution),
+}
+
+search_space2 = {
+    "x0": np.arange(-7, 7, resolution),
+    "x1": np.arange(-7, 7, resolution),
 }
 
 
@@ -71,6 +78,10 @@ objective_function_infos = {
         "search_space": search_space2,
         "norm": None,
     },
+    cross_in_tray_function: {
+        "search_space": search_space2,
+        "norm": None,
+    },
 }
 
 
@@ -86,7 +97,6 @@ for objective_function in objective_function_infos.keys():
     matplotlib_heatmap(objective_function, search_space, norm=norm).savefig(
         path + "/images/" + name + "_heatmap.jpg", dpi=100
     )
-
     matplotlib_surface(objective_function, search_space, norm=norm).savefig(
         path + "/images/" + name + "_surface.jpg", dpi=100
     )
