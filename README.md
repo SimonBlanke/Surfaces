@@ -44,6 +44,21 @@
     <td> <img src="./doc/images/beale_function_heatmap.jpg" width="90%"> </td>
     <td> <img src="./doc/images/beale_function_surface.jpg" width="100%"> </td>
   </tr>
+  <tr>
+    <th> <ins>Himmelblaus function</ins> <br><br> </th>
+    <td> <img src="./doc/images/himmelblaus_function_heatmap.jpg" width="90%"> </td>
+    <td> <img src="./doc/images/himmelblaus_function_surface.jpg" width="100%"> </td>
+  </tr>
+  <tr>
+    <th> <ins>Hölder Table function</ins> <br><br> </th>
+    <td> <img src="./doc/images/hölder_table_function_heatmap.jpg" width="90%"> </td>
+    <td> <img src="./doc/images/hölder_table_function_surface.jpg" width="100%"> </td>
+  </tr>
+  <tr>
+    <th> <ins>Cross-In-Tray function</ins> <br><br> </th>
+    <td> <img src="./doc/images/cross_in_tray_function_heatmap.jpg" width="90%"> </td>
+    <td> <img src="./doc/images/cross_in_tray_function_surface.jpg" width="100%"> </td>
+  </tr>
 </table>
 
 
@@ -158,7 +173,8 @@ Each objective function class has the following parameters:
     
 - A = -0.0001
 - B = 100
-- 
+- C = 1
+
 </details>
 
 
