@@ -2,14 +2,17 @@ import pytest
 import numpy as np
 from gradient_free_optimizers import RandomSearchOptimizer
 
-from gradient_free_objective_functions.convex import (
+from bbox_functions.convex import (
     SphereFunction,
 )
-from gradient_free_objective_functions.non_convex import (
+from bbox_functions.non_convex import (
     RastriginFunction,
     AckleyFunction,
     RosenbrockFunction,
     BealeFunction,
+    HimmelblausFunction,
+    HölderTableFunction,
+    CrossInTrayFunction,
 )
 
 sphere_function = SphereFunction(2)
@@ -17,6 +20,9 @@ rastrigin_function = RastriginFunction(2)
 ackley_function = AckleyFunction()
 rosenbrock_function = RosenbrockFunction()
 beale_function = BealeFunction()
+himmelblaus_function = HimmelblausFunction()
+hölder_table_function = HölderTableFunction()
+cross_in_tray_function = CrossInTrayFunction()
 
 
 objective_function_para_2D = (
@@ -27,6 +33,9 @@ objective_function_para_2D = (
         (ackley_function),
         (rosenbrock_function),
         (beale_function),
+        (himmelblaus_function),
+        (hölder_table_function),
+        (cross_in_tray_function),
     ],
 )
 

@@ -14,3 +14,6 @@ reinstall:
 	rm -fr build dist bbox_functions.egg-info
 	python setup.py bdist_wheel
 	pip install dist/*
+
+test:
+	python -m pytest -x -p no:warnings -rfEX tests/ \
