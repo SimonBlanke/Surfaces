@@ -149,3 +149,31 @@ class CrossInTrayFunction(ObjectiveFunction):
         loss = -self.A * (np.abs(loss1 * loss2)) ** 0.1
 
         return self.return_metric(loss)
+
+
+class SimionescuFunction(ObjectiveFunction):
+    def __init__(
+        self, A=0.1, r_T=1, r_S=0.2, n=8, metric="score", input_type="dictionary"
+    ):
+        super().__init__(metric, input_type)
+        self.__name__ = "simionescu_function"
+
+        self.A = A
+        self.r_T = r_T
+        self.r_S = r_S
+        self.n = n
+
+    def objective_function_dict(self, params):
+        x = params["x0"]
+        y = params["x1"]
+
+        condition = (self.r_T + self.r_S * np.cos(self.n * np.arctan(x / y))) ** 2
+
+        mask = x ** 2 + y ** 2 <= condition
+        mask_int = mask.astype(int)
+
+        loss = self.A * x * y
+        loss = mask_int * loss
+        loss[~mask] = np.nan
+
+        return self.return_metric(loss)
