@@ -164,8 +164,8 @@ class SimionescuFunction(ObjectiveFunction):
         self.n = n
 
     def objective_function_dict(self, params):
-        x = params["x0"]
-        y = params["x1"]
+        x = params["x0"].reshape(-1)
+        y = params["x1"].reshape(-1)
 
         condition = (self.r_T + self.r_S * np.cos(self.n * np.arctan(x / y))) ** 2
 
