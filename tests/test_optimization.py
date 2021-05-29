@@ -13,6 +13,7 @@ from bbox_functions.non_convex import (
     HimmelblausFunction,
     HölderTableFunction,
     CrossInTrayFunction,
+    SimionescuFunction,
 )
 
 sphere_function = SphereFunction(2)
@@ -23,6 +24,7 @@ beale_function = BealeFunction()
 himmelblaus_function = HimmelblausFunction()
 hölder_table_function = HölderTableFunction()
 cross_in_tray_function = CrossInTrayFunction()
+simionescu_function = SimionescuFunction()
 
 
 objective_function_para_2D = (
@@ -36,6 +38,7 @@ objective_function_para_2D = (
         (himmelblaus_function),
         (hölder_table_function),
         (cross_in_tray_function),
+        (simionescu_function),
     ],
 )
 
