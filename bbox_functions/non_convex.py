@@ -177,3 +177,24 @@ class SimionescuFunction(ObjectiveFunction):
         loss[~mask] = np.nan
 
         return self.return_metric(loss)
+
+
+class EasomFunction(ObjectiveFunction):
+    def __init__(self, A=-0.0001, B=100, C=1, metric="score", input_type="dictionary"):
+        super().__init__(metric, input_type)
+        self.__name__ = "easom_function"
+
+        self.A = A
+        self.B = B
+        self.C = C
+
+    def objective_function_dict(self, params):
+        x = params["x0"]
+        y = params["x1"]
+
+        loss1 = np.cos(x) * np.cos(y)
+        loss2 = np.exp(-((x - np.pi) ** 2 + (y - np.pi) ** 2))
+
+        loss = -loss1 * loss2
+
+        return self.return_metric(loss)
