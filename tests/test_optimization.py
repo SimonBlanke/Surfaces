@@ -14,6 +14,7 @@ from bbox_functions.non_convex import (
     HölderTableFunction,
     CrossInTrayFunction,
     SimionescuFunction,
+    EasomFunction,
 )
 
 sphere_function = SphereFunction(2)
@@ -25,6 +26,7 @@ himmelblaus_function = HimmelblausFunction()
 hölder_table_function = HölderTableFunction()
 cross_in_tray_function = CrossInTrayFunction()
 simionescu_function = SimionescuFunction()
+easom_function = EasomFunction()
 
 
 objective_function_para_2D = (
@@ -39,6 +41,7 @@ objective_function_para_2D = (
         (hölder_table_function),
         (cross_in_tray_function),
         (simionescu_function),
+        (easom_function),
     ],
 )
 
