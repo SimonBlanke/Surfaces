@@ -8,19 +8,19 @@ from .base_objective_function import ObjectiveFunction
 
 
 class AckleyFunction(ObjectiveFunction):
-    def __init__(self, A=20, B=2 * np.pi, metric="score", input_type="dictionary"):
+    def __init__(self, A=20, angle=2 * np.pi, metric="score", input_type="dictionary"):
         super().__init__(metric, input_type)
         self.__name__ = "ackley_function"
 
         self.A = A
-        self.B = B
+        self.angle = angle
 
     def objective_function_dict(self, params):
         x = params["x0"]
         y = params["x1"]
 
         loss1 = -self.A * np.exp(-0.2 * np.sqrt(0.5 * (x * x + y * y)))
-        loss2 = -np.exp(0.5 * (np.cos(self.B * x) + np.cos(self.B * y)))
+        loss2 = -np.exp(0.5 * (np.cos(self.angle * x) + np.cos(self.angle * y)))
         loss3 = np.exp(1)
         loss4 = self.A
 
@@ -31,14 +31,14 @@ class AckleyFunction(ObjectiveFunction):
 
 class RastriginFunction(ObjectiveFunction):
     def __init__(
-        self, n_dim, A=10, B=2 * np.pi, metric="score", input_type="dictionary"
+        self, n_dim, A=10, angle=2 * np.pi, metric="score", input_type="dictionary"
     ):
         super().__init__(metric, input_type)
         self.__name__ = "rastrigin_function"
 
         self.n_dim = n_dim
         self.A = A
-        self.B = B
+        self.angle = angle
 
     def objective_function_dict(self, params):
         loss = 0
@@ -46,7 +46,7 @@ class RastriginFunction(ObjectiveFunction):
             dim_str = "x" + str(dim)
             x = params[dim_str]
 
-            loss += self.A * self.n_dim + (x * x - self.A * np.cos(self.B * x))
+            loss += self.A * self.n_dim + (x * x - self.A * np.cos(self.angle * x))
 
         return self.return_metric(loss)
 
@@ -111,18 +111,18 @@ class HimmelblausFunction(ObjectiveFunction):
 
 
 class HölderTableFunction(ObjectiveFunction):
-    def __init__(self, A=10, B=1, metric="score", input_type="dictionary"):
+    def __init__(self, A=10, angle=1, metric="score", input_type="dictionary"):
         super().__init__(metric, input_type)
         self.__name__ = "hölder_table_function"
 
         self.A = A
-        self.B = B
+        self.angle = angle
 
     def objective_function_dict(self, params):
         x = params["x0"]
         y = params["x1"]
 
-        loss1 = np.sin(self.B * x) * np.cos(self.B * y)
+        loss1 = np.sin(self.angle * x) * np.cos(self.angle * y)
         loss2 = np.exp(abs(1 - (np.sqrt(x ** 2 + y ** 2) / np.pi)))
 
         loss = -np.abs(loss1 * loss2)
@@ -131,19 +131,21 @@ class HölderTableFunction(ObjectiveFunction):
 
 
 class CrossInTrayFunction(ObjectiveFunction):
-    def __init__(self, A=-0.0001, B=100, C=1, metric="score", input_type="dictionary"):
+    def __init__(
+        self, A=-0.0001, B=100, angle=1, metric="score", input_type="dictionary"
+    ):
         super().__init__(metric, input_type)
         self.__name__ = "cross_in_tray_function"
 
         self.A = A
         self.B = B
-        self.C = C
+        self.angle = angle
 
     def objective_function_dict(self, params):
         x = params["x0"]
         y = params["x1"]
 
-        loss1 = np.sin(self.C * x) * np.sin(self.C * y)
+        loss1 = np.sin(self.angle * x) * np.sin(self.angle * y)
         loss2 = np.exp(abs(self.B - (np.sqrt(x ** 2 + y ** 2) / np.pi)) + 1)
 
         loss = -self.A * (np.abs(loss1 * loss2)) ** 0.1
@@ -180,21 +182,21 @@ class SimionescuFunction(ObjectiveFunction):
 
 
 class EasomFunction(ObjectiveFunction):
-    def __init__(self, A=-0.0001, B=100, C=1, metric="score", input_type="dictionary"):
+    def __init__(self, A=-1, B=1, angle=1, metric="score", input_type="dictionary"):
         super().__init__(metric, input_type)
         self.__name__ = "easom_function"
 
         self.A = A
         self.B = B
-        self.C = C
+        self.angle = angle
 
     def objective_function_dict(self, params):
         x = params["x0"]
         y = params["x1"]
 
-        loss1 = np.cos(x) * np.cos(y)
-        loss2 = np.exp(-((x - np.pi) ** 2 + (y - np.pi) ** 2))
+        loss1 = np.cos(x * self.angle) * np.cos(y * self.angle)
+        loss2 = np.exp(-((x - np.pi / self.B) ** 2 + (y - np.pi / self.B) ** 2))
 
-        loss = -loss1 * loss2
+        loss = self.A * loss1 * loss2
 
         return self.return_metric(loss)
