@@ -194,9 +194,31 @@ class EasomFunction(ObjectiveFunction):
         x = params["x0"]
         y = params["x1"]
 
-        loss1 = np.cos(x * self.angle) * np.cos(y * self.angle)
+        loss1 = self.A * np.cos(x * self.angle) * np.cos(y * self.angle)
         loss2 = np.exp(-((x - np.pi / self.B) ** 2 + (y - np.pi / self.B) ** 2))
 
-        loss = self.A * loss1 * loss2
+        loss = loss1 * loss2
+
+        return self.return_metric(loss)
+
+
+class EggholderFunction(ObjectiveFunction):
+    def __init__(self, A=-1, B=47, angle=1, metric="score", input_type="dictionary"):
+        super().__init__(metric, input_type)
+        self.__name__ = "eggholder_function"
+
+        self.A = A
+        self.B = B
+        self.angle = angle
+
+    def objective_function_dict(self, params):
+        x = params["x0"]
+        y = params["x1"]
+
+        loss1 = self.A * (y + self.B)
+        loss2 = np.sin(self.angle * np.sqrt(np.abs(x / 2 + (y + self.B))))
+        loss3 = self.A * x * np.sin(self.angle * np.sqrt(np.abs(x - (y + self.B))))
+
+        loss = loss1 * loss2 + loss3
 
         return self.return_metric(loss)
