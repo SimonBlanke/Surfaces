@@ -3,26 +3,23 @@
 # License: MIT License
 
 import numpy as np
-
-from sympy import Sum, Indexed
-from sympy.abc import x, i
+from sympy.parsing.latex import parse_latex
 
 from .base_objective_function import ObjectiveFunction
 
 
 class SphereFunction(ObjectiveFunction):
     __name__ = "sphere_function"
-    continuous = True
-    convex = True
-    separable = True
-    differentiable = False
-    mutimodal = False
-    randomized_term = False
-    parametric = False
+    latex_formula_left = r"f(x)="
 
     def __init__(self, n_dim, A=1, metric="score", input_type="dictionary"):
         super().__init__(metric, input_type)
-        self.equation = Sum(Indexed(x, i) ** 2, (i, 1, n_dim))
+
+        self.latex_formula_right = (
+            r"" + str(A) + " \sum_{i=1}^{" + str(n_dim) + "} x_i^{2}"
+        )
+        self.latex = self.latex_formula_left + self.latex_formula_right
+        self.sympy = parse_latex(self.latex_formula_right)
 
         self.n_dim = n_dim
         self.A = A
@@ -39,9 +36,10 @@ class SphereFunction(ObjectiveFunction):
 
 
 class AckleyFunction(ObjectiveFunction):
+    __name__ = "ackley_function"
+
     def __init__(self, A=20, angle=2 * np.pi, metric="score", input_type="dictionary"):
         super().__init__(metric, input_type)
-        self.__name__ = "ackley_function"
 
         self.A = A
         self.angle = angle
@@ -61,11 +59,12 @@ class AckleyFunction(ObjectiveFunction):
 
 
 class RastriginFunction(ObjectiveFunction):
+    __name__ = "rastrigin_function"
+
     def __init__(
         self, n_dim, A=10, angle=2 * np.pi, metric="score", input_type="dictionary"
     ):
         super().__init__(metric, input_type)
-        self.__name__ = "rastrigin_function"
 
         self.n_dim = n_dim
         self.A = A
@@ -83,9 +82,10 @@ class RastriginFunction(ObjectiveFunction):
 
 
 class RosenbrockFunction(ObjectiveFunction):
+    __name__ = "rosenbrock_function"
+
     def __init__(self, A=1, B=100, metric="score", input_type="dictionary"):
         super().__init__(metric, input_type)
-        self.__name__ = "rosenbrock_function"
 
         self.A = A
         self.B = B
@@ -100,9 +100,10 @@ class RosenbrockFunction(ObjectiveFunction):
 
 
 class BealeFunction(ObjectiveFunction):
+    __name__ = "beale_function"
+
     def __init__(self, A=1.5, B=2.25, C=2.652, metric="score", input_type="dictionary"):
         super().__init__(metric, input_type)
-        self.__name__ = "beale_function"
 
         self.A = A
         self.B = B
@@ -122,9 +123,10 @@ class BealeFunction(ObjectiveFunction):
 
 
 class HimmelblausFunction(ObjectiveFunction):
+    __name__ = "himmelblaus_function"
+
     def __init__(self, A=-11, B=-7, metric="score", input_type="dictionary"):
         super().__init__(metric, input_type)
-        self.__name__ = "himmelblaus_function"
 
         self.A = A
         self.B = B
@@ -142,9 +144,10 @@ class HimmelblausFunction(ObjectiveFunction):
 
 
 class HölderTableFunction(ObjectiveFunction):
+    __name__ = "hölder_table_function"
+
     def __init__(self, A=10, angle=1, metric="score", input_type="dictionary"):
         super().__init__(metric, input_type)
-        self.__name__ = "hölder_table_function"
 
         self.A = A
         self.angle = angle
@@ -162,11 +165,12 @@ class HölderTableFunction(ObjectiveFunction):
 
 
 class CrossInTrayFunction(ObjectiveFunction):
+    __name__ = "cross_in_tray_function"
+
     def __init__(
         self, A=-0.0001, B=100, angle=1, metric="score", input_type="dictionary"
     ):
         super().__init__(metric, input_type)
-        self.__name__ = "cross_in_tray_function"
 
         self.A = A
         self.B = B
@@ -185,11 +189,12 @@ class CrossInTrayFunction(ObjectiveFunction):
 
 
 class SimionescuFunction(ObjectiveFunction):
+    __name__ = "simionescu_function"
+
     def __init__(
         self, A=0.1, r_T=1, r_S=0.2, n=8, metric="score", input_type="dictionary"
     ):
         super().__init__(metric, input_type)
-        self.__name__ = "simionescu_function"
 
         self.A = A
         self.r_T = r_T
@@ -213,9 +218,10 @@ class SimionescuFunction(ObjectiveFunction):
 
 
 class EasomFunction(ObjectiveFunction):
+    __name__ = "easom_function"
+
     def __init__(self, A=-1, B=1, angle=1, metric="score", input_type="dictionary"):
         super().__init__(metric, input_type)
-        self.__name__ = "easom_function"
 
         self.A = A
         self.B = B
@@ -234,9 +240,10 @@ class EasomFunction(ObjectiveFunction):
 
 
 class EggholderFunction(ObjectiveFunction):
+    __name__ = "eggholder_function"
+
     def __init__(self, A=-1, B=47, angle=1, metric="score", input_type="dictionary"):
         super().__init__(metric, input_type)
-        self.__name__ = "eggholder_function"
 
         self.A = A
         self.B = B
