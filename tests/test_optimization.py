@@ -18,7 +18,7 @@ from bbox_functions.test_functions import (
 sphere_function = SphereFunction(2)
 rastrigin_function = RastriginFunction(2)
 ackley_function = AckleyFunction()
-rosenbrock_function = RosenbrockFunction()
+rosenbrock_function = RosenbrockFunction(2)
 beale_function = BealeFunction()
 himmelblaus_function = HimmelblausFunction()
 hölder_table_function = HölderTableFunction()
@@ -59,6 +59,7 @@ def test_optimization_2D(objective_function):
 
 sphere_function = SphereFunction(3)
 rastrigin_function = RastriginFunction(3)
+rosenbrock_function = RosenbrockFunction(3)
 
 
 objective_function_para_3D = (
@@ -66,6 +67,7 @@ objective_function_para_3D = (
     [
         (sphere_function),
         (rastrigin_function),
+        (rosenbrock_function),
     ],
 )
 
@@ -86,6 +88,7 @@ def test_optimization_3D(objective_function):
 
 sphere_function = SphereFunction(4)
 rastrigin_function = RastriginFunction(4)
+rosenbrock_function = RosenbrockFunction(4)
 
 
 objective_function_para_4D = (
@@ -93,6 +96,7 @@ objective_function_para_4D = (
     [
         (sphere_function),
         (rastrigin_function),
+        (rosenbrock_function),
     ],
 )
 
