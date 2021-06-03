@@ -2,10 +2,9 @@ import pytest
 import numpy as np
 from gradient_free_optimizers import RandomSearchOptimizer
 
-from bbox_functions.convex import (
+
+from bbox_functions.test_functions import (
     SphereFunction,
-)
-from bbox_functions.non_convex import (
     RastriginFunction,
     AckleyFunction,
     RosenbrockFunction,
