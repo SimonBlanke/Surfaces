@@ -7,7 +7,7 @@ from setuptools import find_packages
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-requires = ["numpy", "matplotlib"]
+requires = ["numpy", "matplotlib", "plotly", "sympy", "antlr4-python3-runtime"]
 
 
 def find_version(*filepath):
