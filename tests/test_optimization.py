@@ -13,6 +13,8 @@ from bbox_functions.test_functions import (
     CrossInTrayFunction,
     SimionescuFunction,
     EasomFunction,
+    BoothFunction,
+    GoldsteinPriceFunction,
 )
 
 sphere_function = SphereFunction(2)
@@ -25,6 +27,8 @@ hölder_table_function = HölderTableFunction()
 cross_in_tray_function = CrossInTrayFunction()
 simionescu_function = SimionescuFunction()
 easom_function = EasomFunction()
+booth_function = BoothFunction()
+goldstein_price_function = GoldsteinPriceFunction()
 
 
 objective_function_para_2D = (
@@ -40,6 +44,8 @@ objective_function_para_2D = (
         (cross_in_tray_function),
         (simionescu_function),
         (easom_function),
+        (booth_function),
+        (goldstein_price_function),
     ],
 )
 
