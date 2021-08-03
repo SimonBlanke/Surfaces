@@ -16,6 +16,7 @@ from bbox_functions.test_functions import (
     EasomFunction,
     BoothFunction,
     GoldsteinPriceFunction,
+    StyblinskiTangFunction,
 )
 
 sphere_function = SphereFunction(2, input_type="arrays")
@@ -30,6 +31,7 @@ simionescu_function = SimionescuFunction(input_type="arrays")
 easom_function = EasomFunction(input_type="arrays")
 booth_function = BoothFunction(input_type="arrays")
 goldstein_price_function = GoldsteinPriceFunction(input_type="arrays")
+styblinski_tang_function = StyblinskiTangFunction(2, input_type="arrays")
 
 
 objective_function_para_2D = (
@@ -47,6 +49,7 @@ objective_function_para_2D = (
         (easom_function),
         (booth_function),
         (goldstein_price_function),
+        (styblinski_tang_function),
     ],
 )
 

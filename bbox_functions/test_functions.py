@@ -277,3 +277,24 @@ class GoldsteinPriceFunction(ObjectiveFunction):
         loss = loss1 * loss2
 
         return self.return_metric(loss)
+
+
+class StyblinskiTangFunction(ObjectiveFunction):
+    __name__ = "styblinski_tang_function"
+
+    def __init__(self, n_dim, metric="score", input_type="dictionary"):
+        super().__init__(metric, input_type)
+
+        self.n_dim = n_dim
+
+    def objective_function_dict(self, params):
+        loss = 0
+        for dim in range(self.n_dim):
+            dim_str = "x" + str(dim)
+            x = params[dim_str]
+
+            loss += x ** 4 - 16 * x ** 2 + 5 * x
+
+        loss = loss / 2
+
+        return self.return_metric(loss)
