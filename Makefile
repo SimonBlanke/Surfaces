@@ -10,8 +10,8 @@ develop:
 	pip install -e .
 
 reinstall:
-	pip uninstall -y bbox_functions
-	rm -fr build dist bbox_functions.egg-info
+	pip uninstall -y surfaces
+	rm -fr build dist surfaces.egg-info
 	python setup.py bdist_wheel
 	pip install dist/*
 
