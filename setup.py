@@ -31,7 +31,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     keywords=["visualization", "data-science"],
-    url="https://github.com/SimonBlanke/black-box-objective-functions",
+    url="https://github.com/SimonBlanke/Surfaces",
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
