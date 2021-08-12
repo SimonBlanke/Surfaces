@@ -9,10 +9,9 @@ from .base_objective_function import ObjectiveFunction
 
 class SphereFunction(ObjectiveFunction):
     __name__ = "sphere_function"
-    latex_formula_left = r"f(x)="
 
-    def __init__(self, n_dim, A=1, metric="score", input_type="dictionary"):
-        super().__init__(metric, input_type)
+    def __init__(self, n_dim, A=1, metric="score", input_type="dictionary", sleep=0):
+        super().__init__(metric, input_type, sleep)
         self.n_dim = n_dim
         self.A = A
 
@@ -30,8 +29,10 @@ class SphereFunction(ObjectiveFunction):
 class AckleyFunction(ObjectiveFunction):
     __name__ = "ackley_function"
 
-    def __init__(self, A=20, angle=2 * np.pi, metric="score", input_type="dictionary"):
-        super().__init__(metric, input_type)
+    def __init__(
+        self, A=20, angle=2 * np.pi, metric="score", input_type="dictionary", sleep=0
+    ):
+        super().__init__(metric, input_type, sleep)
 
         self.A = A
         self.angle = angle
@@ -54,9 +55,15 @@ class RastriginFunction(ObjectiveFunction):
     __name__ = "rastrigin_function"
 
     def __init__(
-        self, n_dim, A=10, angle=2 * np.pi, metric="score", input_type="dictionary"
+        self,
+        n_dim,
+        A=10,
+        angle=2 * np.pi,
+        metric="score",
+        input_type="dictionary",
+        sleep=0,
     ):
-        super().__init__(metric, input_type)
+        super().__init__(metric, input_type, sleep)
 
         self.n_dim = n_dim
         self.A = A
@@ -76,8 +83,8 @@ class RastriginFunction(ObjectiveFunction):
 class RosenbrockFunction(ObjectiveFunction):
     __name__ = "rosenbrock_function"
 
-    def __init__(self, A=1, B=100, metric="score", input_type="dictionary"):
-        super().__init__(metric, input_type)
+    def __init__(self, A=1, B=100, metric="score", input_type="dictionary", sleep=0):
+        super().__init__(metric, input_type, sleep)
 
         self.A = A
         self.B = B
@@ -94,8 +101,10 @@ class RosenbrockFunction(ObjectiveFunction):
 class BealeFunction(ObjectiveFunction):
     __name__ = "beale_function"
 
-    def __init__(self, A=1.5, B=2.25, C=2.652, metric="score", input_type="dictionary"):
-        super().__init__(metric, input_type)
+    def __init__(
+        self, A=1.5, B=2.25, C=2.652, metric="score", input_type="dictionary", sleep=0
+    ):
+        super().__init__(metric, input_type, sleep)
 
         self.A = A
         self.B = B
@@ -117,8 +126,8 @@ class BealeFunction(ObjectiveFunction):
 class HimmelblausFunction(ObjectiveFunction):
     __name__ = "himmelblaus_function"
 
-    def __init__(self, A=-11, B=-7, metric="score", input_type="dictionary"):
-        super().__init__(metric, input_type)
+    def __init__(self, A=-11, B=-7, metric="score", input_type="dictionary", sleep=0):
+        super().__init__(metric, input_type, sleep)
 
         self.A = A
         self.B = B
@@ -138,8 +147,8 @@ class HimmelblausFunction(ObjectiveFunction):
 class HölderTableFunction(ObjectiveFunction):
     __name__ = "hölder_table_function"
 
-    def __init__(self, A=10, angle=1, metric="score", input_type="dictionary"):
-        super().__init__(metric, input_type)
+    def __init__(self, A=10, angle=1, metric="score", input_type="dictionary", sleep=0):
+        super().__init__(metric, input_type, sleep)
 
         self.A = A
         self.angle = angle
@@ -160,9 +169,15 @@ class CrossInTrayFunction(ObjectiveFunction):
     __name__ = "cross_in_tray_function"
 
     def __init__(
-        self, A=-0.0001, B=100, angle=1, metric="score", input_type="dictionary"
+        self,
+        A=-0.0001,
+        B=100,
+        angle=1,
+        metric="score",
+        input_type="dictionary",
+        sleep=0,
     ):
-        super().__init__(metric, input_type)
+        super().__init__(metric, input_type, sleep)
 
         self.A = A
         self.B = B
@@ -184,9 +199,16 @@ class SimionescuFunction(ObjectiveFunction):
     __name__ = "simionescu_function"
 
     def __init__(
-        self, A=0.1, r_T=1, r_S=0.2, n=8, metric="score", input_type="dictionary"
+        self,
+        A=0.1,
+        r_T=1,
+        r_S=0.2,
+        n=8,
+        metric="score",
+        input_type="dictionary",
+        sleep=0,
     ):
-        super().__init__(metric, input_type)
+        super().__init__(metric, input_type, sleep)
 
         self.A = A
         self.r_T = r_T
@@ -212,8 +234,10 @@ class SimionescuFunction(ObjectiveFunction):
 class EasomFunction(ObjectiveFunction):
     __name__ = "easom_function"
 
-    def __init__(self, A=-1, B=1, angle=1, metric="score", input_type="dictionary"):
-        super().__init__(metric, input_type)
+    def __init__(
+        self, A=-1, B=1, angle=1, metric="score", input_type="dictionary", sleep=0
+    ):
+        super().__init__(metric, input_type, sleep)
 
         self.A = A
         self.B = B
@@ -234,8 +258,8 @@ class EasomFunction(ObjectiveFunction):
 class BoothFunction(ObjectiveFunction):
     __name__ = "booth_function"
 
-    def __init__(self, metric="score", input_type="dictionary"):
-        super().__init__(metric, input_type)
+    def __init__(self, metric="score", input_type="dictionary", sleep=0):
+        super().__init__(metric, input_type, sleep)
 
     def objective_function_dict(self, params):
         x = params["x0"]
@@ -252,8 +276,8 @@ class BoothFunction(ObjectiveFunction):
 class GoldsteinPriceFunction(ObjectiveFunction):
     __name__ = "goldstein_price_function"
 
-    def __init__(self, metric="score", input_type="dictionary"):
-        super().__init__(metric, input_type)
+    def __init__(self, metric="score", input_type="dictionary", sleep=0):
+        super().__init__(metric, input_type, sleep)
 
     def objective_function_dict(self, params):
         x = params["x0"]
@@ -274,8 +298,8 @@ class GoldsteinPriceFunction(ObjectiveFunction):
 class StyblinskiTangFunction(ObjectiveFunction):
     __name__ = "styblinski_tang_function"
 
-    def __init__(self, n_dim, metric="score", input_type="dictionary"):
-        super().__init__(metric, input_type)
+    def __init__(self, n_dim, metric="score", input_type="dictionary", sleep=0):
+        super().__init__(metric, input_type, sleep)
 
         self.n_dim = n_dim
 

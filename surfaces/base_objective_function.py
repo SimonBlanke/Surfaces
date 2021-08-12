@@ -3,10 +3,14 @@
 # License: MIT License
 
 
+import time
+
+
 class ObjectiveFunction:
-    def __init__(self, metric="score", input_type="dictionary"):
+    def __init__(self, metric="score", input_type="dictionary", sleep=0):
         self.metric = metric
         self.input_type = input_type
+        self.sleep = sleep
 
     def return_metric(self, loss):
         if self.metric == "score":
@@ -23,6 +27,8 @@ class ObjectiveFunction:
         return self.objective_function_dict(para)
 
     def __call__(self, *input):
+        time.sleep(self.sleep)
+
         if self.input_type == "dictionary":
             return self.objective_function_dict(*input)
         elif self.input_type == "arrays":
