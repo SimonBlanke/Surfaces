@@ -1,11 +1,11 @@
 <H1 align="center">
-    Black-box Objective-functions
+    Surfaces
 </H1>
 
 <br>
 
 <H2 align="center">
-    A collection and visualization of black-box objective functions
+    A collection and visualization of single objective black-box functions for optimization benchmarking
 </H2>
 
 
@@ -68,19 +68,19 @@
 
 ## Installation
 
-The most recent version of Black-box Objective-functions is available on PyPi:
+The most recent version of Surfaces is available on PyPi:
 
 ```console
-pip install black-box-objective-functions
+pip install surfaces
 ```
 
 ## Example
 ```python
 import numpy as np
 
-from bbox_functions.convex import SphereFunction
-from bbox_functions.non_convex import AckleyFunction
-from bbox_functions.visualize import plotly_surface
+from surfaces.convex import SphereFunction
+from surfaces.non_convex import AckleyFunction
+from surfaces.visualize import plotly_surface
 
 
 sphere_function = SphereFunction(n_dim=2, metric="score")
