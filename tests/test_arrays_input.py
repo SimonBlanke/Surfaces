@@ -22,7 +22,7 @@ from bbox_functions.test_functions import (
 sphere_function = SphereFunction(2, input_type="arrays")
 rastrigin_function = RastriginFunction(2, input_type="arrays")
 ackley_function = AckleyFunction(input_type="arrays")
-rosenbrock_function = RosenbrockFunction(input_type="arrays")
+rosenbrock_function = RosenbrockFunction(2, input_type="arrays")
 beale_function = BealeFunction(input_type="arrays")
 himmelblaus_function = HimmelblausFunction(input_type="arrays")
 hölder_table_function = HölderTableFunction(input_type="arrays")

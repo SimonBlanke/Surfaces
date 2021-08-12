@@ -7,7 +7,7 @@ from setuptools import find_packages
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-requires = ["numpy", "matplotlib", "plotly", "sympy", "antlr4-python3-runtime"]
+requires = ["numpy", "matplotlib", "plotly"]
 
 
 def find_version(*filepath):
@@ -22,8 +22,8 @@ def find_version(*filepath):
 
 
 setup(
-    name="black-box-objective-functions",
-    version=find_version("bbox_functions/__init__.py"),
+    name="surfaces",
+    version=find_version("surfaces/__init__.py"),
     author="Simon Blanke",
     author_email="simon.blanke@yahoo.com",
     license="MIT",
@@ -31,7 +31,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     keywords=["visualization", "data-science"],
-    url="https://github.com/SimonBlanke/gradient-free-objective-functions",
+    url="https://github.com/SimonBlanke/black-box-objective-functions",
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
