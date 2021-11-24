@@ -314,3 +314,20 @@ class StyblinskiTangFunction(ObjectiveFunction):
         loss = loss / 2
 
         return self.return_metric(loss)
+
+
+class MatyasFunction(ObjectiveFunction):
+    __name__ = "matyas_function"
+
+    def __init__(self, metric="score", input_type="dictionary", sleep=0):
+        super().__init__(metric, input_type, sleep)
+
+        self.n_dim = 2
+
+    def objective_function_dict(self, params):
+        x = params["x0"]
+        y = params["x1"]
+
+        loss = 0.26 * (x ** 2 + y ** 2) - 0.48 * x * y
+
+        return self.return_metric(loss)
