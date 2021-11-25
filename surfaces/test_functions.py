@@ -331,3 +331,20 @@ class MatyasFunction(ObjectiveFunction):
         loss = 0.26 * (x ** 2 + y ** 2) - 0.48 * x * y
 
         return self.return_metric(loss)
+
+
+class McCormickFunction(ObjectiveFunction):
+    __name__ = "mccormick_function"
+
+    def __init__(self, metric="score", input_type="dictionary", sleep=0):
+        super().__init__(metric, input_type, sleep)
+
+        self.n_dim = 2
+
+    def objective_function_dict(self, params):
+        x = params["x0"]
+        y = params["x1"]
+
+        loss = np.sin(x + y) + (x - y) ** 2 - 1.5 * x + 2.5 * y + 1
+
+        return self.return_metric(loss)
