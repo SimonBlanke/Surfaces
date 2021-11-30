@@ -75,7 +75,9 @@ class RastriginFunction(ObjectiveFunction):
             dim_str = "x" + str(dim)
             x = params[dim_str]
 
-            loss += self.A * self.n_dim + (x * x - self.A * np.cos(self.angle * x))
+            loss += x * x - self.A * np.cos(self.angle * x)
+
+        loss = self.A * self.n_dim + loss
 
         return self.return_metric(loss)
 
