@@ -78,8 +78,7 @@ pip install surfaces
 ```python
 import numpy as np
 
-from surfaces.convex import SphereFunction
-from surfaces.non_convex import AckleyFunction
+from surfaces.test_functions import SphereFunction, AckleyFunction
 from surfaces.visualize import plotly_surface
 
 
