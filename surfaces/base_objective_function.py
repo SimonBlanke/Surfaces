@@ -4,6 +4,7 @@
 
 
 import time
+import numpy as np
 
 
 class ObjectiveFunction:
@@ -11,6 +12,15 @@ class ObjectiveFunction:
         self.metric = metric
         self.input_type = input_type
         self.sleep = sleep
+
+    def search_space(self, min=-5, max=5, step=0.1):
+        search_space_ = {}
+
+        for dim in range(self.n_dim):
+            dim_str = "x" + str(dim)
+            search_space_[dim_str] = np.arange(min, max, step)
+
+        return search_space_
 
     def return_metric(self, loss):
         if self.metric == "score":

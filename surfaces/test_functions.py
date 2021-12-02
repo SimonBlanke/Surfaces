@@ -33,6 +33,7 @@ class AckleyFunction(ObjectiveFunction):
         self, A=20, angle=2 * np.pi, metric="score", input_type="dictionary", sleep=0
     ):
         super().__init__(metric, input_type, sleep)
+        self.n_dim = 2
 
         self.A = A
         self.angle = angle
@@ -87,6 +88,7 @@ class RosenbrockFunction(ObjectiveFunction):
 
     def __init__(self, A=1, B=100, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)
+        self.n_dim = 2
 
         self.A = A
         self.B = B
@@ -107,6 +109,7 @@ class BealeFunction(ObjectiveFunction):
         self, A=1.5, B=2.25, C=2.652, metric="score", input_type="dictionary", sleep=0
     ):
         super().__init__(metric, input_type, sleep)
+        self.n_dim = 2
 
         self.A = A
         self.B = B
@@ -130,6 +133,7 @@ class HimmelblausFunction(ObjectiveFunction):
 
     def __init__(self, A=-11, B=-7, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)
+        self.n_dim = 2
 
         self.A = A
         self.B = B
@@ -151,6 +155,7 @@ class HölderTableFunction(ObjectiveFunction):
 
     def __init__(self, A=10, angle=1, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)
+        self.n_dim = 2
 
         self.A = A
         self.angle = angle
@@ -180,6 +185,7 @@ class CrossInTrayFunction(ObjectiveFunction):
         sleep=0,
     ):
         super().__init__(metric, input_type, sleep)
+        self.n_dim = 2
 
         self.A = A
         self.B = B
@@ -211,6 +217,7 @@ class SimionescuFunction(ObjectiveFunction):
         sleep=0,
     ):
         super().__init__(metric, input_type, sleep)
+        self.n_dim = 2
 
         self.A = A
         self.r_T = r_T
@@ -240,6 +247,7 @@ class EasomFunction(ObjectiveFunction):
         self, A=-1, B=1, angle=1, metric="score", input_type="dictionary", sleep=0
     ):
         super().__init__(metric, input_type, sleep)
+        self.n_dim = 2
 
         self.A = A
         self.B = B
@@ -262,6 +270,7 @@ class BoothFunction(ObjectiveFunction):
 
     def __init__(self, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)
+        self.n_dim = 2
 
     def objective_function_dict(self, params):
         x = params["x0"]
@@ -280,6 +289,7 @@ class GoldsteinPriceFunction(ObjectiveFunction):
 
     def __init__(self, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)
+        self.n_dim = 2
 
     def objective_function_dict(self, params):
         x = params["x0"]
@@ -302,7 +312,6 @@ class StyblinskiTangFunction(ObjectiveFunction):
 
     def __init__(self, n_dim, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)
-
         self.n_dim = n_dim
 
     def objective_function_dict(self, params):
@@ -323,7 +332,6 @@ class MatyasFunction(ObjectiveFunction):
 
     def __init__(self, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)
-
         self.n_dim = 2
 
     def objective_function_dict(self, params):
@@ -340,7 +348,6 @@ class McCormickFunction(ObjectiveFunction):
 
     def __init__(self, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)
-
         self.n_dim = 2
 
     def objective_function_dict(self, params):
