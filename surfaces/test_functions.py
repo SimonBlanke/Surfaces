@@ -8,7 +8,8 @@ from .base_objective_function import ObjectiveFunction
 
 
 class SphereFunction(ObjectiveFunction):
-    __name__ = "sphere_function"
+    name = "Sphere Function"
+    _name_ = "sphere_function"
 
     def __init__(self, n_dim, A=1, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)
@@ -27,7 +28,8 @@ class SphereFunction(ObjectiveFunction):
 
 
 class AckleyFunction(ObjectiveFunction):
-    __name__ = "ackley_function"
+    name = "Ackley Function"
+    _name_ = "ackley_function"
 
     def __init__(
         self, A=20, angle=2 * np.pi, metric="score", input_type="dictionary", sleep=0
@@ -53,7 +55,8 @@ class AckleyFunction(ObjectiveFunction):
 
 
 class RastriginFunction(ObjectiveFunction):
-    __name__ = "rastrigin_function"
+    name = "Rastrigin Function"
+    _name_ = "rastrigin_function"
 
     def __init__(
         self,
@@ -84,7 +87,8 @@ class RastriginFunction(ObjectiveFunction):
 
 
 class RosenbrockFunction(ObjectiveFunction):
-    __name__ = "rosenbrock_function"
+    name = "Rosenbrock Function"
+    _name_ = "rosenbrock_function"
 
     def __init__(self, A=1, B=100, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)
@@ -103,7 +107,8 @@ class RosenbrockFunction(ObjectiveFunction):
 
 
 class BealeFunction(ObjectiveFunction):
-    __name__ = "beale_function"
+    name = "Beale Function"
+    _name_ = "beale_function"
 
     def __init__(
         self, A=1.5, B=2.25, C=2.652, metric="score", input_type="dictionary", sleep=0
@@ -129,7 +134,8 @@ class BealeFunction(ObjectiveFunction):
 
 
 class HimmelblausFunction(ObjectiveFunction):
-    __name__ = "himmelblaus_function"
+    name = "Himmelblau's Function"
+    _name_ = "himmelblaus_function"
 
     def __init__(self, A=-11, B=-7, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)
@@ -151,7 +157,8 @@ class HimmelblausFunction(ObjectiveFunction):
 
 
 class HölderTableFunction(ObjectiveFunction):
-    __name__ = "hölder_table_function"
+    name = "Hölder Table Function"
+    _name_ = "hölder_table_function"
 
     def __init__(self, A=10, angle=1, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)
@@ -173,7 +180,8 @@ class HölderTableFunction(ObjectiveFunction):
 
 
 class CrossInTrayFunction(ObjectiveFunction):
-    __name__ = "cross_in_tray_function"
+    name = "Cross In Tray Function"
+    _name_ = "cross_in_tray_function"
 
     def __init__(
         self,
@@ -204,7 +212,8 @@ class CrossInTrayFunction(ObjectiveFunction):
 
 
 class SimionescuFunction(ObjectiveFunction):
-    __name__ = "simionescu_function"
+    name = "Simionescu Function"
+    _name_ = "simionescu_function"
 
     def __init__(
         self,
@@ -241,7 +250,8 @@ class SimionescuFunction(ObjectiveFunction):
 
 
 class EasomFunction(ObjectiveFunction):
-    __name__ = "easom_function"
+    name = "Easom Function"
+    _name_ = "easom_function"
 
     def __init__(
         self, A=-1, B=1, angle=1, metric="score", input_type="dictionary", sleep=0
@@ -266,7 +276,8 @@ class EasomFunction(ObjectiveFunction):
 
 
 class BoothFunction(ObjectiveFunction):
-    __name__ = "booth_function"
+    name = "Booth Function"
+    _name_ = "booth_function"
 
     def __init__(self, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)
@@ -285,7 +296,8 @@ class BoothFunction(ObjectiveFunction):
 
 
 class GoldsteinPriceFunction(ObjectiveFunction):
-    __name__ = "goldstein_price_function"
+    name = "Goldstein Price Function"
+    _name_ = "goldstein_price_function"
 
     def __init__(self, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)
@@ -308,7 +320,8 @@ class GoldsteinPriceFunction(ObjectiveFunction):
 
 
 class StyblinskiTangFunction(ObjectiveFunction):
-    __name__ = "styblinski_tang_function"
+    name = "Styblinski Tang Function"
+    _name_ = "styblinski_tang_function"
 
     def __init__(self, n_dim, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)
@@ -328,7 +341,8 @@ class StyblinskiTangFunction(ObjectiveFunction):
 
 
 class MatyasFunction(ObjectiveFunction):
-    __name__ = "matyas_function"
+    name = "Matyas Function"
+    _name_ = "matyas_function"
 
     def __init__(self, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)
@@ -344,7 +358,8 @@ class MatyasFunction(ObjectiveFunction):
 
 
 class McCormickFunction(ObjectiveFunction):
-    __name__ = "mccormick_function"
+    name = "Mc Cormick Function"
+    _name_ = "mccormick_function"
 
     def __init__(self, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)
