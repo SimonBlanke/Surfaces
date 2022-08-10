@@ -7,7 +7,13 @@ from setuptools import find_packages
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-requires = ["numpy", "matplotlib", "plotly"]
+requires = [
+    "numpy",
+    "matplotlib",
+    "plotly",
+    "gradient-free-optimizers",
+    "simple-data-collector",
+]
 
 
 def find_version(*filepath):
@@ -32,6 +38,7 @@ setup(
     long_description_content_type="text/markdown",
     keywords=["visualization", "data-science"],
     url="https://github.com/SimonBlanke/Surfaces",
+    python_requires=">=3.5",
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
