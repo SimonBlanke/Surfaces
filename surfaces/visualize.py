@@ -36,8 +36,6 @@ def plotly_surface(
 ):
     xi, yi, zi = _create_grid(objective_function, search_space)
 
-    print("color_scale", color_scale)
-
     fig = go.Figure(
         data=go.Surface(
             z=zi,
@@ -45,7 +43,6 @@ def plotly_surface(
             y=yi,
             colorscale=color_scale,
         ),
-        color=np.log10(zi),
     )
 
     # add a countour plot
