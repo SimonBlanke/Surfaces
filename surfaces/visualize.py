@@ -34,6 +34,10 @@ def plotly_surface(
     height=900,
     contour=False,
 ):
+    if len(search_space) != 2:
+        error = "search space must be two dimensional"
+        raise Exception(error)
+
     xi, yi, zi = _create_grid(objective_function, search_space)
 
     fig = go.Figure(
