@@ -18,6 +18,7 @@ from .goldstein_price_function import GoldsteinPriceFunction
 from .styblinski_tang_function import StyblinskiTangFunction
 from .matyas_function import MatyasFunction
 from .mccormick_function import McCormickFunction
+from .bukin_function_n6 import BukinFunctionN6
 
 __all__ = [
     "SphereFunction",
@@ -35,4 +36,5 @@ __all__ = [
     "StyblinskiTangFunction",
     "MatyasFunction",
     "McCormickFunction",
+    "BukinFunctionN6",
 ]
