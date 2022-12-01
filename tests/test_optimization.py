@@ -16,6 +16,7 @@ from surfaces.test_functions import (
     BoothFunction,
     GoldsteinPriceFunction,
     StyblinskiTangFunction,
+    BukinFunctionN6,
 )
 
 sphere_function = SphereFunction(2)
@@ -31,6 +32,7 @@ easom_function = EasomFunction()
 booth_function = BoothFunction()
 goldstein_price_function = GoldsteinPriceFunction()
 styblinski_tang_function = StyblinskiTangFunction(2)
+bukin_function_n6 = BukinFunctionN6()
 
 
 objective_function_para_2D = (
@@ -49,6 +51,7 @@ objective_function_para_2D = (
         (booth_function),
         (goldstein_price_function),
         (styblinski_tang_function),
+        (bukin_function_n6),
     ],
 )
 
