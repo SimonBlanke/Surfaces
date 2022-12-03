@@ -2,7 +2,7 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from .base_objective_function import ObjectiveFunction
+from ._base_objective_function import ObjectiveFunction
 
 
 class SphereFunction(ObjectiveFunction):

@@ -5,7 +5,7 @@
 
 import numpy as np
 
-from .base_objective_function import ObjectiveFunction
+from ._base_objective_function import ObjectiveFunction
 
 
 class RastriginFunction(ObjectiveFunction):
