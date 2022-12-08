@@ -1,7 +1,7 @@
 import os
 import numpy as np
 
-from simple_data_collector import DataCollector
+from search_data_collector import DataCollector
 
 from sklearn.neighbors import KNeighborsClassifier as KNeighborsClassifier_
 from sklearn.model_selection import cross_val_score
