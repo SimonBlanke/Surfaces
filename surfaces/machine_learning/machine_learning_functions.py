@@ -5,12 +5,12 @@ from search_data_collector import DataCollector
 
 from sklearn.neighbors import KNeighborsClassifier as KNeighborsClassifier_
 from sklearn.model_selection import cross_val_score
-from sklearn.datasets import load_iris
+from sklearn.datasets import load_digits
 
 from .base_machine_learning_function import BaseMachineLearningFunction
 
 
-iris_dataset = load_iris()
+iris_dataset = load_digits()
 X, y = iris_dataset.data, iris_dataset.target
 
 
@@ -21,14 +21,14 @@ class KNeighborsClassifier(BaseMachineLearningFunction):
         super().__init__(metric, input_type, sleep)
 
         self.search_space = {
-            "n_neighbors": np.arange(3, 10),
-            "leaf_size": np.arange(3, 5),
+            "n_neighbors": list(np.arange(3, 50)),
+            "algorithm": ["auto", "ball_tree", "kd_tree", "brute"],
         }
 
     def model(self, params):
         knc = KNeighborsClassifier_(
             n_neighbors=params["n_neighbors"],
-            leaf_size=params["leaf_size"],
+            algorithm=params["algorithm"],
         )
-        scores = cross_val_score(knc, X, y, cv=2)
+        scores = cross_val_score(knc, X, y, cv=4)
         return scores.mean()
