@@ -23,7 +23,81 @@ def _create_grid(objective_function, search_space):
     xi, yi = np.meshgrid(x_all, y_all)
     zi = objective_function_np(xi, yi)
 
+    print("\n xi \n", xi, xi.shape, "\n")
+    print("\n yi \n", yi, yi.shape, "\n")
+    print("\n zi \n", zi, zi.shape, "\n")
+
     return xi, yi, zi
+
+
+def plotly_surface_new(
+    objective_function,
+    search_space,
+    title="Objective Function Surface",
+    width=900,
+    height=900,
+    contour=False,
+):
+    if len(search_space) != 2:
+        error = "search space must be two dimensional"
+        raise Exception(error)
+
+    para_l = list(search_space.keys())
+
+    para1 = para_l[0]
+    para2 = para_l[1]
+
+    (x_all, y_all) = search_space.values()
+    xi, yi = np.meshgrid(x_all, y_all)
+    zi = []
+
+    for dim_value1 in search_space[para1]:
+        zi_sub_dim = []
+        for dim_value2 in search_space[para2]:
+            para_dict = {
+                para1: dim_value1,
+                para2: dim_value2,
+            }
+            zi_sub_dim_values = objective_function(para_dict)
+            zi_sub_dim.append(zi_sub_dim_values)
+
+        zi.append(zi_sub_dim)
+
+    zi = np.array(zi).T
+
+    print("\n xi \n", xi, xi.shape, "\n")
+    print("\n yi \n", yi, yi.shape, "\n")
+    print("\n zi \n", zi, zi.shape, "\n")
+
+    fig = go.Figure(
+        data=go.Surface(
+            z=zi,
+            x=xi,
+            y=yi,
+            colorscale=color_scale,
+        ),
+    )
+
+    # add a countour plot
+    if contour:
+        fig.update_traces(
+            contours_z=dict(
+                show=True, usecolormap=True, highlightcolor="limegreen", project_z=True
+            )
+        )
+
+    # annotate the plot
+    fig.update_layout(
+        title=title,
+        scene=dict(
+            xaxis_title=para1,
+            yaxis_title=para2,
+            zaxis_title="Metric",
+        ),
+        width=width,
+        height=height,
+    )
+    return fig
 
 
 def plotly_surface(
