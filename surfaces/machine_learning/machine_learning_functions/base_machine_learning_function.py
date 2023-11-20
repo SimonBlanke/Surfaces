@@ -14,11 +14,7 @@ here_path = os.path.dirname(os.path.realpath(__file__))
 
 
 class BaseMachineLearningFunction:
-    def __init__(self, X, y, cv=3, metric="score", input_type="dictionary", sleep=0):
-        self.X = X
-        self.y = y
-        self.cv = cv
-        self.metric = metric
+    def __init__(self, input_type="dictionary", sleep=0):
         self.input_type = input_type
         self.sleep = sleep
 
@@ -26,7 +22,7 @@ class BaseMachineLearningFunction:
 
     def init_sdc(self):
         self.collector = SearchDataCollector(
-            os.path.join(here_path, "data", self.__name__ + ".csv")
+            os.path.join(here_path, "..", "data", self.__name__ + ".csv")
         )
 
     def collect_data(self):
@@ -37,12 +33,14 @@ class BaseMachineLearningFunction:
 
         dim_sizes_list = [len(array) for array in self.search_space.values()]
         search_space_size = reduce((lambda x, y: x * y), dim_sizes_list)
+        print("search_space_size", search_space_size)
 
         while search_data_length < search_space_size:
             hyper = Hyperactive(verbosity=["progress_bar"])
             hyper.add_search(
                 self.model,
                 self.search_space,
+                initialize={},
                 n_iter=search_space_size,
                 optimizer=GridSearchOptimizer(),
                 memory_warm_start=search_data,
