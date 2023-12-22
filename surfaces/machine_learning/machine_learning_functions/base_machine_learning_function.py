@@ -1,16 +1,13 @@
 import os
 import time
+
 import numpy as np
 import pandas as pd
-
 from functools import reduce
 
 from hyperactive import Hyperactive
 from hyperactive.optimizers import GridSearchOptimizer
-from search_data_collector import SearchDataCollector
-
-
-here_path = os.path.dirname(os.path.realpath(__file__))
+from ..data_collector import SurfacesDataCollector
 
 
 class BaseMachineLearningFunction:
@@ -18,14 +15,9 @@ class BaseMachineLearningFunction:
         self.input_type = input_type
         self.sleep = sleep
 
-        self.init_sdc()
+        self.sql_data = SurfacesDataCollector()
 
-    def init_sdc(self):
-        self.collector = SearchDataCollector(
-            os.path.join(here_path, "..", "data", self.__name__ + ".csv")
-        )
-
-    def collect_data(self):
+    def collect_data(self, if_exists="append"):
         para_names = list(self.search_space.keys())
         search_data_cols = para_names + ["score"]
         search_data = pd.DataFrame([], columns=search_data_cols)
@@ -33,7 +25,6 @@ class BaseMachineLearningFunction:
 
         dim_sizes_list = [len(array) for array in self.search_space.values()]
         search_space_size = reduce((lambda x, y: x * y), dim_sizes_list)
-        print("search_space_size", search_space_size)
 
         while search_data_length < search_space_size:
             hyper = Hyperactive(verbosity=["progress_bar"])
@@ -42,7 +33,7 @@ class BaseMachineLearningFunction:
                 self.search_space,
                 initialize={},
                 n_iter=search_space_size,
-                optimizer=GridSearchOptimizer(),
+                optimizer=GridSearchOptimizer(direction="orthogonal"),
                 memory_warm_start=search_data,
             )
             hyper.run()
@@ -50,14 +41,14 @@ class BaseMachineLearningFunction:
             search_data = pd.concat(
                 [search_data, hyper.search_data(self.model)], ignore_index=True
             )
+
             search_data = search_data.drop_duplicates(subset=para_names)
             search_data_length = len(search_data)
-            print("search_data_length", search_data_length)
 
-        self.collector.save(search_data)
+        self.sql_data.save(self.__name__, search_data, if_exists)
 
     def load_search_data(self):
-        return self.collector.load()
+        return self.sql_data.load(self.__name__)
 
     def objective_function_dict(self, params):
         try:
