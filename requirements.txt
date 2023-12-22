@@ -1,4 +1,6 @@
 numpy >=1.18.1
-matplotlib
 pandas
-gradient-free-optimizers >=1.2.4, <2.0.0
+matplotlib
+plotly
+hyperactive
+search-data-collector
