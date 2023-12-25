@@ -4,4 +4,7 @@
 
 
 from .tabular_classifiers import KNeighborsClassifierFunction
-from .tabular_regressors import GradientBoostingRegressorFunction
+from .tabular_regressors import (
+    GradientBoostingRegressorFunction,
+    KNeighborsRegressorFunction,
+)
