@@ -5,6 +5,11 @@
 
 import time
 import numpy as np
+import pandas as pd
+from functools import reduce
+
+from hyperactive import Hyperactive
+from hyperactive.optimizers import GridSearchOptimizer
 
 
 class ObjectiveFunction:
@@ -13,14 +18,48 @@ class ObjectiveFunction:
         self.input_type = input_type
         self.sleep = sleep
 
-    def search_space(self, min=-5, max=5, step=0.1):
+    def search_space(self, min=-5, max=5, step=0.1, value_typ="array"):
         search_space_ = {}
 
         for dim in range(self.n_dim):
             dim_str = "x" + str(dim)
-            search_space_[dim_str] = np.arange(min, max, step)
+
+            values = np.arange(min, max, step)
+            if value_typ == "list":
+                values = list(values)
+            search_space_[dim_str] = values
 
         return search_space_
+
+    @property
+    def search_data(self):
+        para_names = list(self.search_space().keys())
+        search_data_cols = para_names + ["score"]
+        search_data = pd.DataFrame([], columns=search_data_cols)
+        search_data_length = 0
+
+        dim_sizes_list = [len(array) for array in self.search_space().values()]
+        search_space_size = reduce((lambda x, y: x * y), dim_sizes_list)
+
+        while search_data_length < search_space_size:
+            hyper = Hyperactive(verbosity=["progress_bar"])
+            hyper.add_search(
+                self,
+                self.search_space(value_typ="list"),
+                initialize={},
+                n_iter=search_space_size,
+                optimizer=GridSearchOptimizer(direction="orthogonal"),
+                memory_warm_start=search_data,
+            )
+            hyper.run()
+
+            search_data = pd.concat(
+                [search_data, hyper.search_data(self)], ignore_index=True
+            )
+            search_data = search_data.drop_duplicates(subset=para_names)
+            search_data_length = len(search_data)
+
+        return search_data
 
     def return_metric(self, loss):
         if self.metric == "score":
