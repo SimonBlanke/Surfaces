@@ -11,7 +11,7 @@ from .base_machine_learning_function import BaseMachineLearningFunction
 
 
 class KNeighborsRegressorFunction(BaseMachineLearningFunction):
-    __name__ = "k_neighbors_classifier"
+    __name__ = "k_neighbors_regressor"
 
     def __init__(self, input_type="dictionary", sleep=0):
         super().__init__(input_type, sleep)
