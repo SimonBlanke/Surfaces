@@ -17,6 +17,8 @@ class BaseMachineLearningFunction:
 
         self.sql_data = SurfacesDataCollector()
 
+        self.model.__func__.__name__ = self.__name__
+
     def collect_data(self, if_exists="append"):
         para_names = list(self.search_space.keys())
         search_data_cols = para_names + ["score"]
@@ -55,6 +57,12 @@ class BaseMachineLearningFunction:
             parameter_d = params.para_dict
         except AttributeError:
             parameter_d = params
+
+        for para_names, dim_value in parameter_d.items():
+            try:
+                parameter_d[para_names] = dim_value.__name__
+            except AttributeError:
+                pass
 
         search_data = self.load_search_data()
         para_names = list(self.search_space.keys())
