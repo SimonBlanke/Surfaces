@@ -2,11 +2,14 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
+
 import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+
+from tqdm import tqdm
 
 color_scale = px.colors.sequential.Jet
 
@@ -38,36 +41,49 @@ def plotly_surface_new(
     height=900,
     contour=False,
 ):
-    if len(search_space) != 2:
-        error = "search space must be two dimensional"
+    if len(search_space) < 2:
+        error = "search space must be at least two dimensional"
         raise Exception(error)
+    elif len(search_space) > 2:
+        search_space_2d = {}
+        para_dict_set_values = {}
+        for para_name, dim_values in search_space.items():
+            if len(dim_values) == 1:
+                para_dict_set_values[para_name] = dim_values[0]
+            else:
+                search_space_2d[para_name] = dim_values
+    else:
+        search_space_2d = search_space
+        para_dict_set_values = {}
 
-    para_l = list(search_space.keys())
+    para_l = list(search_space_2d.keys())
 
     para1 = para_l[0]
     para2 = para_l[1]
 
-    (x_all, y_all) = search_space.values()
+    (x_all, y_all) = search_space_2d.values()
     xi, yi = np.meshgrid(x_all, y_all)
     zi = []
 
-    for dim_value1 in search_space[para1]:
+    pbar_total = len(search_space_2d[para1]) * len(search_space_2d[para2])
+    pbar = tqdm(total=pbar_total)
+    for dim_value1 in search_space_2d[para1]:
         zi_sub_dim = []
-        for dim_value2 in search_space[para2]:
-            para_dict = {
+        for dim_value2 in search_space_2d[para2]:
+            para_dict_2d = {
                 para1: dim_value1,
                 para2: dim_value2,
             }
+            para_dict = {**para_dict_2d, **para_dict_set_values}
+
             zi_sub_dim_values = objective_function(para_dict)
             zi_sub_dim.append(zi_sub_dim_values)
+            pbar.update(1)
 
         zi.append(zi_sub_dim)
 
     zi = np.array(zi).T
-
-    print("\n xi \n", xi, xi.shape, "\n")
-    print("\n yi \n", yi, yi.shape, "\n")
-    print("\n zi \n", zi, zi.shape, "\n")
+    pbar.close()
 
     fig = go.Figure(
         data=go.Surface(
