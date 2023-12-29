@@ -50,7 +50,11 @@ class BaseMachineLearningFunction:
         self.sql_data.save(self.__name__, search_data, if_exists)
 
     def load_search_data(self):
-        return self.sql_data.load(self.__name__)
+        try:
+            dataframe = self.sql_data.load(self.__name__)
+        except:
+            print("Path 2 database: ", self.sql_data.path)
+        return dataframe
 
     def objective_function_dict(self, params):
         try:
