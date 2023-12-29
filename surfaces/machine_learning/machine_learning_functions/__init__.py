@@ -8,3 +8,15 @@ from .tabular_regressors import (
     GradientBoostingRegressorFunction,
     KNeighborsRegressorFunction,
 )
+
+__all__ = [
+    "KNeighborsClassifierFunction",
+    "GradientBoostingRegressorFunction",
+    "KNeighborsRegressorFunction",
+]
+
+all = [
+    KNeighborsClassifierFunction,
+    GradientBoostingRegressorFunction,
+    KNeighborsRegressorFunction,
+]

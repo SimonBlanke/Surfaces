@@ -38,3 +38,22 @@ __all__ = [
     "McCormickFunction",
     "BukinFunctionN6",
 ]
+
+all = [
+    SphereFunction,
+    AckleyFunction,
+    RastriginFunction,
+    RosenbrockFunction,
+    BealeFunction,
+    HimmelblausFunction,
+    HölderTableFunction,
+    CrossInTrayFunction,
+    SimionescuFunction,
+    EasomFunction,
+    BoothFunction,
+    GoldsteinPriceFunction,
+    StyblinskiTangFunction,
+    MatyasFunction,
+    McCormickFunction,
+    BukinFunctionN6,
+]
