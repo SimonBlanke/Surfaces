@@ -11,9 +11,11 @@ class StyblinskiTangFunction(MathematicalFunction):
     _name_ = "styblinski_tang_function"
     __name__ = "StyblinskiTangFunction"
 
+    dimensions = "n"
     formula = (
         r"""f(\vec {x}) = \frac{\sum_{i=1}^{n} x_{i}^{4} - 16x_{i}^{2} + 5x_{i}}{2}"""
     )
+    global_minimum = r"""-39.16617n < f(\underbrace{-2.903534, \ldots, -2.903534}_{n \text{ times}} ) < -39.16616n"""
 
     def __init__(self, n_dim, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)

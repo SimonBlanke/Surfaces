@@ -13,9 +13,11 @@ class BukinFunctionN6(MathematicalFunction):
     _name_ = "bukin_function_n6"
     __name__ = "BukinFunctionN6"
 
+    dimensions = "2"
     formula = (
         r"""f(x,y) = 100 \sqrt{\left| y-0.01x^2 \right|} + 0.01 \left|x+10\right|"""
     )
+    global_minimum = r"""f(-10,1)=0"""
 
     def __init__(self, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)

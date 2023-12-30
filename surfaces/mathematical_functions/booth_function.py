@@ -11,7 +11,9 @@ class BoothFunction(MathematicalFunction):
     _name_ = "booth_function"
     __name__ = "BoothFunction"
 
+    dimensions = "2"
     formula = r"""f(x,y) = (x + 2y - 7)^2 + (2x + y - 5)^2"""
+    global_minimum = r"""f(1,3)=0"""
 
     def __init__(self, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)

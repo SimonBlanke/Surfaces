@@ -13,7 +13,14 @@ class CrossInTrayFunction(MathematicalFunction):
     _name_ = "cross_in_tray_function"
     __name__ = "CrossInTrayFunction"
 
+    dimensions = "2"
     formula = r"""f(x,y) = -0.0001 \left[ \left| \sin x \sin y \exp\left( \left| 100 - \frac{\sqrt{x^2+y^2}}{\pi} \right| \right)  \right| +1  \right]^{0.1}"""
+    global_minimum = r"""
+    f(1.34941, -1.34941) = -2.06261 \\
+    f(1.34941, 1.34941) = -2.06261 \\
+    f(-1.34941, 1.34941) = -2.06261 \\
+    f(-1.34941, -1.34941) = -2.06261 \\
+        """
 
     def __init__(
         self,

@@ -13,7 +13,9 @@ class SchafferFunctionN2(MathematicalFunction):
     _name_ = "schaffer_function_n2"
     __name__ = "SchafferFunctionN2"
 
+    dimensions = "2"
     formula = r"""f(x,y) = 0.5 + \frac{\sin^{2}\left(x^{2} - y^{2}\right) - 0.5}{\left[1 + 0.001\left(x^{2} + y^{2}\right) \right]^{2}}"""
+    global_minimum = r"""f(0,0) = 0"""
 
     def __init__(self, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)

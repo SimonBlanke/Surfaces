@@ -13,7 +13,9 @@ class GramacyAndLeeFunction(MathematicalFunction):
     _name_ = "gramacy_and_lee_function"
     __name__ = "GramacyAndLeeFunction"
 
+    dimensions = "1"
     formula = r"""f(x) = \frac{\sin(10\pi x)}{2x} + (x - 1)^4"""
+    global_minimum = r"""-"""
 
     def __init__(self, *args, **kwargs):
         super().__init__(args, **kwargs)

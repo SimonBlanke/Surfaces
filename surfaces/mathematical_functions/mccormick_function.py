@@ -13,9 +13,11 @@ class McCormickFunction(MathematicalFunction):
     _name_ = "mccormick_function"
     __name__ = "McCormickFunction"
 
+    dimensions = "2"
     formula = (
         r"""f(x,y) = \sin \left(x+y\right) + \left(x-y\right)^{2} - 1.5x + 2.5y + 1"""
     )
+    global_minimum = r"""f(-0.54719, -1.54719) = -1.9133"""
 
     def __init__(self, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)

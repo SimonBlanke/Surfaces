@@ -11,7 +11,9 @@ class GoldsteinPriceFunction(MathematicalFunction):
     _name_ = "goldstein_price_function"
     __name__ = "GoldsteinPriceFunction"
 
+    dimensions = "2"
     formula = r"""f(x,y) = \left[1+\left(x+y+1\right)^{2}\left(19-14x+3x^{2}-14y+6xy+3y^{2}\right)\right]\left[30+\left(2x-3y\right)^{2}\left(18-32x+12x^{2}+48y-36xy+27y^{2}\right)\right]"""
+    global_minimum = r"""f(0,-1) = 3"""
 
     def __init__(self, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)

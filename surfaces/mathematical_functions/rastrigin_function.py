@@ -13,9 +13,11 @@ class RastriginFunction(MathematicalFunction):
     _name_ = "rastrigin_function"
     __name__ = "RastriginFunction"
 
+    dimensions = "n"
     formula = r"""f(\vec{x}) = An + \sum^n_{i=1} \left[x_i^2 - A\cos(2\pi x_i)\right]
                 \newline
                 \text{where:} A = 10"""
+    global_minimum = r"""f(\vec x = 0) = 0"""
 
     def __init__(
         self,

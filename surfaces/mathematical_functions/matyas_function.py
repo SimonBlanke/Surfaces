@@ -11,7 +11,9 @@ class MatyasFunction(MathematicalFunction):
     _name_ = "matyas_function"
     __name__ = "MatyasFunction"
 
+    dimensions = "2"
     formula = r"""f(x,y) = 0.26 \left( x^{2} + y^{2}\right) - 0.48 xy"""
+    global_minimum = r"""f(0,0) = 0"""
 
     def __init__(self, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)

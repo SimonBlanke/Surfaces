@@ -11,9 +11,11 @@ class BealeFunction(MathematicalFunction):
     _name_ = "beale_function"
     __name__ = "BealeFunction"
 
+    dimensions = "2"
     formula = (
         r"""f(x,y) = (1.5 - x + xy)^2 + (2.25 - x + xy^2)^2 + (2.625 - x + xy^3)^2"""
     )
+    global_minimum = r"""f(3, 0.5) = 0"""
 
     def __init__(
         self, A=1.5, B=2.25, C=2.652, metric="score", input_type="dictionary", sleep=0

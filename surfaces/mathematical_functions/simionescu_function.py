@@ -18,6 +18,7 @@ class SimionescuFunction(MathematicalFunction):
             x^2+y^2\le\left[r_{T}+r_{S}\cos\left(n \arctan \frac{x}{y} \right)\right]^2
             \newline
             \text{where: }  r_{T}=1, r_{S}=0.2 \text{ and } n = 8"""
+    global_minimum = r"""f(\pm 0.84852813,\mp 0.84852813) = -0.072"""
 
     def __init__(
         self,

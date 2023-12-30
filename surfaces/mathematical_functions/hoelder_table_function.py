@@ -13,7 +13,14 @@ class HölderTableFunction(MathematicalFunction):
     _name_ = "hölder_table_function"
     __name__ = "HölderTableFunction"
 
+    dimensions = "2"
     formula = r"""f(x,y) = - \left|\sin x \cos y \exp \left(\left|1 - \frac{\sqrt{x^{2} + y^{2}}}{\pi} \right|\right)\right|"""
+    global_minimum = r"""      
+      f(8.05502,  9.66459) = -19.2085 \\
+      f(-8.05502,  9.66459) = -19.2085 \\
+      f(8.05502,-9.66459) = -19.2085 \\
+      f(-8.05502,-9.66459) = -19.2085
+      """
 
     def __init__(self, A=10, angle=1, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)
