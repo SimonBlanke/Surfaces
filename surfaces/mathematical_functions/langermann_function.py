@@ -13,6 +13,8 @@ class LangermannFunction(MathematicalFunction):
     _name_ = "langermann_function"
     __name__ = "LangermannFunction"
 
+    formula = r"""f(\vec x) = \sum^m_{i=1} c_i \exp \left[-\frac{1}{\pi}\sum_{j=1}^d(x_j - A_{ij})^2 \right] \cos \left[\pi \sum_{j=1}^d (x_j - A_{ij})^2 \right]"""
+
     c = np.array([1, 2, 5, 2, 3])
     m = 5
     A = np.array([[3, 5, 2, 1, 7], [5, 2, 1, 4, 9]])

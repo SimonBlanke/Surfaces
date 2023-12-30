@@ -11,6 +11,8 @@ class RosenbrockFunction(MathematicalFunction):
     _name_ = "rosenbrock_function"
     __name__ = "RosenbrockFunction"
 
+    formula = r"""f(\vec {x}) = \sum_{i=1}^{n-1} \left[ 100 \left(x_{i+1} - x_{i}^{2}\right)^{2} + \left(1 - x_{i}\right)^{2}\right]"""
+
     def __init__(self, A=1, B=100, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)
         self.n_dim = 2

@@ -11,7 +11,6 @@ from functools import reduce
 from hyperactive import Hyperactive
 from hyperactive.optimizers import GridSearchOptimizer
 
-from ..data_collector import SurfacesDataCollector
 from .._base_test_function import BaseTestFunction
 
 
@@ -23,11 +22,11 @@ class MathematicalFunction(BaseTestFunction):
     global_minimum = r" "
 
     def __init__(self, metric="score", input_type="dictionary", sleep=0):
+        super().__init__()
+
         self.metric = metric
         self.input_type = input_type
         self.sleep = sleep
-
-        self.sql_data = SurfacesDataCollector()
 
     def search_space(self, min=-5, max=5, step=0.1, value_typ="array"):
         search_space_ = {}
@@ -43,6 +42,8 @@ class MathematicalFunction(BaseTestFunction):
         return search_space_
 
     def collect_data(self, if_exists="append"):
+        self.search_space = self.search_space(value_typ="list")
+
         para_names = list(self.search_space().keys())
         search_data_cols = para_names + ["score"]
         search_data = pd.DataFrame([], columns=search_data_cols)
@@ -86,11 +87,3 @@ class MathematicalFunction(BaseTestFunction):
             para[dim_str] = arg
 
         return self.objective_function_dict(para)
-
-    def __call__(self, *input):
-        time.sleep(self.sleep)
-
-        if self.input_type == "dictionary":
-            return self.objective_function_dict(*input)
-        elif self.input_type == "arrays":
-            return self.objective_function_np(*input)

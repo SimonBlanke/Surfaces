@@ -13,6 +13,8 @@ class EggholderFunction(MathematicalFunction):
     _name_ = "eggholder_function"
     __name__ = "EggholderFunction"
 
+    formula = r"""f(x, y) = - (y + 47) \sin \sqrt{\left| \frac{x}{2} + (y + 47) \right|} - x \sin \sqrt{\left| x- (y + 47) \right|}"""
+
     def __init__(self, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)
         self.n_dim = 2

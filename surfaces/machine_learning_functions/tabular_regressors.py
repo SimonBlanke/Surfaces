@@ -23,7 +23,7 @@ class KNeighborsRegressorFunction(MachineLearningFunction):
             "dataset": [diabetes_data],
         }
 
-    def model(self, params):
+    def objective_function(self, params):
         knc = KNeighborsRegressor(
             n_neighbors=params["n_neighbors"],
             algorithm=params["algorithm"],
@@ -46,7 +46,7 @@ class GradientBoostingRegressorFunction(MachineLearningFunction):
             "dataset": [diabetes_data],
         }
 
-    def model(self, params):
+    def objective_function(self, params):
         knc = GradientBoostingRegressor(
             n_estimators=params["n_estimators"],
             max_depth=params["max_depth"],

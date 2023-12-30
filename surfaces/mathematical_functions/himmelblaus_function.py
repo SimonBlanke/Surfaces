@@ -11,6 +11,8 @@ class HimmelblausFunction(MathematicalFunction):
     _name_ = "himmelblaus_function"
     __name__ = "HimmelblausFunction"
 
+    formula = r"""f(x, y) = (x^2+y-11)^2 + (x+y^2-7)^2"""
+
     def __init__(self, A=-11, B=-7, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)
         self.n_dim = 2

@@ -3,26 +3,20 @@
 # License: MIT License
 
 
-import time
-
 import numpy as np
 import pandas as pd
 from functools import reduce
 
 from hyperactive import Hyperactive
 from hyperactive.optimizers import GridSearchOptimizer
-from ..data_collector import SurfacesDataCollector
 from .._base_test_function import BaseTestFunction
 
 
 class MachineLearningFunction(BaseTestFunction):
-    def __init__(self, input_type="dictionary", sleep=0):
-        self.input_type = input_type
-        self.sleep = sleep
+    def __init__(self, input_type="dictionary"):
+        super().__init__(input_type)
 
-        self.sql_data = SurfacesDataCollector()
-
-        self.model.__func__.__name__ = self.__name__
+        self.objective_function.__func__.__name__ = self.__name__
 
     def collect_data(self, if_exists="append"):
         para_names = list(self.search_space.keys())
@@ -36,7 +30,7 @@ class MachineLearningFunction(BaseTestFunction):
         while search_data_length < search_space_size:
             hyper = Hyperactive(verbosity=["progress_bar"])
             hyper.add_search(
-                self.model,
+                self.objective_function,
                 self.search_space,
                 initialize={},
                 n_iter=search_space_size,
@@ -46,7 +40,8 @@ class MachineLearningFunction(BaseTestFunction):
             hyper.run()
 
             search_data = pd.concat(
-                [search_data, hyper.search_data(self.model)], ignore_index=True
+                [search_data, hyper.search_data(self.objective_function)],
+                ignore_index=True,
             )
 
             search_data = search_data.drop_duplicates(subset=para_names)
@@ -76,11 +71,3 @@ class MachineLearningFunction(BaseTestFunction):
 
         score = para_df_row["score"].values[0]
         return score
-
-    def __call__(self, *input):
-        time.sleep(self.sleep)
-
-        if self.input_type == "dictionary":
-            return self.objective_function_dict(*input)
-        elif self.input_type == "arrays":
-            return self.objective_function_np(*input)

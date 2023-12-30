@@ -11,6 +11,10 @@ class StyblinskiTangFunction(MathematicalFunction):
     _name_ = "styblinski_tang_function"
     __name__ = "StyblinskiTangFunction"
 
+    formula = (
+        r"""f(\vec {x}) = \frac{\sum_{i=1}^{n} x_{i}^{4} - 16x_{i}^{2} + 5x_{i}}{2}"""
+    )
+
     def __init__(self, n_dim, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)
         self.n_dim = n_dim

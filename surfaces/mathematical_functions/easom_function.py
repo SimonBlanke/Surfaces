@@ -13,6 +13,8 @@ class EasomFunction(MathematicalFunction):
     _name_ = "easom_function"
     __name__ = "EasomFunction"
 
+    formula = r"""f(x, y) = -\cos (x) \cos (y) \ exp\left[- \left((x-\pi)^2 + (y-\pi)^2 \right) \right]"""
+
     def __init__(
         self, A=-1, B=1, angle=1, metric="score", input_type="dictionary", sleep=0
     ):

@@ -13,6 +13,12 @@ class SimionescuFunction(MathematicalFunction):
     _name_ = "simionescu_function"
     __name__ = "SimionescuFunction"
 
+    formula = r"""f(x,y) = 0.1xy 
+            \newline
+            x^2+y^2\le\left[r_{T}+r_{S}\cos\left(n \arctan \frac{x}{y} \right)\right]^2
+            \newline
+            \text{where: }  r_{T}=1, r_{S}=0.2 \text{ and } n = 8"""
+
     def __init__(
         self,
         A=0.1,

@@ -22,7 +22,7 @@ class KNeighborsClassifierFunction(MachineLearningFunction):
             "dataset": [digits_data, wine_data, iris_data],
         }
 
-    def model(self, params):
+    def objective_function(self, params):
         knc = KNeighborsClassifier(
             n_neighbors=params["n_neighbors"],
             algorithm=params["algorithm"],

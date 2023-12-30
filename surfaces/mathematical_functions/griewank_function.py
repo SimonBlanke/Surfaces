@@ -13,6 +13,8 @@ class GriewankFunction(MathematicalFunction):
     _name_ = "griewank_function"
     __name__ = "GriewankFunction"
 
+    formula = r"""f(\vec x) = \sum^d_{i=1} \frac{x_i^2}{4000} - \prod_{i=1}^d\cos (\frac{x_i}{\sqrt i}) + 1"""
+
     def __init__(self, *args, n_dim, **kwargs):
         super().__init__(args, **kwargs)
         self.n_dim = n_dim

@@ -13,6 +13,8 @@ class LeviFunctionN13(MathematicalFunction):
     _name_ = "levi_function_n13"
     __name__ = "LeviFunctionN13"
 
+    formula = r"""f(x,y) = \sin^{2} 3\pi x + \left(x-1\right)^{2}\left(1+\sin^{2} 3\pi y\right)+\left(y-1\right)^{2}\left(1+\sin^{2} 2\pi y\right)"""
+
     def __init__(self, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)
         self.n_dim = 2

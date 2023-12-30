@@ -13,6 +13,8 @@ class DropWaveFunction(MathematicalFunction):
     _name_ = "drop_wave_function"
     __name__ = "DropWaveFunction"
 
+    formula = r"""f(x, y) = -\frac{1+\cos (12\sqrt{x^2+y^2})}{0.5 (x^2 + y^2) + 2}"""
+
     def __init__(self, *args, **kwargs):
         super().__init__(args, **kwargs)
         self.n_dim = 2

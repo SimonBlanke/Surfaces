@@ -13,6 +13,8 @@ class ThreeHumpCamelFunction(MathematicalFunction):
     _name_ = "three_hump_camel_function"
     __name__ = "ThreeHumpCamelFunction"
 
+    formula = r"""f(x,y) = -\cos \left(x\right)\cos \left(y\right) \exp\left[-\left(\left(x-\pi\right)^{2} + \left(y-\pi\right)^{2}\right)\right]"""
+
     def __init__(self, metric="score", input_type="dictionary", sleep=0):
         super().__init__(metric, input_type, sleep)
         self.n_dim = 2

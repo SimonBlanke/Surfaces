@@ -13,6 +13,8 @@ class AckleyFunction(MathematicalFunction):
     _name_ = "ackley_function"
     __name__ = "AckleyFunction"
 
+    formula = r"f(x, y) = -20 \exp\left[-0.2\sqrt{0.5(x^2+y^2)} \right] -\exp\left[ 0.5(\cos2\pi x + cos2\pi y) \right] + e + 20"
+
     def __init__(
         self, A=20, angle=2 * np.pi, metric="score", input_type="dictionary", sleep=0
     ):
