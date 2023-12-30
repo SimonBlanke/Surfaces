@@ -5,10 +5,10 @@
 
 import numpy as np
 
-from ._base_objective_function import ObjectiveFunction
+from ._base_objective_function import MathematicalFunction
 
 
-class RastriginFunction(ObjectiveFunction):
+class RastriginFunction(MathematicalFunction):
     name = "Rastrigin Function"
     _name_ = "rastrigin_function"
     __name__ = "RastriginFunction"

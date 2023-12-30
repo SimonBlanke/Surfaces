@@ -3,10 +3,10 @@
 # License: MIT License
 
 
-from ._base_objective_function import ObjectiveFunction
+from ._base_objective_function import MathematicalFunction
 
 
-class BealeFunction(ObjectiveFunction):
+class BealeFunction(MathematicalFunction):
     name = "Beale Function"
     _name_ = "beale_function"
     __name__ = "BealeFunction"
@@ -26,8 +26,8 @@ class BealeFunction(ObjectiveFunction):
         y = params["x1"]
 
         loss1 = (self.A - x + x * y) ** 2
-        loss2 = (self.B - x + x * y ** 2) ** 2
-        loss3 = (self.C - x + x * y ** 3) ** 2
+        loss2 = (self.B - x + x * y**2) ** 2
+        loss3 = (self.C - x + x * y**3) ** 2
 
         loss = loss1 + loss2 + loss3
 

@@ -5,10 +5,10 @@
 
 import numpy as np
 
-from ._base_objective_function import ObjectiveFunction
+from ._base_objective_function import MathematicalFunction
 
 
-class EasomFunction(ObjectiveFunction):
+class EasomFunction(MathematicalFunction):
     name = "Easom Function"
     _name_ = "easom_function"
     __name__ = "EasomFunction"

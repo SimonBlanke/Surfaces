@@ -5,10 +5,10 @@
 
 import numpy as np
 
-from ._base_objective_function import ObjectiveFunction
+from ._base_objective_function import MathematicalFunction
 
 
-class LangermannFunction(ObjectiveFunction):
+class LangermannFunction(MathematicalFunction):
     name = "Langermann Function"
     _name_ = "langermann_function"
     __name__ = "LangermannFunction"

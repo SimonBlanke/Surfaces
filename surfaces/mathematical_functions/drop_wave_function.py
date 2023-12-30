@@ -5,10 +5,10 @@
 
 import numpy as np
 
-from ._base_objective_function import ObjectiveFunction
+from ._base_objective_function import MathematicalFunction
 
 
-class DropWaveFunction(ObjectiveFunction):
+class DropWaveFunction(MathematicalFunction):
     name = "Drop Wave Function"
     _name_ = "drop_wave_function"
     __name__ = "DropWaveFunction"
@@ -21,8 +21,8 @@ class DropWaveFunction(ObjectiveFunction):
         x = params["x0"]
         y = params["x1"]
 
-        loss = -(1 + np.cos(12 * np.sqrt(x ** 2 + y ** 2))) / (
-            0.5 * (x ** 2 + y ** 2) + 2
+        loss = -(1 + np.cos(12 * np.sqrt(x**2 + y**2))) / (
+            0.5 * (x**2 + y**2) + 2
         )
 
         return self.return_metric(loss)

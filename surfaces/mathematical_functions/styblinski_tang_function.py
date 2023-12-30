@@ -3,10 +3,10 @@
 # License: MIT License
 
 
-from ._base_objective_function import ObjectiveFunction
+from ._base_objective_function import MathematicalFunction
 
 
-class StyblinskiTangFunction(ObjectiveFunction):
+class StyblinskiTangFunction(MathematicalFunction):
     name = "Styblinski Tang Function"
     _name_ = "styblinski_tang_function"
     __name__ = "StyblinskiTangFunction"
@@ -21,7 +21,7 @@ class StyblinskiTangFunction(ObjectiveFunction):
             dim_str = "x" + str(dim)
             x = params[dim_str]
 
-            loss += x ** 4 - 16 * x ** 2 + 5 * x
+            loss += x**4 - 16 * x**2 + 5 * x
 
         loss = loss / 2
 

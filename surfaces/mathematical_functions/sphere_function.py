@@ -2,10 +2,10 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from ._base_objective_function import ObjectiveFunction
+from ._base_objective_function import MathematicalFunction
 
 
-class SphereFunction(ObjectiveFunction):
+class SphereFunction(MathematicalFunction):
     name = "Sphere Function"
     _name_ = "sphere_function"
     __name__ = "SphereFunction"

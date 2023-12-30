@@ -5,10 +5,10 @@
 
 import numpy as np
 
-from ._base_objective_function import ObjectiveFunction
+from ._base_objective_function import MathematicalFunction
 
 
-class SimionescuFunction(ObjectiveFunction):
+class SimionescuFunction(MathematicalFunction):
     name = "Simionescu Function"
     _name_ = "simionescu_function"
     __name__ = "SimionescuFunction"
@@ -37,7 +37,7 @@ class SimionescuFunction(ObjectiveFunction):
 
         condition = (self.r_T + self.r_S * np.cos(self.n * np.arctan(x / y))) ** 2
 
-        mask = x ** 2 + y ** 2 <= condition
+        mask = x**2 + y**2 <= condition
         mask_int = mask.astype(int)
 
         loss = self.A * x * y

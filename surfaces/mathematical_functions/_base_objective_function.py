@@ -12,9 +12,10 @@ from hyperactive import Hyperactive
 from hyperactive.optimizers import GridSearchOptimizer
 
 from ..data_collector import SurfacesDataCollector
+from .._base_test_function import BaseTestFunction
 
 
-class ObjectiveFunction:
+class MathematicalFunction(BaseTestFunction):
     explanation = """ """
 
     dimensions = " "
@@ -71,13 +72,6 @@ class ObjectiveFunction:
             search_data_length = len(search_data)
 
         self.sql_data.save(self.__name__, search_data, if_exists)
-
-    def load_search_data(self):
-        try:
-            dataframe = self.sql_data.load(self.__name__)
-        except:
-            print("Path 2 database: ", self.sql_data.path)
-        return dataframe
 
     def return_metric(self, loss):
         if self.metric == "score":

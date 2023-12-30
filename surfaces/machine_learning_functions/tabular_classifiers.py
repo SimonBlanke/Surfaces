@@ -6,10 +6,10 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import cross_val_score
 from .datasets import digits_data, wine_data, iris_data
 
-from .base_machine_learning_function import BaseMachineLearningFunction
+from .base_machine_learning_function import MachineLearningFunction
 
 
-class KNeighborsClassifierFunction(BaseMachineLearningFunction):
+class KNeighborsClassifierFunction(MachineLearningFunction):
     __name__ = "k_neighbors_classifier"
 
     def __init__(self, input_type="dictionary", sleep=0):

@@ -5,10 +5,10 @@
 
 import numpy as np
 
-from ._base_objective_function import ObjectiveFunction
+from ._base_objective_function import MathematicalFunction
 
 
-class BukinFunctionN6(ObjectiveFunction):
+class BukinFunctionN6(MathematicalFunction):
     name = "Bukin Function N6"
     _name_ = "bukin_function_n6"
     __name__ = "BukinFunctionN6"
@@ -21,6 +21,6 @@ class BukinFunctionN6(ObjectiveFunction):
         x = params["x0"]
         y = params["x1"]
 
-        loss = 100 * np.sqrt(np.abs(y - 0.01 * x ** 2)) + 0.01 * np.abs(x + 10)
+        loss = 100 * np.sqrt(np.abs(y - 0.01 * x**2)) + 0.01 * np.abs(x + 10)
 
         return self.return_metric(loss)

@@ -5,10 +5,10 @@
 
 import numpy as np
 
-from ._base_objective_function import ObjectiveFunction
+from ._base_objective_function import MathematicalFunction
 
 
-class GramacyAndLeeFunction(ObjectiveFunction):
+class GramacyAndLeeFunction(MathematicalFunction):
     name = "Gramacy And Lee Function"
     _name_ = "gramacy_and_lee_function"
     __name__ = "GramacyAndLeeFunction"

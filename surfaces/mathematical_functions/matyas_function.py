@@ -3,10 +3,10 @@
 # License: MIT License
 
 
-from ._base_objective_function import ObjectiveFunction
+from ._base_objective_function import MathematicalFunction
 
 
-class MatyasFunction(ObjectiveFunction):
+class MatyasFunction(MathematicalFunction):
     name = "Matyas Function"
     _name_ = "matyas_function"
     __name__ = "MatyasFunction"
@@ -19,6 +19,6 @@ class MatyasFunction(ObjectiveFunction):
         x = params["x0"]
         y = params["x1"]
 
-        loss = 0.26 * (x ** 2 + y ** 2) - 0.48 * x * y
+        loss = 0.26 * (x**2 + y**2) - 0.48 * x * y
 
         return self.return_metric(loss)

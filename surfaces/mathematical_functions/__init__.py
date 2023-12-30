@@ -9,7 +9,7 @@ from .rastrigin_function import RastriginFunction
 from .rosenbrock_function import RosenbrockFunction
 from .beale_function import BealeFunction
 from .himmelblaus_function import HimmelblausFunction
-from .hölder_table_function import HölderTableFunction
+from .hoelder_table_function import HölderTableFunction
 from .cross_in_tray_function import CrossInTrayFunction
 from .simionescu_function import SimionescuFunction
 from .easom_function import EasomFunction

@@ -5,10 +5,10 @@
 
 import numpy as np
 
-from ._base_objective_function import ObjectiveFunction
+from ._base_objective_function import MathematicalFunction
 
 
-class LeviFunctionN13(ObjectiveFunction):
+class LeviFunctionN13(MathematicalFunction):
     name = "Levi Function N13"
     _name_ = "levi_function_n13"
     __name__ = "LeviFunctionN13"

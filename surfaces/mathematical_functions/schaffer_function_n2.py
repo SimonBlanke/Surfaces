@@ -5,10 +5,10 @@
 
 import numpy as np
 
-from ._base_objective_function import ObjectiveFunction
+from ._base_objective_function import MathematicalFunction
 
 
-class SchafferFunctionN2(ObjectiveFunction):
+class SchafferFunctionN2(MathematicalFunction):
     name = "Schaffer Function N2"
     _name_ = "schaffer_function_n2"
     __name__ = "SchafferFunctionN2"
@@ -21,6 +21,6 @@ class SchafferFunctionN2(ObjectiveFunction):
         x = params["x0"]
         y = params["x1"]
 
-        loss = 100 * np.sqrt(np.abs(y - 0.01 * x ** 2)) + 0.01 * np.abs(x + 10)
+        loss = 100 * np.sqrt(np.abs(y - 0.01 * x**2)) + 0.01 * np.abs(x + 10)
 
         return self.return_metric(loss)

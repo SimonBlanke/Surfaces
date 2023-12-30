@@ -5,10 +5,10 @@
 
 import numpy as np
 
-from ._base_objective_function import ObjectiveFunction
+from ._base_objective_function import MathematicalFunction
 
 
-class ThreeHumpCamelFunction(ObjectiveFunction):
+class ThreeHumpCamelFunction(MathematicalFunction):
     name = "Three Hump Camel Function"
     _name_ = "three_hump_camel_function"
     __name__ = "ThreeHumpCamelFunction"
@@ -21,6 +21,6 @@ class ThreeHumpCamelFunction(ObjectiveFunction):
         x = params["x0"]
         y = params["x1"]
 
-        loss = 2 * x ** 2 - 1.05 * x ** 4 + x ** 6 / 6 + x * y + y ** 2
+        loss = 2 * x**2 - 1.05 * x**4 + x**6 / 6 + x * y + y**2
 
         return self.return_metric(loss)

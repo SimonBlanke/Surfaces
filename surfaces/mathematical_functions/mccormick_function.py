@@ -5,10 +5,10 @@
 
 import numpy as np
 
-from ._base_objective_function import ObjectiveFunction
+from ._base_objective_function import MathematicalFunction
 
 
-class McCormickFunction(ObjectiveFunction):
+class McCormickFunction(MathematicalFunction):
     name = "Mc Cormick Function"
     _name_ = "mccormick_function"
     __name__ = "McCormickFunction"

@@ -3,10 +3,10 @@
 # License: MIT License
 
 
-from ._base_objective_function import ObjectiveFunction
+from ._base_objective_function import MathematicalFunction
 
 
-class BoothFunction(ObjectiveFunction):
+class BoothFunction(MathematicalFunction):
     name = "Booth Function"
     _name_ = "booth_function"
     __name__ = "BoothFunction"

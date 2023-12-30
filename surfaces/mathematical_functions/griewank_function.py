@@ -5,10 +5,10 @@
 
 import numpy as np
 
-from ._base_objective_function import ObjectiveFunction
+from ._base_objective_function import MathematicalFunction
 
 
-class GriewankFunction(ObjectiveFunction):
+class GriewankFunction(MathematicalFunction):
     name = "Griewank Function"
     _name_ = "griewank_function"
     __name__ = "GriewankFunction"
@@ -24,7 +24,7 @@ class GriewankFunction(ObjectiveFunction):
             dim_str = "x" + str(dim)
             x = params[dim_str]
 
-            loss_sum += x ** 2 / 4000
+            loss_sum += x**2 / 4000
             loss_product *= np.cos(x / np.sqrt(dim + 1))
 
         loss = loss_sum - loss_product + 1

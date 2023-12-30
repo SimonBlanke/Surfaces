@@ -3,10 +3,10 @@
 # License: MIT License
 
 
-from ._base_objective_function import ObjectiveFunction
+from ._base_objective_function import MathematicalFunction
 
 
-class RosenbrockFunction(ObjectiveFunction):
+class RosenbrockFunction(MathematicalFunction):
     name = "Rosenbrock Function"
     _name_ = "rosenbrock_function"
     __name__ = "RosenbrockFunction"
@@ -22,6 +22,6 @@ class RosenbrockFunction(ObjectiveFunction):
         x = params["x0"]
         y = params["x1"]
 
-        loss = (self.A - x) ** 2 + self.B * (y - x ** 2) ** 2
+        loss = (self.A - x) ** 2 + self.B * (y - x**2) ** 2
 
         return self.return_metric(loss)

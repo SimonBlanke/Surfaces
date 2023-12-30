@@ -7,10 +7,10 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.model_selection import cross_val_score
 from .datasets import diabetes_data
 
-from .base_machine_learning_function import BaseMachineLearningFunction
+from .base_machine_learning_function import MachineLearningFunction
 
 
-class KNeighborsRegressorFunction(BaseMachineLearningFunction):
+class KNeighborsRegressorFunction(MachineLearningFunction):
     __name__ = "k_neighbors_regressor"
 
     def __init__(self, input_type="dictionary", sleep=0):
@@ -33,7 +33,7 @@ class KNeighborsRegressorFunction(BaseMachineLearningFunction):
         return scores.mean()
 
 
-class GradientBoostingRegressorFunction(BaseMachineLearningFunction):
+class GradientBoostingRegressorFunction(MachineLearningFunction):
     __name__ = "gradient_boosting_regressor"
 
     def __init__(self, input_type="dictionary", sleep=0):

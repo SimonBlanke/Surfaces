@@ -5,10 +5,10 @@
 
 import numpy as np
 
-from ._base_objective_function import ObjectiveFunction
+from ._base_objective_function import MathematicalFunction
 
 
-class EggholderFunction(ObjectiveFunction):
+class EggholderFunction(MathematicalFunction):
     name = "Eggholder Function"
     _name_ = "eggholder_function"
     __name__ = "EggholderFunction"

@@ -5,10 +5,10 @@
 
 import numpy as np
 
-from ._base_objective_function import ObjectiveFunction
+from ._base_objective_function import MathematicalFunction
 
 
-class AckleyFunction(ObjectiveFunction):
+class AckleyFunction(MathematicalFunction):
     name = "Ackley Function"
     _name_ = "ackley_function"
     __name__ = "AckleyFunction"

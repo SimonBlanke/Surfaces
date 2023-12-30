@@ -12,9 +12,10 @@ from functools import reduce
 from hyperactive import Hyperactive
 from hyperactive.optimizers import GridSearchOptimizer
 from ..data_collector import SurfacesDataCollector
+from .._base_test_function import BaseTestFunction
 
 
-class BaseMachineLearningFunction:
+class MachineLearningFunction(BaseTestFunction):
     def __init__(self, input_type="dictionary", sleep=0):
         self.input_type = input_type
         self.sleep = sleep
@@ -52,13 +53,6 @@ class BaseMachineLearningFunction:
             search_data_length = len(search_data)
 
         self.sql_data.save(self.__name__, search_data, if_exists)
-
-    def load_search_data(self):
-        try:
-            dataframe = self.sql_data.load(self.__name__)
-        except:
-            print("Path 2 database: ", self.sql_data.path)
-        return dataframe
 
     def objective_function_dict(self, params):
         try:

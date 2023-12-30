@@ -3,10 +3,10 @@
 # License: MIT License
 
 
-from ._base_objective_function import ObjectiveFunction
+from ._base_objective_function import MathematicalFunction
 
 
-class HimmelblausFunction(ObjectiveFunction):
+class HimmelblausFunction(MathematicalFunction):
     name = "Himmelblau's Function"
     _name_ = "himmelblaus_function"
     __name__ = "HimmelblausFunction"
@@ -22,8 +22,8 @@ class HimmelblausFunction(ObjectiveFunction):
         x = params["x0"]
         y = params["x1"]
 
-        loss1 = (x ** 2 + y + self.A) ** 2
-        loss2 = (x + y ** 2 + self.B) ** 2
+        loss1 = (x**2 + y + self.A) ** 2
+        loss2 = (x + y**2 + self.B) ** 2
 
         loss = loss1 + loss2
 
