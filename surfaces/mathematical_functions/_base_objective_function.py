@@ -11,10 +11,16 @@ from functools import reduce
 from hyperactive import Hyperactive
 from hyperactive.optimizers import GridSearchOptimizer
 
-from ..machine_learning.data_collector import SurfacesDataCollector
+from ..data_collector import SurfacesDataCollector
 
 
 class ObjectiveFunction:
+    explanation = """ """
+
+    dimensions = " "
+    formula = r" "
+    global_minimum = r" "
+
     def __init__(self, metric="score", input_type="dictionary", sleep=0):
         self.metric = metric
         self.input_type = input_type

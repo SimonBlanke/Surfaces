@@ -5,7 +5,7 @@ from sklearn.neighbors import KNeighborsRegressor
 from sklearn.ensemble import GradientBoostingRegressor
 
 from sklearn.model_selection import cross_val_score
-from ..datasets import diabetes_data
+from .datasets import diabetes_data
 
 from .base_machine_learning_function import BaseMachineLearningFunction
 
