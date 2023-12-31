@@ -2,7 +2,7 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-__version__ = "0.0.7"
+__version__ = "0.0.8"
 __license__ = "MIT"
 
 from .mathematical_functions import mathematical_functions
