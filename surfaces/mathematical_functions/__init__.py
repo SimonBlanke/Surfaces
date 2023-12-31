@@ -55,7 +55,7 @@ __all__ = [
     "ThreeHumpCamelFunction",
 ]
 
-all = [
+mathematical_functions = [
     AckleyFunction,
     BealeFunction,
     BoothFunction,

@@ -15,7 +15,7 @@ __all__ = [
     "KNeighborsRegressorFunction",
 ]
 
-all = [
+machine_learning_functions = [
     KNeighborsClassifierFunction,
     GradientBoostingRegressorFunction,
     KNeighborsRegressorFunction,
