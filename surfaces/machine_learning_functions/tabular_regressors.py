@@ -14,7 +14,10 @@ class KNeighborsRegressorFunction(MachineLearningFunction):
     __name__ = "k_neighbors_regressor"
 
     def __init__(self, input_type="dictionary", sleep=0):
-        super().__init__(input_type, sleep)
+        super().__init__()
+
+        self.input_type = input_type
+        self.sleep = sleep
 
         self.search_space = {
             "n_neighbors": list(np.arange(3, 150)),
@@ -37,7 +40,10 @@ class GradientBoostingRegressorFunction(MachineLearningFunction):
     __name__ = "gradient_boosting_regressor"
 
     def __init__(self, input_type="dictionary", sleep=0):
-        super().__init__(input_type, sleep)
+        super().__init__()
+
+        self.input_type = input_type
+        self.sleep = sleep
 
         self.search_space = {
             "n_estimators": list(np.arange(5, 150)),

@@ -13,8 +13,8 @@ from .._base_test_function import BaseTestFunction
 
 
 class MachineLearningFunction(BaseTestFunction):
-    def __init__(self, input_type="dictionary"):
-        super().__init__(input_type)
+    def __init__(self):
+        super().__init__()
 
         self.objective_function.__func__.__name__ = self.__name__
 
