@@ -17,3 +17,6 @@ reinstall:
 
 test:
 	python -m pytest -x -p no:warnings -rfEX tests/ \
+
+database:
+	python -m collect_search_data.py
