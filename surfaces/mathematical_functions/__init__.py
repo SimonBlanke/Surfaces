@@ -81,3 +81,39 @@ mathematical_functions = [
     StyblinskiTangFunction,
     ThreeHumpCamelFunction,
 ]
+
+
+mathematical_functions_1d = [
+    GramacyAndLeeFunction,
+]
+
+
+mathematical_functions_2d = [
+    AckleyFunction,
+    BealeFunction,
+    BoothFunction,
+    BukinFunctionN6,
+    CrossInTrayFunction,
+    DropWaveFunction,
+    EasomFunction,
+    EggholderFunction,
+    GoldsteinPriceFunction,
+    HimmelblausFunction,
+    HölderTableFunction,
+    LangermannFunction,
+    LeviFunctionN13,
+    MatyasFunction,
+    McCormickFunction,
+    RosenbrockFunction,
+    SchafferFunctionN2,
+    SimionescuFunction,
+    ThreeHumpCamelFunction,
+]
+
+
+mathematical_functions_nd = [
+    GriewankFunction,
+    RastriginFunction,
+    SphereFunction,
+    StyblinskiTangFunction,
+]
