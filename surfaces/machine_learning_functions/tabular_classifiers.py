@@ -10,7 +10,9 @@ from .base_machine_learning_function import MachineLearningFunction
 
 
 class KNeighborsClassifierFunction(MachineLearningFunction):
-    __name__ = "k_neighbors_classifier"
+    name = "KNeighbors Classifier Function"
+    _name_ = "k_neighbors_classifier"
+    __name__ = "KNeighborsClassifierFunction"
 
     def __init__(self, input_type="dictionary", sleep=0):
         super().__init__()
@@ -19,7 +21,7 @@ class KNeighborsClassifierFunction(MachineLearningFunction):
         self.sleep = sleep
 
         self.search_space = {
-            "n_neighbors": list(np.arange(3, 150)),
+            "n_neighbors": list(np.arange(3, 150, 5)),
             "algorithm": ["auto", "ball_tree", "kd_tree", "brute"],
             "cv": [2, 3, 4, 5, 8, 10],
             "dataset": [digits_data, wine_data, iris_data],

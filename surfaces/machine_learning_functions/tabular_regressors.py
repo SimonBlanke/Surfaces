@@ -11,7 +11,9 @@ from .base_machine_learning_function import MachineLearningFunction
 
 
 class KNeighborsRegressorFunction(MachineLearningFunction):
-    __name__ = "k_neighbors_regressor"
+    name = "KNeighbors Regressor Function"
+    _name_ = "k_neighbors_regressor"
+    __name__ = "KNeighborsRegressorFunction"
 
     def __init__(self, input_type="dictionary", sleep=0):
         super().__init__()
@@ -20,7 +22,7 @@ class KNeighborsRegressorFunction(MachineLearningFunction):
         self.sleep = sleep
 
         self.search_space = {
-            "n_neighbors": list(np.arange(3, 150)),
+            "n_neighbors": list(np.arange(3, 150, 5)),
             "algorithm": ["auto", "ball_tree", "kd_tree", "brute"],
             "cv": [2, 3, 4, 5, 10],
             "dataset": [diabetes_data],
@@ -37,7 +39,9 @@ class KNeighborsRegressorFunction(MachineLearningFunction):
 
 
 class GradientBoostingRegressorFunction(MachineLearningFunction):
-    __name__ = "gradient_boosting_regressor"
+    name = "Gradient Boosting Regressor Function"
+    _name_ = "gradient_boosting_regressor"
+    __name__ = "GradientBoostingRegressorFunction"
 
     def __init__(self, input_type="dictionary", sleep=0):
         super().__init__()
@@ -46,7 +50,7 @@ class GradientBoostingRegressorFunction(MachineLearningFunction):
         self.sleep = sleep
 
         self.search_space = {
-            "n_estimators": list(np.arange(5, 150)),
+            "n_estimators": list(np.arange(5, 150, 5)),
             "max_depth": list(np.arange(1, 15)),
             "cv": [2, 3, 4, 5],
             "dataset": [diabetes_data],
