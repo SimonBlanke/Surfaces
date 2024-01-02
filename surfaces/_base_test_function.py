@@ -22,7 +22,8 @@ class BaseTestFunction:
             dataframe = self.sql_data.load(self.__name__)
         except:
             print("Path 2 database: ", self.sql_data.path)
-        return dataframe
+        else:
+            return dataframe
 
     def __call__(self, *input):
         time.sleep(self.sleep)
