@@ -62,6 +62,9 @@ class MachineLearningFunction(BaseTestFunction):
                 pass
 
         search_data = self.load_search_data()
+        if search_data is None:
+            msg = "Search Data is empty"
+            raise TypeError(msg)
         para_names = list(self.search_space.keys())
 
         params_df = pd.DataFrame(parameter_d, index=[0])
