@@ -24,9 +24,11 @@ class GramacyAndLeeFunction(MathematicalFunction):
     def objective_function_dict(self, params):
         x = params["x0"]
 
-        loss = np.sin(10 * np.pi * x) / (2 * x) + (x - 1) ** 4
+        loss = (np.sin(10 * np.pi * x) / (2 * x)) + (x - 1) ** 4
 
         return self.return_metric(loss)
 
     def search_space(self, value_types="array"):
-        return super().search_space(min=0.5, max=2.5, step=0.1, value_types=value_types)
+        return super().search_space(
+            min=0.5, max=2.5, step=0.01, value_types=value_types
+        )
