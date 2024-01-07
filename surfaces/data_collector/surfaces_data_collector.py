@@ -1,6 +1,6 @@
-from .config import paths
-
 from search_data_collector import SqlDataCollector
+
+from .config import paths
 
 
 class SurfacesDataCollector(SqlDataCollector):
