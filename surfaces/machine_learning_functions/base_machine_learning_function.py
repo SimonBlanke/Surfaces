@@ -28,6 +28,8 @@ class MachineLearningFunction(BaseTestFunction):
         search_space_size = reduce((lambda x, y: x * y), dim_sizes_list)
 
         while search_data_length < search_space_size:
+            print("\n ------------ search_space_size", search_space_size)
+
             hyper = Hyperactive(verbosity=["progress_bar"])
             hyper.add_search(
                 self.objective_function,
@@ -46,7 +48,7 @@ class MachineLearningFunction(BaseTestFunction):
 
             search_data = search_data.drop_duplicates(subset=para_names)
             search_data_length = len(search_data)
-
+            print("\n ------------ search_data_length", search_data_length, "\n")
         self.sql_data.save(self.__name__, search_data, if_exists)
 
     def objective_function_dict(self, params):

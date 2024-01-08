@@ -52,9 +52,11 @@ class MathematicalFunction(BaseTestFunction):
         search_space_size = reduce((lambda x, y: x * y), dim_sizes_list)
 
         while search_data_length < search_space_size:
-            print("\n search_space_size", search_space_size)
-            opt = GridSearchOptimizer(self.search_space, direction="orthogonal")
-            opt.search(self.objective_function_dict, n_iter=search_space_size)
+            print("\n ------------ search_space_size", search_space_size)
+            opt = GridSearchOptimizer(
+                self.search_space, direction="orthogonal", initialize={}
+            )
+            opt.search(self.objective_function_dict, n_iter=int(search_space_size * 1))
 
             search_data = pd.concat(
                 [search_data, opt.search_data],
@@ -63,7 +65,8 @@ class MathematicalFunction(BaseTestFunction):
 
             search_data = search_data.drop_duplicates(subset=para_names)
             search_data_length = len(search_data)
-            print("\n search_data_length", search_data_length, "\n")
+            print("\n ------------ search_data_length", search_data_length, "\n")
+
         return search_data
 
     def collect_data(self, if_exists="append"):
