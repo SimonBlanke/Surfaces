@@ -1,9 +1,10 @@
 name: publish testing image
-on: push:
-  branches:
-    - 'main'
-  paths:
-    - 'requirements.txt'
+on: 
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'requirements.txt'
 
 jobs:
   build and publish testing image:
@@ -21,6 +22,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build the hello-docker Docker image
         run: |
-          docker build . --tag ghcr.io/simonblanke/hello-docker-gcr-demo:latest
-          docker run ghcr.io/simonblanke/hello-docker-gcr-demo:latest
-          docker push ghcr.io/simonblanke/hello-docker-gcr-demo:latest
+          docker build . --tag ghcr.io/simonblanke/testing-image:latest
+          docker run ghcr.io/simonblanke/testing-image:latest
+          docker push ghcr.io/simonblanke/testing-image:latest
