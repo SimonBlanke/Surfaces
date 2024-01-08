@@ -18,12 +18,7 @@ class BaseTestFunction:
         self.sql_data = SurfacesDataCollector()
 
     def load_search_data(self):
-        try:
-            dataframe = self.sql_data.load(self.__name__)
-        except:
-            print("Path 2 database: ", self.sql_data.path)
-        else:
-            return dataframe
+        return self.sql_data.load(self.__name__)
 
     def __call__(self, *input):
         time.sleep(self.sleep)
