@@ -1,0 +1,21 @@
+name: Pytest with Docker
+# workflow triggered by any push on any branch
+on: [push]
+jobs:
+  build:
+    name: Pytest
+    # runs on the latest Ubuntu
+    runs-on: ubuntu-latest 
+    
+    # runs within your Docker container
+    container:
+      image: ghcr.io/simonblanke/surfaces-testing-image:latest
+
+    # checkout your code from your repository
+    # and runs pytest in your pipenv environment
+    steps:
+    - uses: actions/checkout@v2
+    - name: Test with pytest
+      run: |
+          python -m pytest tests --cov=surfaces --cov-report=term-missing --cov-report=xml -p no:warnings
+      
