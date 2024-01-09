@@ -5,4 +5,4 @@ RUN echo "\n Run Dockerfile"
 COPY ./requirements.txt .
 
 # Install pipenv
-RUN python -m pip download -r requirements.txt
+RUN python -m pip install -r requirements.txt
