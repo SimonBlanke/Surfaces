@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - 'main'
+    paths:
+      - 'requirements.txt'
 
 jobs:
   build-publish:
