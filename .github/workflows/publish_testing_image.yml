@@ -18,8 +18,8 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build the hello-docker Docker image
+      - name: Build Docker image
         run: |
-          docker build . --tag ghcr.io/simonblanke/testing-image:latest
-          docker run ghcr.io/simonblanke/testing-image:latest
-          docker push ghcr.io/simonblanke/testing-image:latest
+          docker build . --tag ghcr.io/simonblanke/surfaces-testing-image:latest
+          docker run ghcr.io/simonblanke/surfaces-testing-image:latest
+          docker push ghcr.io/simonblanke/surfaces-testing-image:latest
