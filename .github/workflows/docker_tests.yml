@@ -11,6 +11,7 @@ jobs:
     container:
       image: ghcr.io/simonblanke/surfaces-testing-image:latest
 
+    steps:
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
