@@ -6,3 +6,4 @@ COPY ./requirements.txt .
 
 # Install pipenv
 RUN python -m pip install -r requirements.txt
+RUN python -m pip install flake8 pytest coveralls codecov pytest-cov
