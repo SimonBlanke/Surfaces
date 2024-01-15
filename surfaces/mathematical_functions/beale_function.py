@@ -38,3 +38,6 @@ class BealeFunction(MathematicalFunction):
         loss = loss1 + loss2 + loss3
 
         return self.return_metric(loss)
+
+    def search_space(self, min=-4.5, max=4.5, step=0.1, value_types="array"):
+        return super().search_space(min, max, step, value_types)

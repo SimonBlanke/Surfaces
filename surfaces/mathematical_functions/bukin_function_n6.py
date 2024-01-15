@@ -30,3 +30,6 @@ class BukinFunctionN6(MathematicalFunction):
         loss = 100 * np.sqrt(np.abs(y - 0.01 * x**2)) + 0.01 * np.abs(x + 10)
 
         return self.return_metric(loss)
+
+    def search_space(self, min=-8, max=8, step=0.1, value_types="array"):
+        return super().search_space(min, max, step, value_types)
