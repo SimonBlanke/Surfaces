@@ -31,5 +31,11 @@ class BukinFunctionN6(MathematicalFunction):
 
         return self.return_metric(loss)
 
-    def search_space(self, min=-8, max=8, step=0.1, value_types="array"):
-        return super().search_space(min, max, step, value_types)
+    def search_space(self, value_types="array"):
+        return super().search_space(
+            search_space_blank={
+                "x0": (-8, 8, 0.1),
+                "x1": (-8, 8, 0.1),
+            },
+            value_types=value_types,
+        )

@@ -39,5 +39,11 @@ class AckleyFunction(MathematicalFunction):
 
         return self.return_metric(loss)
 
-    def search_space(self, min=-5, max=5, step=0.1, value_types="array"):
-        return super().search_space(min, max, step, value_types)
+    def search_space(self, value_types="array"):
+        return super().search_space(
+            search_space_blank={
+                "x0": (-5, 5, 0.1),
+                "x1": (-5, 5, 0.1),
+            },
+            value_types=value_types,
+        )
