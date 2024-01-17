@@ -3,7 +3,6 @@
 # License: MIT License
 
 
-import time
 import numpy as np
 import pandas as pd
 from functools import reduce
@@ -27,7 +26,14 @@ class MathematicalFunction(BaseTestFunction):
         self.input_type = input_type
         self.sleep = sleep
 
-    def search_space(self, min=-5, max=5, step=0.1, value_types="array"):
+    @staticmethod
+    def conv_arrays2lists(search_space):
+        search_space_lists = {}
+        for para_name, dim_values in search_space.items():
+            search_space_lists[para_name] = list(dim_values)
+        return search_space_lists
+
+    def create_n_dim_search_space(self, min=-5, max=5, step=0.1, value_types="array"):
         search_space_ = {}
 
         for dim in range(self.n_dim):
@@ -39,6 +45,15 @@ class MathematicalFunction(BaseTestFunction):
             search_space_[dim_str] = values
 
         return search_space_
+
+    def search_space(search_space_blank, value_types):
+        search_space = {}
+        for para_names, blank_values in search_space_blank.item():
+            dim_values = np.arange(*blank_values)
+            if value_types == "list":
+                dim_values = list(dim_values)
+            search_space[para_names] = dim_values
+        return search_space
 
     def search_data(self):
         self.search_space = self.search_space(value_types="list")
