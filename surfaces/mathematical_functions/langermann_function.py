@@ -45,3 +45,21 @@ class LangermannFunction(MathematicalFunction):
 
         loss = loss_sum1 * np.exp(loss_sum2) * np.cos(loss_sum3)
         return self.return_metric(loss)
+
+    def search_space(self, value_types="array", steps=100):
+        min_x0 = -15
+        min_x1 = -15
+
+        max_x0 = 15
+        max_x1 = 15
+
+        step_size_x0 = int((max_x0 - min_x0) / steps)
+        step_size_x1 = int((max_x1 - min_x1) / steps)
+
+        return super().search_space(
+            search_space_blank={
+                "x0": (min_x0, max_x0, step_size_x0),
+                "x1": (min_x1, max_x1, step_size_x1),
+            },
+            value_types=value_types,
+        )

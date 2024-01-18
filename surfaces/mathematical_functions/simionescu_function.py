@@ -52,3 +52,21 @@ class SimionescuFunction(MathematicalFunction):
         loss[~mask] = np.nan
 
         return self.return_metric(loss)
+
+    def search_space(self, value_types="array", steps=100):
+        min_x0 = -1.25
+        min_x1 = -1.25
+
+        max_x0 = 1.25
+        max_x1 = 1.25
+
+        step_size_x0 = int((max_x0 - min_x0) / steps)
+        step_size_x1 = int((max_x1 - min_x1) / steps)
+
+        return super().search_space(
+            search_space_blank={
+                "x0": (min_x0, max_x0, step_size_x0),
+                "x1": (min_x1, max_x1, step_size_x1),
+            },
+            value_types=value_types,
+        )

@@ -32,3 +32,15 @@ class GramacyAndLeeFunction(MathematicalFunction):
         return super().search_space(
             min=0.5, max=2.5, step=0.01, value_types=value_types
         )
+
+    def search_space(self, value_types="array", steps=100):
+        min_x0 = 0.5
+        max_x0 = 2.5
+        step_size_x0 = int((max_x0 - min_x0) / steps)
+
+        return super().search_space(
+            search_space_blank={
+                "x0": (min_x0, max_x0, step_size_x0),
+            },
+            value_types=value_types,
+        )
