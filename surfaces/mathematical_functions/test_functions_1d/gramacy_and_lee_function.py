@@ -18,7 +18,7 @@ class GramacyAndLeeFunction(MathematicalFunction):
     global_minimum = r"""-"""
 
     def __init__(self, metric="score", input_type="dictionary", sleep=0):
-        super().__init__()
+        super().__init__(metric, input_type, sleep)
         self.n_dim = 1
 
     def objective_function_dict(self, params):
@@ -27,11 +27,6 @@ class GramacyAndLeeFunction(MathematicalFunction):
         loss = (np.sin(10 * np.pi * x) / (2 * x)) + (x - 1) ** 4
 
         return self.return_metric(loss)
-
-    def search_space(self, value_types="array"):
-        return super().search_space(
-            min=0.5, max=2.5, step=0.01, value_types=value_types
-        )
 
     def search_space(self, value_types="array", steps=100):
         min_x0 = 0.5
