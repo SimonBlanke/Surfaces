@@ -84,8 +84,10 @@ class MathematicalFunction(BaseTestFunction):
 
         return search_data
 
-    def collect_data(self, if_exists="append"):
-        self.sql_data.save(self.__name__, self.search_data(), if_exists)
+    def collect_data(self, table=None, if_exists="append"):
+        if table is None:
+            table = self.__name__
+        self.sql_data.save(table, self.search_data(), if_exists)
 
     def return_metric(self, loss):
         if self.metric == "score":
