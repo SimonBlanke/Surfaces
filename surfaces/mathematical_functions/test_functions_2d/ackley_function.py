@@ -13,6 +13,14 @@ class AckleyFunction(MathematicalFunction):
     _name_ = "ackley_function"
     __name__ = "AckleyFunction"
 
+    explanation = """
+    The Ackley function is a non-convex function used as a performance test problem for optimization algorithms.
+    """
+
+    reference = """
+    Ackley, D. H. (1987) "A connectionist machine for genetic hillclimbing", Kluwer Academic Publishers, Boston MA.
+    """
+
     dimensions = "2"
     formula = r"f(x, y) = -20 \exp\left[-0.2\sqrt{0.5(x^2+y^2)} \right] -\exp\left[ 0.5(\cos2\pi x + cos2\pi y) \right] + e + 20"
     global_minimum = r"f(\vec{x}=0) = 0"

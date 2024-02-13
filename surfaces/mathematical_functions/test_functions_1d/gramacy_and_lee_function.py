@@ -13,6 +13,14 @@ class GramacyAndLeeFunction(MathematicalFunction):
     _name_ = "gramacy_and_lee_function"
     __name__ = "GramacyAndLeeFunction"
 
+    explanation = """
+    This is a simple one-dimensional test function.
+    """
+
+    reference = """
+    Gramacy, R. B., & Lee, H. K. (2012). Cases for the nugget in modeling computer experiments. Statistics and Computing, 22(3), 713-722.
+    """
+
     dimensions = "1"
     formula = r"""f(x) = \frac{\sin(10\pi x)}{2x} + (x - 1)^4"""
     global_minimum = r"""-"""

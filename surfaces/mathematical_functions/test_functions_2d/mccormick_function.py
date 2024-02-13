@@ -13,6 +13,14 @@ class McCormickFunction(MathematicalFunction):
     _name_ = "mccormick_function"
     __name__ = "McCormickFunction"
 
+    explanation = """
+    
+    """
+
+    reference = """
+    
+    """
+
     dimensions = "2"
     formula = (
         r"""f(x,y) = \sin \left(x+y\right) + \left(x-y\right)^{2} - 1.5x + 2.5y + 1"""

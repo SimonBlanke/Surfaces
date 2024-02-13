@@ -11,6 +11,14 @@ class HimmelblausFunction(MathematicalFunction):
     _name_ = "himmelblaus_function"
     __name__ = "HimmelblausFunction"
 
+    explanation = """
+    
+    """
+
+    reference = """
+    
+    """
+
     dimensions = "2"
     formula = r"""f(x, y) = (x^2+y-11)^2 + (x+y^2-7)^2"""
     global_minimum = r"""

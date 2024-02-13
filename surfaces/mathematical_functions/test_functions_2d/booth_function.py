@@ -11,6 +11,15 @@ class BoothFunction(MathematicalFunction):
     _name_ = "booth_function"
     __name__ = "BoothFunction"
 
+    explanation = """
+    
+    """
+
+    reference = """
+    Global Optimization Test Problems. Retrieved June 2013, from
+http://www-optima.amp.i.kyoto-u.ac.jp/member/student/hedar/Hedar_files/TestGO
+    """
+
     dimensions = "2"
     formula = r"""f(x,y) = (x + 2y - 7)^2 + (2x + y - 5)^2"""
     global_minimum = r"""f(1,3)=0"""

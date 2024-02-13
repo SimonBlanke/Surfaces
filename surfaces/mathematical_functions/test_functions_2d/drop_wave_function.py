@@ -13,6 +13,14 @@ class DropWaveFunction(MathematicalFunction):
     _name_ = "drop_wave_function"
     __name__ = "DropWaveFunction"
 
+    explanation = """
+    
+    """
+
+    reference = """
+    
+    """
+
     dimensions = "2"
     formula = r"""f(x, y) = -\frac{1+\cos (12\sqrt{x^2+y^2})}{0.5 (x^2 + y^2) + 2}"""
     global_minimum = r"""f(0, 0)= -1"""

@@ -13,6 +13,14 @@ class SimionescuFunction(MathematicalFunction):
     _name_ = "simionescu_function"
     __name__ = "SimionescuFunction"
 
+    explanation = """
+    
+    """
+
+    reference = """
+    
+    """
+
     formula = r"""f(x,y) = 0.1xy 
             \newline
             x^2+y^2\le\left[r_{T}+r_{S}\cos\left(n \arctan \frac{x}{y} \right)\right]^2

@@ -11,6 +11,14 @@ class StyblinskiTangFunction(MathematicalFunction):
     _name_ = "styblinski_tang_function"
     __name__ = "StyblinskiTangFunction"
 
+    explanation = """
+    
+    """
+
+    reference = """
+    
+    """
+
     dimensions = "n"
     formula = (
         r"""f(\vec {x}) = \frac{\sum_{i=1}^{n} x_{i}^{4} - 16x_{i}^{2} + 5x_{i}}{2}"""

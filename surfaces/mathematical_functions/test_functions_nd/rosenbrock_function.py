@@ -11,6 +11,14 @@ class RosenbrockFunction(MathematicalFunction):
     _name_ = "rosenbrock_function"
     __name__ = "RosenbrockFunction"
 
+    explanation = """
+    
+    """
+
+    reference = """
+    
+    """
+
     dimensions = "2"
     formula = r"""f(\vec {x}) = \sum_{i=1}^{n-1} \left[ 100 \left(x_{i+1} - x_{i}^{2}\right)^{2} + \left(1 - x_{i}\right)^{2}\right]"""
     global_minimum = r"""f(1,1) = 0"""

@@ -12,6 +12,10 @@ class SphereFunction(MathematicalFunction):
 
     explanation = """The Sphere function has d local minima except for the global one. It is continuous, convex and unimodal. The plot shows its two-dimensional form."""
 
+    reference = """
+    
+    """
+
     dimensions = "n"
     formula = r"f(\vec{x}) = \sum^n_{i=1}x^2_i"
     global_minimum = r"f(\vec{x}=0) = 0"

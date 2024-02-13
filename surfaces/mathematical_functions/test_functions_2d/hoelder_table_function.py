@@ -13,6 +13,14 @@ class HölderTableFunction(MathematicalFunction):
     _name_ = "hölder_table_function"
     __name__ = "HölderTableFunction"
 
+    explanation = """
+    
+    """
+
+    reference = """
+    
+    """
+
     dimensions = "2"
     formula = r"""f(x,y) = - \left|\sin x \cos y \exp \left(\left|1 - \frac{\sqrt{x^{2} + y^{2}}}{\pi} \right|\right)\right|"""
     global_minimum = r"""      

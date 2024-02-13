@@ -13,6 +13,14 @@ class EasomFunction(MathematicalFunction):
     _name_ = "easom_function"
     __name__ = "EasomFunction"
 
+    explanation = """
+    
+    """
+
+    reference = """
+    
+    """
+
     dimensions = "2"
     formula = r"""f(x, y) = -\cos (x) \cos (y) \ exp\left[- \left((x-\pi)^2 + (y-\pi)^2 \right) \right]"""
     global_minimum = r"""f(\pi, \pi) = -1"""

@@ -13,6 +13,14 @@ class ThreeHumpCamelFunction(MathematicalFunction):
     _name_ = "three_hump_camel_function"
     __name__ = "ThreeHumpCamelFunction"
 
+    explanation = """
+    
+    """
+
+    reference = """
+    
+    """
+
     dimensions = "2"
     formula = r"""f(x,y) = -\cos \left(x\right)\cos \left(y\right) \exp\left[-\left(\left(x-\pi\right)^{2} + \left(y-\pi\right)^{2}\right)\right]"""
     global_minimum = r"""f(0,0)= 0"""
