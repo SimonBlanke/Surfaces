@@ -5,7 +5,7 @@
 
 import numpy as np
 
-from ._base_objective_function import MathematicalFunction
+from .._base_objective_function import MathematicalFunction
 
 
 class DropWaveFunction(MathematicalFunction):
@@ -33,9 +33,7 @@ class DropWaveFunction(MathematicalFunction):
         x = params["x0"]
         y = params["x1"]
 
-        loss = -(1 + np.cos(12 * np.sqrt(x**2 + y**2))) / (
-            0.5 * (x**2 + y**2) + 2
-        )
+        loss = -(1 + np.cos(12 * np.sqrt(x**2 + y**2))) / (0.5 * (x**2 + y**2) + 2)
         return self.return_metric(loss)
 
     def search_space(self, value_types="array", steps=100):
