@@ -26,7 +26,7 @@ def test_all_mathematical_functions(test_function):
     hyper = Hyperactive()
     hyper.add_search(
         test_function_,
-        test_function_.search_space(value_types="list"),
+        test_function_.create_n_dim_search_space(value_types="list"),
         n_iter=15,
     )
     hyper.run()
