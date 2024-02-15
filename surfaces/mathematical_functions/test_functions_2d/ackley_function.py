@@ -22,7 +22,7 @@ class AckleyFunction(MathematicalFunction):
     """
 
     dimensions = "2"
-    formula = r"f(x, y) = -20 \exp\left[-0.2\sqrt{0.5(x^2+y^2)} \right] -\exp\left[ 0.5(\cos2\pi x + cos2\pi y) \right] + e + 20"
+    formula = r"f(x, y) = -20 \exp\left[-0.2\sqrt{0.5(x^2+y^2)} \right] -\exp\left[ 0.5(\cos2\pi x + \cos2\pi y) \right] + e + 20"
     global_minimum = r"f(\vec{x}=0) = 0"
 
     def __init__(
@@ -54,8 +54,8 @@ class AckleyFunction(MathematicalFunction):
         max_x0 = 5
         max_x1 = 5
 
-        step_size_x0 = int((max_x0 - min_x0) / steps)
-        step_size_x1 = int((max_x1 - min_x1) / steps)
+        step_size_x0 = (max_x0 - min_x0) / steps
+        step_size_x1 = (max_x1 - min_x1) / steps
 
         return super().search_space(
             search_space_blank={
