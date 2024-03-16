@@ -34,8 +34,8 @@ goldstein_price_function = GoldsteinPriceFunction(input_type="arrays")
 styblinski_tang_function = StyblinskiTangFunction(2, input_type="arrays")
 
 
-objective_function_para_2D = (
-    "objective_function",
+test_function_para_2D = (
+    "test_function",
     [
         (sphere_function),
         (rastrigin_function),
@@ -57,6 +57,6 @@ a = np.array([1, 2, 3, 4, 5])
 b = np.array([1, 2, 3, 4, 5])
 
 
-@pytest.mark.parametrize(*objective_function_para_2D)
-def test_array_input(objective_function):
-    objective_function(a, b)
+@pytest.mark.parametrize(*test_function_para_2D)
+def test_array_input(test_function):
+    test_function.objective_function(a, b)

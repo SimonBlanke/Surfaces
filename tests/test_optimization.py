@@ -36,7 +36,7 @@ bukin_function_n6 = BukinFunctionN6()
 
 
 objective_function_para_2D = (
-    "objective_function",
+    "test_function",
     [
         (sphere_function),
         (rastrigin_function),
@@ -57,14 +57,14 @@ objective_function_para_2D = (
 
 
 @pytest.mark.parametrize(*objective_function_para_2D)
-def test_optimization_2D(objective_function):
+def test_optimization_2D(test_function):
     search_space = {
         "x0": np.arange(0, 100, 1),
         "x1": np.arange(0, 100, 1),
     }
 
     opt = RandomSearchOptimizer(search_space)
-    opt.search(objective_function, n_iter=30)
+    opt.search(test_function.objective_function, n_iter=30)
 
 
 ############################################################
@@ -75,7 +75,7 @@ rosenbrock_function = RosenbrockFunction(3)
 
 
 objective_function_para_3D = (
-    "objective_function",
+    "test_function",
     [
         (sphere_function),
         (rastrigin_function),
@@ -85,7 +85,7 @@ objective_function_para_3D = (
 
 
 @pytest.mark.parametrize(*objective_function_para_3D)
-def test_optimization_3D(objective_function):
+def test_optimization_3D(test_function):
     search_space = {
         "x0": np.arange(0, 100, 1),
         "x1": np.arange(0, 100, 1),
@@ -93,7 +93,7 @@ def test_optimization_3D(objective_function):
     }
 
     opt = RandomSearchOptimizer(search_space)
-    opt.search(objective_function, n_iter=30)
+    opt.search(test_function.objective_function, n_iter=30)
 
 
 ############################################################
@@ -104,7 +104,7 @@ rosenbrock_function = RosenbrockFunction(4)
 
 
 objective_function_para_4D = (
-    "objective_function",
+    "test_function",
     [
         (sphere_function),
         (rastrigin_function),
@@ -114,7 +114,7 @@ objective_function_para_4D = (
 
 
 @pytest.mark.parametrize(*objective_function_para_4D)
-def test_optimization_4D(objective_function):
+def test_optimization_4D(test_function):
     search_space = {
         "x0": np.arange(0, 100, 1),
         "x1": np.arange(0, 100, 1),
@@ -123,4 +123,4 @@ def test_optimization_4D(objective_function):
     }
 
     opt = RandomSearchOptimizer(search_space)
-    opt.search(objective_function, n_iter=30)
+    opt.search(test_function.objective_function, n_iter=30)
