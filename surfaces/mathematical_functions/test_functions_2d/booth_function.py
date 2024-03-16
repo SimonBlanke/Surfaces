@@ -28,16 +28,18 @@ http://www-optima.amp.i.kyoto-u.ac.jp/member/student/hedar/Hedar_files/TestGO
         super().__init__(metric, input_type, sleep)
         self.n_dim = 2
 
-    def objective_function_dict(self, params):
-        x = params["x0"]
-        y = params["x1"]
+    def create_objective_function(self):
 
-        loss1 = (x + 2 * y - 7) ** 2
-        loss2 = (2 * x + y - 5) ** 2
+        def booth_function(params):
+            x = params["x0"]
+            y = params["x1"]
 
-        loss = loss1 * loss2
+            loss1 = (x + 2 * y - 7) ** 2
+            loss2 = (2 * x + y - 5) ** 2
 
-        return self.return_metric(loss)
+            return loss1 * loss2
+
+        self.pure_objective_function = booth_function
 
     def search_space(self, value_types="array", steps=100):
         min_x0 = -10

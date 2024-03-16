@@ -90,17 +90,3 @@ class MathematicalFunction(BaseTestFunction):
         if table is None:
             table = self.__name__
         self.sql_data.save(table, self.search_data(), if_exists)
-
-    def return_metric(self, loss):
-        if self.metric == "score":
-            return -loss
-        elif self.metric == "loss":
-            return loss
-
-    def objective_function_np(self, *args):
-        para = {}
-        for i, arg in enumerate(args):
-            dim_str = "x" + str(i)
-            para[dim_str] = arg
-
-        return self.objective_function_dict(para)

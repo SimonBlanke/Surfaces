@@ -29,13 +29,14 @@ class ThreeHumpCamelFunction(MathematicalFunction):
         super().__init__(metric, input_type, sleep)
         self.n_dim = 2
 
-    def objective_function_dict(self, params):
-        x = params["x0"]
-        y = params["x1"]
+    def create_objective_function(self):
+        def three_hump_camel_function(params):
+            x = params["x0"]
+            y = params["x1"]
 
-        loss = 2 * x**2 - 1.05 * x**4 + x**6 / 6 + x * y + y**2
+            return 2 * x**2 - 1.05 * x**4 + x**6 / 6 + x * y + y**2
 
-        return self.return_metric(loss)
+        self.pure_objective_function = three_hump_camel_function
 
     def search_space(self, value_types="array", steps=100):
         min_x0 = -5

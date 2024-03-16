@@ -46,20 +46,23 @@ class SimionescuFunction(MathematicalFunction):
         self.r_S = r_S
         self.n = n
 
-    def objective_function_dict(self, params):
-        x = params["x0"].reshape(-1)
-        y = params["x1"].reshape(-1)
+    def create_objective_function(self):
+        def simionescu_function(params):
+            x = params["x0"].reshape(-1)
+            y = params["x1"].reshape(-1)
 
-        condition = (self.r_T + self.r_S * np.cos(self.n * np.arctan(x / y))) ** 2
+            condition = (self.r_T + self.r_S * np.cos(self.n * np.arctan(x / y))) ** 2
 
-        mask = x**2 + y**2 <= condition
-        mask_int = mask.astype(int)
+            mask = x**2 + y**2 <= condition
+            mask_int = mask.astype(int)
 
-        loss = self.A * x * y
-        loss = mask_int * loss
-        loss[~mask] = np.nan
+            loss = self.A * x * y
+            loss = mask_int * loss
+            loss[~mask] = np.nan
 
-        return self.return_metric(loss)
+            return loss
+
+        self.pure_objective_function = simionescu_function
 
     def search_space(self, value_types="array", steps=100):
         min_x0 = -1.25

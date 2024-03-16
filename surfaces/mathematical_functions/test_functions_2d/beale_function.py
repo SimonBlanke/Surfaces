@@ -36,17 +36,18 @@ http://www-optima.amp.i.kyoto-u.ac.jp/member/student/hedar/Hedar_files/TestGO
         self.B = B
         self.C = C
 
-    def objective_function_dict(self, params):
-        x = params["x0"]
-        y = params["x1"]
+    def create_objective_function(self):
+        def beale_function(params):
+            x = params["x0"]
+            y = params["x1"]
 
-        loss1 = (self.A - x + x * y) ** 2
-        loss2 = (self.B - x + x * y**2) ** 2
-        loss3 = (self.C - x + x * y**3) ** 2
+            loss1 = (self.A - x + x * y) ** 2
+            loss2 = (self.B - x + x * y**2) ** 2
+            loss3 = (self.C - x + x * y**3) ** 2
 
-        loss = loss1 + loss2 + loss3
+            return loss1 + loss2 + loss3
 
-        return self.return_metric(loss)
+        self.pure_objective_function = beale_function
 
     def search_space(self, value_types="array", steps=100):
         min_x0 = -4.5

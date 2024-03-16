@@ -28,14 +28,17 @@ class KNeighborsRegressorFunction(MachineLearningFunction):
             "dataset": [diabetes_data],
         }
 
-    def objective_function(self, params):
-        knc = KNeighborsRegressor(
-            n_neighbors=params["n_neighbors"],
-            algorithm=params["algorithm"],
-        )
-        X, y = params["dataset"]()
-        scores = cross_val_score(knc, X, y, cv=params["cv"])
-        return scores.mean()
+    def create_objective_function(self):
+        def k_neighbors_regressor(params):
+            knc = KNeighborsRegressor(
+                n_neighbors=params["n_neighbors"],
+                algorithm=params["algorithm"],
+            )
+            X, y = params["dataset"]()
+            scores = cross_val_score(knc, X, y, cv=params["cv"])
+            return scores.mean()
+
+        self.pure_objective_function = k_neighbors_regressor
 
 
 class GradientBoostingRegressorFunction(MachineLearningFunction):
@@ -56,11 +59,14 @@ class GradientBoostingRegressorFunction(MachineLearningFunction):
             "dataset": [diabetes_data],
         }
 
-    def objective_function(self, params):
-        knc = GradientBoostingRegressor(
-            n_estimators=params["n_estimators"],
-            max_depth=params["max_depth"],
-        )
-        X, y = params["dataset"]()
-        scores = cross_val_score(knc, X, y, cv=params["cv"])
-        return scores.mean()
+    def create_objective_function(self):
+        def gradient_boosting_regressor(params):
+            knc = GradientBoostingRegressor(
+                n_estimators=params["n_estimators"],
+                max_depth=params["max_depth"],
+            )
+            X, y = params["dataset"]()
+            scores = cross_val_score(knc, X, y, cv=params["cv"])
+            return scores.mean()
+
+        self.pure_objective_function = gradient_boosting_regressor

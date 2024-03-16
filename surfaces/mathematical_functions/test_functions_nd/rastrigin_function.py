@@ -42,17 +42,18 @@ class RastriginFunction(MathematicalFunction):
         self.A = A
         self.angle = angle
 
-    def objective_function_dict(self, params):
-        loss = 0
-        for dim in range(self.n_dim):
-            dim_str = "x" + str(dim)
-            x = params[dim_str]
+    def create_objective_function(self):
+        def rastrigin_function(params):
+            loss = 0
+            for dim in range(self.n_dim):
+                dim_str = "x" + str(dim)
+                x = params[dim_str]
 
-            loss += x * x - self.A * np.cos(self.angle * x)
+                loss += x * x - self.A * np.cos(self.angle * x)
 
-        loss = self.A * self.n_dim + loss
+            return self.A * self.n_dim + loss
 
-        return self.return_metric(loss)
+        self.pure_objective_function = rastrigin_function
 
     def search_space(self, min=-5, max=5, step=0.1, value_types="array"):
         return super().create_n_dim_search_space(min, max, step, value_types)

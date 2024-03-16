@@ -29,13 +29,14 @@ class SchafferFunctionN2(MathematicalFunction):
         super().__init__(metric, input_type, sleep)
         self.n_dim = 2
 
-    def objective_function_dict(self, params):
-        x = params["x0"]
-        y = params["x1"]
+    def create_objective_function(self):
+        def schaffer_function_n2(params):
+            x = params["x0"]
+            y = params["x1"]
 
-        loss = 100 * np.sqrt(np.abs(y - 0.01 * x**2)) + 0.01 * np.abs(x + 10)
+            return 100 * np.sqrt(np.abs(y - 0.01 * x**2)) + 0.01 * np.abs(x + 10)
 
-        return self.return_metric(loss)
+        self.pure_objective_function = schaffer_function_n2
 
     def search_space(self, value_types="array", steps=100):
         min_x0 = -50

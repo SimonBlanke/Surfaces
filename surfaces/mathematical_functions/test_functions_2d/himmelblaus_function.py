@@ -35,16 +35,17 @@ class HimmelblausFunction(MathematicalFunction):
         self.A = A
         self.B = B
 
-    def objective_function_dict(self, params):
-        x = params["x0"]
-        y = params["x1"]
+    def create_objective_function(self):
+        def himmelblaus_function(params):
+            x = params["x0"]
+            y = params["x1"]
 
-        loss1 = (x**2 + y + self.A) ** 2
-        loss2 = (x + y**2 + self.B) ** 2
+            loss1 = (x**2 + y + self.A) ** 2
+            loss2 = (x + y**2 + self.B) ** 2
 
-        loss = loss1 + loss2
+            return loss1 + loss2
 
-        return self.return_metric(loss)
+        self.pure_objective_function = himmelblaus_function
 
     def search_space(self, value_types="array", steps=100):
         min_x0 = -5

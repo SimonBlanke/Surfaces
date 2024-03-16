@@ -27,13 +27,14 @@ class MatyasFunction(MathematicalFunction):
         super().__init__(metric, input_type, sleep)
         self.n_dim = 2
 
-    def objective_function_dict(self, params):
-        x = params["x0"]
-        y = params["x1"]
+    def create_objective_function(self):
+        def matyas_function(params):
+            x = params["x0"]
+            y = params["x1"]
 
-        loss = 0.26 * (x**2 + y**2) - 0.48 * x * y
+            return 0.26 * (x**2 + y**2) - 0.48 * x * y
 
-        return self.return_metric(loss)
+        self.pure_objective_function = matyas_function
 
     def search_space(self, value_types="array", steps=100):
         min_x0 = -10

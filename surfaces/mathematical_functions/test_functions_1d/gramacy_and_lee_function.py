@@ -29,12 +29,13 @@ class GramacyAndLeeFunction(MathematicalFunction):
         super().__init__(metric, input_type, sleep)
         self.n_dim = 1
 
-    def objective_function_dict(self, params):
-        x = params["x0"]
+    def create_objective_function(self):
+        def gramacy_and_lee_function(params):
+            x = params["x0"]
 
-        loss = (np.sin(10 * np.pi * x) / (2 * x)) + (x - 1) ** 4
+            return (np.sin(10 * np.pi * x) / (2 * x)) + (x - 1) ** 4
 
-        return self.return_metric(loss)
+        self.pure_objective_function = gramacy_and_lee_function
 
     def search_space(self, value_types="array", steps=100):
         min_x0 = 0.5

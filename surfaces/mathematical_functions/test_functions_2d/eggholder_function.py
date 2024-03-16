@@ -29,15 +29,16 @@ class EggholderFunction(MathematicalFunction):
         super().__init__(metric, input_type, sleep)
         self.n_dim = 2
 
-    def objective_function_dict(self, params):
-        x = params["x0"]
-        y = params["x1"]
+    def create_objective_function(self):
+        def eggholder_function(params):
+            x = params["x0"]
+            y = params["x1"]
 
-        loss = (y + 47) * np.sin(np.sqrt(np.abs(x / 2 + (y + 47)))) - x * np.sin(
-            np.sqrt(np.abs(x - (y + 47)))
-        )
+            return (y + 47) * np.sin(np.sqrt(np.abs(x / 2 + (y + 47)))) - x * np.sin(
+                np.sqrt(np.abs(x - (y + 47)))
+            )
 
-        return self.return_metric(loss)
+        self.pure_objective_function = eggholder_function
 
     def search_space(self, value_types="array", steps=100):
         min_x0 = -1000

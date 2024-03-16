@@ -29,17 +29,18 @@ class LeviFunctionN13(MathematicalFunction):
         super().__init__(metric, input_type, sleep)
         self.n_dim = 2
 
-    def objective_function_dict(self, params):
-        x = params["x0"]
-        y = params["x1"]
+    def create_objective_function(self):
+        def levi_function_n13(params):
+            x = params["x0"]
+            y = params["x1"]
 
-        loss = (
-            np.sin(3 * np.pi * x) ** 2
-            + (x + 1) ** 2 * (1 + np.sin(3 * np.pi * y) ** 2)
-            + (y - 1) ** 2 * (1 + np.sin(3 * np.pi * y) ** 2)
-        )
+            return (
+                np.sin(3 * np.pi * x) ** 2
+                + (x + 1) ** 2 * (1 + np.sin(3 * np.pi * y) ** 2)
+                + (y - 1) ** 2 * (1 + np.sin(3 * np.pi * y) ** 2)
+            )
 
-        return self.return_metric(loss)
+        self.pure_objective_function = levi_function_n13
 
     def search_space(self, value_types="array", steps=100):
         min_x0 = -10

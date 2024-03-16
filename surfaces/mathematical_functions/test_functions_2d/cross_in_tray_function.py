@@ -46,16 +46,17 @@ class CrossInTrayFunction(MathematicalFunction):
         self.B = B
         self.angle = angle
 
-    def objective_function_dict(self, params):
-        x = params["x0"]
-        y = params["x1"]
+    def create_objective_function(self):
+        def cross_in_tray_function(params):
+            x = params["x0"]
+            y = params["x1"]
 
-        loss1 = np.sin(self.angle * x) * np.sin(self.angle * y)
-        loss2 = np.exp(abs(self.B - (np.sqrt(x**2 + y**2) / np.pi)) + 1)
+            loss1 = np.sin(self.angle * x) * np.sin(self.angle * y)
+            loss2 = np.exp(abs(self.B - (np.sqrt(x**2 + y**2) / np.pi)) + 1)
 
-        loss = -self.A * (np.abs(loss1 * loss2)) ** 0.1
+            return -self.A * (np.abs(loss1 * loss2)) ** 0.1
 
-        return self.return_metric(loss)
+        self.pure_objective_function = cross_in_tray_function
 
     def search_space(self, value_types="array", steps=100):
         min_x0 = -10

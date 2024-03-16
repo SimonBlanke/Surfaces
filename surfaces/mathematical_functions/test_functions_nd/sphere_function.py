@@ -25,15 +25,18 @@ class SphereFunction(MathematicalFunction):
         self.n_dim = n_dim
         self.A = A
 
-    def objective_function_dict(self, params):
-        loss = 0
-        for dim in range(self.n_dim):
-            dim_str = "x" + str(dim)
-            x = params[dim_str]
+    def create_objective_function(self):
+        def sphere_function(params):
+            loss = 0
+            for dim in range(self.n_dim):
+                dim_str = "x" + str(dim)
+                x = params[dim_str]
 
-            loss += self.A * x * x
+                loss += self.A * x * x
 
-        return self.return_metric(loss)
+            return loss
+
+        self.pure_objective_function = sphere_function
 
     def search_space(self, min=-5, max=5, step=0.1, value_types="array"):
         return super().create_n_dim_search_space(min, max, step, value_types)

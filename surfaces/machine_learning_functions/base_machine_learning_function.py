@@ -51,6 +51,9 @@ class MachineLearningFunction(BaseTestFunction):
             print("\n ------------ search_data_length", search_data_length, "\n")
         self.sql_data.save(self.__name__, search_data, if_exists)
 
+    def objective_function(self, *input):
+        return self.objective_function_dict(*input)
+
     def objective_function_dict(self, params):
         try:
             parameter_d = params.para_dict

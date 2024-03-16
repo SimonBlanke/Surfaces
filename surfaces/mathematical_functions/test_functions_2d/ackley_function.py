@@ -2,7 +2,6 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-
 import numpy as np
 
 from .._base_objective_function import MathematicalFunction
@@ -29,23 +28,25 @@ class AckleyFunction(MathematicalFunction):
         self, A=20, angle=2 * np.pi, metric="score", input_type="dictionary", sleep=0
     ):
         super().__init__(metric, input_type, sleep)
+
         self.n_dim = 2
 
         self.A = A
         self.angle = angle
 
-    def objective_function_dict(self, params):
-        x = params["x0"]
-        y = params["x1"]
+    def create_objective_function(self):
+        def ackley_function(params):
+            x = params["x0"]
+            y = params["x1"]
 
-        loss1 = -self.A * np.exp(-0.2 * np.sqrt(0.5 * (x * x + y * y)))
-        loss2 = -np.exp(0.5 * (np.cos(self.angle * x) + np.cos(self.angle * y)))
-        loss3 = np.exp(1)
-        loss4 = self.A
+            loss1 = -self.A * np.exp(-0.2 * np.sqrt(0.5 * (x * x + y * y)))
+            loss2 = -np.exp(0.5 * (np.cos(self.angle * x) + np.cos(self.angle * y)))
+            loss3 = np.exp(1)
+            loss4 = self.A
 
-        loss = loss1 + loss2 + loss3 + loss4
+            return loss1 + loss2 + loss3 + loss4
 
-        return self.return_metric(loss)
+        self.pure_objective_function = ackley_function
 
     def search_space(self, value_types="array", steps=100):
         min_x0 = -5

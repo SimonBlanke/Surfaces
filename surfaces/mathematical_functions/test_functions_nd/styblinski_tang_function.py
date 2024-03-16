@@ -29,17 +29,18 @@ class StyblinskiTangFunction(MathematicalFunction):
         super().__init__(metric, input_type, sleep)
         self.n_dim = n_dim
 
-    def objective_function_dict(self, params):
-        loss = 0
-        for dim in range(self.n_dim):
-            dim_str = "x" + str(dim)
-            x = params[dim_str]
+    def create_objective_function(self):
+        def styblinski_tang_function(params):
+            loss = 0
+            for dim in range(self.n_dim):
+                dim_str = "x" + str(dim)
+                x = params[dim_str]
 
-            loss += x**4 - 16 * x**2 + 5 * x
+                loss += x**4 - 16 * x**2 + 5 * x
 
-        loss = loss / 2
+            return loss / 2
 
-        return self.return_metric(loss)
+        self.pure_objective_function = styblinski_tang_function
 
     def search_space(self, min=-5, max=5, step=0.1, value_types="array"):
         return super().create_n_dim_search_space(min, max, step, value_types)

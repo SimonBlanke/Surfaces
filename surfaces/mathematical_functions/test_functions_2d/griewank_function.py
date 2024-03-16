@@ -29,18 +29,20 @@ class GriewankFunction(MathematicalFunction):
         super().__init__()
         self.n_dim = n_dim
 
-    def objective_function_dict(self, params):
-        loss_sum = 0
-        loss_product = 1
-        for dim in range(self.n_dim):
-            dim_str = "x" + str(dim)
-            x = params[dim_str]
+    def create_objective_function(self):
+        def griewank_function(params):
+            loss_sum = 0
+            loss_product = 1
+            for dim in range(self.n_dim):
+                dim_str = "x" + str(dim)
+                x = params[dim_str]
 
-            loss_sum += x**2 / 4000
-            loss_product *= np.cos(x / np.sqrt(dim + 1))
+                loss_sum += x**2 / 4000
+                loss_product *= np.cos(x / np.sqrt(dim + 1))
 
-        loss = loss_sum - loss_product + 1
-        return self.return_metric(loss)
+            return loss_sum - loss_product + 1
+
+        self.pure_objective_function = griewank_function
 
     def search_space(self, value_types="array", steps=100):
         min_x0 = -100

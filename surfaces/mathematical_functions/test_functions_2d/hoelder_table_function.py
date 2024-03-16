@@ -37,16 +37,17 @@ class HölderTableFunction(MathematicalFunction):
         self.A = A
         self.angle = angle
 
-    def objective_function_dict(self, params):
-        x = params["x0"]
-        y = params["x1"]
+    def create_objective_function(self):
+        def hölder_table_function(params):
+            x = params["x0"]
+            y = params["x1"]
 
-        loss1 = np.sin(self.angle * x) * np.cos(self.angle * y)
-        loss2 = np.exp(abs(1 - (np.sqrt(x**2 + y**2) / np.pi)))
+            loss1 = np.sin(self.angle * x) * np.cos(self.angle * y)
+            loss2 = np.exp(abs(1 - (np.sqrt(x**2 + y**2) / np.pi)))
 
-        loss = -np.abs(loss1 * loss2)
+            return -np.abs(loss1 * loss2)
 
-        return self.return_metric(loss)
+        self.pure_objective_function = hölder_table_function
 
     def search_space(self, value_types="array", steps=100):
         min_x0 = -10

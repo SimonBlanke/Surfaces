@@ -27,11 +27,14 @@ class KNeighborsClassifierFunction(MachineLearningFunction):
             "dataset": [digits_data, wine_data, iris_data],
         }
 
-    def objective_function(self, params):
-        knc = KNeighborsClassifier(
-            n_neighbors=params["n_neighbors"],
-            algorithm=params["algorithm"],
-        )
-        X, y = params["dataset"]()
-        scores = cross_val_score(knc, X, y, cv=params["cv"])
-        return scores.mean()
+    def create_objective_function(self):
+        def k_neighbors_classifier(params):
+            knc = KNeighborsClassifier(
+                n_neighbors=params["n_neighbors"],
+                algorithm=params["algorithm"],
+            )
+            X, y = params["dataset"]()
+            scores = cross_val_score(knc, X, y, cv=params["cv"])
+            return scores.mean()
+
+        self.pure_objective_function = k_neighbors_classifier

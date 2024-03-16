@@ -27,20 +27,21 @@ class GoldsteinPriceFunction(MathematicalFunction):
         super().__init__(metric, input_type, sleep)
         self.n_dim = 2
 
-    def objective_function_dict(self, params):
-        x = params["x0"]
-        y = params["x1"]
+    def create_objective_function(self):
+        def goldstein_price_function(params):
+            x = params["x0"]
+            y = params["x1"]
 
-        loss1 = 1 + (x + y + 1) ** 2 * (
-            19 - 14 * x + 3 * x**2 - 14 * y + 6 * x * y + 3 * y**2
-        )
-        loss2 = 30 + (2 * x - 3 * y) ** 2 * (
-            18 - 32 * x + 12 * x**2 + 48 * y - 36 * x * y + 27 * y**2
-        )
+            loss1 = 1 + (x + y + 1) ** 2 * (
+                19 - 14 * x + 3 * x**2 - 14 * y + 6 * x * y + 3 * y**2
+            )
+            loss2 = 30 + (2 * x - 3 * y) ** 2 * (
+                18 - 32 * x + 12 * x**2 + 48 * y - 36 * x * y + 27 * y**2
+            )
 
-        loss = loss1 * loss2
+            return loss1 * loss2
 
-        return self.return_metric(loss)
+        self.pure_objective_function = goldstein_price_function
 
     def search_space(self, value_types="array", steps=100):
         min_x0 = -2

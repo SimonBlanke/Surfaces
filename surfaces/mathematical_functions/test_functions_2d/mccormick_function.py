@@ -31,13 +31,14 @@ class McCormickFunction(MathematicalFunction):
         super().__init__(metric, input_type, sleep)
         self.n_dim = 2
 
-    def objective_function_dict(self, params):
-        x = params["x0"]
-        y = params["x1"]
+    def create_objective_function(self):
+        def mccormick_function(params):
+            x = params["x0"]
+            y = params["x1"]
 
-        loss = np.sin(x + y) + (x - y) ** 2 - 1.5 * x + 2.5 * y + 1
+            return np.sin(x + y) + (x - y) ** 2 - 1.5 * x + 2.5 * y + 1
 
-        return self.return_metric(loss)
+        self.pure_objective_function = mccormick_function
 
     def search_space(self, value_types="array", steps=100):
         min_x0 = -5

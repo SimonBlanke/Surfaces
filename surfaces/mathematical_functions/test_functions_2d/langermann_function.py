@@ -33,26 +33,28 @@ class LangermannFunction(MathematicalFunction):
         super().__init__()
         self.n_dim = 2
 
-    def objective_function_dict(self, params):
-        loss_sum1 = 0
+    def create_objective_function(self):
+        def langermann_function(params):
+            loss_sum1 = 0
 
-        for m in range(self.m):
-            loss_sum1 += self.c[m]
+            for m in range(self.m):
+                loss_sum1 += self.c[m]
 
-            loss_sum2 = 0
-            loss_sum3 = 0
-            for dim in range(self.n_dim):
-                dim_str = "x" + str(dim)
-                x = params[dim_str]
+                loss_sum2 = 0
+                loss_sum3 = 0
+                for dim in range(self.n_dim):
+                    dim_str = "x" + str(dim)
+                    x = params[dim_str]
 
-                loss_sum2 += x - self.A[dim, m]
-                loss_sum3 += x - self.A[dim, m]
+                    loss_sum2 += x - self.A[dim, m]
+                    loss_sum3 += x - self.A[dim, m]
 
-            loss_sum2 *= -1 / np.pi
-            loss_sum3 *= np.pi
+                loss_sum2 *= -1 / np.pi
+                loss_sum3 *= np.pi
 
-        loss = loss_sum1 * np.exp(loss_sum2) * np.cos(loss_sum3)
-        return self.return_metric(loss)
+            return loss_sum1 * np.exp(loss_sum2) * np.cos(loss_sum3)
+
+        self.pure_objective_function = langermann_function
 
     def search_space(self, value_types="array", steps=100):
         min_x0 = -15

@@ -29,12 +29,14 @@ class DropWaveFunction(MathematicalFunction):
         super().__init__(metric, input_type, sleep)
         self.n_dim = 2
 
-    def objective_function_dict(self, params):
-        x = params["x0"]
-        y = params["x1"]
+    def create_objective_function(self):
+        def drop_wave_function(params):
+            x = params["x0"]
+            y = params["x1"]
 
-        loss = -(1 + np.cos(12 * np.sqrt(x**2 + y**2))) / (0.5 * (x**2 + y**2) + 2)
-        return self.return_metric(loss)
+            return -(1 + np.cos(12 * np.sqrt(x**2 + y**2))) / (0.5 * (x**2 + y**2) + 2)
+
+        self.pure_objective_function = drop_wave_function
 
     def search_space(self, value_types="array", steps=100):
         min_x0 = -5
