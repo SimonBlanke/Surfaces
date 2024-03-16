@@ -47,7 +47,7 @@ class MathematicalFunction(BaseTestFunction):
         return search_space_
 
     @staticmethod
-    def search_space(search_space_blank, value_types):
+    def search_space_from_blank(search_space_blank, value_types):
         search_space = {}
         for para_names, blank_values in search_space_blank.items():
             print("\n blank_values \n", blank_values, "\n")

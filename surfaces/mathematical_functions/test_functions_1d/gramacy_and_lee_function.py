@@ -41,7 +41,7 @@ class GramacyAndLeeFunction(MathematicalFunction):
         max_x0 = 2.5
         step_size_x0 = (max_x0 - min_x0) / steps
 
-        return super().search_space(
+        return super().search_space_from_blank(
             search_space_blank={
                 "x0": (min_x0, max_x0, step_size_x0),
             },
