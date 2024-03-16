@@ -37,3 +37,6 @@ class RosenbrockFunction(MathematicalFunction):
         loss = (self.A - x) ** 2 + self.B * (y - x**2) ** 2
 
         return self.return_metric(loss)
+
+    def search_space(self, min=-5, max=5, step=0.1, value_types="array"):
+        return super().create_n_dim_search_space(min, max, step, value_types)
