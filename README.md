@@ -94,7 +94,7 @@ search_space = {
     "x1": np.arange(-min_, max_, step_),
 }
 
-plotly_surface(sphere_function, search_space).show()
-plotly_surface(ackley_function, search_space).show()
+plotly_surface(sphere_function.objective_function, search_space).show()
+plotly_surface(ackley_function.objective_function, search_space).show()
 ```
 
