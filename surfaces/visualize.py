@@ -26,10 +26,6 @@ def _create_grid(objective_function, search_space):
     xi, yi = np.meshgrid(x_all, y_all)
     zi = objective_function_np(xi, yi)
 
-    print("\n xi \n", xi, xi.shape, "\n")
-    print("\n yi \n", yi, yi.shape, "\n")
-    print("\n zi \n", zi, zi.shape, "\n")
-
     return xi, yi, zi
 
 
