@@ -4,7 +4,10 @@ dist:
 	ls -l dist
 
 install:
-	pip install .
+	python -m pip install -r requirements.txt
+
+install-test:
+	python -m pip install -r requirements-test.txt
 
 dev-install:
 	pip install -e .
