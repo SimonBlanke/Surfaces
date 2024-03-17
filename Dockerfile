@@ -2,7 +2,7 @@
 FROM python:3.10-slim
 RUN echo "\n Run Dockerfile"
 
-COPY requirements Makefile ./
+COPY requirements/requirements.in requirements/requirements-test.in Makefile ./
 
 # Install pipenv
 RUN make requirement &&\

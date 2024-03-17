@@ -1,5 +1,6 @@
 name: publish testing image
 on: 
+  workflow_dispatch:
   push:
     branches:
       - 'main'
