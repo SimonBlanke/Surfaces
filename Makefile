@@ -15,8 +15,13 @@ reinstall:
 	python setup.py bdist_wheel
 	pip install dist/*
 
-test:
-	python -m pytest -x -p no:warnings -rfEX tests/ \
+tox-test:
+	tox -- -x -p no:warnings -rfEX tests/ \
+
+test-pytest:
+	python -m pytest -x -p no:warnings tests/; \
+
+test:  test-pytest tox-test
 
 database:
 	python -m collect_search_data.py
