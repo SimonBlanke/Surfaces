@@ -2,8 +2,12 @@
 FROM python:3.10-slim
 RUN echo "\n Run Dockerfile"
 
-COPY requirements/requirements.in requirements/requirements-test.in Makefile ./
+COPY requirements/ Makefile ./
 
 # Install pipenv
-RUN make requirement &&\
-    python -m pip install -r requirements.txt -r requirements-test.txt
+RUN apt-get -y update &&\
+    apt-get -y install build-essential &&\
+    python -m pip install pip-tools &&\
+    make requirement &&\
+    make install &&\
+    make install-test
