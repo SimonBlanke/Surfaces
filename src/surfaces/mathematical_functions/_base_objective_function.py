@@ -50,7 +50,6 @@ class MathematicalFunction(BaseTestFunction):
     def search_space_from_blank(search_space_blank, value_types):
         search_space = {}
         for para_names, blank_values in search_space_blank.items():
-            print("\n blank_values \n", blank_values, "\n")
             dim_values = np.arange(*blank_values)
             if value_types == "list":
                 dim_values = list(dim_values)

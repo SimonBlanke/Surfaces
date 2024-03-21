@@ -2,7 +2,9 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-__version__ = "0.3.0"
+import importlib.metadata
+
+__version__ = importlib.metadata.version("mypackage")
 __license__ = "MIT"
 
 from .mathematical_functions import (
