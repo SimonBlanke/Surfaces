@@ -1,2 +1,1 @@
-include surfaces/search_data.db
-include requirements.txt
+include src/surfaces/search_data.db
