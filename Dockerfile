@@ -5,5 +5,5 @@ COPY ./requirements/*.txt .
 
 # Install pipenv
 RUN echo $(ls -1) &&\
-    python -m pip install -r ./requirements/requirements.txt &&\
-    python -m pip install -r ./requirements/requirements-test.txt
+    python -m pip install -r ./requirements.txt &&\
+    python -m pip install -r ./requirements-test.txt
