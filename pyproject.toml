@@ -43,3 +43,6 @@ test = ["coverage"]
 "Homepage" = "https://github.com/SimonBlanke/Surfaces"
 "Bug Reports" = "https://github.com/SimonBlanke/Surfaces/issues"
 "Source" = "https://github.com/SimonBlanke/Surfaces/"
+
+[tool.pytest.ini_options]
+pythonpath = "src"
