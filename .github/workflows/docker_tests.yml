@@ -25,7 +25,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install package
-        run: python -m pip install .
+        run: |
+          python -m pip install .
+          pip list
+          ls -l
 
       # and runs pytest in your pipenv environment
       - name: Test with pytest
