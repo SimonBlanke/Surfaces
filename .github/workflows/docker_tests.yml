@@ -24,6 +24,9 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v2
 
+      - name: Install package
+        run: python -m pip install .
+
       # and runs pytest in your pipenv environment
       - name: Test with pytest
         run: |
