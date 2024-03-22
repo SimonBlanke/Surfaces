@@ -1,8 +1,3 @@
-dist:
-	python setup.py sdist
-	python setup.py bdist_wheel
-	ls -l dist
-
 install:
 	python -m pip install -r ./requirements/requirements.txt
 
@@ -15,7 +10,7 @@ dev-install:
 reinstall: requirement
 	pip uninstall -y surfaces
 	rm -fr build dist surfaces.egg-info
-	python setup.py bdist_wheel
+	python -m build
 	pip install dist/*
 
 tox-test:
