@@ -4,7 +4,7 @@
 
 import importlib.metadata
 
-__version__ = importlib.metadata.version("mypackage")
+__version__ = importlib.metadata.version("surfaces")
 __license__ = "MIT"
 
 from .mathematical_functions import (
