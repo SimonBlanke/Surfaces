@@ -39,7 +39,7 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 # Dev
-_*___.*
+**/_dev_scripts
 
 # Unit test / coverage reports
 htmlcov/
