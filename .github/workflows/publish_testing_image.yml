@@ -5,8 +5,8 @@ on:
     branches:
       - 'main'
     paths:
-      - 'requirements/requirements.in'
-      - 'requirements/requirements-test.in'
+      - 'requirements/requirements.txt'
+      - 'requirements/requirements-test.txt'
 
 jobs:
   build-publish:
