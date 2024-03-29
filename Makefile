@@ -16,10 +16,10 @@ reinstall:
 tox-test:
 	tox -- -x -p no:warnings -rfEX tests/ \
 
-test-pytest:
+py-test:
 	python -m pytest -x -p no:warnings tests/; \
 
-test:  test-pytest tox-test
+test:  py-test tox-test
 
 requirement:
 	cd requirements/; \
