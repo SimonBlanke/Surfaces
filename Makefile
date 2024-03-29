@@ -7,11 +7,11 @@ install-test:
 dev-install:
 	pip install -e .
 
-reinstall: requirement
+reinstall:
 	pip uninstall -y surfaces
 	rm -fr build dist surfaces.egg-info
 	python -m build
-	pip install dist/*
+	pip install dist/*.whl
 
 tox-test:
 	tox -- -x -p no:warnings -rfEX tests/ \
