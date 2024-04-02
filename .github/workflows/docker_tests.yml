@@ -31,7 +31,7 @@ jobs:
       # and runs pytest in your pipenv environment
       - name: Test with pytest
         run: |
-          tox -- --cov=surfaces --cov-report=term-missing --cov-report=xml -p no:warnings
+          python -m pytest tests -p no:warnings --cov=hyperactive
 
       - name: Coverage Summary Report
         uses:  irongut/CodeCoverageSummary@v1.3.0
