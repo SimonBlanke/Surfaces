@@ -8,10 +8,10 @@ install-requirements:
 	python -m pip install ./requirements/requirements.in
 
 install-test-requirements:
-	python -m pip nstall ./requirements/requirements-test.in
+	python -m pip install ./requirements/requirements-test.in
 
 install-build-requirements:
-	python -m pip nstall ./requirements/requirements-build.in
+	python -m pip install ./requirements/requirements-build.in
 
 dev-install:
 	pip install -e .
