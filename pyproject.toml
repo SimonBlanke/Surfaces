@@ -34,7 +34,7 @@ classifiers=[
 ]
 
 [tool.setuptools.dynamic]
-dependencies = {file = ["requirements/requirements.txt"]}
+dependencies = {file = ["requirements/requirements.in"]}
 
 [project.optional-dependencies]
 dev = ["check-manifest"]
