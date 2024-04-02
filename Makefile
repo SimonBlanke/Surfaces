@@ -5,13 +5,13 @@ install: build
 	pip install dist/*.whl
 
 install-requirements:
-	python -m pip install -r ./requirements/requirements.txt
+	python -m pip install ./requirements/requirements.in
 
 install-test-requirements:
-	python -m pip install -r ./requirements/requirements-test.txt
+	python -m pip nstall ./requirements/requirements-test.in
 
 install-build-requirements:
-	python -m pip install -r ./requirements/requirements-build.txt
+	python -m pip nstall ./requirements/requirements-build.in
 
 dev-install:
 	pip install -e .
