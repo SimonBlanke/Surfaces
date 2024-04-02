@@ -9,6 +9,7 @@ find = {}
 name = "surfaces"
 version = "0.3.0"
 description = "A collection and visualization of black-box objective functions"
+dynamic = ["dependencies"]
 readme = "README.md"
 requires-python = ">=3.8"
 license = {file = "LICENSE"}
@@ -33,7 +34,7 @@ classifiers=[
 ]
 
 [tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
+dependencies = {file = ["requirements/requirements.txt"]}
 
 [project.optional-dependencies]
 dev = ["check-manifest"]
