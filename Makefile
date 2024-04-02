@@ -4,10 +4,10 @@ build:
 install: build
 	pip install dist/*.whl
 
-req-install:
+install-requirements:
 	python -m pip install -r ./requirements/requirements.txt
 
-req-install-test:
+install-test-requirements:
 	python -m pip install -r ./requirements/requirements-test.txt
 
 dev-install:
