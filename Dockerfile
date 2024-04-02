@@ -1,4 +1,3 @@
-# Get the python 3.10 base docker image
 FROM python:3.10-slim
 
 COPY ./requirements/*.txt .
