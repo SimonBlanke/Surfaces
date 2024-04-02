@@ -10,6 +10,9 @@ install-requirements:
 install-test-requirements:
 	python -m pip install -r ./requirements/requirements-test.txt
 
+install-build-requirements:
+	python -m pip install -r ./requirements/requirements-build.txt
+
 dev-install:
 	pip install -e .
 
@@ -29,7 +32,8 @@ test:  py-test tox-test
 requirement:
 	cd requirements/; \
 		pip-compile requirements.in;\
-		pip-compile requirements-test.in
+		pip-compile requirements-test.in;\
+		pip-compile requirements-build.in
 
 database:
 	python -m collect_search_data.py
