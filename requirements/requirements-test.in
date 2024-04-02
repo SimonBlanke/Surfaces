@@ -2,3 +2,4 @@ pytest == 7.4.4
 flake8
 pytest-cov
 tox
+gradient-free-optimizers
