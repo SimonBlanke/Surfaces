@@ -1,7 +1,13 @@
-install:
+build:
+	python -m build
+
+install: build
+	pip install dist/*.whl
+
+req-install:
 	python -m pip install -r ./requirements/requirements.txt
 
-install-test:
+req-install-test:
 	python -m pip install -r ./requirements/requirements-test.txt
 
 dev-install:
@@ -10,8 +16,7 @@ dev-install:
 reinstall:
 	pip uninstall -y surfaces
 	rm -fr build dist surfaces.egg-info
-	python -m build
-	pip install dist/*.whl
+	make install
 
 tox-test:
 	tox -- -x -p no:warnings -rfEX tests/ \
