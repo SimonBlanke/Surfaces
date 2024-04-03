@@ -2,8 +2,8 @@
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools.packages]
-find = {}
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [project]
 name = "surfaces"
@@ -44,6 +44,3 @@ test = ["coverage"]
 "Homepage" = "https://github.com/SimonBlanke/Surfaces"
 "Bug Reports" = "https://github.com/SimonBlanke/Surfaces/issues"
 "Source" = "https://github.com/SimonBlanke/Surfaces/"
-
-[tool.pytest.ini_options]
-pythonpath = "src"
