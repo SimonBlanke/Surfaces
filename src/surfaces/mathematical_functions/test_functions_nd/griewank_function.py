@@ -26,7 +26,7 @@ class GriewankFunction(MathematicalFunction):
     global_minimum = r"""f(\vec x = 0) = 0"""
 
     def __init__(self, n_dim, metric="score", input_type="dictionary", sleep=0):
-        super().__init__()
+        super().__init__(metric, input_type, sleep)
         self.n_dim = n_dim
 
     def create_objective_function(self):
@@ -44,20 +44,5 @@ class GriewankFunction(MathematicalFunction):
 
         self.pure_objective_function = griewank_function
 
-    def search_space(self, value_types="array", steps=100):
-        min_x0 = -100
-        min_x1 = -100
-
-        max_x0 = 100
-        max_x1 = 100
-
-        step_size_x0 = (max_x0 - min_x0) / steps
-        step_size_x1 = (max_x1 - min_x1) / steps
-
-        return super().search_space_from_blank(
-            search_space_blank={
-                "x0": (min_x0, max_x0, step_size_x0),
-                "x1": (min_x1, max_x1, step_size_x1),
-            },
-            value_types=value_types,
-        )
+    def search_space(self, min=-100, max=100, step=0.1, value_types="array"):
+        return super().create_n_dim_search_space(min, max, step, value_types)

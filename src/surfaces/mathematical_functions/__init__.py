@@ -15,7 +15,6 @@ from .test_functions_2d.drop_wave_function import DropWaveFunction
 from .test_functions_2d.easom_function import EasomFunction
 from .test_functions_2d.eggholder_function import EggholderFunction
 from .test_functions_2d.goldstein_price_function import GoldsteinPriceFunction
-from .test_functions_2d.griewank_function import GriewankFunction
 from .test_functions_2d.himmelblaus_function import HimmelblausFunction
 from .test_functions_2d.hoelder_table_function import HölderTableFunction
 from .test_functions_2d.langermann_function import LangermannFunction
@@ -31,6 +30,7 @@ from .test_functions_nd.rastrigin_function import RastriginFunction
 from .test_functions_nd.rosenbrock_function import RosenbrockFunction
 from .test_functions_nd.sphere_function import SphereFunction
 from .test_functions_nd.styblinski_tang_function import StyblinskiTangFunction
+from .test_functions_nd.griewank_function import GriewankFunction
 
 
 __all__ = [

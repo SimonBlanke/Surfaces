@@ -19,23 +19,37 @@ class RosenbrockFunction(MathematicalFunction):
     
     """
 
-    dimensions = "2"
+    dimensions = "n"
     formula = r"""f(\vec {x}) = \sum_{i=1}^{n-1} \left[ 100 \left(x_{i+1} - x_{i}^{2}\right)^{2} + \left(1 - x_{i}\right)^{2}\right]"""
     global_minimum = r"""f(1,1) = 0"""
 
-    def __init__(self, A=1, B=100, metric="score", input_type="dictionary", sleep=0):
+    def __init__(
+        self,
+        n_dim,
+        A=1,
+        B=100,
+        metric="score",
+        input_type="dictionary",
+        sleep=0,
+    ):
         super().__init__(metric, input_type, sleep)
-        self.n_dim = 2
+        self.n_dim = n_dim
 
         self.A = A
         self.B = B
 
     def create_objective_function(self):
         def rosenbrock_function(params):
-            x = params["x0"]
-            y = params["x1"]
+            loss = 0
+            for dim in range(self.n_dim - 1):
+                dim_str = "x" + str(dim)
+                dim_str_1 = "x" + str(dim + 1)
 
-            return (self.A - x) ** 2 + self.B * (y - x**2) ** 2
+                x = params[dim_str]
+                y = params[dim_str_1]
+
+                loss += (self.A - x) ** 2 + self.B * (y - x**2) ** 2
+            return loss
 
         self.pure_objective_function = rosenbrock_function
 

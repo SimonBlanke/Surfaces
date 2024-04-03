@@ -12,7 +12,6 @@ from .drop_wave_function import DropWaveFunction
 from .easom_function import EasomFunction
 from .eggholder_function import EggholderFunction
 from .goldstein_price_function import GoldsteinPriceFunction
-from .griewank_function import GriewankFunction
 from .himmelblaus_function import HimmelblausFunction
 from .hoelder_table_function import HölderTableFunction
 from .langermann_function import LangermannFunction
@@ -33,7 +32,6 @@ __all__ = [
     "EasomFunction",
     "EggholderFunction",
     "GoldsteinPriceFunction",
-    "GriewankFunction",
     "HimmelblausFunction",
     "HölderTableFunction",
     "LangermannFunction",
