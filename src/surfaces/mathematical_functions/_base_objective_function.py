@@ -57,7 +57,7 @@ class MathematicalFunction(BaseTestFunction):
         return search_space
 
     def search_data(self):
-        self.search_space = self.search_space(value_types="list")
+        self.search_space = self.search_space(value_types="array")
 
         para_names = list(self.search_space.keys())
         search_data_cols = para_names + ["score"]
@@ -67,12 +67,14 @@ class MathematicalFunction(BaseTestFunction):
         dim_sizes_list = [len(array) for array in self.search_space.values()]
         search_space_size = reduce((lambda x, y: x * y), dim_sizes_list)
 
+        self.create_objective_function()
+
         while search_data_length < search_space_size:
             print("\n ------------ search_space_size", search_space_size)
             opt = GridSearchOptimizer(
                 self.search_space, direction="orthogonal", initialize={}
             )
-            opt.search(self.objective_function_dict, n_iter=int(search_space_size * 1))
+            opt.search(self.pure_objective_function, n_iter=int(search_space_size * 1))
 
             search_data = pd.concat(
                 [search_data, opt.search_data],
