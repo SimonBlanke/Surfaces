@@ -44,5 +44,5 @@ class GriewankFunction(MathematicalFunction):
 
         self.pure_objective_function = griewank_function
 
-    def search_space(self, min=-100, max=100, step=0.1, value_types="array"):
+    def search_space(self, min=-100, max=100, step=1, value_types="array"):
         return super().create_n_dim_search_space(min, max, step, value_types)
