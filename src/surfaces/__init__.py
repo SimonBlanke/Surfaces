@@ -16,8 +16,11 @@ from .mathematical_functions import (
 
 from .machine_learning_functions import machine_learning_functions
 
+test_functions: list = mathematical_functions + machine_learning_functions
+
 
 __all__ = [
+    "test_functions",
     "mathematical_functions",
     "mathematical_functions_1d",
     "mathematical_functions_2d",
