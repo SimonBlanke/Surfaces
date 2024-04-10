@@ -1,6 +1,8 @@
 import pytest
 
 from hyperactive import Hyperactive
+from gradient_free_optimizers import RandomSearchOptimizer
+
 from surfaces import mathematical_functions, machine_learning_functions
 
 
@@ -23,23 +25,26 @@ def test_all_mathematical_functions(test_function):
     except TypeError:
         test_function_ = test_function(n_dim=2)
 
-    hyper = Hyperactive()
-    hyper.add_search(
-        test_function_.objective_function,
-        test_function_.create_n_dim_search_space(value_types="list"),
-        n_iter=15,
-    )
-    hyper.run()
+    objective_function = test_function_.objective_function
+    search_space = test_function_.search_space(value_types="array")
+    n_iter = 20
+
+    opt = RandomSearchOptimizer(search_space)
+    opt.search(objective_function, n_iter=n_iter)
 
 
 @pytest.mark.parametrize(*machine_learning_functions_d)
 def test_all_machine_learning_functions(test_function):
     test_function_ = test_function()
 
+    objective_function = test_function_.objective_function
+    search_space = test_function_.search_space()
+    n_iter = 20
+
     hyper = Hyperactive()
     hyper.add_search(
-        test_function_.objective_function,
-        test_function_.search_space,
-        n_iter=15,
+        objective_function,
+        search_space,
+        n_iter=n_iter,
     )
     hyper.run()
