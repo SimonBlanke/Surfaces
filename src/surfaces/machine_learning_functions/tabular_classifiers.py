@@ -15,8 +15,8 @@ class KNeighborsClassifierFunction(MachineLearningFunction):
 
     para_names = ["n_neighbors", "algorithm", "cv", "dataset"]
 
-    def __init__(self, metric=None, sleep=0):
-        super().__init__(metric, sleep)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def search_space(
         self,
