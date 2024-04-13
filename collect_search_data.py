@@ -8,9 +8,9 @@ for mathematical_function in mathematical_functions:
     except TypeError:
         test_function = mathematical_function(n_dim=2, metric="loss")
 
-    test_function.collect_data()
+    test_function._collect_data()
 
 
 for machine_learning_function in machine_learning_functions:
-    test_function = machine_learning_function()
-    test_function.collect_data()
+    test_function = machine_learning_function(load_search_data=False)
+    test_function._collect_data()

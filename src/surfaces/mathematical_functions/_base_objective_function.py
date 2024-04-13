@@ -72,9 +72,15 @@ class MathematicalFunction(BaseTestFunction):
         while search_data_length < search_space_size:
             print("\n ------------ search_space_size", search_space_size)
             opt = GridSearchOptimizer(
-                self.search_space, direction="orthogonal", initialize={}
+                self.search_space,
+                direction="orthogonal",
+                initialize={},
             )
-            opt.search(self.pure_objective_function, n_iter=int(search_space_size * 1))
+            opt.search(
+                self.pure_objective_function,
+                n_iter=int(search_space_size * 1),
+                verbosity=["progress_bar"],
+            )
 
             search_data = pd.concat(
                 [search_data, opt.search_data],
@@ -87,7 +93,7 @@ class MathematicalFunction(BaseTestFunction):
 
         return search_data
 
-    def collect_data(self, table=None, if_exists="append"):
+    def _collect_data(self, table=None, if_exists="append"):
         if table is None:
             table = self.__name__
         self.sql_data.save(table, self.search_data(), if_exists)
