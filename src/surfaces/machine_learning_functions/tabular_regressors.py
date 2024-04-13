@@ -77,7 +77,7 @@ class GradientBoostingRegressorFunction(MachineLearningFunction):
         search_space: dict = {}
 
         n_estimators_default = list(np.arange(3, 150, 5))
-        max_depth_default = ["auto", "ball_tree", "kd_tree", "brute"]
+        max_depth_default = list(np.arange(2, 25))
         cv_default = [2, 3, 4, 5, 8, 10]
         dataset_default = [diabetes_data]
 
