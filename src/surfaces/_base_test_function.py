@@ -14,6 +14,7 @@ class BaseTestFunction:
     formula = r" "
     global_minimum = r" "
 
+    objective_function: callable
     pure_objective_function: callable
 
     def __init__(self):
