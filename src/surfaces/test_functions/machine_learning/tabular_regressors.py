@@ -47,8 +47,8 @@ class KNeighborsRegressorFunction(MachineLearningFunction):
     def create_objective_function(self):
         def k_neighbors_regressor(params):
             knc = KNeighborsRegressor(
-                n_estimators=params["n_estimators"],
-                max_depth=params["max_depth"],
+                n_neighbors=params["n_neighbors"],
+                algorithm=params["algorithm"],
             )
             X, y = params["dataset"]()
             scores = cross_val_score(knc, X, y, cv=params["cv"], scoring=self.metric)
