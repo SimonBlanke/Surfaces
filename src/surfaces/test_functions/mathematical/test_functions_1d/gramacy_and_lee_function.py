@@ -37,14 +37,7 @@ class GramacyAndLeeFunction(MathematicalFunction):
 
         self.pure_objective_function = gramacy_and_lee_function
 
-    def search_space(self, value_types="array", steps=100):
-        min_x0 = 0.5
-        max_x0 = 2.5
-        step_size_x0 = (max_x0 - min_x0) / steps
-
-        return super().search_space_from_blank(
-            search_space_blank={
-                "x0": (min_x0, max_x0, step_size_x0),
-            },
-            value_types=value_types,
+    def search_space(self, value_types="array", size=10000):
+        return super().create_n_dim_search_space(
+            min=0.5, max=2.5, size=size, value_types=value_types
         )

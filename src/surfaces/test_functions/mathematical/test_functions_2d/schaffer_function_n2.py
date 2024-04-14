@@ -38,20 +38,7 @@ class SchafferFunctionN2(MathematicalFunction):
 
         self.pure_objective_function = schaffer_function_n2
 
-    def search_space(self, value_types="array", steps=100):
-        min_x0 = -50
-        min_x1 = -50
-
-        max_x0 = 50
-        max_x1 = 50
-
-        step_size_x0 = (max_x0 - min_x0) / steps
-        step_size_x1 = (max_x1 - min_x1) / steps
-
-        return super().search_space_from_blank(
-            search_space_blank={
-                "x0": (min_x0, max_x0, step_size_x0),
-                "x1": (min_x1, max_x1, step_size_x1),
-            },
-            value_types=value_types,
+    def search_space(self, value_types="array", size=10000):
+        return super().create_n_dim_search_space(
+            min=-50, max=50, size=size, value_types=value_types
         )

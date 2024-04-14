@@ -42,20 +42,7 @@ class LeviFunctionN13(MathematicalFunction):
 
         self.pure_objective_function = levi_function_n13
 
-    def search_space(self, value_types="array", steps=100):
-        min_x0 = -10
-        min_x1 = -10
-
-        max_x0 = 10
-        max_x1 = 10
-
-        step_size_x0 = (max_x0 - min_x0) / steps
-        step_size_x1 = (max_x1 - min_x1) / steps
-
-        return super().search_space_from_blank(
-            search_space_blank={
-                "x0": (min_x0, max_x0, step_size_x0),
-                "x1": (min_x1, max_x1, step_size_x1),
-            },
-            value_types=value_types,
+    def search_space(self, value_types="array", size=10000):
+        return super().create_n_dim_search_space(
+            min=-10, max=10, size=size, value_types=value_types
         )
