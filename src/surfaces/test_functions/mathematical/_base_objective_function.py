@@ -33,16 +33,24 @@ class MathematicalFunction(BaseTestFunction):
             search_space_lists[para_name] = list(dim_values)
         return search_space_lists
 
-    def create_n_dim_search_space(self, min=-5, max=5, step=0.1, value_types="array"):
+    def create_n_dim_search_space(self, min=-5, max=5, size=100, value_types="array"):
         search_space_ = {}
+        dim_size = size ** (1 / self.n_dim)
 
-        for dim in range(self.n_dim):
+        def add_dim(search_space_: dict, dim: int, min, max):
             dim_str = "x" + str(dim)
-
-            values = np.arange(min, max, step)
+            step_size = (max - min) / dim_size
+            values = np.arange(min, max, step_size)
             if value_types == "list":
                 values = list(values)
             search_space_[dim_str] = values
+
+        if isinstance(min, list) and isinstance(max, list) and len(min) == len(max):
+            for dim, (min_, max_) in enumerate(zip(min, max)):
+                add_dim(search_space_, dim, min_, max_)
+        else:
+            for dim in range(self.n_dim):
+                add_dim(search_space_, dim, min, max)
 
         return search_space_
 
