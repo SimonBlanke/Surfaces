@@ -38,7 +38,7 @@ class SchafferFunctionN2(MathematicalFunction):
 
         self.pure_objective_function = schaffer_function_n2
 
-    def search_space(self, value_types="array", size=10000):
+    def search_space(self, min=-50, max=50, value_types="array", size=10000):
         return super().create_n_dim_search_space(
-            min=-50, max=50, size=size, value_types=value_types
+            min=min, max=max, size=size, value_types=value_types
         )

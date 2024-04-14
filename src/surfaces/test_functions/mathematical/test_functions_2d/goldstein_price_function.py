@@ -43,7 +43,7 @@ class GoldsteinPriceFunction(MathematicalFunction):
 
         self.pure_objective_function = goldstein_price_function
 
-    def search_space(self, value_types="array", size=10000):
+    def search_space(self, min=-2, max=2, value_types="array", size=10000):
         return super().create_n_dim_search_space(
-            min=-2, max=2, size=size, value_types=value_types
+            min=min, max=max, size=size, value_types=value_types
         )

@@ -47,7 +47,7 @@ class HimmelblausFunction(MathematicalFunction):
 
         self.pure_objective_function = himmelblaus_function
 
-    def search_space(self, value_types="array", size=10000):
+    def search_space(self, min=-5, max=5, value_types="array", size=10000):
         return super().create_n_dim_search_space(
-            min=-5, max=5, size=size, value_types=value_types
+            min=min, max=max, size=size, value_types=value_types
         )

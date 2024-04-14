@@ -53,5 +53,7 @@ class RosenbrockFunction(MathematicalFunction):
 
         self.pure_objective_function = rosenbrock_function
 
-    def search_space(self, min=-5, max=5, step=0.1, value_types="array"):
-        return super().create_n_dim_search_space(min, max, step, value_types)
+    def search_space(self, min=-5, max=5, size=10000, value_types="array"):
+        return super().create_n_dim_search_space(
+            min, max, size=size, value_types=value_types
+        )

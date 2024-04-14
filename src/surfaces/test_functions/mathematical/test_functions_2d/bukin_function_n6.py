@@ -40,7 +40,7 @@ class BukinFunctionN6(MathematicalFunction):
 
         self.pure_objective_function = bukin_function_n6
 
-    def search_space(self, value_types="array", size=10000):
+    def search_space(self, min=-8, max=8, value_types="array", size=10000):
         return super().create_n_dim_search_space(
-            min=-8, max=8, size=size, value_types=value_types
+            min=min, max=max, size=size, value_types=value_types
         )

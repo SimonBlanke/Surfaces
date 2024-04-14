@@ -64,7 +64,7 @@ class SimionescuFunction(MathematicalFunction):
 
         self.pure_objective_function = simionescu_function
 
-    def search_space(self, value_types="array", size=10000):
+    def search_space(self, min=-1.25, max=1.25, value_types="array", size=10000):
         return super().create_n_dim_search_space(
-            min=-1.25, max=1.25, size=size, value_types=value_types
+            min=min, max=max, size=size, value_types=value_types
         )
