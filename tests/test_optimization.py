@@ -2,7 +2,7 @@ import pytest
 import numpy as np
 from gradient_free_optimizers import RandomSearchOptimizer
 
-from surfaces.mathematical_functions import (
+from surfaces.test_functions.mathematical import (
     SphereFunction,
     RastriginFunction,
     AckleyFunction,

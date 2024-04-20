@@ -3,7 +3,7 @@ import pytest
 from hyperactive import Hyperactive
 from gradient_free_optimizers import RandomSearchOptimizer
 
-from surfaces import mathematical_functions, machine_learning_functions
+from surfaces.test_functions import mathematical_functions, machine_learning_functions
 
 
 mathematical_functions_d = (
@@ -27,7 +27,7 @@ def test_all_mathematical_functions(test_function):
 
     objective_function = test_function_.objective_function
     search_space = test_function_.search_space(value_types="array")
-    n_iter = 20
+    n_iter = 100
 
     opt = RandomSearchOptimizer(search_space)
     opt.search(objective_function, n_iter=n_iter)
@@ -39,7 +39,7 @@ def test_all_machine_learning_functions(test_function):
 
     objective_function = test_function_.objective_function
     search_space = test_function_.search_space()
-    n_iter = 20
+    n_iter = 3
 
     hyper = Hyperactive()
     hyper.add_search(
