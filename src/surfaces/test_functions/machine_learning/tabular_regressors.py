@@ -16,6 +16,11 @@ class KNeighborsRegressorFunction(MachineLearningFunction):
 
     para_names = ["n_neighbors", "algorithm", "cv", "dataset"]
 
+    n_neighbors_default = list(np.arange(3, 150, 5))
+    algorithm_default = ["auto", "ball_tree", "kd_tree", "brute"]
+    cv_default = [2, 3, 4, 5, 8, 10]
+    dataset_default = [diabetes_data]
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -28,19 +33,14 @@ class KNeighborsRegressorFunction(MachineLearningFunction):
     ):
         search_space: dict = {}
 
-        n_neighbors_default = list(np.arange(3, 150, 5))
-        algorithm_default = ["auto", "ball_tree", "kd_tree", "brute"]
-        cv_default = [2, 3, 4, 5, 8, 10]
-        dataset_default = [diabetes_data]
-
         search_space["n_neighbors"] = (
-            n_neighbors_default if n_neighbors is None else n_neighbors
+            self.n_neighbors_default if n_neighbors is None else n_neighbors
         )
         search_space["algorithm"] = (
-            algorithm_default if algorithm is None else algorithm
+            self.algorithm_default if algorithm is None else algorithm
         )
-        search_space["cv"] = cv_default if cv is None else cv
-        search_space["dataset"] = dataset_default if dataset is None else dataset
+        search_space["cv"] = self.cv_default if cv is None else cv
+        search_space["dataset"] = self.dataset_default if dataset is None else dataset
 
         return search_space
 
@@ -64,6 +64,11 @@ class GradientBoostingRegressorFunction(MachineLearningFunction):
 
     para_names = ["n_estimators", "max_depth", "cv", "dataset"]
 
+    n_estimators_default = list(np.arange(3, 150, 5))
+    max_depth_default = list(np.arange(2, 25))
+    cv_default = [2, 3, 4, 5, 8, 10]
+    dataset_default = [diabetes_data]
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -76,19 +81,14 @@ class GradientBoostingRegressorFunction(MachineLearningFunction):
     ):
         search_space: dict = {}
 
-        n_estimators_default = list(np.arange(3, 150, 5))
-        max_depth_default = list(np.arange(2, 25))
-        cv_default = [2, 3, 4, 5, 8, 10]
-        dataset_default = [diabetes_data]
-
         search_space["n_estimators"] = (
-            n_estimators_default if n_estimators is None else n_estimators
+            self.n_estimators_default if n_estimators is None else n_estimators
         )
         search_space["max_depth"] = (
-            max_depth_default if max_depth is None else max_depth
+            self.max_depth_default if max_depth is None else max_depth
         )
-        search_space["cv"] = cv_default if cv is None else cv
-        search_space["dataset"] = dataset_default if dataset is None else dataset
+        search_space["cv"] = self.cv_default if cv is None else cv
+        search_space["dataset"] = self.dataset_default if dataset is None else dataset
 
         return search_space
 
