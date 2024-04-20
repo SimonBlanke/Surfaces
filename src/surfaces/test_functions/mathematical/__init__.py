@@ -109,7 +109,6 @@ mathematical_functions_2d = [
     LeviFunctionN13,
     MatyasFunction,
     McCormickFunction,
-    RosenbrockFunction,
     SchafferFunctionN2,
     SimionescuFunction,
     ThreeHumpCamelFunction,
@@ -119,6 +118,7 @@ mathematical_functions_2d = [
 mathematical_functions_nd = [
     GriewankFunction,
     RastriginFunction,
+    RosenbrockFunction,
     SphereFunction,
     StyblinskiTangFunction,
 ]
