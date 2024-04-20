@@ -4,8 +4,6 @@
 
 import time
 
-from ..data_collector import SurfacesDataCollector
-
 
 class BaseTestFunction:
     explanation = """ """
@@ -18,8 +16,6 @@ class BaseTestFunction:
     pure_objective_function: callable
 
     def __init__(self):
-        self.sql_data = SurfacesDataCollector()
-
         self.create_objective_function()
 
     def create_objective_function(self):

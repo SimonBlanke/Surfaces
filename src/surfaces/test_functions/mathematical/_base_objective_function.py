@@ -45,7 +45,10 @@ class MathematicalFunction(BaseTestFunction):
                 values = list(values)
             search_space_[dim_str] = values
 
-        if isinstance(min, list) and isinstance(max, list) and len(min) == len(max):
+        if isinstance(min, list) and isinstance(max, list):
+            if len(min) != len(max) or len(min) != self.n_dim:
+                raise ValueError
+
             for dim, (min_, max_) in enumerate(zip(min, max)):
                 add_dim(search_space_, dim, min_, max_)
         else:
@@ -63,45 +66,3 @@ class MathematicalFunction(BaseTestFunction):
                 dim_values = list(dim_values)
             search_space[para_names] = dim_values
         return search_space
-
-    def search_data(self):
-        self.search_space = self.search_space(value_types="array")
-
-        para_names = list(self.search_space.keys())
-        search_data_cols = para_names + ["score"]
-        search_data = pd.DataFrame([], columns=search_data_cols)
-        search_data_length = 0
-
-        dim_sizes_list = [len(array) for array in self.search_space.values()]
-        search_space_size = reduce((lambda x, y: x * y), dim_sizes_list)
-
-        self.create_objective_function()
-
-        while search_data_length < search_space_size:
-            print("\n ------------ search_space_size", search_space_size)
-            opt = GridSearchOptimizer(
-                self.search_space,
-                direction="orthogonal",
-                initialize={},
-            )
-            opt.search(
-                self.pure_objective_function,
-                n_iter=int(search_space_size * 1),
-                verbosity=["progress_bar"],
-            )
-
-            search_data = pd.concat(
-                [search_data, opt.search_data],
-                ignore_index=True,
-            )
-
-            search_data = search_data.drop_duplicates(subset=para_names)
-            search_data_length = len(search_data)
-            print("\n ------------ search_data_length", search_data_length, "\n")
-
-        return search_data
-
-    def _collect_data(self, table=None, if_exists="append"):
-        if table is None:
-            table = self.__name__
-        self.sql_data.save(table, self.search_data(), if_exists)
