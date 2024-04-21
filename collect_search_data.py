@@ -1,4 +1,5 @@
-from surfaces import mathematical_functions, machine_learning_functions
+from surfaces.test_functions import mathematical_functions, machine_learning_functions
+from surfaces.data_collector import SurfacesDataCollector
 
 
 for mathematical_function in mathematical_functions:
@@ -8,9 +9,18 @@ for mathematical_function in mathematical_functions:
     except TypeError:
         test_function = mathematical_function(n_dim=2, metric="loss")
 
-    test_function._collect_data()
+    objective_function = test_function.objective_function
+    search_space = test_function.search_space(value_types="array")
+
+    sdc = SurfacesDataCollector()
+    sdc.collect(objective_function, search_space)
 
 
 for machine_learning_function in machine_learning_functions:
     test_function = machine_learning_function(load_search_data=False)
-    test_function._collect_data()
+
+    objective_function = test_function.objective_function
+    search_space = test_function.search_space(value_types="array")
+
+    sdc = SurfacesDataCollector()
+    sdc.collect(objective_function, search_space)
