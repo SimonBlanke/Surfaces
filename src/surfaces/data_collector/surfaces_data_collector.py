@@ -99,3 +99,6 @@ class SurfacesDataCollector(SqlSearchData):
             self._list_search_space(objective_function, search_space)
 
         self.save(table, self.search_data, if_exists)
+
+    def load(self, table):
+        return self.sql_data.load(table)
