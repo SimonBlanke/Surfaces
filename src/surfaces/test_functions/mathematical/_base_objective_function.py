@@ -4,10 +4,6 @@
 
 
 import numpy as np
-import pandas as pd
-from functools import reduce
-
-from gradient_free_optimizers import GridSearchOptimizer
 
 from .._base_test_function import BaseTestFunction
 
@@ -19,8 +15,15 @@ class MathematicalFunction(BaseTestFunction):
     formula = r" "
     global_minimum = r" "
 
-    def __init__(self, metric="score", input_type="dictionary", sleep=0):
-        super().__init__()
+    def __init__(
+        self,
+        *args,
+        metric="loss",
+        input_type="dictionary",
+        sleep=0,
+        **kwargs,
+    ):
+        super().__init__(*args, metric, **kwargs)
 
         self.metric = metric
         self.input_type = input_type
