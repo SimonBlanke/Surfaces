@@ -17,13 +17,12 @@ class MathematicalFunction(BaseTestFunction):
 
     def __init__(
         self,
-        *args,
         metric="loss",
         input_type="dictionary",
         sleep=0,
-        **kwargs,
+        evaluate_from_data=False,
     ):
-        super().__init__(*args, metric, **kwargs)
+        super().__init__(metric, sleep, evaluate_from_data)
 
         self.metric = metric
         self.input_type = input_type

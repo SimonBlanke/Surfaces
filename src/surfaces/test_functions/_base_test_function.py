@@ -20,7 +20,7 @@ class BaseTestFunction:
     objective_function: callable
     pure_objective_function: callable
 
-    def __init__(self, metric, sleep=0, evaluate_from_data=False):
+    def __init__(self, metric, sleep, evaluate_from_data):
         self.sleep = sleep
         self.metric = metric
 
