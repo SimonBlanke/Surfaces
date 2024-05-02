@@ -25,7 +25,12 @@ class AckleyFunction(MathematicalFunction):
     global_minimum = r"f(\vec{x}=0) = 0"
 
     def __init__(
-        self, A=20, angle=2 * np.pi, metric="score", input_type="dictionary", sleep=0
+        self,
+        A=20,
+        angle=2 * np.pi,
+        metric="score",
+        input_type="dictionary",
+        sleep=0,
     ):
         super().__init__(metric, input_type, sleep)
 

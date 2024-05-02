@@ -21,8 +21,13 @@ class KNeighborsRegressorFunction(MachineLearningFunction):
     cv_default = [2, 3, 4, 5, 8, 10]
     dataset_default = [diabetes_data]
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(
+        self,
+        metric=None,
+        sleep=0,
+        evaluate_from_data=False,
+    ):
+        super().__init__(metric, sleep, evaluate_from_data)
 
     def search_space(
         self,
@@ -69,8 +74,13 @@ class GradientBoostingRegressorFunction(MachineLearningFunction):
     cv_default = [2, 3, 4, 5, 8, 10]
     dataset_default = [diabetes_data]
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(
+        self,
+        metric=None,
+        sleep=0,
+        evaluate_from_data=False,
+    ):
+        super().__init__(metric, sleep, evaluate_from_data)
 
     def search_space(
         self,

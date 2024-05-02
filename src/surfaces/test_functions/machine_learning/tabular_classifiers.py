@@ -22,7 +22,7 @@ class KNeighborsClassifierFunction(MachineLearningFunction):
 
     def __init__(
         self,
-        metric="loss",
+        metric=None,
         sleep=0,
         evaluate_from_data=False,
     ):
