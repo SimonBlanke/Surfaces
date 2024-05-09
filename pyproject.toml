@@ -7,7 +7,7 @@ where = ["src"]
 
 [project]
 name = "surfaces"
-version = "0.3.0"
+version = "0.4.0"
 description = "A collection and visualization of black-box objective functions"
 dynamic = ["dependencies"]
 readme = "README.md"
