@@ -28,11 +28,9 @@ class BaseTestFunction:
 
         if evaluate_from_data:
             self.sdc = SurfacesDataCollector()
-            self.objective_function = self.objective_function_loaded
+            self._objective_function_ = self.objective_function_loaded
         else:
-            self.objective_function = self.pure_objective_function
-
-        self.objective_function.__name__ = self.__name__
+            self._objective_function_ = self.pure_objective_function
 
     def create_objective_function(self):
         e_msg = "'create_objective_function'-method is not implemented"
@@ -54,7 +52,7 @@ class BaseTestFunction:
             dim_str = "x" + str(i)
             para[dim_str] = arg
 
-        return self.pure_objective_function(para)
+        return self._objective_function_(para)
 
     def objective_function(self, *input):
         time.sleep(self.sleep)
