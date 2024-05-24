@@ -30,8 +30,8 @@ class HölderTableFunction(MathematicalFunction):
       f(-8.05502,-9.66459) = -19.2085
       """
 
-    def __init__(self, A=10, angle=1, metric="score", input_type="dictionary", sleep=0):
-        super().__init__(metric, input_type, sleep)
+    def __init__(self, A=10, angle=1, metric="score", sleep=0):
+        super().__init__(metric, sleep)
         self.n_dim = 2
 
         self.A = A

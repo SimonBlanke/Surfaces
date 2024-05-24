@@ -25,8 +25,8 @@ class StyblinskiTangFunction(MathematicalFunction):
     )
     global_minimum = r"""-39.16617n < f(\underbrace{-2.903534, \ldots, -2.903534}_{n \text{ times}} ) < -39.16616n"""
 
-    def __init__(self, n_dim, metric="score", input_type="dictionary", sleep=0):
-        super().__init__(metric, input_type, sleep)
+    def __init__(self, n_dim, metric="score", sleep=0):
+        super().__init__(metric, sleep)
         self.n_dim = n_dim
 
     def create_objective_function(self):

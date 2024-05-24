@@ -20,8 +20,8 @@ class SphereFunction(MathematicalFunction):
     formula = r"f(\vec{x}) = \sum^n_{i=1}x^2_i"
     global_minimum = r"f(\vec{x}=0) = 0"
 
-    def __init__(self, n_dim, A=1, metric="score", input_type="dictionary", sleep=0):
-        super().__init__(metric, input_type, sleep)
+    def __init__(self, n_dim, A=1, metric="score", sleep=0):
+        super().__init__(metric, sleep)
         self.n_dim = n_dim
         self.A = A
 

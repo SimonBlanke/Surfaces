@@ -26,10 +26,8 @@ http://www-optima.amp.i.kyoto-u.ac.jp/member/student/hedar/Hedar_files/TestGO
     )
     global_minimum = r"""f(3, 0.5) = 0"""
 
-    def __init__(
-        self, A=1.5, B=2.25, C=2.652, metric="score", input_type="dictionary", sleep=0
-    ):
-        super().__init__(metric, input_type, sleep)
+    def __init__(self, A=1.5, B=2.25, C=2.652, metric="score", sleep=0):
+        super().__init__(metric, sleep)
         self.n_dim = 2
 
         self.A = A

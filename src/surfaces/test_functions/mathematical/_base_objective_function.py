@@ -18,15 +18,21 @@ class MathematicalFunction(BaseTestFunction):
     def __init__(
         self,
         metric="loss",
-        input_type="dictionary",
         sleep=0,
         evaluate_from_data=False,
     ):
         super().__init__(metric, sleep, evaluate_from_data)
 
         self.metric = metric
-        self.input_type = input_type
         self.sleep = sleep
+
+    def return_metric(self, loss):
+        if self.metric == "score":
+            return -loss
+        elif self.metric == "loss":
+            return loss
+        else:
+            raise ValueError
 
     @staticmethod
     def conv_arrays2lists(search_space):

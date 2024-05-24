@@ -25,8 +25,8 @@ class ThreeHumpCamelFunction(MathematicalFunction):
     formula = r"""f(x,y) = -\cos \left(x\right)\cos \left(y\right) \exp\left[-\left(\left(x-\pi\right)^{2} + \left(y-\pi\right)^{2}\right)\right]"""
     global_minimum = r"""f(0,0)= 0"""
 
-    def __init__(self, metric="score", input_type="dictionary", sleep=0):
-        super().__init__(metric, input_type, sleep)
+    def __init__(self, metric="score", sleep=0):
+        super().__init__(metric, sleep)
         self.n_dim = 2
 
     def create_objective_function(self):

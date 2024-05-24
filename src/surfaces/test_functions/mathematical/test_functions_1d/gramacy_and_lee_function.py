@@ -25,8 +25,8 @@ class GramacyAndLeeFunction(MathematicalFunction):
     formula = r"""f(x) = \frac{\sin(10\pi x)}{2x} + (x - 1)^4"""
     global_minimum = r"""-"""
 
-    def __init__(self, metric="score", input_type="dictionary", sleep=0):
-        super().__init__(metric, input_type, sleep)
+    def __init__(self, metric="score", sleep=0):
+        super().__init__(metric, sleep)
         self.n_dim = 1
 
     def create_objective_function(self):

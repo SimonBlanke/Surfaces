@@ -25,8 +25,8 @@ class LeviFunctionN13(MathematicalFunction):
     formula = r"""f(x,y) = \sin^{2} 3\pi x + \left(x-1\right)^{2}\left(1+\sin^{2} 3\pi y\right)+\left(y-1\right)^{2}\left(1+\sin^{2} 2\pi y\right)"""
     global_minimum = r"""f(1,1)=0"""
 
-    def __init__(self, metric="score", input_type="dictionary", sleep=0):
-        super().__init__(metric, input_type, sleep)
+    def __init__(self, metric="score", sleep=0):
+        super().__init__(metric, sleep)
         self.n_dim = 2
 
     def create_objective_function(self):

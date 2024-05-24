@@ -29,10 +29,9 @@ class RosenbrockFunction(MathematicalFunction):
         A=1,
         B=100,
         metric="score",
-        input_type="dictionary",
         sleep=0,
     ):
-        super().__init__(metric, input_type, sleep)
+        super().__init__(metric, sleep)
         self.n_dim = n_dim
 
         self.A = A

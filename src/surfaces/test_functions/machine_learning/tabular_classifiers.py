@@ -56,6 +56,7 @@ class KNeighborsClassifierFunction(MachineLearningFunction):
             )
             X, y = params["dataset"]()
             scores = cross_val_score(knc, X, y, cv=params["cv"], scoring=self.metric)
+            print("\n score ", scores.mean(), "\n")
             return scores.mean()
 
         self.pure_objective_function = k_neighbors_classifier

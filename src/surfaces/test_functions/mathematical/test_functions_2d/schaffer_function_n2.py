@@ -25,8 +25,8 @@ class SchafferFunctionN2(MathematicalFunction):
     formula = r"""f(x,y) = 0.5 + \frac{\sin^{2}\left(x^{2} - y^{2}\right) - 0.5}{\left[1 + 0.001\left(x^{2} + y^{2}\right) \right]^{2}}"""
     global_minimum = r"""f(0,0) = 0"""
 
-    def __init__(self, metric="score", input_type="dictionary", sleep=0):
-        super().__init__(metric, input_type, sleep)
+    def __init__(self, metric="score", sleep=0):
+        super().__init__(metric, sleep)
         self.n_dim = 2
 
     def create_objective_function(self):

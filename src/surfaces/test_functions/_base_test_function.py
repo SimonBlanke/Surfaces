@@ -40,11 +40,8 @@ class BaseTestFunction:
         e_msg = "'search_space'-method is not implemented"
         raise NotImplementedError(e_msg)
 
-    def return_metric(self, loss):
-        if self.metric == "score":
-            return -loss
-        elif self.metric == "loss":
-            return loss
+    def return_metric(self, metric):
+        return metric
 
     def objective_function_np(self, *args):
         para = {}
@@ -56,12 +53,15 @@ class BaseTestFunction:
 
     def objective_function(self, *input):
         time.sleep(self.sleep)
-
+        """
         if self.input_type == "dictionary":
             metric = self.pure_objective_function(*input)
         elif self.input_type == "arrays":
             metric = self.objective_function_np(*input)
+        """
 
+        metric = self.pure_objective_function(*input)
+        print("\n metric ", metric, "\n")
         return self.return_metric(metric)
 
     def objective_function_loaded(self, params):

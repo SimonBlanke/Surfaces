@@ -25,8 +25,8 @@ class GriewankFunction(MathematicalFunction):
     formula = r"""f(\vec x) = \sum^d_{i=1} \frac{x_i^2}{4000} - \prod_{i=1}^d\cos (\frac{x_i}{\sqrt i}) + 1"""
     global_minimum = r"""f(\vec x = 0) = 0"""
 
-    def __init__(self, n_dim, metric="score", input_type="dictionary", sleep=0):
-        super().__init__(metric, input_type, sleep)
+    def __init__(self, n_dim, metric="score", sleep=0):
+        super().__init__(metric, sleep)
         self.n_dim = n_dim
 
     def create_objective_function(self):

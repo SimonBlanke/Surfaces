@@ -25,10 +25,8 @@ class EasomFunction(MathematicalFunction):
     formula = r"""f(x, y) = -\cos (x) \cos (y) \ exp\left[- \left((x-\pi)^2 + (y-\pi)^2 \right) \right]"""
     global_minimum = r"""f(\pi, \pi) = -1"""
 
-    def __init__(
-        self, A=-1, B=1, angle=1, metric="score", input_type="dictionary", sleep=0
-    ):
-        super().__init__(metric, input_type, sleep)
+    def __init__(self, A=-1, B=1, angle=1, metric="score", sleep=0):
+        super().__init__(metric, sleep)
         self.n_dim = 2
 
         self.A = A

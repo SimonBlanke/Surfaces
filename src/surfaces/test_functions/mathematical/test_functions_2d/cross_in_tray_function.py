@@ -36,10 +36,9 @@ class CrossInTrayFunction(MathematicalFunction):
         B=100,
         angle=1,
         metric="score",
-        input_type="dictionary",
         sleep=0,
     ):
-        super().__init__(metric, input_type, sleep)
+        super().__init__(metric, sleep)
         self.n_dim = 2
 
         self.A = A

@@ -25,8 +25,8 @@ class DropWaveFunction(MathematicalFunction):
     formula = r"""f(x, y) = -\frac{1+\cos (12\sqrt{x^2+y^2})}{0.5 (x^2 + y^2) + 2}"""
     global_minimum = r"""f(0, 0)= -1"""
 
-    def __init__(self, metric="score", input_type="dictionary", sleep=0):
-        super().__init__(metric, input_type, sleep)
+    def __init__(self, metric="score", sleep=0):
+        super().__init__(metric, sleep)
         self.n_dim = 2
 
     def create_objective_function(self):
