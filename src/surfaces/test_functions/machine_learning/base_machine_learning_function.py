@@ -2,6 +2,8 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
+import numpy as np
+import pandas as pd
 
 from .._base_test_function import BaseTestFunction
 from ...data_collector import SurfacesDataCollector
