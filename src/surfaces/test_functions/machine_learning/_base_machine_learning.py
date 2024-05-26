@@ -10,8 +10,8 @@ from ...data_collector import SurfacesDataCollector
 
 
 class MachineLearningFunction(BaseTestFunction):
-    def __init__(self, metric, sleep, evaluate_from_data):
-        super().__init__(metric, sleep)
+    def __init__(self, *args, sleep=0, evaluate_from_data=False, **kwargs):
+        super().__init__(*args, sleep, **kwargs)
 
         if evaluate_from_data:
             self.sdc = SurfacesDataCollector()

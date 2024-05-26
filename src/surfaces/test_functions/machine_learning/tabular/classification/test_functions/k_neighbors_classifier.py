@@ -20,13 +20,8 @@ class KNeighborsClassifierFunction(BaseClassification):
     cv_default = [2, 3, 4, 5, 8, 10]
     dataset_default = [digits_data, wine_data, iris_data]
 
-    def __init__(
-        self,
-        metric=None,
-        sleep=0,
-        evaluate_from_data=False,
-    ):
-        super().__init__(metric, sleep, evaluate_from_data)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def search_space(
         self,

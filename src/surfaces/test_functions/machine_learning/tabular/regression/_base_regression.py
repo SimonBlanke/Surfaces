@@ -7,7 +7,5 @@ from .._base_tabular import BaseTabular
 
 
 class BaseRegression(BaseTabular):
-    metric = "r2"  # called 'scoring' in sklearn
-
-    def __init__(self, metric, sleep, evaluate_from_data):
-        super().__init__(metric, sleep, evaluate_from_data)
+    def __init__(self, *args, metric="r2", **kwargs):
+        super().__init__(*args, metric, **kwargs)
