@@ -33,7 +33,6 @@ class SurfacesDataCollector(SqlSearchData):
 
     def _array_search_space(self, objective_function, search_space):
         while self.search_data_length < self.search_space_size:
-            print("\n ------------ search_space_size", self.search_space_size)
             opt = GridSearchOptimizer(
                 search_space,
                 direction="orthogonal",
@@ -52,13 +51,9 @@ class SurfacesDataCollector(SqlSearchData):
 
             self.search_data = self.search_data.drop_duplicates(subset=self.para_names)
             self.search_data_length = len(self.search_data)
-            print(
-                "\n ------------ self.search_data_length", self.search_data_length, "\n"
-            )
 
     def _list_search_space(self, objective_function, search_space):
         while self.search_data_length < self.search_space_size:
-            print("\n ------------ search_space_size", self.search_space_size)
 
             hyper = Hyperactive(verbosity=["progress_bar"])
             hyper.add_search(
@@ -78,9 +73,6 @@ class SurfacesDataCollector(SqlSearchData):
 
             self.search_data = self.search_data.drop_duplicates(subset=self.para_names)
             self.search_data_length = len(self.search_data)
-            print(
-                "\n ------------ self.search_data_length", self.search_data_length, "\n"
-            )
 
     def collect(
         self,
