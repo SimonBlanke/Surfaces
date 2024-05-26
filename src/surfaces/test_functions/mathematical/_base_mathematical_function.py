@@ -65,13 +65,3 @@ class MathematicalFunction(BaseTestFunction):
                 add_dim(search_space_, dim, min, max)
 
         return search_space_
-
-    @staticmethod
-    def search_space_from_blank(search_space_blank, value_types):
-        search_space = {}
-        for para_names, blank_values in search_space_blank.items():
-            dim_values = np.arange(*blank_values)
-            if value_types == "list":
-                dim_values = list(dim_values)
-            search_space[para_names] = dim_values
-        return search_space

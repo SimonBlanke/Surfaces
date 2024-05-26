@@ -42,12 +42,6 @@ class BaseTestFunction:
 
     def objective_function(self, *input):
         time.sleep(self.sleep)
-        """
-        if self.input_type == "dictionary":
-            metric = self.pure_objective_function(*input)
-        elif self.input_type == "arrays":
-            metric = self.objective_function_np(*input)
-        """
 
         metric = self.pure_objective_function(*input)
         return self.return_metric(metric)
