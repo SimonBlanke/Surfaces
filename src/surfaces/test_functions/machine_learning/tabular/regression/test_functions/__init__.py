@@ -2,10 +2,9 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from .test_functions import (
-    KNeighborsRegressorFunction,
-    GradientBoostingRegressorFunction,
-)
+
+from .k_neighbors_regressor import KNeighborsRegressorFunction
+from .gradient_boosting_regressor import GradientBoostingRegressorFunction
 
 
 __all__ = [

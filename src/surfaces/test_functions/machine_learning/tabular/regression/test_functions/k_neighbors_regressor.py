@@ -1,24 +1,29 @@
+# Author: Simon Blanke
+# Email: simon.blanke@yahoo.com
+# License: MIT License
+
+
 import numpy as np
 
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neighbors import KNeighborsRegressor
 
 from sklearn.model_selection import cross_val_score
-from .datasets import digits_data, wine_data, iris_data
+from ..datasets import diabetes_data
 
-from .base_machine_learning_function import MachineLearningFunction
+from .._base_regression import BaseRegression
 
 
-class KNeighborsClassifierFunction(MachineLearningFunction):
-    name = "KNeighbors Classifier Function"
-    _name_ = "k_neighbors_classifier"
-    __name__ = "KNeighborsClassifierFunction"
+class KNeighborsRegressorFunction(BaseRegression):
+    name = "KNeighbors Regressor Function"
+    _name_ = "k_neighbors_regressor"
+    __name__ = "KNeighborsRegressorFunction"
 
     para_names = ["n_neighbors", "algorithm", "cv", "dataset"]
 
     n_neighbors_default = list(np.arange(3, 150, 5))
     algorithm_default = ["auto", "ball_tree", "kd_tree", "brute"]
     cv_default = [2, 3, 4, 5, 8, 10]
-    dataset_default = [digits_data, wine_data, iris_data]
+    dataset_default = [diabetes_data]
 
     def __init__(
         self,
@@ -49,8 +54,8 @@ class KNeighborsClassifierFunction(MachineLearningFunction):
         return search_space
 
     def create_objective_function(self):
-        def k_neighbors_classifier(params):
-            knc = KNeighborsClassifier(
+        def k_neighbors_regressor(params):
+            knc = KNeighborsRegressor(
                 n_neighbors=params["n_neighbors"],
                 algorithm=params["algorithm"],
             )
@@ -58,4 +63,4 @@ class KNeighborsClassifierFunction(MachineLearningFunction):
             scores = cross_val_score(knc, X, y, cv=params["cv"], scoring=self.metric)
             return scores.mean()
 
-        self.pure_objective_function = k_neighbors_classifier
+        self.pure_objective_function = k_neighbors_regressor

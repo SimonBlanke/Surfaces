@@ -3,17 +3,19 @@
 # License: MIT License
 
 
-from .tabular_classifiers import KNeighborsClassifierFunction
-from .tabular_regressors import (
-    GradientBoostingRegressorFunction,
+from .tabular import (
+    KNeighborsClassifierFunction,
     KNeighborsRegressorFunction,
+    GradientBoostingRegressorFunction,
 )
+
 
 __all__ = [
     "KNeighborsClassifierFunction",
-    "GradientBoostingRegressorFunction",
     "KNeighborsRegressorFunction",
+    "GradientBoostingRegressorFunction",
 ]
+
 
 machine_learning_functions = [
     KNeighborsClassifierFunction,

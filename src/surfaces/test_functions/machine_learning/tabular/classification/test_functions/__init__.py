@@ -2,9 +2,8 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from .test_functions import (
-    KNeighborsClassifierFunction,
-)
+
+from .k_neighbors_classifier import KNeighborsClassifierFunction
 
 
 __all__ = [
