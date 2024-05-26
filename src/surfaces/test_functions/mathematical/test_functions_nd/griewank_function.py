@@ -5,7 +5,7 @@
 
 import numpy as np
 
-from .._base_objective_function import MathematicalFunction
+from .._base_mathematical_function import MathematicalFunction
 
 
 class GriewankFunction(MathematicalFunction):

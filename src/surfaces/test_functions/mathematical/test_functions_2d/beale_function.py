@@ -3,7 +3,7 @@
 # License: MIT License
 
 
-from .._base_objective_function import MathematicalFunction
+from .._base_mathematical_function import MathematicalFunction
 
 
 class BealeFunction(MathematicalFunction):
