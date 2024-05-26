@@ -19,12 +19,13 @@ class MathematicalFunction(BaseTestFunction):
         self,
         metric="loss",
         sleep=0,
-        evaluate_from_data=False,
     ):
-        super().__init__(metric, sleep, evaluate_from_data)
+        super().__init__(metric, sleep)
 
         self.metric = metric
         self.sleep = sleep
+
+        self._objective_function_ = self.pure_objective_function
 
     def return_metric(self, loss):
         if self.metric == "score":
