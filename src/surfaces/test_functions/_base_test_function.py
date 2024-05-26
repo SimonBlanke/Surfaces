@@ -15,11 +15,17 @@ class BaseTestFunction:
     objective_function: callable
     pure_objective_function: callable
 
+    def create_objective_function_(function):
+        def wrapper(self, *args, **kwargs):
+            function(*args, **kwargs)
+            self.create_objective_function()
+
+        return wrapper
+
+    @create_objective_function_
     def __init__(self, metric, sleep):
         self.sleep = sleep
         self.metric = metric
-
-        self.create_objective_function()
 
     def create_objective_function(self):
         e_msg = "'create_objective_function'-method is not implemented"
