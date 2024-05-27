@@ -17,8 +17,11 @@ class BaseTestFunction:
 
     def create_objective_function_(function):
         def wrapper(self, *args, **kwargs):
-            function(*args, **kwargs)
+            function(self, *args, **kwargs)
             self.create_objective_function()
+            self.objective_function.__func__.__name__ = (
+                self.pure_objective_function.__name__
+            )
 
         return wrapper
 
