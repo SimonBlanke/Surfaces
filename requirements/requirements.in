@@ -3,4 +3,4 @@ pandas
 matplotlib
 plotly
 hyperactive
-search-data-collector==0.5.0
+search-data-collector==0.6.0
