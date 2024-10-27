@@ -42,11 +42,7 @@ class BaseTestFunction:
         return metric
 
     def objective_function_np(self, *args):
-        para = {}
-        for i, arg in enumerate(args):
-            dim_str = "x" + str(i)
-            para[dim_str] = arg
-
+        para = {f"x{i}": arg for i, arg in enumerate(args)}
         return self._objective_function_(para)
 
     def objective_function(self, *input):
