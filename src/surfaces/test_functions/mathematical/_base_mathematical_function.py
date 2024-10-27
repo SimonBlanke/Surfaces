@@ -37,12 +37,14 @@ class MathematicalFunction(BaseTestFunction):
 
     @staticmethod
     def conv_arrays2lists(search_space):
-        search_space_lists = {}
-        for para_name, dim_values in search_space.items():
-            search_space_lists[para_name] = list(dim_values)
-        return search_space_lists
+        return {
+            para_name: list(dim_values)
+            for para_name, dim_values in search_space.items()
+        }
 
-    def create_n_dim_search_space(self, min=-5, max=5, size=100, value_types="array"):
+    def create_n_dim_search_space(
+        self, min=-5, max=5, size=100, value_types="array"
+    ):
         search_space_ = {}
         dim_size = size ** (1 / self.n_dim)
 
