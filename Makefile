@@ -28,9 +28,6 @@ test-examples:
 	cd tests; \
 		python _test_examples.py
 
-tox-test:
-	tox -- -x -p no:warnings -rfEX tests/ \
-
 py-test:
 	python -m pytest -x -p no:warnings tests/; \
 
