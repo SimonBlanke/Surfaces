@@ -134,12 +134,11 @@ class SurfacesDataCollector(SqlSearchData):
         if table is None:
             table = objective_function.__name__
 
-        self._init_search_data(objective_function, search_space)
-        if isinstance(search_space[self.para_names[0]], np.ndarray):
-            self._array_search_space(objective_function, search_space)
-        else:
-            self._list_search_space(objective_function, search_space)
+        # Use unified grid search for both array and list search spaces
+        self._perform_grid_search(objective_function, search_space)
 
+        # Convert our custom DataFrame to format expected by save method
+        # The save method will need to handle our custom DataFrame
         self.save(table, self.search_data, if_exists)
 
     def load(self, table):
