@@ -117,6 +117,20 @@ class SurfacesDataCollector(SqlSearchData):
         table=None,
         if_exists="append",
     ):
+        """
+        Collect surface data by performing grid search on the objective function.
+
+        Parameters:
+        -----------
+        objective_function : callable
+            Function to optimize
+        search_space : dict
+            Dictionary mapping parameter names to their possible values
+        table : str
+            Name of the table to save results to
+        if_exists : str
+            How to handle existing data ('append', 'replace', etc.)
+        """
         if table is None:
             table = objective_function.__name__
 
