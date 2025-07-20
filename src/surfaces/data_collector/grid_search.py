@@ -1,8 +1,3 @@
-# MODULE: src/surfaces/data_collector/grid_search.py
-# ─────────────────────────────────────────────────────────────────────────────
-# Custom Grid Search Implementation
-# A dependency-free grid search optimizer for replacing gradient_free_optimizers and hyperactive
-
 import numpy as np
 import itertools
 from typing import Dict, List, Tuple, Union, Callable, Any
