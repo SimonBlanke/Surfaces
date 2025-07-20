@@ -142,4 +142,5 @@ class SurfacesDataCollector(SqlSearchData):
         self.save(table, self.search_data, if_exists)
 
     def load(self, table):
+        """Load data from the specified table."""
         return self.sql_data.load(table)
