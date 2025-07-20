@@ -67,49 +67,6 @@ class SurfacesDataCollector(SqlSearchData):
             self.search_data = self.search_data.drop_duplicates(subset=self.para_names)
             self.search_data_length = len(self.search_data)
 
-    def _array_search_space(self, objective_function, search_space):
-        while self.search_data_length < self.search_space_size:
-            opt = GridSearchOptimizer(
-                search_space,
-                direction="orthogonal",
-                initialize={},
-            )
-            opt.search(
-                objective_function,
-                n_iter=int(self.search_space_size * 1),
-                verbosity=["progress_bar"],
-            )
-
-            self.search_data = pd.concat(
-                [self.search_data, opt.search_data],
-                ignore_index=True,
-            )
-
-            self.search_data = self.search_data.drop_duplicates(subset=self.para_names)
-            self.search_data_length = len(self.search_data)
-
-    def _list_search_space(self, objective_function, search_space):
-        while self.search_data_length < self.search_space_size:
-
-            hyper = Hyperactive(verbosity=["progress_bar"])
-            hyper.add_search(
-                objective_function,
-                search_space,
-                initialize={},
-                n_iter=self.search_space_size,
-                optimizer=HyperactiveGridSearchOptimizer(direction="orthogonal"),
-                memory_warm_start=self.search_data,
-            )
-            hyper.run()
-
-            self.search_data = pd.concat(
-                [self.search_data, hyper.search_data(objective_function)],
-                ignore_index=True,
-            )
-
-            self.search_data = self.search_data.drop_duplicates(subset=self.para_names)
-            self.search_data_length = len(self.search_data)
-
     def collect(
         self,
         objective_function,
