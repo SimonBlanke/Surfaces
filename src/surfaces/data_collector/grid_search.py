@@ -264,7 +264,7 @@ class DataFrame:
         # Get columns from first non-empty DataFrame
         columns = None
         for df in dfs:
-            if hasattr(df, "columns") and df.columns:
+            if hasattr(df, "columns") and len(df.columns) > 0:
                 columns = df.columns
                 break
 
