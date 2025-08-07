@@ -4,14 +4,15 @@
 
 
 import numpy as np
+import pandas as pd
 from functools import reduce
 
-from search_data_collector import SqlSearchData
+from search_data_collector import SqlDataCollector
 from .grid_search import GridSearchOptimizer, DataFrame, SearchData
 from .config import default_search_data_path
 
 
-class SurfacesDataCollector(SqlSearchData):
+class SurfacesDataCollector(SqlDataCollector):
     def __init__(self, path=None) -> None:
         if path is None:
             path = default_search_data_path
@@ -91,12 +92,15 @@ class SurfacesDataCollector(SqlSearchData):
         if table is None:
             table = objective_function.__name__
 
+        # Initialize search data before performing grid search
+        self._init_search_data(objective_function, search_space)
+        
         # Use unified grid search for both array and list search spaces
         self._perform_grid_search(objective_function, search_space)
 
-        # Convert our custom DataFrame to format expected by save method
-        # The save method will need to handle our custom DataFrame
-        self.save(table, self.search_data, if_exists)
+        # Convert our custom DataFrame to pandas DataFrame for saving
+        pandas_df = pd.DataFrame(self.search_data.data, columns=self.search_data.columns)
+        self.save(table, pandas_df, if_exists)
 
     def load(self, table):
         """Load data from the specified table."""
