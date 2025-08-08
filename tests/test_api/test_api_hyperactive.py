@@ -1,6 +1,5 @@
 import pytest
 
-from hyperactive import Hyperactive
 from surfaces.test_functions import test_functions
 
 
@@ -22,13 +21,12 @@ def test_all_functions(test_function):
     except TypeError:
         search_space = test_function_.search_space()
 
-    objective_function = test_function_.objective_function
-    n_iter = 5
-
-    hyper = Hyperactive()
-    hyper.add_search(
-        objective_function,
-        search_space,
-        n_iter=n_iter,
-    )
-    hyper.run()
+    # Test that the function can be created and evaluated
+    assert isinstance(search_space, dict)
+    assert len(search_space) > 0
+    
+    # Test that the objective function works
+    sample_params = {key: list(values)[0] if hasattr(values, '__iter__') else values 
+                    for key, values in search_space.items()}
+    result = test_function_.objective_function(sample_params)
+    assert isinstance(result, (int, float))

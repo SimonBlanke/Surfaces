@@ -47,8 +47,8 @@ class SimionescuFunction(MathematicalFunction):
 
     def create_objective_function(self):
         def simionescu_function(params):
-            x = params["x0"].reshape(-1)
-            y = params["x1"].reshape(-1)
+            x = np.asarray(params["x0"]).reshape(-1)
+            y = np.asarray(params["x1"]).reshape(-1)
 
             condition = (self.r_T + self.r_S * np.cos(self.n * np.arctan(x / y))) ** 2
 
@@ -59,6 +59,9 @@ class SimionescuFunction(MathematicalFunction):
             loss = mask_int * loss
             loss[~mask] = np.nan
 
+            # Return scalar if input was scalar
+            if loss.size == 1:
+                return float(loss[0])
             return loss
 
         self.pure_objective_function = simionescu_function

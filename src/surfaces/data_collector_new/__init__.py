@@ -1,2 +1,3 @@
 from .search_data_collector import SearchDataCollector
 from .search_data_lookup import SearchDataLookup
+from .search_data_manager import SearchDataManager

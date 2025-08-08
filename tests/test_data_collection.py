@@ -33,7 +33,7 @@ def test_all_mathematical_functions(test_function):
 
     sdc = SurfacesDataCollector(path=search_data_path)
     sdc.collect(objective_function, search_space)
-    sdc.remove()
+    sdc.remove(objective_function.__name__)
 
 
 def test_all_machine_learning_functions():
@@ -46,4 +46,4 @@ def test_all_machine_learning_functions():
 
     sdc = SurfacesDataCollector(path=search_data_path)
     sdc.collect(objective_function, search_space)
-    sdc.remove()
+    sdc.remove(objective_function.__name__)
