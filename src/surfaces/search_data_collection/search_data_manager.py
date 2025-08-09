@@ -97,18 +97,21 @@ class SearchDataManager:
         """
         db_path = self.get_db_path(function_name)
         
+        # Convert parameter values to strings for storage
+        param_values = []
+        param_names = []
+        
+        for key, value in parameters.items():
+            param_names.append(key)
+            if hasattr(value, '__name__'):  # Handle function objects
+                param_values.append(value.__name__)
+            else:
+                param_values.append(str(value))
+        
+        # Ensure table exists before storing
+        self.create_table(function_name, param_names)
+        
         with sqlite3.connect(db_path) as conn:
-            # Convert parameter values to strings for storage
-            param_values = []
-            param_names = []
-            
-            for key, value in parameters.items():
-                param_names.append(key)
-                if hasattr(value, '__name__'):  # Handle function objects
-                    param_values.append(value.__name__)
-                else:
-                    param_values.append(str(value))
-            
             # Insert data
             columns = param_names + ["score", "evaluation_time", "timestamp"]
             values = param_values + [score, evaluation_time, time.time()]

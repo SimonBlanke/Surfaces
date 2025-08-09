@@ -8,12 +8,65 @@ from .search_data_manager import SearchDataManager
 from .grid_generator import GridGenerator
 
 
+class DatasetRegistry:
+    """
+    Registry for dataset functions to handle object serialization in search spaces.
+    
+    Maps string identifiers to dataset functions, allowing datasets to be stored
+    in the database as strings and resolved back to callable functions.
+    """
+    
+    def __init__(self):
+        self._datasets = {}
+        self._register_default_datasets()
+    
+    def _register_default_datasets(self):
+        """Register default datasets from the surfaces package."""
+        # Import classification datasets
+        from ..test_functions.machine_learning.tabular.classification.datasets import (
+            digits_data, wine_data, iris_data
+        )
+        self.register("digits_data", digits_data)
+        self.register("wine_data", wine_data) 
+        self.register("iris_data", iris_data)
+        
+        # Import regression datasets
+        from ..test_functions.machine_learning.tabular.regression.datasets import (
+            diabetes_data
+        )
+        self.register("diabetes_data", diabetes_data)
+    
+    def register(self, name: str, dataset_func: Callable):
+        """Register a dataset function with a string identifier."""
+        self._datasets[name] = dataset_func
+    
+    def get(self, name: str) -> Callable:
+        """Get a dataset function by its string identifier."""
+        if name not in self._datasets:
+            raise ValueError(f"Dataset '{name}' not found in registry. Available: {list(self._datasets.keys())}")
+        return self._datasets[name]
+    
+    def get_name(self, dataset_func: Callable) -> str:
+        """Get the string identifier for a dataset function."""
+        for name, func in self._datasets.items():
+            if func is dataset_func:
+                return name
+        # If not found, use the function name as fallback
+        return getattr(dataset_func, '__name__', str(dataset_func))
+    
+    def list_datasets(self) -> List[str]:
+        """List all registered dataset names."""
+        return list(self._datasets.keys())
+
+
 class SearchDataCollector:
     """
     Collects search data by evaluating machine learning functions across parameter grids.
     
-    This class coordinates the evaluation of ML functions across all parameter combinations,
-    measures execution time for benchmarking, and stores results for future fast lookups.
+    Enhanced features:
+    - Automatic use of default search spaces from ML functions
+    - Intelligent handling of dataset objects through string serialization
+    - Incremental database updates
     """
     
     def __init__(self, data_manager: Optional[SearchDataManager] = None):
@@ -25,6 +78,7 @@ class SearchDataCollector:
         """
         self.data_manager = data_manager or SearchDataManager()
         self.grid_generator = GridGenerator()
+        self.dataset_registry = DatasetRegistry()
     
     def collect_search_data(self, 
                           test_function, 
@@ -46,17 +100,21 @@ class SearchDataCollector:
         # Get function name and search space
         function_name = getattr(test_function, '_name_', test_function.__class__.__name__)
         
+        # Use default search space if none provided
         if search_space is None:
             search_space = test_function.search_space()
         
+        # Process search space to handle dataset objects
+        processed_search_space = self._process_search_space(search_space)
+        
         # Validate search space
-        validation_errors = self.grid_generator.validate_search_space(search_space)
+        validation_errors = self.grid_generator.validate_search_space(processed_search_space)
         if validation_errors:
             raise ValueError(f"Invalid search space: {'; '.join(validation_errors)}")
         
         # Get parameter names and total combinations
-        parameter_names = list(search_space.keys())
-        total_combinations = self.grid_generator.count_combinations(search_space)
+        parameter_names = list(processed_search_space.keys())
+        total_combinations = self.grid_generator.count_combinations(processed_search_space)
         
         if verbose:
             print(f"Collecting search data for: {function_name}")
@@ -72,43 +130,56 @@ class SearchDataCollector:
             if verbose:
                 print(f"Found {existing_count} existing evaluations")
         
+        # Create wrapper function that handles dataset resolution
+        original_objective = test_function.pure_objective_function
+        wrapper_objective = self._create_dataset_wrapper(original_objective)
+        test_function.pure_objective_function = wrapper_objective
+        
         # Collect evaluations
         start_time = time.time()
         collected_count = 0
         batch_evaluations = []
         
-        for i, parameters in enumerate(self.grid_generator.generate_grid_iterator(search_space)):
-            # Check if evaluation already exists
-            existing = self.data_manager.lookup_evaluation(function_name, parameters)
-            if existing is not None:
-                continue
-            
-            # Evaluate function with timing
-            eval_start = time.time()
-            try:
-                score = test_function.pure_objective_function(parameters)
-            except Exception as e:
-                if verbose:
-                    print(f"Error evaluating parameters {parameters}: {e}")
-                continue
-            eval_time = time.time() - eval_start
-            
-            # Add to batch
-            batch_evaluations.append((parameters, score, eval_time))
-            collected_count += 1
-            
-            # Store batch when it reaches batch_size
-            if len(batch_evaluations) >= batch_size:
-                self.data_manager.store_batch(function_name, parameter_names, batch_evaluations)
-                batch_evaluations = []
+        try:
+            for i, parameters in enumerate(self.grid_generator.generate_grid_iterator(processed_search_space)):
+                # Check if evaluation already exists
+                existing = self.data_manager.lookup_evaluation(function_name, parameters)
+                if existing is not None:
+                    continue
                 
-                if verbose:
-                    progress = (i + 1) / total_combinations * 100
-                    print(f"Progress: {progress:.1f}% ({i + 1}/{total_combinations})")
+                # Evaluate function with timing
+                eval_start = time.time()
+                try:
+                    score = test_function.pure_objective_function(parameters)
+                except Exception as e:
+                    if verbose:
+                        print(f"Error evaluating parameters {parameters}: {e}")
+                    continue
+                eval_time = time.time() - eval_start
+                
+                # Add to batch
+                batch_evaluations.append((parameters, score, eval_time))
+                collected_count += 1
+                
+                # Store batch when it reaches batch_size
+                if len(batch_evaluations) >= batch_size:
+                    self.data_manager.store_batch(function_name, parameter_names, batch_evaluations)
+                    batch_evaluations = []
+                    
+                    if verbose:
+                        progress = (i + 1) / total_combinations * 100
+                        print(f"Progress: {progress:.1f}% ({i + 1}/{total_combinations})")
+            
+            # Store remaining evaluations
+            if batch_evaluations:
+                self.data_manager.store_batch(function_name, parameter_names, batch_evaluations)
         
-        # Store remaining evaluations
-        if batch_evaluations:
-            self.data_manager.store_batch(function_name, parameter_names, batch_evaluations)
+        except Exception as e:
+            # Re-raise the exception after cleanup
+            raise
+        finally:
+            # Always restore original objective function
+            test_function.pure_objective_function = original_objective
         
         total_time = time.time() - start_time
         
@@ -225,3 +296,48 @@ class SearchDataCollector:
             "min_time": min(eval_times),
             "max_time": max(eval_times)
         }
+    
+    def _process_search_space(self, search_space: Dict[str, List[Any]]) -> Dict[str, List[Any]]:
+        """
+        Process search space to handle dataset objects.
+        
+        Converts callable dataset objects to string identifiers that can be stored in database.
+        """
+        processed = {}
+        
+        for param_name, param_values in search_space.items():
+            if param_name == "dataset":
+                # Convert dataset functions to string identifiers
+                processed_values = []
+                for value in param_values:
+                    if callable(value):
+                        dataset_name = self.dataset_registry.get_name(value)
+                        processed_values.append(dataset_name)
+                    else:
+                        processed_values.append(value)
+                processed[param_name] = processed_values
+            else:
+                processed[param_name] = param_values
+        
+        return processed
+    
+    def _create_dataset_wrapper(self, original_objective: Callable) -> Callable:
+        """
+        Create a wrapper function that resolves dataset string identifiers back to functions.
+        """
+        def wrapper(params):
+            processed_params = params.copy()
+            
+            # Resolve dataset string back to function if present
+            if "dataset" in processed_params:
+                dataset_value = processed_params["dataset"]
+                if isinstance(dataset_value, str):
+                    processed_params["dataset"] = self.dataset_registry.get(dataset_value)
+            
+            return original_objective(processed_params)
+        
+        return wrapper
+    
+    def register_dataset(self, name: str, dataset_func: Callable):
+        """Register a custom dataset function."""
+        self.dataset_registry.register(name, dataset_func)
