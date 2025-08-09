@@ -17,10 +17,12 @@ from surfaces.test_functions.mathematical.test_functions_2d import *
 from surfaces.test_functions.mathematical.test_functions_nd import *
 from surfaces.visualize import matplotlib_heatmap, matplotlib_surface
 
-# Ensure output directory exists
+# Ensure output directories exist
 script_dir = os.path.dirname(os.path.abspath(__file__))
-output_dir = os.path.join(script_dir, '..', 'doc', 'images')
-os.makedirs(output_dir, exist_ok=True)
+main_output_dir = os.path.join(script_dir, '..', 'doc', 'images')
+mathematical_output_dir = os.path.join(main_output_dir, 'mathematical')
+os.makedirs(main_output_dir, exist_ok=True)
+os.makedirs(mathematical_output_dir, exist_ok=True)
 
 # Configuration for each function type
 FUNCTION_CONFIGS = {
@@ -163,7 +165,7 @@ def generate_plots():
                 title=f"{func_instance.name} - Heatmap" if hasattr(func_instance, 'name') else f"{func_name} - Heatmap",
                 norm=norm
             )
-            heatmap_path = os.path.join(output_dir, f"{file_name}_heatmap.jpg")
+            heatmap_path = os.path.join(mathematical_output_dir, f"{file_name}_heatmap.jpg")
             heatmap_fig.savefig(heatmap_path, dpi=150, bbox_inches='tight')
             heatmap_fig.close()
             
@@ -175,7 +177,7 @@ def generate_plots():
                 title=f"{func_instance.name} - Surface" if hasattr(func_instance, 'name') else f"{func_name} - Surface",
                 norm=norm
             )
-            surface_path = os.path.join(output_dir, f"{file_name}_surface.jpg")
+            surface_path = os.path.join(mathematical_output_dir, f"{file_name}_surface.jpg")
             surface_fig.savefig(surface_path, dpi=150, bbox_inches='tight')
             surface_fig.close()
             
@@ -185,7 +187,7 @@ def generate_plots():
             print(f"  ✗ Error generating plots for {func_name}: {e}")
             continue
     
-    print(f"\n✓ Mathematical function plot generation complete! Images saved to {output_dir}")
+    print(f"\n✓ Mathematical function plot generation complete! Images saved to {mathematical_output_dir}")
     
     # Generate ML function plots
     print("\nGenerating ML function plots...")

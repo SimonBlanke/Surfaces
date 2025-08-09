@@ -24,10 +24,12 @@ from surfaces.visualize import (
 
 # Ensure output directories exist
 script_dir = os.path.dirname(os.path.abspath(__file__))
-output_dir = os.path.join(script_dir, '..', 'doc', 'images')
-ml_output_dir = os.path.join(output_dir, 'ml_functions')
-os.makedirs(output_dir, exist_ok=True)
-os.makedirs(ml_output_dir, exist_ok=True)
+main_images_dir = os.path.join(script_dir, '..', 'doc', 'images')
+ml_functions_dir = os.path.join(main_images_dir, 'ml_functions')
+ml_detailed_dir = os.path.join(ml_functions_dir, 'detailed')
+os.makedirs(main_images_dir, exist_ok=True)
+os.makedirs(ml_functions_dir, exist_ok=True)
+os.makedirs(ml_detailed_dir, exist_ok=True)
 
 # ML Function configurations with reduced parameter spaces for faster evaluation
 ML_FUNCTION_CONFIGS = {
@@ -100,9 +102,9 @@ def generate_ml_plots():
         reduced_space = config['reduced_search_space']
         ml_func = create_reduced_ml_function(func_class, reduced_space)
         
-        # Create function-specific output directory
-        func_output_dir = os.path.join(ml_output_dir, ml_func._name_)
-        os.makedirs(func_output_dir, exist_ok=True)
+        # Create function-specific detailed output directory
+        func_detailed_dir = os.path.join(ml_detailed_dir, ml_func._name_)
+        os.makedirs(func_detailed_dir, exist_ok=True)
         
         print(f"Search space: {ml_func.search_space()}")
         
@@ -116,13 +118,13 @@ def generate_ml_plots():
                 title=f"{ml_func.name} - {param1} vs {param2}"
             )
             
-            # Save as image
-            output_path = os.path.join(func_output_dir, f"{param1}_vs_{param2}_heatmap.jpg")
-            fig.write_image(output_path, format="jpeg", width=900, height=700)
+            # Save detailed image
+            detailed_path = os.path.join(func_detailed_dir, f"{param1}_vs_{param2}_heatmap.jpg")
+            fig.write_image(detailed_path, format="jpeg", width=900, height=700)
             
-            # Also save to main images directory for README
-            main_output_path = os.path.join(output_dir, f"{ml_func._name_}_{param1}_vs_{param2}_heatmap.jpg")
-            fig.write_image(main_output_path, format="jpeg", width=900, height=700)
+            # Save main image for README
+            main_path = os.path.join(ml_functions_dir, f"{ml_func._name_}_{param1}_vs_{param2}_heatmap.jpg")
+            fig.write_image(main_path, format="jpeg", width=900, height=700)
             
             print(f"    ✓ Saved {param1} vs {param2} heatmap")
         
@@ -136,21 +138,21 @@ def generate_ml_plots():
                 title=f"{ml_func.name} - Dataset vs {hyperparameter}"
             )
             
-            # Save as image
-            output_path = os.path.join(func_output_dir, f"dataset_vs_{hyperparameter}_analysis.jpg")
-            fig.write_image(output_path, format="jpeg", width=1000, height=700)
+            # Save detailed image
+            detailed_path = os.path.join(func_detailed_dir, f"dataset_vs_{hyperparameter}_analysis.jpg")
+            fig.write_image(detailed_path, format="jpeg", width=1000, height=700)
             
-            # Also save to main images directory for README
-            main_output_path = os.path.join(output_dir, f"{ml_func._name_}_dataset_vs_{hyperparameter}_analysis.jpg")
-            fig.write_image(main_output_path, format="jpeg", width=1000, height=700)
+            # Save main image for README
+            main_path = os.path.join(ml_functions_dir, f"{ml_func._name_}_dataset_vs_{hyperparameter}_analysis.jpg")
+            fig.write_image(main_path, format="jpeg", width=1000, height=700)
             
             print(f"    ✓ Saved dataset vs {hyperparameter} analysis")
                 
         print(f"✓ Completed {func_name} analysis")
     
     print(f"\n✓ ML plot generation complete! Images saved to:")
-    print(f"  - Individual function plots: {ml_output_dir}")
-    print(f"  - README plots: {output_dir}")
+    print(f"  - Detailed function plots: {ml_detailed_dir}")
+    print(f"  - README plots: {ml_functions_dir}")
 
 def generate_sample_plots():
     """Generate a few sample plots for testing."""
@@ -175,7 +177,7 @@ def generate_sample_plots():
         ml_func, 'n_neighbors', 'algorithm',
         title="Sample: KNN Hyperparameter Analysis"
     )
-    fig1.write_image(os.path.join(output_dir, "sample_knn_hyperparams.jpg"), 
+    fig1.write_image(os.path.join(ml_functions_dir, "sample_knn_hyperparams.jpg"), 
                     format="jpeg", width=900, height=700)
     
     print("Creating sample dataset analysis plot...")
@@ -183,7 +185,7 @@ def generate_sample_plots():
         ml_func, 'n_neighbors',
         title="Sample: Dataset vs n_neighbors"
     )
-    fig2.write_image(os.path.join(output_dir, "sample_knn_datasets.jpg"), 
+    fig2.write_image(os.path.join(ml_functions_dir, "sample_knn_datasets.jpg"), 
                     format="jpeg", width=1000, height=700)
     
     print("✓ Sample plots generated successfully!")

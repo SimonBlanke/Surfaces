@@ -47,6 +47,6 @@ jobs:
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
         commit_message: "🤖 Auto-update function visualization plots"
-        file_pattern: "doc/images/*.jpg"
+        file_pattern: "doc/images/mathematical/*.jpg doc/images/ml_functions/*.jpg"
         commit_user_name: "github-actions[bot]"
         commit_user_email: "github-actions[bot]@users.noreply.github.com"
