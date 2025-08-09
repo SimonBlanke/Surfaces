@@ -19,7 +19,7 @@ def main():
     print("=" * 40)
     
     # Create KNN classifier function
-    knn_func = KNeighborsClassifierFunction(metric="score")
+    knn_func = KNeighborsClassifierFunction(metric="accuracy")
     
     # Override search space with smaller values for faster demo
     def reduced_search_space(**kwargs):

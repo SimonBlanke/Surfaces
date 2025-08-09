@@ -68,8 +68,11 @@ ML_FUNCTION_CONFIGS = {
 
 def create_reduced_ml_function(func_class, reduced_space):
     """Create ML function instance with reduced search space for faster evaluation."""
-    # Create instance
-    func = func_class(metric="score")
+    # Create instance with appropriate metric
+    if 'Classifier' in func_class.__name__:
+        func = func_class(metric="accuracy")  # Use accuracy for classification
+    else:
+        func = func_class(metric="neg_mean_squared_error")  # Use MSE for regression
     
     # Override search_space method with reduced space
     original_search_space = func.search_space
@@ -92,71 +95,58 @@ def generate_ml_plots():
         print(f"Processing {func_name}...")
         print(f"{'='*50}")
         
-        try:
-            # Create function instance with reduced search space
-            func_class = config['class']
-            reduced_space = config['reduced_search_space']
-            ml_func = create_reduced_ml_function(func_class, reduced_space)
+        # Create function instance with reduced search space
+        func_class = config['class']
+        reduced_space = config['reduced_search_space']
+        ml_func = create_reduced_ml_function(func_class, reduced_space)
+        
+        # Create function-specific output directory
+        func_output_dir = os.path.join(ml_output_dir, ml_func._name_)
+        os.makedirs(func_output_dir, exist_ok=True)
+        
+        print(f"Search space: {ml_func.search_space()}")
+        
+        # 1. Generate hyperparameter vs hyperparameter plots
+        print("\n1. Generating hyperparameter interaction plots...")
+        for param1, param2 in config['hyperparameter_pairs']:
+            print(f"  Creating {param1} vs {param2} plot...")
             
-            # Create function-specific output directory
-            func_output_dir = os.path.join(ml_output_dir, ml_func._name_)
-            os.makedirs(func_output_dir, exist_ok=True)
+            fig = plotly_ml_hyperparameter_heatmap(
+                ml_func, param1, param2,
+                title=f"{ml_func.name} - {param1} vs {param2}"
+            )
             
-            print(f"Search space: {ml_func.search_space()}")
+            # Save as image
+            output_path = os.path.join(func_output_dir, f"{param1}_vs_{param2}_heatmap.jpg")
+            fig.write_image(output_path, format="jpeg", width=900, height=700)
             
-            # 1. Generate hyperparameter vs hyperparameter plots
-            print("\n1. Generating hyperparameter interaction plots...")
-            for param1, param2 in config['hyperparameter_pairs']:
-                print(f"  Creating {param1} vs {param2} plot...")
+            # Also save to main images directory for README
+            main_output_path = os.path.join(output_dir, f"{ml_func._name_}_{param1}_vs_{param2}_heatmap.jpg")
+            fig.write_image(main_output_path, format="jpeg", width=900, height=700)
+            
+            print(f"    ✓ Saved {param1} vs {param2} heatmap")
+        
+        # 2. Generate dataset vs hyperparameter plots  
+        print("\n2. Generating dataset analysis plots...")
+        for hyperparameter in config['dataset_analyses']:
+            print(f"  Creating dataset vs {hyperparameter} plot...")
+            
+            fig = plotly_dataset_hyperparameter_analysis(
+                ml_func, hyperparameter,
+                title=f"{ml_func.name} - Dataset vs {hyperparameter}"
+            )
+            
+            # Save as image
+            output_path = os.path.join(func_output_dir, f"dataset_vs_{hyperparameter}_analysis.jpg")
+            fig.write_image(output_path, format="jpeg", width=1000, height=700)
+            
+            # Also save to main images directory for README
+            main_output_path = os.path.join(output_dir, f"{ml_func._name_}_dataset_vs_{hyperparameter}_analysis.jpg")
+            fig.write_image(main_output_path, format="jpeg", width=1000, height=700)
+            
+            print(f"    ✓ Saved dataset vs {hyperparameter} analysis")
                 
-                try:
-                    fig = plotly_ml_hyperparameter_heatmap(
-                        ml_func, param1, param2,
-                        title=f"{ml_func.name} - {param1} vs {param2}"
-                    )
-                    
-                    # Save as image
-                    output_path = os.path.join(func_output_dir, f"{param1}_vs_{param2}_heatmap.jpg")
-                    fig.write_image(output_path, format="jpeg", width=900, height=700)
-                    
-                    # Also save to main images directory for README
-                    main_output_path = os.path.join(output_dir, f"{ml_func._name_}_{param1}_vs_{param2}_heatmap.jpg")
-                    fig.write_image(main_output_path, format="jpeg", width=900, height=700)
-                    
-                    print(f"    ✓ Saved {param1} vs {param2} heatmap")
-                    
-                except Exception as e:
-                    print(f"    ✗ Error creating {param1} vs {param2} plot: {e}")
-            
-            # 2. Generate dataset vs hyperparameter plots  
-            print("\n2. Generating dataset analysis plots...")
-            for hyperparameter in config['dataset_analyses']:
-                print(f"  Creating dataset vs {hyperparameter} plot...")
-                
-                try:
-                    fig = plotly_dataset_hyperparameter_analysis(
-                        ml_func, hyperparameter,
-                        title=f"{ml_func.name} - Dataset vs {hyperparameter}"
-                    )
-                    
-                    # Save as image
-                    output_path = os.path.join(func_output_dir, f"dataset_vs_{hyperparameter}_analysis.jpg")
-                    fig.write_image(output_path, format="jpeg", width=1000, height=700)
-                    
-                    # Also save to main images directory for README
-                    main_output_path = os.path.join(output_dir, f"{ml_func._name_}_dataset_vs_{hyperparameter}_analysis.jpg")
-                    fig.write_image(main_output_path, format="jpeg", width=1000, height=700)
-                    
-                    print(f"    ✓ Saved dataset vs {hyperparameter} analysis")
-                    
-                except Exception as e:
-                    print(f"    ✗ Error creating dataset vs {hyperparameter} plot: {e}")
-                    
-            print(f"✓ Completed {func_name} analysis")
-                    
-        except Exception as e:
-            print(f"✗ Error processing {func_name}: {e}")
-            continue
+        print(f"✓ Completed {func_name} analysis")
     
     print(f"\n✓ ML plot generation complete! Images saved to:")
     print(f"  - Individual function plots: {ml_output_dir}")
@@ -166,37 +156,37 @@ def generate_sample_plots():
     """Generate a few sample plots for testing."""
     print("Generating sample ML plots for testing...")
     
-    # Test with KNeighborsClassifier (smallest/fastest)
-    try:
-        ml_func = create_reduced_ml_function(
-            KNeighborsClassifierFunction, 
-            {
-                'n_neighbors': [3, 10, 20],  # Very small for testing
-                'algorithm': ['auto', 'ball_tree'], 
-                'cv': [3],
-            }
-        )
-        
-        print("Creating sample hyperparameter plot...")
-        fig1 = plotly_ml_hyperparameter_heatmap(
-            ml_func, 'n_neighbors', 'algorithm',
-            title="Sample: KNN Hyperparameter Analysis"
-        )
-        fig1.write_image(os.path.join(output_dir, "sample_knn_hyperparams.jpg"), 
-                        format="jpeg", width=900, height=700)
-        
-        print("Creating sample dataset analysis plot...")
-        fig2 = plotly_dataset_hyperparameter_analysis(
-            ml_func, 'n_neighbors',
-            title="Sample: Dataset vs n_neighbors"
-        )
-        fig2.write_image(os.path.join(output_dir, "sample_knn_datasets.jpg"), 
-                        format="jpeg", width=1000, height=700)
-        
-        print("✓ Sample plots generated successfully!")
-        
-    except Exception as e:
-        print(f"✗ Error generating sample plots: {e}")
+    # Create with proper metric
+    ml_func = KNeighborsClassifierFunction(metric="accuracy")
+    
+    # Override search space with small values for testing
+    def reduced_search_space_method(**kwargs):
+        return {
+            'n_neighbors': [3, 10, 20],  # Very small for testing
+            'algorithm': ['auto', 'ball_tree'], 
+            'cv': [3],
+            'dataset': ml_func.dataset_default  # Keep all datasets
+        }
+    
+    ml_func.search_space = reduced_search_space_method
+    
+    print("Creating sample hyperparameter plot...")
+    fig1 = plotly_ml_hyperparameter_heatmap(
+        ml_func, 'n_neighbors', 'algorithm',
+        title="Sample: KNN Hyperparameter Analysis"
+    )
+    fig1.write_image(os.path.join(output_dir, "sample_knn_hyperparams.jpg"), 
+                    format="jpeg", width=900, height=700)
+    
+    print("Creating sample dataset analysis plot...")
+    fig2 = plotly_dataset_hyperparameter_analysis(
+        ml_func, 'n_neighbors',
+        title="Sample: Dataset vs n_neighbors"
+    )
+    fig2.write_image(os.path.join(output_dir, "sample_knn_datasets.jpg"), 
+                    format="jpeg", width=1000, height=700)
+    
+    print("✓ Sample plots generated successfully!")
 
 if __name__ == "__main__":
     # Check if we should generate sample plots first (faster for testing)
