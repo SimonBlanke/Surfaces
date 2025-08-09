@@ -138,7 +138,7 @@ def get_function_instance(class_name):
 
 def generate_plots():
     """Generate heatmap and surface plots for all configured functions."""
-    print("Generating plots for objective functions...")
+    print("Generating plots for mathematical objective functions...")
     
     for func_name, config in FUNCTION_CONFIGS.items():
         print(f"\nProcessing {func_name}...")
@@ -185,7 +185,26 @@ def generate_plots():
             print(f"  ✗ Error generating plots for {func_name}: {e}")
             continue
     
-    print(f"\n✓ Plot generation complete! Images saved to {output_dir}")
+    print(f"\n✓ Mathematical function plot generation complete! Images saved to {output_dir}")
+    
+    # Generate ML function plots
+    print("\nGenerating ML function plots...")
+    try:
+        import subprocess
+        ml_script = os.path.join(script_dir, 'generate_ml_plots.py')
+        result = subprocess.run([sys.executable, ml_script], 
+                              capture_output=True, text=True, cwd=script_dir)
+        
+        if result.returncode == 0:
+            print("✓ ML function plots generated successfully!")
+            if result.stdout:
+                print("ML Script Output:", result.stdout)
+        else:
+            print("✗ Error generating ML function plots")
+            if result.stderr:
+                print("Error:", result.stderr)
+    except Exception as e:
+        print(f"✗ Failed to run ML plot generation: {e}")
 
 if __name__ == "__main__":
     generate_plots()

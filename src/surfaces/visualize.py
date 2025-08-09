@@ -488,3 +488,299 @@ def create_function_comparison(
         figures.append(fig)
     
     return figures
+
+
+def plotly_ml_hyperparameter_heatmap(
+    ml_function,
+    param1: str,
+    param2: str,
+    fixed_params: Dict[str, Any] = None,
+    title: str = "ML Function Hyperparameter Analysis",
+    width: int = 900,
+    height: int = 700,
+) -> go.Figure:
+    """Create heatmap for ML function with 2 hyperparameters.
+    
+    Args:
+        ml_function: ML test function instance
+        param1: First hyperparameter name (x-axis)
+        param2: Second hyperparameter name (y-axis)
+        fixed_params: Fixed values for other parameters
+        title: Plot title
+        width: Plot width in pixels
+        height: Plot height in pixels
+        
+    Returns:
+        Plotly Figure object
+    """
+    search_space = ml_function.search_space()
+    
+    # Use provided fixed params or defaults
+    if fixed_params is None:
+        fixed_params = {}
+    
+    # Get parameter ranges
+    param1_values = search_space[param1]
+    param2_values = search_space[param2]
+    
+    # Create grid for evaluation
+    results = []
+    param1_grid = []
+    param2_grid = []
+    
+    print(f"Evaluating {len(param1_values)} x {len(param2_values)} = {len(param1_values) * len(param2_values)} combinations...")
+    pbar = tqdm(total=len(param1_values) * len(param2_values), desc="ML Evaluation")
+    
+    for p1_val in param1_values:
+        row_results = []
+        row_p1 = []
+        row_p2 = []
+        
+        for p2_val in param2_values:
+            # Create parameter dict
+            params = fixed_params.copy()
+            params[param1] = p1_val
+            params[param2] = p2_val
+            
+            # Fill in any missing required parameters with defaults
+            for param_name in search_space:
+                if param_name not in params:
+                    default_val = search_space[param_name][0]  # Use first value as default
+                    params[param_name] = default_val
+            
+            # Evaluate
+            try:
+                score = ml_function.objective_function(params)
+                row_results.append(score)
+            except Exception as e:
+                print(f"Error evaluating {params}: {e}")
+                row_results.append(np.nan)
+            
+            row_p1.append(p1_val)
+            row_p2.append(p2_val)
+            pbar.update(1)
+        
+        results.append(row_results)
+        param1_grid.append(row_p1)
+        param2_grid.append(row_p2)
+    
+    pbar.close()
+    
+    # Convert to numpy arrays
+    z_values = np.array(results)
+    
+    # Handle categorical parameters for display
+    if isinstance(param1_values[0], str):
+        x_labels = param1_values
+        x_values = list(range(len(param1_values)))
+    else:
+        x_labels = [str(v) for v in param1_values]
+        x_values = param1_values
+        
+    if isinstance(param2_values[0], str):
+        y_labels = param2_values
+        y_values = list(range(len(param2_values)))
+    else:
+        y_labels = [str(v) for v in param2_values]
+        y_values = param2_values
+
+    fig = go.Figure(data=go.Heatmap(
+        z=z_values,
+        x=x_values,
+        y=y_values,
+        colorscale='Viridis',
+        hoverongaps=False,
+        hovertemplate=f'{param1}: %{{x}}<br>{param2}: %{{y}}<br>Score: %{{z:.4f}}<extra></extra>'
+    ))
+    
+    # Update layout
+    fig.update_layout(
+        title=f"{title}<br>{param1} vs {param2}",
+        xaxis_title=param1,
+        yaxis_title=param2,
+        width=width,
+        height=height,
+    )
+    
+    # Handle categorical axis labels
+    if isinstance(param1_values[0], str):
+        fig.update_xaxes(tickmode='array', tickvals=x_values, ticktext=x_labels)
+    if isinstance(param2_values[0], str):
+        fig.update_yaxes(tickmode='array', tickvals=y_values, ticktext=y_labels)
+    
+    return fig
+
+
+def plotly_dataset_hyperparameter_analysis(
+    ml_function,
+    hyperparameter: str,
+    fixed_params: Dict[str, Any] = None,
+    title: str = "Dataset vs Hyperparameter Analysis",
+    width: int = 1000,
+    height: int = 700,
+) -> go.Figure:
+    """Create visualization showing hyperparameter effect across datasets.
+    
+    Args:
+        ml_function: ML test function instance
+        hyperparameter: Hyperparameter name to analyze
+        fixed_params: Fixed values for other parameters
+        title: Plot title
+        width: Plot width in pixels
+        height: Plot height in pixels
+        
+    Returns:
+        Plotly Figure object
+    """
+    search_space = ml_function.search_space()
+    
+    # Use provided fixed params or defaults
+    if fixed_params is None:
+        fixed_params = {}
+        
+    datasets = search_space['dataset']
+    hyperparameter_values = search_space[hyperparameter]
+    
+    # Get dataset names
+    dataset_names = []
+    for dataset_func in datasets:
+        name = dataset_func.__name__.replace('_data', '').replace('_', ' ').title()
+        dataset_names.append(name)
+    
+    # Evaluate across datasets and hyperparameter values
+    results = []
+    
+    print(f"Evaluating {len(datasets)} datasets x {len(hyperparameter_values)} {hyperparameter} values...")
+    pbar = tqdm(total=len(datasets) * len(hyperparameter_values), desc="Dataset Analysis")
+    
+    for dataset_func in datasets:
+        dataset_results = []
+        
+        for hyperparam_val in hyperparameter_values:
+            # Create parameter dict
+            params = fixed_params.copy()
+            params['dataset'] = dataset_func
+            params[hyperparameter] = hyperparam_val
+            
+            # Fill in missing required parameters with defaults
+            for param_name in search_space:
+                if param_name not in params:
+                    default_val = search_space[param_name][0]
+                    params[param_name] = default_val
+            
+            # Evaluate
+            try:
+                score = ml_function.objective_function(params)
+                dataset_results.append(score)
+            except Exception as e:
+                print(f"Error evaluating {params}: {e}")
+                dataset_results.append(np.nan)
+            
+            pbar.update(1)
+        
+        results.append(dataset_results)
+    
+    pbar.close()
+    
+    # Create heatmap
+    z_values = np.array(results)
+    
+    # Handle categorical hyperparameter
+    if isinstance(hyperparameter_values[0], str):
+        x_labels = hyperparameter_values
+        x_values = list(range(len(hyperparameter_values)))
+    else:
+        x_labels = [str(v) for v in hyperparameter_values]
+        x_values = hyperparameter_values
+    
+    fig = go.Figure(data=go.Heatmap(
+        z=z_values,
+        x=x_values,
+        y=list(range(len(dataset_names))),
+        colorscale='Viridis',
+        hoverongaps=False,
+        hovertemplate=f'Dataset: %{{y}}<br>{hyperparameter}: %{{x}}<br>Score: %{{z:.4f}}<extra></extra>'
+    ))
+    
+    # Update layout
+    fig.update_layout(
+        title=f"{title}<br>Impact of {hyperparameter} across Datasets",
+        xaxis_title=hyperparameter,
+        yaxis_title="Dataset",
+        width=width,
+        height=height,
+    )
+    
+    # Set dataset names on y-axis
+    fig.update_yaxes(
+        tickmode='array', 
+        tickvals=list(range(len(dataset_names))), 
+        ticktext=dataset_names
+    )
+    
+    # Handle categorical x-axis
+    if isinstance(hyperparameter_values[0], str):
+        fig.update_xaxes(tickmode='array', tickvals=x_values, ticktext=x_labels)
+    
+    return fig
+
+
+def create_ml_function_analysis_suite(
+    ml_function,
+    output_dir: str = "ml_analysis_plots",
+) -> Dict[str, go.Figure]:
+    """Create comprehensive analysis suite for ML function.
+    
+    Args:
+        ml_function: ML test function instance
+        output_dir: Directory to save plots
+        
+    Returns:
+        Dictionary mapping plot names to Plotly figures
+    """
+    search_space = ml_function.search_space()
+    figures = {}
+    
+    # Get numeric hyperparameters (exclude dataset and cv)
+    numeric_params = []
+    categorical_params = []
+    
+    for param_name, param_values in search_space.items():
+        if param_name in ['dataset', 'cv']:
+            continue
+        if isinstance(param_values[0], (int, float)):
+            numeric_params.append(param_name)
+        else:
+            categorical_params.append(param_name)
+    
+    # 1. Hyperparameter vs Hyperparameter plots
+    print("Creating hyperparameter interaction plots...")
+    for i, param1 in enumerate(numeric_params + categorical_params):
+        for j, param2 in enumerate(numeric_params + categorical_params):
+            if i >= j:  # Avoid duplicates and self-comparisons
+                continue
+                
+            plot_name = f"hyperparam_{param1}_vs_{param2}"
+            try:
+                fig = plotly_ml_hyperparameter_heatmap(
+                    ml_function, param1, param2,
+                    title=f"{ml_function.name} - Hyperparameter Analysis"
+                )
+                figures[plot_name] = fig
+            except Exception as e:
+                print(f"Error creating plot {plot_name}: {e}")
+    
+    # 2. Dataset vs Hyperparameter plots
+    print("Creating dataset analysis plots...")
+    for param_name in numeric_params + categorical_params:
+        plot_name = f"dataset_vs_{param_name}"
+        try:
+            fig = plotly_dataset_hyperparameter_analysis(
+                ml_function, param_name,
+                title=f"{ml_function.name} - Dataset Analysis"
+            )
+            figures[plot_name] = fig
+        except Exception as e:
+            print(f"Error creating plot {plot_name}: {e}")
+    
+    return figures
