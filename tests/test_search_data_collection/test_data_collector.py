@@ -257,12 +257,13 @@ class TestSearchDataCollector:
     def test_timing_measurement_accuracy(self, mock_time, collector, mock_function):
         """Test that timing measurements are accurate."""
         # Mock time.time() to return predictable values
-        # Need more values: collection start, eval1 start, eval1 end, eval2 start, eval2 end, etc, collection end
+        # Need more values: collection start, eval1 start, eval1 end, eval2 start, eval2 end, etc, batch store, collection end
         time_sequence = [0.0,  # collection start
                         1.0, 1.1,  # eval 1 (param1=1, param2=a)
                         2.0, 2.2,  # eval 2 (param1=1, param2=b)  
                         3.0, 3.2,  # eval 3 (param1=2, param2=a)
                         4.0, 4.3,  # eval 4 (param1=2, param2=b)
+                        4.4,  # batch store timestamp
                         5.0]  # collection end
         mock_time.side_effect = time_sequence
         
@@ -273,10 +274,10 @@ class TestSearchDataCollector:
         
         # Expected times: 0.1, 0.2, 0.2, 0.3
         assert stats['count'] == 4
-        assert stats['min_time'] == 0.1
-        assert stats['max_time'] == 0.3
-        assert stats['total_time'] == 0.8
-        assert stats['average_time'] == 0.2
+        assert abs(stats['min_time'] - 0.1) < 1e-10
+        assert abs(stats['max_time'] - 0.3) < 1e-10
+        assert abs(stats['total_time'] - 0.8) < 1e-10
+        assert abs(stats['average_time'] - 0.2) < 1e-10
 
 
 class TestIntegrationWithRealMLFunction:
