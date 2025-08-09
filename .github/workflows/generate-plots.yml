@@ -36,7 +36,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -e .
-        pip install plotly matplotlib kaleido numpy tqdm
+        pip install plotly matplotlib kaleido numpy tqdm sklearn
         
     - name: Generate plots
       run: |
