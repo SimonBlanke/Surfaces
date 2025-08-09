@@ -1,0 +1,51 @@
+name: Generate Function Plots
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/surfaces/test_functions/**'
+      - 'src/surfaces/visualize.py'
+      - '.github/workflows/generate-plots.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'src/surfaces/test_functions/**'
+      - 'src/surfaces/visualize.py'
+      - '.github/workflows/generate-plots.yml'
+  workflow_dispatch:
+
+jobs:
+  generate-plots:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.9"
+        
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3-tk
+        
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .
+        pip install plotly matplotlib kaleido numpy tqdm
+        
+    - name: Generate plots
+      run: |
+        python scripts/generate_all_plots.py
+        
+    - name: Commit updated plots
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: "🤖 Auto-update function visualization plots"
+        file_pattern: "doc/images/*.jpg doc/images/*.png"
+        commit_user_name: "github-actions[bot]"
+        commit_user_email: "github-actions[bot]@users.noreply.github.com"
