@@ -130,56 +130,75 @@ class SearchDataCollector:
             if verbose:
                 print(f"Found {existing_count} existing evaluations")
         
-        # Create wrapper function that handles dataset resolution
-        original_objective = test_function.pure_objective_function
-        wrapper_objective = self._create_dataset_wrapper(original_objective)
-        test_function.pure_objective_function = wrapper_objective
-        
         # Collect evaluations
         start_time = time.time()
         collected_count = 0
         batch_evaluations = []
+        evaluation_errors = 0
         
-        try:
-            for i, parameters in enumerate(self.grid_generator.generate_grid_iterator(processed_search_space)):
-                # Check if evaluation already exists
-                existing = self.data_manager.lookup_evaluation(function_name, parameters)
-                if existing is not None:
-                    continue
-                
-                # Evaluate function with timing
-                eval_start = time.time()
+        for i, parameters in enumerate(self.grid_generator.generate_grid_iterator(processed_search_space)):
+            # Check if evaluation already exists
+            existing = self.data_manager.lookup_evaluation(function_name, parameters)
+            if existing is not None:
+                continue
+            
+            # Resolve dataset string identifiers to functions before evaluation
+            resolved_parameters = self._resolve_dataset_parameters(parameters)
+            
+            # Evaluate function with timing
+            eval_start = time.time()
+            try:
+                score = test_function.pure_objective_function(resolved_parameters)
+            except Exception as e:
+                evaluation_errors += 1
+                error_msg = f"Evaluation failed for parameters {parameters}: {type(e).__name__}: {e}"
+                if verbose:
+                    print(f"WARNING: {error_msg}")
+                # Log detailed error information for debugging
+                if verbose and hasattr(e, '__traceback__'):
+                    import traceback
+                    print(f"Full traceback: {traceback.format_exc()}")
+                continue
+            eval_time = time.time() - eval_start
+            
+            # Add to batch (store the processed parameters for database consistency)
+            batch_evaluations.append((parameters, score, eval_time))
+            collected_count += 1
+            
+            # Store batch when it reaches batch_size
+            if len(batch_evaluations) >= batch_size:
                 try:
-                    score = test_function.pure_objective_function(parameters)
-                except Exception as e:
-                    if verbose:
-                        print(f"Error evaluating parameters {parameters}: {e}")
-                    continue
-                eval_time = time.time() - eval_start
-                
-                # Add to batch
-                batch_evaluations.append((parameters, score, eval_time))
-                collected_count += 1
-                
-                # Store batch when it reaches batch_size
-                if len(batch_evaluations) >= batch_size:
                     self.data_manager.store_batch(function_name, parameter_names, batch_evaluations)
                     batch_evaluations = []
-                    
+                except Exception as e:
+                    error_msg = f"Database storage failed: {type(e).__name__}: {e}"
                     if verbose:
-                        progress = (i + 1) / total_combinations * 100
-                        print(f"Progress: {progress:.1f}% ({i + 1}/{total_combinations})")
-            
-            # Store remaining evaluations
-            if batch_evaluations:
-                self.data_manager.store_batch(function_name, parameter_names, batch_evaluations)
+                        print(f"ERROR: {error_msg}")
+                    # This is a critical error - we should not continue
+                    raise RuntimeError(f"Critical database error during data collection: {error_msg}") from e
+                
+                if verbose:
+                    progress = (i + 1) / total_combinations * 100
+                    print(f"Progress: {progress:.1f}% ({i + 1}/{total_combinations})")
         
-        except Exception as e:
-            # Re-raise the exception after cleanup
-            raise
-        finally:
-            # Always restore original objective function
-            test_function.pure_objective_function = original_objective
+        # Store remaining evaluations
+        if batch_evaluations:
+            try:
+                self.data_manager.store_batch(function_name, parameter_names, batch_evaluations)
+            except Exception as e:
+                error_msg = f"Database storage failed for final batch: {type(e).__name__}: {e}"
+                if verbose:
+                    print(f"ERROR: {error_msg}")
+                raise RuntimeError(f"Critical database error during final storage: {error_msg}") from e
+        
+        # Report evaluation errors if any occurred
+        if evaluation_errors > 0:
+            error_rate = (evaluation_errors / total_combinations) * 100
+            warning_msg = f"WARNING: {evaluation_errors}/{total_combinations} evaluations failed ({error_rate:.1f}% error rate)"
+            if verbose:
+                print(warning_msg)
+            if error_rate > 50:  # More than 50% failures is concerning
+                raise RuntimeError(f"High error rate in evaluations: {warning_msg}. Check your search space and function implementation.")
         
         total_time = time.time() - start_time
         
@@ -321,22 +340,30 @@ class SearchDataCollector:
         
         return processed
     
-    def _create_dataset_wrapper(self, original_objective: Callable) -> Callable:
+    def _resolve_dataset_parameters(self, parameters: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Create a wrapper function that resolves dataset string identifiers back to functions.
-        """
-        def wrapper(params):
-            processed_params = params.copy()
-            
-            # Resolve dataset string back to function if present
-            if "dataset" in processed_params:
-                dataset_value = processed_params["dataset"]
-                if isinstance(dataset_value, str):
-                    processed_params["dataset"] = self.dataset_registry.get(dataset_value)
-            
-            return original_objective(processed_params)
+        Resolve dataset string identifiers back to callable functions.
         
-        return wrapper
+        Args:
+            parameters: Parameter dictionary that may contain dataset string identifiers
+            
+        Returns:
+            Parameter dictionary with dataset strings resolved to functions
+            
+        Raises:
+            ValueError: If a dataset identifier cannot be resolved
+        """
+        resolved_params = parameters.copy()
+        
+        if "dataset" in resolved_params:
+            dataset_value = resolved_params["dataset"]
+            if isinstance(dataset_value, str):
+                try:
+                    resolved_params["dataset"] = self.dataset_registry.get(dataset_value)
+                except ValueError as e:
+                    raise ValueError(f"Failed to resolve dataset '{dataset_value}': {e}") from e
+        
+        return resolved_params
     
     def register_dataset(self, name: str, dataset_func: Callable):
         """Register a custom dataset function."""
