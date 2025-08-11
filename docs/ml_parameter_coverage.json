@@ -1,0 +1,240 @@
+{
+  "gradient_boosting_regressor": {
+    "default_ranges": {
+      "n_estimators": {
+        "type": "numeric",
+        "default_count": 30,
+        "default_values": [
+          "3",
+          "8",
+          "13",
+          "18",
+          "23"
+        ],
+        "is_truncated": true
+      },
+      "max_depth": {
+        "type": "numeric",
+        "default_count": 23,
+        "default_values": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6"
+        ],
+        "is_truncated": true
+      },
+      "cv": {
+        "type": "numeric",
+        "default_count": 6,
+        "default_values": [
+          2,
+          3,
+          4,
+          5,
+          8
+        ],
+        "is_truncated": true,
+        "default_min": 2,
+        "default_max": 10,
+        "default_range": "2 - 10"
+      },
+      "dataset": {
+        "type": "numeric",
+        "default_count": 1,
+        "default_values": [
+          "<function diabetes_data at 0x77efe92c8680>"
+        ],
+        "is_truncated": false
+      }
+    },
+    "stored_ranges": {
+      "exists": true,
+      "message": "Database exists but contains no data"
+    }
+  },
+  "k_neighbors_regressor": {
+    "default_ranges": {
+      "n_neighbors": {
+        "type": "numeric",
+        "default_count": 30,
+        "default_values": [
+          "3",
+          "8",
+          "13",
+          "18",
+          "23"
+        ],
+        "is_truncated": true
+      },
+      "algorithm": {
+        "type": "categorical",
+        "default_count": 4,
+        "default_values": [
+          "auto",
+          "ball_tree",
+          "kd_tree",
+          "brute"
+        ],
+        "is_truncated": false
+      },
+      "cv": {
+        "type": "numeric",
+        "default_count": 6,
+        "default_values": [
+          2,
+          3,
+          4,
+          5,
+          8
+        ],
+        "is_truncated": true,
+        "default_min": 2,
+        "default_max": 10,
+        "default_range": "2 - 10"
+      },
+      "dataset": {
+        "type": "numeric",
+        "default_count": 1,
+        "default_values": [
+          "<function diabetes_data at 0x77efe92c8680>"
+        ],
+        "is_truncated": false
+      }
+    },
+    "stored_ranges": {
+      "exists": true,
+      "total_evaluations": 1,
+      "parameters": {
+        "n_neighbors": {
+          "type": "numeric",
+          "unique_count": 1,
+          "unique_values": [
+            "3"
+          ],
+          "min": 3.0,
+          "max": 3.0,
+          "range": "3.0 - 3.0"
+        },
+        "algorithm": {
+          "type": "categorical",
+          "unique_count": 1,
+          "unique_values": [
+            "auto"
+          ]
+        },
+        "cv": {
+          "type": "numeric",
+          "unique_count": 1,
+          "unique_values": [
+            "2"
+          ],
+          "min": 2.0,
+          "max": 2.0,
+          "range": "2.0 - 2.0"
+        },
+        "dataset": {
+          "type": "categorical",
+          "unique_count": 1,
+          "unique_values": [
+            "diabetes_data"
+          ]
+        }
+      }
+    }
+  },
+  "k_neighbors_classifier": {
+    "default_ranges": {
+      "n_neighbors": {
+        "type": "numeric",
+        "default_count": 30,
+        "default_values": [
+          "3",
+          "8",
+          "13",
+          "18",
+          "23"
+        ],
+        "is_truncated": true
+      },
+      "algorithm": {
+        "type": "categorical",
+        "default_count": 4,
+        "default_values": [
+          "auto",
+          "ball_tree",
+          "kd_tree",
+          "brute"
+        ],
+        "is_truncated": false
+      },
+      "cv": {
+        "type": "numeric",
+        "default_count": 6,
+        "default_values": [
+          2,
+          3,
+          4,
+          5,
+          8
+        ],
+        "is_truncated": true,
+        "default_min": 2,
+        "default_max": 10,
+        "default_range": "2 - 10"
+      },
+      "dataset": {
+        "type": "numeric",
+        "default_count": 3,
+        "default_values": [
+          "<function digits_data at 0x77efe95d23e0>",
+          "<function wine_data at 0x77efe95d22a0>",
+          "<function iris_data at 0x77efe9257d80>"
+        ],
+        "is_truncated": false
+      }
+    },
+    "stored_ranges": {
+      "exists": true,
+      "total_evaluations": 2,
+      "parameters": {
+        "n_neighbors": {
+          "type": "numeric",
+          "unique_count": 2,
+          "unique_values": [
+            "200",
+            "3"
+          ],
+          "min": 3.0,
+          "max": 200.0,
+          "range": "3.0 - 200.0"
+        },
+        "algorithm": {
+          "type": "categorical",
+          "unique_count": 1,
+          "unique_values": [
+            "auto"
+          ]
+        },
+        "cv": {
+          "type": "numeric",
+          "unique_count": 1,
+          "unique_values": [
+            "2"
+          ],
+          "min": 2.0,
+          "max": 2.0,
+          "range": "2.0 - 2.0"
+        },
+        "dataset": {
+          "type": "categorical",
+          "unique_count": 1,
+          "unique_values": [
+            "iris_data"
+          ]
+        }
+      }
+    }
+  }
+}
