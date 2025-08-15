@@ -12,7 +12,7 @@ import numpy as np
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from surfaces.test_functions.machine_learning.tabular.classification.test_functions import KNeighborsClassifierFunction
-from surfaces.visualize import plotly_ml_hyperparameter_heatmap, plotly_dataset_hyperparameter_analysis
+from surfaces._visualize import plotly_ml_hyperparameter_heatmap, plotly_dataset_hyperparameter_analysis
 
 def main():
     print("ML Function Visualization Example")

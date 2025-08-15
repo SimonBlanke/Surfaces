@@ -4,7 +4,7 @@
 
 import pytest
 from itertools import product
-from surfaces.search_data_collection import GridGenerator
+from surfaces._search_data_collection import GridGenerator
 
 
 class TestGridGenerator:

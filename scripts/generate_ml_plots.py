@@ -16,7 +16,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from surfaces.test_functions.machine_learning.tabular.regression.test_functions import *
 from surfaces.test_functions.machine_learning.tabular.classification.test_functions import *
-from surfaces.visualize import (
+from surfaces._visualize import (
     plotly_ml_hyperparameter_heatmap, 
     plotly_dataset_hyperparameter_analysis,
     create_ml_function_analysis_suite

@@ -9,7 +9,7 @@ import pytest
 import time
 from typing import Dict, Any
 
-from surfaces.search_data_collection import SearchDataManager
+from surfaces._search_data_collection import SearchDataManager
 
 
 class TestSearchDataManager:

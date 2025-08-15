@@ -7,7 +7,7 @@ import pytest
 import os
 from unittest.mock import Mock, patch
 
-from surfaces.search_data_collection import SearchDataManager, SearchDataCollector
+from surfaces._search_data_collection import SearchDataManager, SearchDataCollector
 from surfaces.test_functions.machine_learning.tabular.regression.test_functions.gradient_boosting_regressor import GradientBoostingRegressorFunction
 
 

@@ -8,7 +8,7 @@ import time
 from unittest.mock import patch
 
 from surfaces.test_functions.machine_learning.tabular.regression.test_functions.gradient_boosting_regressor import GradientBoostingRegressorFunction
-from surfaces.search_data_collection import SearchDataManager
+from surfaces._search_data_collection import SearchDataManager
 
 
 class TestMLFunctionIntegration:

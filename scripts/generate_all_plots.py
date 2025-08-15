@@ -15,7 +15,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from surfaces.test_functions.mathematical.test_functions_2d import *
 from surfaces.test_functions.mathematical.test_functions_nd import *
-from surfaces.visualize import matplotlib_heatmap, matplotlib_surface
+from surfaces._visualize import matplotlib_heatmap, matplotlib_surface
 
 # Ensure output directories exist
 script_dir = os.path.dirname(os.path.abspath(__file__))
