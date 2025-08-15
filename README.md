@@ -5,8 +5,30 @@
 <br>
 
 <H2 align="center">
-    A collection and visualization of single objective black-box functions for optimization benchmarking
+    A collection of single-objective black-box functions for optimization benchmarking
 </H2>
+
+<br>
+
+## Introduction
+
+**Surfaces** is a Python library designed for researchers and practitioners in optimization and machine learning. It provides a comprehensive collection of benchmark functions to evaluate and compare optimization algorithms under standardized conditions.
+
+### Key Features
+
+- **Mathematical Test Functions**: 24 test functions covering 1D, 2D, and N-dimensional optimization landscapes
+- **Machine Learning Test Functions**: Real-world ML benchmarks using scikit-learn models with hyperparameter optimization
+- **Standardized Interface**: Consistent API across all functions for easy algorithm evaluation
+- **Flexible Configuration**: Support for different metrics (loss/score), dimensionalities, and evaluation modes
+- **Optimization Research**: Ideal for testing metaheuristics, gradient-free methods, and hyperparameter optimization algorithms
+
+### Use Cases
+
+- **Algorithm Development**: Test new optimization algorithms against established benchmarks
+- **Performance Comparison**: Compare different optimizers on standardized problem sets  
+- **Research Publications**: Use well-known test functions with consistent implementations
+- **Educational Purposes**: Learn optimization concepts with visual and mathematical examples
+- **Hyperparameter Tuning**: Benchmark autoML and hyperparameter optimization methods
 
 
 <br>
@@ -63,54 +85,6 @@
   </tr>
 </table>
 
-### Machine Learning Functions
-
-Surfaces also provides powerful visualizations for machine learning test functions, showing hyperparameter interactions and dataset-specific performance patterns.
-
-<table style="width:100%">
-  <tr>
-    <th> <b>ML Function</b> </th>
-    <th> <b>Hyperparameter Interactions</b> </th> 
-    <th> <b>Dataset Performance Analysis</b> </th>
-  </tr>
-  <tr>
-    <th> <ins>K-Neighbors Classifier</ins> <br><br>
-         <small>Shows how n_neighbors and algorithm<br>
-         interact to affect classification<br>
-         performance across different datasets</small>
-    </th>
-    <td> 
-      <img src="./doc/images/ml_functions/k_neighbors_classifier_n_neighbors_vs_algorithm_heatmap.jpg" width="90%">
-      <br><small>Darker regions indicate better performance combinations</small>
-    </td>
-    <td> 
-      <img src="./doc/images/ml_functions/k_neighbors_classifier_dataset_vs_n_neighbors_analysis.jpg" width="100%">
-      <br><small>Shows optimal n_neighbors varies by dataset</small>
-    </td>
-  </tr>
-  <tr>
-    <th> <ins>Gradient Boosting Regressor</ins> <br><br>
-         <small>Demonstrates the interaction between<br>
-         n_estimators and max_depth parameters<br>
-         for regression tasks</small>
-    </th>
-    <td> 
-      <img src="./doc/images/ml_functions/gradient_boosting_regressor_n_estimators_vs_max_depth_heatmap.jpg" width="90%">
-      <br><small>Reveals sweet spots in hyperparameter space</small>
-    </td>
-    <td> 
-      <img src="./doc/images/ml_functions/gradient_boosting_regressor_dataset_vs_max_depth_analysis.jpg" width="100%">
-      <br><small>Shows max_depth sensitivity across datasets</small>
-    </td>
-  </tr>
-</table>
-
-#### ML Visualization Features
-
-- ** Hyperparameter Interactions**: Visualize how different hyperparameters interact and affect model performance
-- ** Dataset Sensitivity**: Understand how hyperparameters perform across different datasets
-- ** Optimal Regions**: Identify sweet spots in hyperparameter space
-- ** Performance Patterns**: Discover dataset-specific optimization strategies
 
 <br>
 
@@ -122,161 +96,106 @@ The most recent version of Surfaces is available on PyPi:
 pip install surfaces
 ```
 
-## Example
+## Public API
+
+### Test Functions
+
+Surfaces provides two main categories of test functions for optimization benchmarking:
+
+#### Mathematical Functions
+
+Import from `surfaces.test_functions.mathematical`:
+
+**1D Functions:**
+- `GramacyAndLeeFunction`
+
+**2D Functions:**
+- `AckleyFunction`, `BealeFunction`, `BoothFunction`, `BukinFunctionN6`
+- `CrossInTrayFunction`, `DropWaveFunction`, `EasomFunction`, `EggholderFunction`
+- `GoldsteinPriceFunction`, `HimmelblausFunction`, `HölderTableFunction`
+- `LangermannFunction`, `LeviFunctionN13`, `MatyasFunction`, `McCormickFunction`
+- `SchafferFunctionN2`, `SimionescuFunction`, `ThreeHumpCamelFunction`
+
+**N-Dimensional Functions:**
+- `GriewankFunction`, `RastriginFunction`, `RosenbrockFunction`
+- `SphereFunction`, `StyblinskiTangFunction`
+
+#### Machine Learning Functions
+
+Import from `surfaces.test_functions.machine_learning`:
+
+- `KNeighborsClassifierFunction` - K-nearest neighbors classification
+- `KNeighborsRegressorFunction` - K-nearest neighbors regression  
+- `GradientBoostingRegressorFunction` - Gradient boosting regression
+
+### Common Interface
+
+All test functions provide:
+
+- `objective_function(parameters)` - Evaluate the function
+- `search_space()` - Get parameter bounds/ranges
+- Constructor parameters:
+  - `metric="loss"` or `"score"` - Optimization direction
+  - `sleep=0` - Add artificial delays for benchmarking
+  - `n_dim=N` (for N-dimensional functions) - Set dimensionality
+
+## Usage Examples
+
+### Basic Mathematical Function
+
 ```python
-import numpy as np
-
 from surfaces.test_functions.mathematical import SphereFunction, AckleyFunction
-from surfaces.visualize import plotly_surface
 
-
+# Create functions
 sphere_function = SphereFunction(n_dim=2, metric="score")
 ackley_function = AckleyFunction(metric="loss")
 
+# Get search space
+search_space = sphere_function.search_space()
+print(search_space)  # {'x0': array([...]), 'x1': array([...])}
 
-step_ = 0.05
-min_ = 10
-max_ = 10
-search_space = {
-    "x0": np.arange(-min_, max_, step_),
-    "x1": np.arange(-min_, max_, step_),
-}
-
-plotly_surface(sphere_function.objective_function, search_space).show()
-plotly_surface(ackley_function.objective_function, search_space).show()
+# Evaluate function
+params = {'x0': 0.5, 'x1': -0.3}
+result = sphere_function.objective_function(params)
+print(f"Sphere function result: {result}")
 ```
 
-### ML Function Visualization Example
+### Machine Learning Function
 
 ```python
-from surfaces.test_functions.machine_learning.tabular.classification.test_functions import KNeighborsClassifierFunction
-from surfaces.visualize import plotly_ml_hyperparameter_heatmap, plotly_dataset_hyperparameter_analysis
+from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
 # Create ML function
 knn_func = KNeighborsClassifierFunction(metric="accuracy")
 
-# 1. Hyperparameter interaction analysis
-fig1 = plotly_ml_hyperparameter_heatmap(
-    knn_func, 
-    'n_neighbors', 
-    'algorithm',
-    title="KNN: Hyperparameter Interactions"
-)
-fig1.show()
+# Get search space
+search_space = knn_func.search_space()
+print(search_space.keys())  # dict_keys(['n_neighbors', 'algorithm', 'cv', 'dataset'])
 
-# 2. Dataset sensitivity analysis  
-fig2 = plotly_dataset_hyperparameter_analysis(
-    knn_func,
-    'n_neighbors', 
-    title="KNN: Performance Across Datasets"
-)
-fig2.show()
-```
-
-## Search Data Collection for Machine Learning Functions
-
-Surfaces includes a powerful search data collection system for machine learning test functions that enables fast evaluation and benchmarking of optimization algorithms. This feature pre-computes and stores evaluation results across parameter grids, providing instant lookups instead of expensive ML model training.
-
-### Key Benefits
-
-- ** Fast evaluations**: 100-1000x speedup for ML function evaluations
-- ** Timing data included**: Original evaluation times preserved for realistic benchmarking  
-- ** SQLite storage**: Lightweight, dependency-free database storage
-- ** Easy to use**: Simple API integrated with existing ML test functions
-
-### Quick Start
-
-```python
-from surfaces.test_functions.machine_learning.tabular.regression.test_functions import GradientBoostingRegressorFunction
-
-# Create ML function
-ml_func = GradientBoostingRegressorFunction()
-
-# Collect search data (one-time setup)
-ml_func.collect_search_data()
-
-# Now use fast evaluation mode
-fast_func = GradientBoostingRegressorFunction(evaluate_from_data=True)
-
-# Lightning-fast evaluation (uses stored data)
-params = {'n_estimators': 50, 'max_depth': 5, 'cv': 3, 'dataset': ml_func.dataset_default[0]}
-result = fast_func.evaluate(params)  # ~1000x faster than normal evaluation
-```
-
-### Benchmarking with Timing Data
-
-Perfect for testing optimization algorithms within time budgets:
-
-```python
-# Get timing statistics for realistic benchmarking
-timing_stats = ml_func.get_timing_statistics()
-print(f"Average evaluation time: {timing_stats['average_time']:.4f}s")
-print(f"Total time budget: {timing_stats['total_time']:.2f}s")
-
-# Simulate algorithm testing within time constraints
-budget_seconds = 60.0
-evaluations_possible = int(budget_seconds / timing_stats['average_time'])
-print(f"Can test ~{evaluations_possible} parameter combinations in {budget_seconds}s")
-```
-
-### Command-Line Usage
-
-Use the included command-line utility for batch data collection:
-
-```bash
-# Collect data for all ML functions
-python collect_ml_search_data.py --all
-
-# Collect for specific function
-python collect_ml_search_data.py gradient_boosting_regressor
-
-# Check collection status
-python collect_ml_search_data.py --list
-
-# Use custom batch size for memory efficiency
-python collect_ml_search_data.py --batch-size 50 --all
-```
-
-### Advanced Usage
-
-**Custom Search Spaces:**
-```python
-# Define custom parameter ranges
-custom_space = {
-    'n_estimators': [50, 100, 150],
-    'max_depth': [3, 5, 7, 10],
-    'cv': [3, 5],
-    'dataset': ml_func.dataset_default[:2]  # Use subset of datasets
+# Evaluate function
+params = {
+    'n_neighbors': 5,
+    'algorithm': 'auto', 
+    'cv': 3,
+    'dataset': knn_func.search_space()['dataset'][0]
 }
-
-ml_func.collect_search_data(search_space=custom_space)
+accuracy = knn_func.objective_function(params)
+print(f"KNN accuracy: {accuracy}")
 ```
 
-**Collection Status and Management:**
+### N-Dimensional Functions
+
 ```python
-# Check collection status
-status = ml_func.get_search_data_status()
-print(f"Coverage: {status['completion_percentage']:.1f}%")
-print(f"Stored: {status['stored_evaluations']}/{status['total_combinations']}")
+from surfaces.test_functions.mathematical import SphereFunction
 
-# Clear stored data if needed
-ml_func.clear_search_data()
+# Create functions with different dimensionalities
+sphere_1d = SphereFunction(n_dim=1)
+sphere_3d = SphereFunction(n_dim=3) 
+sphere_10d = SphereFunction(n_dim=10)
+
+# Each has appropriate search space
+print(sphere_1d.search_space().keys())   # dict_keys(['x0'])
+print(sphere_3d.search_space().keys())   # dict_keys(['x0', 'x1', 'x2'])
+print(sphere_10d.search_space().keys())  # dict_keys(['x0', 'x1', ..., 'x9'])
 ```
 
-### Available ML Functions
-
-- `GradientBoostingRegressorFunction` - Gradient boosting for regression
-- `KNeighborsRegressorFunction` - K-nearest neighbors regression  
-- `KNeighborsClassifierFunction` - K-nearest neighbors classification
-
-### How It Works
-
-1. **Data Collection Phase**: ML function is evaluated across all parameter combinations in its search space
-2. **Storage**: Results stored in SQLite database with timing information
-3. **Fast Evaluation**: Lookups return pre-computed results instantly
-4. **Benchmarking**: Original timing data enables realistic algorithm testing
-
-The system automatically handles:
-- Parameter grid generation
-- Database indexing for fast lookups
-- Function object serialization
