@@ -107,10 +107,10 @@ Surfaces also provides powerful visualizations for machine learning test functio
 
 #### ML Visualization Features
 
-- **🔧 Hyperparameter Interactions**: Visualize how different hyperparameters interact and affect model performance
-- **📊 Dataset Sensitivity**: Understand how hyperparameters perform across different datasets
-- **🎯 Optimal Regions**: Identify sweet spots in hyperparameter space
-- **📈 Performance Patterns**: Discover dataset-specific optimization strategies
+- ** Hyperparameter Interactions**: Visualize how different hyperparameters interact and affect model performance
+- ** Dataset Sensitivity**: Understand how hyperparameters perform across different datasets
+- ** Optimal Regions**: Identify sweet spots in hyperparameter space
+- ** Performance Patterns**: Discover dataset-specific optimization strategies
 
 <br>
 
