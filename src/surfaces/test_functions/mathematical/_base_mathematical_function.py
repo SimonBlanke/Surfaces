@@ -24,8 +24,35 @@ class MathematicalFunction(BaseTestFunction):
     formula = r" "
     global_minimum = r" "
 
-    # Default bounds for mathematical functions
+    # Default bounds for mathematical functions (can be overridden by subclasses)
     default_bounds: Tuple[float, float] = (-5.0, 5.0)
+    default_size: int = 10000
+
+    @property
+    def default_search_space(self) -> Dict[str, Any]:
+        """
+        Default search space for this function.
+
+        Returns a dictionary mapping parameter names to numpy arrays of values
+        based on the function's default_bounds and n_dim.
+        """
+        min_val, max_val = self.default_bounds
+        return self._create_search_space(min=min_val, max=max_val, size=self.default_size)
+
+    def _create_search_space(
+        self,
+        min: Union[float, list] = -5,
+        max: Union[float, list] = 5,
+        size: int = 10000,
+        value_types: str = "array"
+    ) -> Dict[str, Any]:
+        """
+        Create a search space with custom bounds.
+
+        Internal method for creating search spaces with non-default parameters.
+        For most use cases, access default_search_space property instead.
+        """
+        return self.create_n_dim_search_space(min=min, max=max, size=size, value_types=value_types)
 
     def __init__(
         self,

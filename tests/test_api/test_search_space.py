@@ -34,10 +34,11 @@ machine_learning_functions_d = (
 
 
 @pytest.mark.parametrize(*mathematical_functions_1d)
-def test_search_space_1d_0(test_function):
+def test_search_space_1d_default(test_function):
+    """Test that 1D functions have valid default_search_space."""
     test_function_ = test_function()
 
-    search_space = test_function_.search_space(min=-1, max=1, value_types="array")
+    search_space = test_function_.default_search_space
     n_iter = 20
 
     opt = RandomSearchOptimizer(search_space)
@@ -45,24 +46,11 @@ def test_search_space_1d_0(test_function):
 
 
 @pytest.mark.parametrize(*mathematical_functions_2d)
-def test_search_space_2d_0(test_function):
-    print("\n test_function", test_function, "\n")
+def test_search_space_2d_default(test_function):
+    """Test that 2D functions have valid default_search_space."""
     test_function_ = test_function()
 
-    search_space = test_function_.search_space(min=-1, max=1, value_types="array")
-    n_iter = 20
-
-    opt = RandomSearchOptimizer(search_space)
-    opt.search(test_function_, n_iter=n_iter)
-
-
-@pytest.mark.parametrize(*mathematical_functions_2d)
-def test_search_space_2d_1(test_function):
-    test_function_ = test_function()
-
-    search_space = test_function_.search_space(
-        min=[-1, -1], max=[1, 1], value_types="array"
-    )
+    search_space = test_function_.default_search_space
     n_iter = 20
 
     opt = RandomSearchOptimizer(search_space)
@@ -70,10 +58,11 @@ def test_search_space_2d_1(test_function):
 
 
 @pytest.mark.parametrize(*mathematical_functions_nd)
-def test_search_space_nd_0(test_function):
+def test_search_space_nd_default(test_function):
+    """Test that ND functions have valid default_search_space."""
     test_function_ = test_function(n_dim=3)
 
-    search_space = test_function_.search_space(min=-1, max=1, value_types="array")
+    search_space = test_function_.default_search_space
     n_iter = 20
 
     opt = RandomSearchOptimizer(search_space)
@@ -81,10 +70,12 @@ def test_search_space_nd_0(test_function):
 
 
 @pytest.mark.parametrize(*mathematical_functions_nd)
-def test_search_space_nd_1(test_function):
+def test_search_space_nd_custom_bounds(test_function):
+    """Test internal _search_space with custom bounds."""
     test_function_ = test_function(n_dim=3)
 
-    search_space = test_function_.search_space(
+    # Use internal method for custom bounds
+    search_space = test_function_._search_space(
         min=[-1, -1, -1], max=[1, 1, 1], value_types="array"
     )
     n_iter = 20
@@ -94,11 +85,11 @@ def test_search_space_nd_1(test_function):
 
 
 @pytest.mark.parametrize(*machine_learning_functions_d)
-def test_all_(test_function):
+def test_ml_default_search_space(test_function):
+    """Test that ML functions have valid default_search_space."""
     test_function_ = test_function()
 
-    # Test that the function can be created and evaluated
-    search_space = test_function_.search_space()
+    search_space = test_function_.default_search_space
     assert isinstance(search_space, dict)
     assert len(search_space) > 0
 

@@ -30,6 +30,8 @@ class CrossInTrayFunction(MathematicalFunction):
     f(-1.34941, -1.34941) = -2.06261 \\
         """
 
+    default_bounds = (-10.0, 10.0)
+
     def __init__(
         self,
         A=-0.0001,
@@ -57,7 +59,7 @@ class CrossInTrayFunction(MathematicalFunction):
 
         self.pure_objective_function = cross_in_tray_function
 
-    def search_space(self, min=-10, max=10, value_types="array", size=10000):
+    def _search_space(self, min=-10, max=10, value_types="array", size=10000):
         return super().create_n_dim_search_space(
             min=min, max=max, size=size, value_types=value_types
         )

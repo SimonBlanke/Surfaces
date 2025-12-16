@@ -20,6 +20,7 @@ class SphereFunction(MathematicalFunction):
     formula = r"f(\vec{x}) = \sum^n_{i=1}x^2_i"
     global_minimum = r"f(\vec{x}=0) = 0"
 
+    default_bounds = (-5.0, 5.0)
     def __init__(self, n_dim, A=1, metric="score", sleep=0, validate=True):
         super().__init__(metric, sleep, validate)
         self.n_dim = n_dim
@@ -38,7 +39,7 @@ class SphereFunction(MathematicalFunction):
 
         self.pure_objective_function = sphere_function
 
-    def search_space(self, min=-5, max=5, size=10000, value_types="array"):
+    def _search_space(self, min=-5, max=5, size=10000, value_types="array"):
         return super().create_n_dim_search_space(
             min, max, size=size, value_types=value_types
         )

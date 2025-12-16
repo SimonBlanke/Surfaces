@@ -22,7 +22,7 @@ def test_(test_function):
     except TypeError:
         test_function_ = test_function(n_dim=2)
 
-    search_space = test_function_.search_space(value_types="array")
+    search_space = test_function_.default_search_space
     # Test function is directly callable via __call__
     assert callable(test_function_)
 
@@ -31,6 +31,6 @@ def test_(test_function):
 def test_all_(test_function):
     test_function_ = test_function()
 
-    search_space = test_function_.search_space()
+    search_space = test_function_.default_search_space
     # Test function is directly callable via __call__
     assert callable(test_function_)

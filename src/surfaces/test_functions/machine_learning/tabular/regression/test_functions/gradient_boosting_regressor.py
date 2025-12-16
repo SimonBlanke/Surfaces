@@ -28,7 +28,7 @@ class GradientBoostingRegressorFunction(BaseRegression):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def search_space(
+    def _search_space(
         self,
         n_estimators: list = None,
         max_depth: list = None,

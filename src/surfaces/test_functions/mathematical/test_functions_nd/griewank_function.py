@@ -25,6 +25,7 @@ class GriewankFunction(MathematicalFunction):
     formula = r"""f(\vec x) = \sum^d_{i=1} \frac{x_i^2}{4000} - \prod_{i=1}^d\cos (\frac{x_i}{\sqrt i}) + 1"""
     global_minimum = r"""f(\vec x = 0) = 0"""
 
+    default_bounds = (-100.0, 100.0)
     def __init__(self, n_dim, metric="score", sleep=0):
         super().__init__(metric, sleep)
         self.n_dim = n_dim
@@ -44,7 +45,7 @@ class GriewankFunction(MathematicalFunction):
 
         self.pure_objective_function = griewank_function
 
-    def search_space(self, min=-100, max=100, size=10000, value_types="array"):
+    def _search_space(self, min=-100, max=100, size=10000, value_types="array"):
         return super().create_n_dim_search_space(
             min, max, size=size, value_types=value_types
         )

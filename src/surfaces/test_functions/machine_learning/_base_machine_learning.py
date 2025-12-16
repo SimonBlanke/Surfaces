@@ -18,6 +18,24 @@ class MachineLearningFunction(BaseTestFunction):
     higher is better.
     """
 
+    # Subclasses should define para_names and corresponding *_default attributes
+    para_names: list = []
+
+    @property
+    def default_search_space(self) -> Dict[str, Any]:
+        """
+        Default search space for this ML function.
+
+        Returns a dictionary mapping parameter names to lists of values,
+        built from the *_default class attributes.
+        """
+        search_space = {}
+        for param_name in self.para_names:
+            default_attr = f"{param_name}_default"
+            if hasattr(self, default_attr):
+                search_space[param_name] = getattr(self, default_attr)
+        return search_space
+
     def __init__(
         self,
         metric: str = "score",

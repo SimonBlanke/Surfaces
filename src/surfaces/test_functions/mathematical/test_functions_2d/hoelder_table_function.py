@@ -30,6 +30,7 @@ class HölderTableFunction(MathematicalFunction):
       f(-8.05502,-9.66459) = -19.2085
       """
 
+    default_bounds = (-10.0, 10.0)
     def __init__(self, A=10, angle=1, metric="score", sleep=0):
         super().__init__(metric, sleep)
         self.n_dim = 2
@@ -49,7 +50,7 @@ class HölderTableFunction(MathematicalFunction):
 
         self.pure_objective_function = hölder_table_function
 
-    def search_space(self, min=-10, max=10, value_types="array", size=10000):
+    def _search_space(self, min=-10, max=10, value_types="array", size=10000):
         return super().create_n_dim_search_space(
             min=min, max=max, size=size, value_types=value_types
         )

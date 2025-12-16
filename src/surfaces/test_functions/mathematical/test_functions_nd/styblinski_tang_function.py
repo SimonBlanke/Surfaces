@@ -25,6 +25,7 @@ class StyblinskiTangFunction(MathematicalFunction):
     )
     global_minimum = r"""-39.16617n < f(\underbrace{-2.903534, \ldots, -2.903534}_{n \text{ times}} ) < -39.16616n"""
 
+    default_bounds = (-5.0, 5.0)
     def __init__(self, n_dim, metric="score", sleep=0):
         super().__init__(metric, sleep)
         self.n_dim = n_dim
@@ -42,7 +43,7 @@ class StyblinskiTangFunction(MathematicalFunction):
 
         self.pure_objective_function = styblinski_tang_function
 
-    def search_space(self, min=-5, max=5, size=10000, value_types="array"):
+    def _search_space(self, min=-5, max=5, size=10000, value_types="array"):
         return super().create_n_dim_search_space(
             min, max, size=size, value_types=value_types
         )

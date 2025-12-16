@@ -23,6 +23,7 @@ class RosenbrockFunction(MathematicalFunction):
     formula = r"""f(\vec {x}) = \sum_{i=1}^{n-1} \left[ 100 \left(x_{i+1} - x_{i}^{2}\right)^{2} + \left(1 - x_{i}\right)^{2}\right]"""
     global_minimum = r"""f(1,1) = 0"""
 
+    default_bounds = (-5.0, 5.0)
     def __init__(
         self,
         n_dim,
@@ -52,7 +53,7 @@ class RosenbrockFunction(MathematicalFunction):
 
         self.pure_objective_function = rosenbrock_function
 
-    def search_space(self, min=-5, max=5, size=10000, value_types="array"):
+    def _search_space(self, min=-5, max=5, size=10000, value_types="array"):
         return super().create_n_dim_search_space(
             min, max, size=size, value_types=value_types
         )

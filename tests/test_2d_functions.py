@@ -17,7 +17,7 @@ def test_all_mathematical_functions(test_function):
         test_function_ = test_function(n_dim=2)
 
     # Test that the function can be created and evaluated
-    search_space = test_function_.create_n_dim_search_space(value_types="list")
+    search_space = test_function_.default_search_space
     assert isinstance(search_space, dict)
     assert len(search_space) > 0
     

@@ -28,6 +28,7 @@ class SimionescuFunction(MathematicalFunction):
             \text{where: }  r_{T}=1, r_{S}=0.2 \text{ and } n = 8"""
     global_minimum = r"""f(\pm 0.84852813,\mp 0.84852813) = -0.072"""
 
+    default_bounds = (-1.25, 1.25)
     def __init__(
         self,
         A=0.1,
@@ -66,7 +67,7 @@ class SimionescuFunction(MathematicalFunction):
 
         self.pure_objective_function = simionescu_function
 
-    def search_space(self, min=-1.25, max=1.25, value_types="array", size=10000):
+    def _search_space(self, min=-1.25, max=1.25, value_types="array", size=10000):
         return super().create_n_dim_search_space(
             min=min, max=max, size=size, value_types=value_types
         )

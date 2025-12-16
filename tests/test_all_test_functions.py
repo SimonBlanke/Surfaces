@@ -22,11 +22,11 @@ def test_all_mathematical_functions(test_function):
     except TypeError:
         test_function_ = test_function(n_dim=2)
 
-    # Test that the function can be created and evaluated
-    search_space = test_function_.search_space(value_types="array")
+    # Test that the function can be created and has default_search_space
+    search_space = test_function_.default_search_space
     assert isinstance(search_space, dict)
     assert len(search_space) > 0
-    
+
     # Test that the objective function works
     sample_params = {key: values[0] for key, values in search_space.items()}
     result = test_function_(sample_params)
@@ -37,8 +37,8 @@ def test_all_mathematical_functions(test_function):
 def test_all_machine_learning_functions(test_function):
     test_function_ = test_function()
 
-    # Test that the function can be created and evaluated
-    search_space = test_function_.search_space()
+    # Test that the function can be created and has default_search_space
+    search_space = test_function_.default_search_space
     assert isinstance(search_space, dict)
     assert len(search_space) > 0
 

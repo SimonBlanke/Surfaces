@@ -49,8 +49,10 @@ class BaseTestFunction:
     def create_objective_function(self):
         raise NotImplementedError("'create_objective_function' must be implemented")
 
-    def search_space(self):
-        raise NotImplementedError("'search_space' must be implemented")
+    @property
+    def default_search_space(self) -> Dict[str, Any]:
+        """Default search space for this function (override in subclasses)."""
+        raise NotImplementedError("'default_search_space' must be implemented")
 
     def return_metric(self, value):
         """Transform raw value based on metric setting (override in subclasses)."""
@@ -187,7 +189,7 @@ class BaseTestFunction:
         Raises:
             ValueError: If parameters are missing or unexpected
         """
-        space = self.search_space()
+        space = self.default_search_space
         expected_keys = set(space.keys())
         provided_keys = set(params.keys())
 

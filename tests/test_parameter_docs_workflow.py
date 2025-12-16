@@ -37,16 +37,16 @@ def test_workflow():
     # Use a smaller search space for testing
     custom_search_space = {
         'n_neighbors': [3, 5, 7],
-        'algorithm': ['auto', 'ball_tree'], 
+        'algorithm': ['auto', 'ball_tree'],
         'cv': [2, 3],
-        'dataset': func.search_space()['dataset'][:1]  # Just one dataset
+        'dataset': func.default_search_space['dataset'][:1]  # Just one dataset
     }
-    
+
     print(f"Collecting data with custom search space: {custom_search_space}")
     print("(This will take a moment as it actually trains ML models...)")
-    
+
     try:
-        stats = func.collect_search_data(
+        stats = func._collect_search_data(
             search_space=custom_search_space,
             batch_size=5,
             verbose=True

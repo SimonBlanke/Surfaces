@@ -56,7 +56,7 @@ class LangermannFunction(MathematicalFunction):
 
         self.pure_objective_function = langermann_function
 
-    def search_space(self, min=-15, max=15, value_types="array", size=10000):
+    def _search_space(self, min=-15, max=15, value_types="array", size=10000):
         return super().create_n_dim_search_space(
             min=min, max=max, size=size, value_types=value_types
         )

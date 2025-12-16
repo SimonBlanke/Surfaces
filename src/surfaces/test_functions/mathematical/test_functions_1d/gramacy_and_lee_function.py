@@ -25,6 +25,7 @@ class GramacyAndLeeFunction(MathematicalFunction):
     formula = r"""f(x) = \frac{\sin(10\pi x)}{2x} + (x - 1)^4"""
     global_minimum = r"""-"""
 
+    default_bounds = (0.5, 2.5)
     def __init__(self, metric="score", sleep=0):
         super().__init__(metric, sleep)
         self.n_dim = 1
@@ -37,7 +38,7 @@ class GramacyAndLeeFunction(MathematicalFunction):
 
         self.pure_objective_function = gramacy_and_lee_function
 
-    def search_space(self, min=0.5, max=2.5, value_types="array", size=10000):
+    def _search_space(self, min=0.5, max=2.5, value_types="array", size=10000):
         return super().create_n_dim_search_space(
             min=min, max=max, size=size, value_types=value_types
         )

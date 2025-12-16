@@ -27,6 +27,7 @@ class McCormickFunction(MathematicalFunction):
     )
     global_minimum = r"""f(-0.54719, -1.54719) = -1.9133"""
 
+    default_bounds = (-5.0, 5.0)
     def __init__(self, metric="score", sleep=0):
         super().__init__(metric, sleep)
         self.n_dim = 2
@@ -40,7 +41,7 @@ class McCormickFunction(MathematicalFunction):
 
         self.pure_objective_function = mccormick_function
 
-    def search_space(self, min=-5, max=5, value_types="array", size=10000):
+    def _search_space(self, min=-5, max=5, value_types="array", size=10000):
         return super().create_n_dim_search_space(
             min=min, max=max, size=size, value_types=value_types
         )

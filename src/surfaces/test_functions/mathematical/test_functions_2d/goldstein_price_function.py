@@ -23,6 +23,7 @@ class GoldsteinPriceFunction(MathematicalFunction):
     formula = r"""f(x,y) = \left[1+\left(x+y+1\right)^{2}\left(19-14x+3x^{2}-14y+6xy+3y^{2}\right)\right]\left[30+\left(2x-3y\right)^{2}\left(18-32x+12x^{2}+48y-36xy+27y^{2}\right)\right]"""
     global_minimum = r"""f(0,-1) = 3"""
 
+    default_bounds = (-2.0, 2.0)
     def __init__(self, metric="score", sleep=0):
         super().__init__(metric, sleep)
         self.n_dim = 2
@@ -43,7 +44,7 @@ class GoldsteinPriceFunction(MathematicalFunction):
 
         self.pure_objective_function = goldstein_price_function
 
-    def search_space(self, min=-2, max=2, value_types="array", size=10000):
+    def _search_space(self, min=-2, max=2, value_types="array", size=10000):
         return super().create_n_dim_search_space(
             min=min, max=max, size=size, value_types=value_types
         )
