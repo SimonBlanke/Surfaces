@@ -7,22 +7,47 @@ from .._base_mathematical_function import MathematicalFunction
 
 
 class BoothFunction(MathematicalFunction):
+    """Booth two-dimensional test function.
+
+    A simple polynomial optimization test function.
+
+    The function is defined as:
+
+    .. math::
+
+        f(x, y) = (x + 2y - 7)^2 + (2x + y - 5)^2
+
+    The global minimum is :math:`f(1, 3) = 0`.
+
+    Parameters
+    ----------
+    metric : str, default="score"
+        Either "loss" (minimize) or "score" (maximize).
+    sleep : float, default=0
+        Artificial delay in seconds added to each evaluation.
+
+    Attributes
+    ----------
+    n_dim : int
+        Number of dimensions (always 2).
+    default_bounds : tuple
+        Default parameter bounds (-10.0, 10.0).
+
+    References
+    ----------
+    .. [1] Global Optimization Test Problems. Retrieved June 2013, from
+       http://www-optima.amp.i.kyoto-u.ac.jp/member/student/hedar/Hedar_files/TestGO
+
+    Examples
+    --------
+    >>> from surfaces.test_functions import BoothFunction
+    >>> func = BoothFunction()
+    >>> result = func({"x0": 1.0, "x1": 3.0})
+    """
+
     name = "Booth Function"
     _name_ = "booth_function"
     __name__ = "BoothFunction"
-
-    explanation = """
-    
-    """
-
-    reference = """
-    Global Optimization Test Problems. Retrieved June 2013, from
-http://www-optima.amp.i.kyoto-u.ac.jp/member/student/hedar/Hedar_files/TestGO
-    """
-
-    dimensions = "2"
-    formula = r"""f(x,y) = (x + 2y - 7)^2 + (2x + y - 5)^2"""
-    global_minimum = r"""f(1,3)=0"""
 
     default_bounds = (-10.0, 10.0)
 

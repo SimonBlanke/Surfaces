@@ -9,21 +9,38 @@ from .._base_mathematical_function import MathematicalFunction
 
 
 class LangermannFunction(MathematicalFunction):
+    """Langermann two-dimensional test function.
+
+    A multimodal function with many unevenly distributed local minima.
+
+    Parameters
+    ----------
+    metric : str, default="score"
+        Either "loss" (minimize) or "score" (maximize).
+    sleep : float, default=0
+        Artificial delay in seconds added to each evaluation.
+
+    Attributes
+    ----------
+    n_dim : int
+        Number of dimensions (always 2).
+    c : ndarray
+        Coefficient vector.
+    m : int
+        Number of terms in the summation.
+    A : ndarray
+        Matrix of center coordinates.
+
+    Examples
+    --------
+    >>> from surfaces.test_functions import LangermannFunction
+    >>> func = LangermannFunction()
+    >>> result = func({"x0": 0.0, "x1": 0.0})
+    """
+
     name = "Langermann Function"
     _name_ = "langermann_function"
     __name__ = "LangermannFunction"
-
-    explanation = """
-    
-    """
-
-    reference = """
-    
-    """
-
-    dimensions = "2"
-    formula = r"""f(\vec x) = \sum^m_{i=1} c_i \exp \left[-\frac{1}{\pi}\sum_{j=1}^d(x_j - A_{ij})^2 \right] \cos \left[\pi \sum_{j=1}^d (x_j - A_{ij})^2 \right]"""
-    global_minimum = r"""TODO"""
 
     c = np.array([1, 2, 5, 2, 3])
     m = 5

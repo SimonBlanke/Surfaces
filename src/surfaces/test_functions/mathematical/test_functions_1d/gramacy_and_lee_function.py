@@ -9,23 +9,54 @@ from .._base_mathematical_function import MathematicalFunction
 
 
 class GramacyAndLeeFunction(MathematicalFunction):
+    """Gramacy and Lee one-dimensional test function.
+
+    A simple one-dimensional test function commonly used for testing
+    optimization algorithms and surrogate modeling techniques.
+
+    The function is defined as:
+
+    .. math::
+
+        f(x) = \\frac{\\sin(10\\pi x)}{2x} + (x - 1)^4
+
+    Parameters
+    ----------
+    metric : str, default="score"
+        Either "loss" (minimize) or "score" (maximize).
+    sleep : float, default=0
+        Artificial delay in seconds added to each evaluation.
+
+    Attributes
+    ----------
+    n_dim : int
+        Number of dimensions (always 1).
+    default_bounds : tuple
+        Default parameter bounds (0.5, 2.5).
+
+    References
+    ----------
+    .. [1] Gramacy, R. B., & Lee, H. K. (2012). "Cases for the nugget in
+       modeling computer experiments". Statistics and Computing, 22(3),
+       713-722.
+
+    Examples
+    --------
+    >>> from surfaces.test_functions import GramacyAndLeeFunction
+    >>> func = GramacyAndLeeFunction()
+    >>> func({"x0": 1.0})
+    0.0
+    >>> search_space = func.default_search_space
+    >>> len(search_space)
+    1
+    """
+
     name = "Gramacy And Lee Function"
     _name_ = "gramacy_and_lee_function"
     __name__ = "GramacyAndLeeFunction"
 
-    explanation = """
-    This is a simple one-dimensional test function.
-    """
-
-    reference = """
-    Gramacy, R. B., & Lee, H. K. (2012). Cases for the nugget in modeling computer experiments. Statistics and Computing, 22(3), 713-722.
-    """
-
-    dimensions = "1"
-    formula = r"""f(x) = \frac{\sin(10\pi x)}{2x} + (x - 1)^4"""
-    global_minimum = r"""-"""
-
     default_bounds = (0.5, 2.5)
+
     def __init__(self, metric="score", sleep=0):
         super().__init__(metric, sleep)
         self.n_dim = 1

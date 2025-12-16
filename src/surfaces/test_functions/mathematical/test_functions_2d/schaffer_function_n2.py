@@ -9,23 +9,46 @@ from .._base_mathematical_function import MathematicalFunction
 
 
 class SchafferFunctionN2(MathematicalFunction):
+    """Schaffer N.2 two-dimensional test function.
+
+    A multimodal function with many local minima.
+
+    The function is defined as:
+
+    .. math::
+
+        f(x, y) = 0.5 + \\frac{\\sin^2(x^2 - y^2) - 0.5}
+        {[1 + 0.001(x^2 + y^2)]^2}
+
+    The global minimum is :math:`f(0, 0) = 0`.
+
+    Parameters
+    ----------
+    metric : str, default="score"
+        Either "loss" (minimize) or "score" (maximize).
+    sleep : float, default=0
+        Artificial delay in seconds added to each evaluation.
+
+    Attributes
+    ----------
+    n_dim : int
+        Number of dimensions (always 2).
+    default_bounds : tuple
+        Default parameter bounds (-50.0, 50.0).
+
+    Examples
+    --------
+    >>> from surfaces.test_functions import SchafferFunctionN2
+    >>> func = SchafferFunctionN2()
+    >>> result = func({"x0": 0.0, "x1": 0.0})
+    """
+
     name = "Schaffer Function N2"
     _name_ = "schaffer_function_n2"
     __name__ = "SchafferFunctionN2"
 
-    explanation = """
-    
-    """
-
-    reference = """
-    
-    """
-
-    dimensions = "2"
-    formula = r"""f(x,y) = 0.5 + \frac{\sin^{2}\left(x^{2} - y^{2}\right) - 0.5}{\left[1 + 0.001\left(x^{2} + y^{2}\right) \right]^{2}}"""
-    global_minimum = r"""f(0,0) = 0"""
-
     default_bounds = (-50.0, 50.0)
+
     def __init__(self, metric="score", sleep=0):
         super().__init__(metric, sleep)
         self.n_dim = 2

@@ -9,28 +9,49 @@ from .._base_mathematical_function import MathematicalFunction
 
 
 class HölderTableFunction(MathematicalFunction):
+    """Hölder Table two-dimensional test function.
+
+    A multimodal function with four identical global minima.
+
+    The function is defined as:
+
+    .. math::
+
+        f(x, y) = -|\\sin x \\cos y \\exp(|1 - \\frac{\\sqrt{x^2 + y^2}}{\\pi}|)|
+
+    The four global minima are at :math:`f(\\pm 8.05502, \\pm 9.66459) = -19.2085`.
+
+    Parameters
+    ----------
+    A : float, default=10
+        Amplitude parameter.
+    angle : float, default=1
+        Angular frequency parameter.
+    metric : str, default="score"
+        Either "loss" (minimize) or "score" (maximize).
+    sleep : float, default=0
+        Artificial delay in seconds added to each evaluation.
+
+    Attributes
+    ----------
+    n_dim : int
+        Number of dimensions (always 2).
+    default_bounds : tuple
+        Default parameter bounds (-10.0, 10.0).
+
+    Examples
+    --------
+    >>> from surfaces.test_functions import HölderTableFunction
+    >>> func = HölderTableFunction()
+    >>> result = func({"x0": 8.05502, "x1": 9.66459})
+    """
+
     name = "Hölder Table Function"
     _name_ = "hölder_table_function"
     __name__ = "HölderTableFunction"
 
-    explanation = """
-    
-    """
-
-    reference = """
-    
-    """
-
-    dimensions = "2"
-    formula = r"""f(x,y) = - \left|\sin x \cos y \exp \left(\left|1 - \frac{\sqrt{x^{2} + y^{2}}}{\pi} \right|\right)\right|"""
-    global_minimum = r"""      
-      f(8.05502,  9.66459) = -19.2085 \\
-      f(-8.05502,  9.66459) = -19.2085 \\
-      f(8.05502,-9.66459) = -19.2085 \\
-      f(-8.05502,-9.66459) = -19.2085
-      """
-
     default_bounds = (-10.0, 10.0)
+
     def __init__(self, A=10, angle=1, metric="score", sleep=0):
         super().__init__(metric, sleep)
         self.n_dim = 2

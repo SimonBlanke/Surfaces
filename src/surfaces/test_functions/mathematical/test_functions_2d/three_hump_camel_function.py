@@ -9,23 +9,48 @@ from .._base_mathematical_function import MathematicalFunction
 
 
 class ThreeHumpCamelFunction(MathematicalFunction):
+    """Three-Hump Camel two-dimensional test function.
+
+    A function with three local minima, two of which are symmetric about
+    the origin.
+
+    The function is defined as:
+
+    .. math::
+
+        f(x, y) = 2x^2 - 1.05x^4 + \\frac{x^6}{6} + xy + y^2
+
+    The global minimum is :math:`f(0, 0) = 0`.
+
+    Parameters
+    ----------
+    metric : str, default="score"
+        Either "loss" (minimize) or "score" (maximize).
+    sleep : float, default=0
+        Artificial delay in seconds added to each evaluation.
+
+    Attributes
+    ----------
+    n_dim : int
+        Number of dimensions (always 2).
+    default_bounds : tuple
+        Default parameter bounds (-5.0, 5.0).
+
+    Examples
+    --------
+    >>> from surfaces.test_functions import ThreeHumpCamelFunction
+    >>> func = ThreeHumpCamelFunction()
+    >>> result = func({"x0": 0.0, "x1": 0.0})
+    >>> abs(result) < 1e-10
+    True
+    """
+
     name = "Three Hump Camel Function"
     _name_ = "three_hump_camel_function"
     __name__ = "ThreeHumpCamelFunction"
 
-    explanation = """
-    
-    """
-
-    reference = """
-    
-    """
-
-    dimensions = "2"
-    formula = r"""f(x,y) = -\cos \left(x\right)\cos \left(y\right) \exp\left[-\left(\left(x-\pi\right)^{2} + \left(y-\pi\right)^{2}\right)\right]"""
-    global_minimum = r"""f(0,0)= 0"""
-
     default_bounds = (-5.0, 5.0)
+
     def __init__(self, metric="score", sleep=0):
         super().__init__(metric, sleep)
         self.n_dim = 2

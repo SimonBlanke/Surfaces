@@ -6,21 +6,56 @@ from .._base_mathematical_function import MathematicalFunction
 
 
 class SphereFunction(MathematicalFunction):
+    """Sphere N-dimensional test function.
+
+    A continuous, convex, and unimodal function. It is the simplest
+    N-dimensional optimization test function.
+
+    The function is defined as:
+
+    .. math::
+
+        f(\\vec{x}) = \\sum_{i=1}^{n} x_i^2
+
+    The global minimum is :math:`f(\\vec{0}) = 0`.
+
+    Parameters
+    ----------
+    n_dim : int
+        Number of dimensions.
+    A : float, default=1
+        Scaling parameter.
+    metric : str, default="score"
+        Either "loss" (minimize) or "score" (maximize).
+    sleep : float, default=0
+        Artificial delay in seconds added to each evaluation.
+    validate : bool, default=True
+        Whether to validate parameters against the search space.
+
+    Attributes
+    ----------
+    n_dim : int
+        Number of dimensions.
+    default_bounds : tuple
+        Default parameter bounds (-5.0, 5.0).
+
+    Examples
+    --------
+    >>> from surfaces.test_functions import SphereFunction
+    >>> func = SphereFunction(n_dim=3)
+    >>> result = func({"x0": 0.0, "x1": 0.0, "x2": 0.0})
+    >>> abs(result) < 1e-10
+    True
+    >>> len(func.default_search_space)
+    3
+    """
+
     name = "Sphere Function"
     _name_ = "sphere_function"
     __name__ = "SphereFunction"
 
-    explanation = """The Sphere function has d local minima except for the global one. It is continuous, convex and unimodal. The plot shows its two-dimensional form."""
-
-    reference = """
-    
-    """
-
-    dimensions = "n"
-    formula = r"f(\vec{x}) = \sum^n_{i=1}x^2_i"
-    global_minimum = r"f(\vec{x}=0) = 0"
-
     default_bounds = (-5.0, 5.0)
+
     def __init__(self, n_dim, A=1, metric="score", sleep=0, validate=True):
         super().__init__(metric, sleep, validate)
         self.n_dim = n_dim

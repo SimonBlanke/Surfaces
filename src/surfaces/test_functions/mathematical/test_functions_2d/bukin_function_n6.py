@@ -9,23 +9,45 @@ from .._base_mathematical_function import MathematicalFunction
 
 
 class BukinFunctionN6(MathematicalFunction):
+    """Bukin N.6 two-dimensional test function.
+
+    A non-convex function with a ridge along a parabola, making it challenging
+    for many optimization algorithms.
+
+    The function is defined as:
+
+    .. math::
+
+        f(x, y) = 100 \\sqrt{|y - 0.01x^2|} + 0.01|x + 10|
+
+    The global minimum is :math:`f(-10, 1) = 0`.
+
+    Parameters
+    ----------
+    metric : str, default="score"
+        Either "loss" (minimize) or "score" (maximize).
+    sleep : float, default=0
+        Artificial delay in seconds added to each evaluation.
+
+    Attributes
+    ----------
+    n_dim : int
+        Number of dimensions (always 2).
+    default_bounds : tuple
+        Default parameter bounds (-8.0, 8.0).
+
+    Examples
+    --------
+    >>> from surfaces.test_functions import BukinFunctionN6
+    >>> func = BukinFunctionN6()
+    >>> result = func({"x0": -10.0, "x1": 1.0})
+    >>> abs(result) < 1e-10
+    True
+    """
+
     name = "Bukin Function N6"
     _name_ = "bukin_function_n6"
     __name__ = "BukinFunctionN6"
-
-    explanation = """
-    
-    """
-
-    reference = """
-    
-    """
-
-    dimensions = "2"
-    formula = (
-        r"""f(x,y) = 100 \sqrt{\left| y-0.01x^2 \right|} + 0.01 \left|x+10\right|"""
-    )
-    global_minimum = r"""f(-10,1)=0"""
 
     default_bounds = (-8.0, 8.0)
 

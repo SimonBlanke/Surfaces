@@ -9,8 +9,7 @@ import numpy as np
 
 
 class BaseTestFunction:
-    """
-    Base class for all test functions in the Surfaces library.
+    """Base class for all test functions in the Surfaces library.
 
     This class provides the core interface for optimization test functions,
     including evaluation, search space definition, and integration with
@@ -20,13 +19,23 @@ class BaseTestFunction:
         func(params)      - Evaluate the function (uses metric setting)
         func.loss(params) - Always returns value to minimize
         func.score(params) - Always returns value to maximize
+
+    Parameters
+    ----------
+    metric : str, default="loss"
+        Either "loss" (minimize) or "score" (maximize).
+        Controls the return value of __call__().
+    sleep : float, default=0
+        Artificial delay in seconds added to each evaluation.
+    validate : bool, default=True
+        Whether to validate parameters against the search space.
+
+    Examples
+    --------
+    >>> from surfaces.test_functions import SphereFunction
+    >>> func = SphereFunction(n_dim=2)
+    >>> result = func({"x0": 1.0, "x1": 2.0})
     """
-
-    explanation = """ """
-
-    dimensions = " "
-    formula = r" "
-    global_minimum = r" "
 
     pure_objective_function: callable
 

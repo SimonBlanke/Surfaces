@@ -14,6 +14,40 @@ from .._base_regression import BaseRegression
 
 
 class KNeighborsRegressorFunction(BaseRegression):
+    """K-Nearest Neighbors Regressor test function.
+
+    A machine learning test function that evaluates K-Nearest Neighbors
+    regression with different hyperparameters using cross-validation.
+
+    Parameters
+    ----------
+    metric : str, default="r2"
+        Scoring metric for cross-validation.
+    sleep : float, default=0
+        Artificial delay in seconds added to each evaluation.
+
+    Attributes
+    ----------
+    para_names : list
+        Names of the hyperparameters: n_neighbors, algorithm, cv, dataset.
+    n_neighbors_default : list
+        Default values for n_neighbors parameter (3 to 150, step 5).
+    algorithm_default : list
+        Default algorithm options: auto, ball_tree, kd_tree, brute.
+    cv_default : list
+        Default cross-validation fold options: 2, 3, 4, 5, 8, 10.
+    dataset_default : list
+        Default datasets (diabetes).
+
+    Examples
+    --------
+    >>> from surfaces.test_functions import KNeighborsRegressorFunction
+    >>> func = KNeighborsRegressorFunction()
+    >>> search_space = func.default_search_space
+    >>> list(search_space.keys())
+    ['n_neighbors', 'algorithm', 'cv', 'dataset']
+    """
+
     name = "KNeighbors Regressor Function"
     _name_ = "k_neighbors_regressor"
     __name__ = "KNeighborsRegressorFunction"

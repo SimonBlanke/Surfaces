@@ -9,26 +9,62 @@ from .._base_mathematical_function import MathematicalFunction
 
 
 class SimionescuFunction(MathematicalFunction):
+    """Simionescu two-dimensional constrained test function.
+
+    A function with a bumpy constraint boundary. Points outside the
+    constraint region return NaN.
+
+    The function is defined as:
+
+    .. math::
+
+        f(x, y) = 0.1xy
+
+    Subject to:
+
+    .. math::
+
+        x^2 + y^2 \\le [r_T + r_S \\cos(n \\arctan(x/y))]^2
+
+    where :math:`r_T = 1`, :math:`r_S = 0.2`, and :math:`n = 8`.
+
+    The global minimum is :math:`f(\\pm 0.84852813, \\mp 0.84852813) = -0.072`.
+
+    Parameters
+    ----------
+    A : float, default=0.1
+        Amplitude scaling parameter.
+    r_T : float, default=1
+        Constraint radius parameter.
+    r_S : float, default=0.2
+        Constraint wave amplitude.
+    n : int, default=8
+        Number of bumps in the constraint boundary.
+    metric : str, default="score"
+        Either "loss" (minimize) or "score" (maximize).
+    sleep : float, default=0
+        Artificial delay in seconds added to each evaluation.
+
+    Attributes
+    ----------
+    n_dim : int
+        Number of dimensions (always 2).
+    default_bounds : tuple
+        Default parameter bounds (-1.25, 1.25).
+
+    Examples
+    --------
+    >>> from surfaces.test_functions import SimionescuFunction
+    >>> func = SimionescuFunction()
+    >>> result = func({"x0": 0.84852813, "x1": -0.84852813})
+    """
+
     name = "Simionescu Function"
     _name_ = "simionescu_function"
     __name__ = "SimionescuFunction"
 
-    explanation = """
-    
-    """
-
-    reference = """
-    
-    """
-
-    formula = r"""f(x,y) = 0.1xy 
-            \newline
-            x^2+y^2\le\left[r_{T}+r_{S}\cos\left(n \arctan \frac{x}{y} \right)\right]^2
-            \newline
-            \text{where: }  r_{T}=1, r_{S}=0.2 \text{ and } n = 8"""
-    global_minimum = r"""f(\pm 0.84852813,\mp 0.84852813) = -0.072"""
-
     default_bounds = (-1.25, 1.25)
+
     def __init__(
         self,
         A=0.1,

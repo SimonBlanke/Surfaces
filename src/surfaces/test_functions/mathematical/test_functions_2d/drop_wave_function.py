@@ -9,23 +9,48 @@ from .._base_mathematical_function import MathematicalFunction
 
 
 class DropWaveFunction(MathematicalFunction):
+    """Drop-Wave two-dimensional test function.
+
+    A highly multimodal function with many local minima arranged in a
+    concentric wave pattern.
+
+    The function is defined as:
+
+    .. math::
+
+        f(x, y) = -\\frac{1 + \\cos(12\\sqrt{x^2 + y^2})}{0.5(x^2 + y^2) + 2}
+
+    The global minimum is :math:`f(0, 0) = -1`.
+
+    Parameters
+    ----------
+    metric : str, default="score"
+        Either "loss" (minimize) or "score" (maximize).
+    sleep : float, default=0
+        Artificial delay in seconds added to each evaluation.
+
+    Attributes
+    ----------
+    n_dim : int
+        Number of dimensions (always 2).
+    default_bounds : tuple
+        Default parameter bounds (-5.0, 5.0).
+
+    Examples
+    --------
+    >>> from surfaces.test_functions import DropWaveFunction
+    >>> func = DropWaveFunction()
+    >>> result = func({"x0": 0.0, "x1": 0.0})
+    >>> abs(result + 1.0) < 1e-10
+    True
+    """
+
     name = "Drop Wave Function"
     _name_ = "drop_wave_function"
     __name__ = "DropWaveFunction"
 
-    explanation = """
-    
-    """
-
-    reference = """
-    
-    """
-
-    dimensions = "2"
-    formula = r"""f(x, y) = -\frac{1+\cos (12\sqrt{x^2+y^2})}{0.5 (x^2 + y^2) + 2}"""
-    global_minimum = r"""f(0, 0)= -1"""
-
     default_bounds = (-5.0, 5.0)
+
     def __init__(self, metric="score", sleep=0):
         super().__init__(metric, sleep)
         self.n_dim = 2

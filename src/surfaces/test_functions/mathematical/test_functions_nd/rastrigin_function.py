@@ -9,25 +9,57 @@ from .._base_mathematical_function import MathematicalFunction
 
 
 class RastriginFunction(MathematicalFunction):
+    """Rastrigin N-dimensional test function.
+
+    A highly multimodal function with many local minima arranged in a
+    regular lattice pattern. It is commonly used to test the ability
+    of optimization algorithms to escape local optima.
+
+    The function is defined as:
+
+    .. math::
+
+        f(\\vec{x}) = An + \\sum_{i=1}^{n} [x_i^2 - A\\cos(2\\pi x_i)]
+
+    where :math:`A = 10` by default.
+
+    The global minimum is :math:`f(\\vec{0}) = 0`.
+
+    Parameters
+    ----------
+    n_dim : int
+        Number of dimensions.
+    A : float, default=10
+        Amplitude of the cosine modulation.
+    angle : float, default=2*pi
+        Angular frequency parameter.
+    metric : str, default="score"
+        Either "loss" (minimize) or "score" (maximize).
+    sleep : float, default=0
+        Artificial delay in seconds added to each evaluation.
+
+    Attributes
+    ----------
+    n_dim : int
+        Number of dimensions.
+    default_bounds : tuple
+        Default parameter bounds (-5.0, 5.0).
+
+    Examples
+    --------
+    >>> from surfaces.test_functions import RastriginFunction
+    >>> func = RastriginFunction(n_dim=2)
+    >>> result = func({"x0": 0.0, "x1": 0.0})
+    >>> abs(result) < 1e-10
+    True
+    """
+
     name = "Rastrigin Function"
     _name_ = "rastrigin_function"
     __name__ = "RastriginFunction"
 
-    explanation = """
-    
-    """
-
-    reference = """
-    
-    """
-
-    dimensions = "n"
-    formula = r"""f(\vec{x}) = An + \sum^n_{i=1} \left[x_i^2 - A\cos(2\pi x_i)\right]
-                \newline
-                \text{where:} A = 10"""
-    global_minimum = r"""f(\vec x = 0) = 0"""
-
     default_bounds = (-5.0, 5.0)
+
     def __init__(
         self,
         n_dim,

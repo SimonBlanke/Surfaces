@@ -7,24 +7,56 @@ from .._base_mathematical_function import MathematicalFunction
 
 
 class BealeFunction(MathematicalFunction):
+    """Beale two-dimensional test function.
+
+    A multimodal function with sharp peaks at the corners of the input domain.
+    It is commonly used for testing optimization algorithms.
+
+    The function is defined as:
+
+    .. math::
+
+        f(x, y) = (1.5 - x + xy)^2 + (2.25 - x + xy^2)^2 + (2.625 - x + xy^3)^2
+
+    The global minimum is :math:`f(3, 0.5) = 0`.
+
+    Parameters
+    ----------
+    A : float, default=1.5
+        First coefficient.
+    B : float, default=2.25
+        Second coefficient.
+    C : float, default=2.652
+        Third coefficient.
+    metric : str, default="score"
+        Either "loss" (minimize) or "score" (maximize).
+    sleep : float, default=0
+        Artificial delay in seconds added to each evaluation.
+
+    Attributes
+    ----------
+    n_dim : int
+        Number of dimensions (always 2).
+    default_bounds : tuple
+        Default parameter bounds (-4.5, 4.5).
+
+    References
+    ----------
+    .. [1] Global Optimization Test Problems. Retrieved June 2013, from
+       http://www-optima.amp.i.kyoto-u.ac.jp/member/student/hedar/Hedar_files/TestGO
+
+    Examples
+    --------
+    >>> from surfaces.test_functions import BealeFunction
+    >>> func = BealeFunction()
+    >>> result = func({"x0": 3.0, "x1": 0.5})
+    >>> abs(result) < 1e-10
+    True
+    """
+
     name = "Beale Function"
     _name_ = "beale_function"
     __name__ = "BealeFunction"
-
-    explanation = """
-    The Beale function is multimodal, with sharp peaks at the corners of the input domain.
-    """
-
-    reference = """
-    Global Optimization Test Problems. Retrieved June 2013, from
-http://www-optima.amp.i.kyoto-u.ac.jp/member/student/hedar/Hedar_files/TestGO
-    """
-
-    dimensions = "2"
-    formula = (
-        r"""f(x,y) = (1.5 - x + xy)^2 + (2.25 - x + xy^2)^2 + (2.625 - x + xy^3)^2"""
-    )
-    global_minimum = r"""f(3, 0.5) = 0"""
 
     default_bounds = (-4.5, 4.5)
 

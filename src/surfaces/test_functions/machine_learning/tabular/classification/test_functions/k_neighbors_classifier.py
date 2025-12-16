@@ -1,3 +1,7 @@
+# Author: Simon Blanke
+# Email: simon.blanke@yahoo.com
+# License: MIT License
+
 import numpy as np
 
 from sklearn.neighbors import KNeighborsClassifier
@@ -9,6 +13,40 @@ from .._base_classification import BaseClassification
 
 
 class KNeighborsClassifierFunction(BaseClassification):
+    """K-Nearest Neighbors Classifier test function.
+
+    A machine learning test function that evaluates K-Nearest Neighbors
+    classification with different hyperparameters using cross-validation.
+
+    Parameters
+    ----------
+    metric : str, default="accuracy"
+        Scoring metric for cross-validation.
+    sleep : float, default=0
+        Artificial delay in seconds added to each evaluation.
+
+    Attributes
+    ----------
+    para_names : list
+        Names of the hyperparameters: n_neighbors, algorithm, cv, dataset.
+    n_neighbors_default : list
+        Default values for n_neighbors parameter (3 to 150, step 5).
+    algorithm_default : list
+        Default algorithm options: auto, ball_tree, kd_tree, brute.
+    cv_default : list
+        Default cross-validation fold options: 2, 3, 4, 5, 8, 10.
+    dataset_default : list
+        Default datasets (digits, wine, iris).
+
+    Examples
+    --------
+    >>> from surfaces.test_functions import KNeighborsClassifierFunction
+    >>> func = KNeighborsClassifierFunction()
+    >>> search_space = func.default_search_space
+    >>> list(search_space.keys())
+    ['n_neighbors', 'algorithm', 'cv', 'dataset']
+    """
+
     name = "KNeighbors Classifier Function"
     _name_ = "k_neighbors_classifier"
     __name__ = "KNeighborsClassifierFunction"

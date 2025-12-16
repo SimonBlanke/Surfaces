@@ -9,23 +9,46 @@ from .._base_mathematical_function import MathematicalFunction
 
 
 class LeviFunctionN13(MathematicalFunction):
+    """Levi N.13 two-dimensional test function.
+
+    A multimodal function with a single global minimum.
+
+    The function is defined as:
+
+    .. math::
+
+        f(x, y) = \\sin^2(3\\pi x) + (x-1)^2(1 + \\sin^2(3\\pi y))
+        + (y-1)^2(1 + \\sin^2(2\\pi y))
+
+    The global minimum is :math:`f(1, 1) = 0`.
+
+    Parameters
+    ----------
+    metric : str, default="score"
+        Either "loss" (minimize) or "score" (maximize).
+    sleep : float, default=0
+        Artificial delay in seconds added to each evaluation.
+
+    Attributes
+    ----------
+    n_dim : int
+        Number of dimensions (always 2).
+    default_bounds : tuple
+        Default parameter bounds (-10.0, 10.0).
+
+    Examples
+    --------
+    >>> from surfaces.test_functions import LeviFunctionN13
+    >>> func = LeviFunctionN13()
+    >>> result = func({"x0": 1.0, "x1": 1.0})
+    """
+
     name = "Levi Function N13"
     _name_ = "levi_function_n13"
     __name__ = "LeviFunctionN13"
 
-    explanation = """
-    
-    """
-
-    reference = """
-    
-    """
-
-    dimensions = "2"
-    formula = r"""f(x,y) = \sin^{2} 3\pi x + \left(x-1\right)^{2}\left(1+\sin^{2} 3\pi y\right)+\left(y-1\right)^{2}\left(1+\sin^{2} 2\pi y\right)"""
-    global_minimum = r"""f(1,1)=0"""
-
     default_bounds = (-10.0, 10.0)
+
     def __init__(self, metric="score", sleep=0):
         super().__init__(metric, sleep)
         self.n_dim = 2

@@ -9,25 +9,46 @@ from .._base_mathematical_function import MathematicalFunction
 
 
 class McCormickFunction(MathematicalFunction):
+    """McCormick two-dimensional test function.
+
+    A function with a single global minimum, commonly used for testing
+    optimization algorithms.
+
+    The function is defined as:
+
+    .. math::
+
+        f(x, y) = \\sin(x + y) + (x - y)^2 - 1.5x + 2.5y + 1
+
+    The global minimum is :math:`f(-0.54719, -1.54719) = -1.9133`.
+
+    Parameters
+    ----------
+    metric : str, default="score"
+        Either "loss" (minimize) or "score" (maximize).
+    sleep : float, default=0
+        Artificial delay in seconds added to each evaluation.
+
+    Attributes
+    ----------
+    n_dim : int
+        Number of dimensions (always 2).
+    default_bounds : tuple
+        Default parameter bounds (-5.0, 5.0).
+
+    Examples
+    --------
+    >>> from surfaces.test_functions import McCormickFunction
+    >>> func = McCormickFunction()
+    >>> result = func({"x0": -0.54719, "x1": -1.54719})
+    """
+
     name = "Mc Cormick Function"
     _name_ = "mccormick_function"
     __name__ = "McCormickFunction"
 
-    explanation = """
-    
-    """
-
-    reference = """
-    
-    """
-
-    dimensions = "2"
-    formula = (
-        r"""f(x,y) = \sin \left(x+y\right) + \left(x-y\right)^{2} - 1.5x + 2.5y + 1"""
-    )
-    global_minimum = r"""f(-0.54719, -1.54719) = -1.9133"""
-
     default_bounds = (-5.0, 5.0)
+
     def __init__(self, metric="score", sleep=0):
         super().__init__(metric, sleep)
         self.n_dim = 2

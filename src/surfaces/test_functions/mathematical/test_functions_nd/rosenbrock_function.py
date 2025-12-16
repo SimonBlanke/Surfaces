@@ -7,23 +7,61 @@ from .._base_mathematical_function import MathematicalFunction
 
 
 class RosenbrockFunction(MathematicalFunction):
+    """Rosenbrock N-dimensional test function.
+
+    Also known as the "banana function" due to the shape of its contour
+    lines. It is a classic optimization test problem with a narrow,
+    curved valley leading to the global minimum.
+
+    The function is defined as:
+
+    .. math::
+
+        f(\\vec{x}) = \\sum_{i=1}^{n-1} [100(x_{i+1} - x_i^2)^2 + (1 - x_i)^2]
+
+    The global minimum is :math:`f(\\vec{1}) = 0`.
+
+    Parameters
+    ----------
+    n_dim : int
+        Number of dimensions.
+    A : float, default=1
+        First coefficient.
+    B : float, default=100
+        Second coefficient controlling the steepness of the valley.
+    metric : str, default="score"
+        Either "loss" (minimize) or "score" (maximize).
+    sleep : float, default=0
+        Artificial delay in seconds added to each evaluation.
+
+    Attributes
+    ----------
+    n_dim : int
+        Number of dimensions.
+    default_bounds : tuple
+        Default parameter bounds (-5.0, 5.0).
+
+    References
+    ----------
+    .. [1] Rosenbrock, H.H. (1960). "An automatic method for finding the
+       greatest or least value of a function". The Computer Journal.
+       3 (3): 175-184.
+
+    Examples
+    --------
+    >>> from surfaces.test_functions import RosenbrockFunction
+    >>> func = RosenbrockFunction(n_dim=2)
+    >>> result = func({"x0": 1.0, "x1": 1.0})
+    >>> abs(result) < 1e-10
+    True
+    """
+
     name = "Rosenbrock Function"
     _name_ = "rosenbrock_function"
     __name__ = "RosenbrockFunction"
 
-    explanation = """
-    
-    """
-
-    reference = """
-    
-    """
-
-    dimensions = "n"
-    formula = r"""f(\vec {x}) = \sum_{i=1}^{n-1} \left[ 100 \left(x_{i+1} - x_{i}^{2}\right)^{2} + \left(1 - x_{i}\right)^{2}\right]"""
-    global_minimum = r"""f(1,1) = 0"""
-
     default_bounds = (-5.0, 5.0)
+
     def __init__(
         self,
         n_dim,

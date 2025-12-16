@@ -7,23 +7,42 @@ from .._base_mathematical_function import MathematicalFunction
 
 
 class GoldsteinPriceFunction(MathematicalFunction):
+    """Goldstein-Price two-dimensional test function.
+
+    A polynomial function with several local minima, commonly used in
+    benchmarking optimization algorithms.
+
+    The global minimum is :math:`f(0, -1) = 3`.
+
+    Parameters
+    ----------
+    metric : str, default="score"
+        Either "loss" (minimize) or "score" (maximize).
+    sleep : float, default=0
+        Artificial delay in seconds added to each evaluation.
+
+    Attributes
+    ----------
+    n_dim : int
+        Number of dimensions (always 2).
+    default_bounds : tuple
+        Default parameter bounds (-2.0, 2.0).
+
+    Examples
+    --------
+    >>> from surfaces.test_functions import GoldsteinPriceFunction
+    >>> func = GoldsteinPriceFunction()
+    >>> result = func({"x0": 0.0, "x1": -1.0})
+    >>> abs(result - 3.0) < 1e-10
+    True
+    """
+
     name = "Goldstein Price Function"
     _name_ = "goldstein_price_function"
     __name__ = "GoldsteinPriceFunction"
 
-    explanation = """
-    
-    """
-
-    reference = """
-    
-    """
-
-    dimensions = "2"
-    formula = r"""f(x,y) = \left[1+\left(x+y+1\right)^{2}\left(19-14x+3x^{2}-14y+6xy+3y^{2}\right)\right]\left[30+\left(2x-3y\right)^{2}\left(18-32x+12x^{2}+48y-36xy+27y^{2}\right)\right]"""
-    global_minimum = r"""f(0,-1) = 3"""
-
     default_bounds = (-2.0, 2.0)
+
     def __init__(self, metric="score", sleep=0):
         super().__init__(metric, sleep)
         self.n_dim = 2

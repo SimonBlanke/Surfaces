@@ -10,19 +10,29 @@ from .._base_test_function import BaseTestFunction
 
 
 class MathematicalFunction(BaseTestFunction):
-    """
-    Base class for mathematical optimization test functions.
+    """Base class for mathematical optimization test functions.
 
     Mathematical functions compute a loss value based on input parameters.
     The loss can be transformed to a score (negated) via the metric parameter
     or by using the explicit loss() and score() methods.
+
+    Parameters
+    ----------
+    metric : str, default="loss"
+        Either "loss" (minimize) or "score" (maximize).
+        Controls the return value of __call__().
+    sleep : float, default=0
+        Artificial delay in seconds added to each evaluation.
+    validate : bool, default=True
+        Whether to validate parameters against the search space.
+
+    Examples
+    --------
+    >>> from surfaces.test_functions import SphereFunction
+    >>> func = SphereFunction(n_dim=2)
+    >>> search_space = func.default_search_space
+    >>> result = func({"x0": 0.0, "x1": 0.0})
     """
-
-    explanation = """ """
-
-    dimensions = " "
-    formula = r" "
-    global_minimum = r" "
 
     # Default bounds for mathematical functions (can be overridden by subclasses)
     default_bounds: Tuple[float, float] = (-5.0, 5.0)

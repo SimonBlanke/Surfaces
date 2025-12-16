@@ -9,26 +9,50 @@ from .._base_mathematical_function import MathematicalFunction
 
 
 class CrossInTrayFunction(MathematicalFunction):
+    """Cross-in-Tray two-dimensional test function.
+
+    A multimodal function with four identical global minima arranged
+    symmetrically around the origin.
+
+    The function is defined as:
+
+    .. math::
+
+        f(x, y) = -0.0001 \\left[|\\sin x \\sin y
+        \\exp(|100 - \\frac{\\sqrt{x^2+y^2}}{\\pi}|)| + 1\\right]^{0.1}
+
+    The global minima are at :math:`f(\\pm 1.34941, \\pm 1.34941) = -2.06261`.
+
+    Parameters
+    ----------
+    A : float, default=-0.0001
+        Amplitude scaling parameter.
+    B : float, default=100
+        Exponential base parameter.
+    angle : float, default=1
+        Angular frequency parameter.
+    metric : str, default="score"
+        Either "loss" (minimize) or "score" (maximize).
+    sleep : float, default=0
+        Artificial delay in seconds added to each evaluation.
+
+    Attributes
+    ----------
+    n_dim : int
+        Number of dimensions (always 2).
+    default_bounds : tuple
+        Default parameter bounds (-10.0, 10.0).
+
+    Examples
+    --------
+    >>> from surfaces.test_functions import CrossInTrayFunction
+    >>> func = CrossInTrayFunction()
+    >>> result = func({"x0": 1.34941, "x1": 1.34941})
+    """
+
     name = "Cross In Tray Function"
     _name_ = "cross_in_tray_function"
     __name__ = "CrossInTrayFunction"
-
-    explanation = """
-    
-    """
-
-    reference = """
-    
-    """
-
-    dimensions = "2"
-    formula = r"""f(x,y) = -0.0001 \left[ \left| \sin x \sin y \exp\left( \left| 100 - \frac{\sqrt{x^2+y^2}}{\pi} \right| \right)  \right| +1  \right]^{0.1}"""
-    global_minimum = r"""
-    f(1.34941, -1.34941) = -2.06261 \\
-    f(1.34941, 1.34941) = -2.06261 \\
-    f(-1.34941, 1.34941) = -2.06261 \\
-    f(-1.34941, -1.34941) = -2.06261 \\
-        """
 
     default_bounds = (-10.0, 10.0)
 

@@ -8,21 +8,56 @@ from .._base_mathematical_function import MathematicalFunction
 
 
 class AckleyFunction(MathematicalFunction):
+    """Ackley two-dimensional test function.
+
+    A non-convex function used as a performance test problem for optimization
+    algorithms. It has a nearly flat outer region with a large hole at the
+    center, making it challenging for optimization methods.
+
+    The function is defined as:
+
+    .. math::
+
+        f(x, y) = -20 \\exp\\left[-0.2\\sqrt{0.5(x^2+y^2)}\\right]
+        - \\exp\\left[0.5(\\cos 2\\pi x + \\cos 2\\pi y)\\right] + e + 20
+
+    The global minimum is :math:`f(0, 0) = 0`.
+
+    Parameters
+    ----------
+    A : float, default=20
+        Amplitude parameter.
+    angle : float, default=2*pi
+        Angular frequency parameter.
+    metric : str, default="score"
+        Either "loss" (minimize) or "score" (maximize).
+    sleep : float, default=0
+        Artificial delay in seconds added to each evaluation.
+
+    Attributes
+    ----------
+    n_dim : int
+        Number of dimensions (always 2).
+    default_bounds : tuple
+        Default parameter bounds (-5.0, 5.0).
+
+    References
+    ----------
+    .. [1] Ackley, D. H. (1987). "A connectionist machine for genetic
+       hillclimbing". Kluwer Academic Publishers, Boston MA.
+
+    Examples
+    --------
+    >>> from surfaces.test_functions import AckleyFunction
+    >>> func = AckleyFunction()
+    >>> result = func({"x0": 0.0, "x1": 0.0})
+    >>> abs(result) < 1e-10
+    True
+    """
+
     name = "Ackley Function"
     _name_ = "ackley_function"
     __name__ = "AckleyFunction"
-
-    explanation = """
-    The Ackley function is a non-convex function used as a performance test problem for optimization algorithms.
-    """
-
-    reference = """
-    Ackley, D. H. (1987) "A connectionist machine for genetic hillclimbing", Kluwer Academic Publishers, Boston MA.
-    """
-
-    dimensions = "2"
-    formula = r"f(x, y) = -20 \exp\left[-0.2\sqrt{0.5(x^2+y^2)} \right] -\exp\left[ 0.5(\cos2\pi x + \cos2\pi y) \right] + e + 20"
-    global_minimum = r"f(\vec{x}=0) = 0"
 
     default_bounds = (-5.0, 5.0)
 
