@@ -70,7 +70,7 @@ class BealeFunction(MathematicalFunction):
         self.B = B
         self.C = C
 
-    def create_objective_function(self):
+    def _create_objective_function(self):
         def beale_function(params):
             x = params["x0"]
             y = params["x1"]
@@ -84,6 +84,6 @@ class BealeFunction(MathematicalFunction):
         self.pure_objective_function = beale_function
 
     def _search_space(self, min=-4.5, max=4.5, value_types="array", size=10000):
-        return super().create_n_dim_search_space(
+        return super()._create_n_dim_search_space(
             min=min, max=max, size=size, value_types=value_types
         )

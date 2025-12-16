@@ -47,7 +47,7 @@ class GoldsteinPriceFunction(MathematicalFunction):
         super().__init__(metric, sleep)
         self.n_dim = 2
 
-    def create_objective_function(self):
+    def _create_objective_function(self):
         def goldstein_price_function(params):
             x = params["x0"]
             y = params["x1"]
@@ -64,6 +64,6 @@ class GoldsteinPriceFunction(MathematicalFunction):
         self.pure_objective_function = goldstein_price_function
 
     def _search_space(self, min=-2, max=2, value_types="array", size=10000):
-        return super().create_n_dim_search_space(
+        return super()._create_n_dim_search_space(
             min=min, max=max, size=size, value_types=value_types
         )

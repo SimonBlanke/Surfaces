@@ -43,10 +43,10 @@ class BaseTestFunction:
     default_bounds: Tuple[float, float] = (-5.0, 5.0)
 
     def _create_objective_function_(func):
-        """Decorator that calls create_objective_function after __init__."""
+        """Decorator that calls _create_objective_function after __init__."""
         def wrapper(self, *args, **kwargs):
             func(self, *args, **kwargs)
-            self.create_objective_function()
+            self._create_objective_function()
         return wrapper
 
     @_create_objective_function_
@@ -55,15 +55,15 @@ class BaseTestFunction:
         self.metric = metric
         self._validate = validate
 
-    def create_objective_function(self):
-        raise NotImplementedError("'create_objective_function' must be implemented")
+    def _create_objective_function(self):
+        raise NotImplementedError("'_create_objective_function' must be implemented")
 
     @property
     def default_search_space(self) -> Dict[str, Any]:
         """Default search space for this function (override in subclasses)."""
         raise NotImplementedError("'default_search_space' must be implemented")
 
-    def return_metric(self, value):
+    def _return_metric(self, value):
         """Transform raw value based on metric setting (override in subclasses)."""
         return value
 
@@ -110,7 +110,7 @@ class BaseTestFunction:
         """Evaluate with sleep timing applied."""
         time.sleep(self.sleep)
         raw_value = self.pure_objective_function(params)
-        return self.return_metric(raw_value)
+        return self._return_metric(raw_value)
 
     def _evaluate_raw(self, params: Dict[str, Any]) -> float:
         """Evaluate without metric transformation (internal use)."""

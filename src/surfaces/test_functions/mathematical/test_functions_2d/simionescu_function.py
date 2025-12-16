@@ -83,7 +83,7 @@ class SimionescuFunction(MathematicalFunction):
         self.r_S = r_S
         self.n = n
 
-    def create_objective_function(self):
+    def _create_objective_function(self):
         def simionescu_function(params):
             x = np.asarray(params["x0"]).reshape(-1)
             y = np.asarray(params["x1"]).reshape(-1)
@@ -105,6 +105,6 @@ class SimionescuFunction(MathematicalFunction):
         self.pure_objective_function = simionescu_function
 
     def _search_space(self, min=-1.25, max=1.25, value_types="array", size=10000):
-        return super().create_n_dim_search_space(
+        return super()._create_n_dim_search_space(
             min=min, max=max, size=size, value_types=value_types
         )

@@ -77,7 +77,7 @@ class AckleyFunction(MathematicalFunction):
         self.A = A
         self.angle = angle
 
-    def create_objective_function(self):
+    def _create_objective_function(self):
         def ackley_function(params):
             x = params["x0"]
             y = params["x1"]
@@ -92,6 +92,6 @@ class AckleyFunction(MathematicalFunction):
         self.pure_objective_function = ackley_function
 
     def _search_space(self, min=-5, max=5, value_types="array", size=10000):
-        return super().create_n_dim_search_space(
+        return super()._create_n_dim_search_space(
             min=min, max=max, size=size, value_types=value_types
         )

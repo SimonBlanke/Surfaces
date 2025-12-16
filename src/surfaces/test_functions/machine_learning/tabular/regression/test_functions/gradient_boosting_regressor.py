@@ -82,7 +82,7 @@ class GradientBoostingRegressorFunction(BaseRegression):
 
         return search_space
 
-    def create_objective_function(self):
+    def _create_objective_function(self):
         def gradient_boosting_regressor(params):
             knc = GradientBoostingRegressor(
                 n_estimators=params["n_estimators"],

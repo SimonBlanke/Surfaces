@@ -63,7 +63,7 @@ class SphereFunction(MathematicalFunction):
         self.n_dim = n_dim
         self.A = A
 
-    def create_objective_function(self):
+    def _create_objective_function(self):
         def sphere_function(params):
             loss = 0
             for dim in range(self.n_dim):
@@ -77,6 +77,6 @@ class SphereFunction(MathematicalFunction):
         self.pure_objective_function = sphere_function
 
     def _search_space(self, min=-5, max=5, size=10000, value_types="array"):
-        return super().create_n_dim_search_space(
+        return super()._create_n_dim_search_space(
             min, max, size=size, value_types=value_types
         )

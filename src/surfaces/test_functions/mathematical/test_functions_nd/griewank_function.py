@@ -58,7 +58,7 @@ class GriewankFunction(MathematicalFunction):
         super().__init__(metric, sleep)
         self.n_dim = n_dim
 
-    def create_objective_function(self):
+    def _create_objective_function(self):
         def griewank_function(params):
             loss_sum = 0
             loss_product = 1
@@ -74,6 +74,6 @@ class GriewankFunction(MathematicalFunction):
         self.pure_objective_function = griewank_function
 
     def _search_space(self, min=-100, max=100, size=10000, value_types="array"):
-        return super().create_n_dim_search_space(
+        return super()._create_n_dim_search_space(
             min, max, size=size, value_types=value_types
         )

@@ -82,7 +82,7 @@ class KNeighborsRegressorFunction(BaseRegression):
 
         return search_space
 
-    def create_objective_function(self):
+    def _create_objective_function(self):
         def k_neighbors_regressor(params):
             knc = KNeighborsRegressor(
                 n_neighbors=params["n_neighbors"],

@@ -74,12 +74,12 @@ class MachineLearningFunction(BaseTestFunction):
         """Evaluate with sleep timing applied (overrides base class)."""
         time.sleep(self.sleep)
         raw_value = self._get_raw_value(params)
-        return self.return_metric(raw_value)
+        return self._return_metric(raw_value)
 
     # Metrics that behave like scores (higher is better)
     SCORE_LIKE_METRICS = {"score", "accuracy", "r2", "f1", "precision", "recall", "auc"}
 
-    def return_metric(self, score: float) -> float:
+    def _return_metric(self, score: float) -> float:
         """
         Transform raw score value based on metric setting.
 

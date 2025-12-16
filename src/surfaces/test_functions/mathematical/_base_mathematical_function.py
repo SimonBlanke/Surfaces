@@ -62,7 +62,7 @@ class MathematicalFunction(BaseTestFunction):
         Internal method for creating search spaces with non-default parameters.
         For most use cases, access default_search_space property instead.
         """
-        return self.create_n_dim_search_space(min=min, max=max, size=size, value_types=value_types)
+        return self._create_n_dim_search_space(min=min, max=max, size=size, value_types=value_types)
 
     def __init__(
         self,
@@ -85,7 +85,7 @@ class MathematicalFunction(BaseTestFunction):
         self.metric = metric
         self.sleep = sleep
 
-    def return_metric(self, loss: float) -> float:
+    def _return_metric(self, loss: float) -> float:
         """
         Transform raw loss value based on metric setting.
 
@@ -118,14 +118,14 @@ class MathematicalFunction(BaseTestFunction):
         return -raw_value
 
     @staticmethod
-    def conv_arrays2lists(search_space: Dict[str, Any]) -> Dict[str, list]:
+    def _conv_arrays2lists(search_space: Dict[str, Any]) -> Dict[str, list]:
         """Convert array-valued search space to list-valued."""
         return {
             para_name: list(dim_values)
             for para_name, dim_values in search_space.items()
         }
 
-    def create_n_dim_search_space(
+    def _create_n_dim_search_space(
         self,
         min: Union[float, list] = -5,
         max: Union[float, list] = 5,
