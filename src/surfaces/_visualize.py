@@ -2,6 +2,9 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
+# Internal module - not part of public API
+# Visualization utilities for test functions (experimental)
+
 import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
@@ -36,7 +39,7 @@ def _create_grid(objective_function, search_space: Dict[str, np.ndarray]):
     return xi, yi, zi
 
 
-def plotly_surface_nd(
+def _plotly_surface_nd(
     objective_function,
     search_space: Dict[str, np.ndarray],
     title: str = "Objective Function Surface",
@@ -133,7 +136,7 @@ def plotly_surface_nd(
     return fig
 
 
-def plotly_surface(
+def _plotly_surface(
     objective_function,
     search_space: Dict[str, np.ndarray],
     title: str = "Objective Function Surface",
@@ -193,7 +196,7 @@ def plotly_surface(
     return fig
 
 
-def plotly_heatmap(
+def _plotly_heatmap(
     objective_function,
     search_space: Dict[str, np.ndarray],
     title: str = "Objective Function Heatmap",
@@ -238,7 +241,7 @@ def plotly_heatmap(
     return fig
 
 
-def matplotlib_heatmap(
+def _matplotlib_heatmap(
     objective_function,
     search_space: Dict[str, np.ndarray],
     title: str = "Objective Function Heatmap",
@@ -292,7 +295,7 @@ def matplotlib_heatmap(
     return fig
 
 
-def matplotlib_surface(
+def _matplotlib_surface(
     objective_function,
     search_space: Dict[str, np.ndarray],
     title: str = "Objective Function Surface",
@@ -347,7 +350,7 @@ def matplotlib_surface(
     return fig
 
 
-def plotly_contour(
+def _plotly_contour(
     objective_function,
     search_space: Dict[str, np.ndarray],
     title: str = "Objective Function Contours",
@@ -401,7 +404,7 @@ def plotly_contour(
     return fig
 
 
-def plot_parameter_slice(
+def _plot_parameter_slice(
     objective_function,
     search_space: Dict[str, np.ndarray], 
     slice_param: str,
@@ -454,7 +457,7 @@ def plot_parameter_slice(
     return fig
 
 
-def create_function_comparison(
+def _create_function_comparison(
     functions: List[Any],
     search_space: Dict[str, np.ndarray],
     plot_type: str = "surface",
@@ -477,11 +480,11 @@ def create_function_comparison(
         func_title = f"{title} - {getattr(func, 'name', str(func))}"
         
         if plot_type == "surface":
-            fig = plotly_surface(func.objective_function, search_space, func_title)
+            fig = _plotly_surface(func.objective_function, search_space, func_title)
         elif plot_type == "heatmap": 
-            fig = plotly_heatmap(func.objective_function, search_space, func_title)
+            fig = _plotly_heatmap(func.objective_function, search_space, func_title)
         elif plot_type == "contour":
-            fig = plotly_contour(func.objective_function, search_space, func_title)
+            fig = _plotly_contour(func.objective_function, search_space, func_title)
         else:
             raise ValueError(f"Unknown plot type: {plot_type}")
             
@@ -490,7 +493,7 @@ def create_function_comparison(
     return figures
 
 
-def plotly_ml_hyperparameter_heatmap(
+def _plotly_ml_hyperparameter_heatmap(
     ml_function,
     param1: str,
     param2: str,
@@ -608,7 +611,7 @@ def plotly_ml_hyperparameter_heatmap(
     return fig
 
 
-def plotly_dataset_hyperparameter_analysis(
+def _plotly_dataset_hyperparameter_analysis(
     ml_function,
     hyperparameter: str,
     fixed_params: Dict[str, Any] = None,
@@ -727,7 +730,7 @@ def plotly_dataset_hyperparameter_analysis(
     return fig
 
 
-def create_ml_function_analysis_suite(
+def _create_ml_function_analysis_suite(
     ml_function,
     output_dir: str = "ml_analysis_plots",
 ) -> Dict[str, go.Figure]:
@@ -763,7 +766,7 @@ def create_ml_function_analysis_suite(
                 continue
                 
             plot_name = f"hyperparam_{param1}_vs_{param2}"
-            fig = plotly_ml_hyperparameter_heatmap(
+            fig = _plotly_ml_hyperparameter_heatmap(
                 ml_function, param1, param2,
                 title=f"{ml_function.name} - Hyperparameter Analysis"
             )
@@ -773,7 +776,7 @@ def create_ml_function_analysis_suite(
     print("Creating dataset analysis plots...")
     for param_name in numeric_params + categorical_params:
         plot_name = f"dataset_vs_{param_name}"
-        fig = plotly_dataset_hyperparameter_analysis(
+        fig = _plotly_dataset_hyperparameter_analysis(
             ml_function, param_name,
             title=f"{ml_function.name} - Dataset Analysis"
         )

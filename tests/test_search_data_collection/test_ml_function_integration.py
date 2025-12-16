@@ -47,7 +47,7 @@ class TestMLFunctionIntegration:
                 'dataset': func.dataset_default[:1]
             }
             
-            collection_stats = func.collect_search_data(
+            collection_stats = func._collect_search_data(
                 search_space=small_search_space,
                 verbose=False
             )
@@ -57,7 +57,7 @@ class TestMLFunctionIntegration:
             assert collection_stats['collection_time_seconds'] > 0
             
             # Test timing statistics
-            timing = func.get_timing_statistics()
+            timing = func._get_timing_statistics()
             assert timing['count'] == 4
             assert timing['average_time'] > 0
     
@@ -75,7 +75,7 @@ class TestMLFunctionIntegration:
                 'dataset': func_collector.dataset_default[:1]
             }
             
-            func_collector.collect_search_data(
+            func_collector._collect_search_data(
                 search_space=small_search_space,
                 verbose=False
             )
@@ -92,7 +92,7 @@ class TestMLFunctionIntegration:
             
             # Should find stored evaluation
             start_time = time.time()
-            result = func_from_data.objective_function_from_data(test_params)
+            result = func_from_data._objective_function_from_data(test_params)
             lookup_time = time.time() - start_time
             
             assert isinstance(result, float)
@@ -113,7 +113,7 @@ class TestMLFunctionIntegration:
             }
             
             with pytest.raises(ValueError) as exc_info:
-                func.objective_function_from_data(test_params)
+                func._objective_function_from_data(test_params)
             
             assert "No stored evaluation found" in str(exc_info.value)
     
@@ -133,7 +133,7 @@ class TestMLFunctionIntegration:
                 'dataset': func.dataset_default[:1]
             }
             
-            func.collect_search_data(search_space=small_search_space, verbose=False)
+            func._collect_search_data(search_space=small_search_space, verbose=False)
             
             # Check that database was created with correct name
             expected_db_path = manager.get_db_path(func._name_)
@@ -154,17 +154,17 @@ class TestMLFunctionIntegration:
                 'dataset': func.dataset_default[:1]
             }
             
-            func.collect_search_data(search_space=small_search_space, verbose=False)
+            func._collect_search_data(search_space=small_search_space, verbose=False)
             
             # Verify data exists by checking timing stats
-            timing_before = func.get_timing_statistics()
+            timing_before = func._get_timing_statistics()
             assert timing_before['count'] == 1
             
             # Clear data
-            func.clear_search_data()
+            func._clear_search_data()
             
             # Verify data is cleared
-            timing_after = func.get_timing_statistics()
+            timing_after = func._get_timing_statistics()
             assert timing_after['count'] == 0
     
     def test_evaluation_type_consistency(self, temp_data_dir):
@@ -192,11 +192,11 @@ class TestMLFunctionIntegration:
                 'dataset': func.dataset_default[:1]
             }
             
-            func.collect_search_data(search_space=small_search_space, verbose=False)
+            func._collect_search_data(search_space=small_search_space, verbose=False)
             
             # Get result from data lookup
             func_from_data = GradientBoostingRegressorFunction(evaluate_from_data=True)
-            result_lookup = func_from_data.objective_function_from_data(test_params)
+            result_lookup = func_from_data._objective_function_from_data(test_params)
             
             # Results should be very close (allowing for small differences due to dataset serialization)
             assert abs(result_normal - result_lookup) < 1e-3

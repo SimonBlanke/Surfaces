@@ -48,7 +48,7 @@ class MachineLearningFunction(BaseTestFunction):
     def _get_raw_value(self, params: Dict[str, Any]) -> float:
         """Get the raw evaluation value, either computed or from stored data."""
         if self.evaluate_from_data:
-            return self.objective_function_from_data(params)
+            return self._objective_function_from_data(params)
         else:
             return self.pure_objective_function(params)
 
@@ -124,7 +124,7 @@ class MachineLearningFunction(BaseTestFunction):
 
         return self(param_dict)
 
-    def objective_function_from_data(self, params: Dict[str, Any]) -> float:
+    def _objective_function_from_data(self, params: Dict[str, Any]) -> float:
         """
         Evaluate function using stored search data for fast lookups.
         
@@ -149,10 +149,10 @@ class MachineLearningFunction(BaseTestFunction):
         score, eval_time = result
         return score
     
-    def collect_search_data(self, 
-                          search_space: Optional[Dict[str, Any]] = None,
-                          batch_size: int = 100,
-                          verbose: bool = True) -> Dict[str, Any]:
+    def _collect_search_data(self,
+                           search_space: Optional[Dict[str, Any]] = None,
+                           batch_size: int = 100,
+                           verbose: bool = True) -> Dict[str, Any]:
         """
         Collect search data for this function across its parameter space.
         
@@ -172,7 +172,7 @@ class MachineLearningFunction(BaseTestFunction):
             self, search_space, batch_size, verbose
         )
     
-    def get_search_data_status(self) -> Dict[str, Any]:
+    def _get_search_data_status(self) -> Dict[str, Any]:
         """
         Get information about stored search data for this function.
         
@@ -185,7 +185,7 @@ class MachineLearningFunction(BaseTestFunction):
         
         return self.data_collector.get_collection_status(self)
     
-    def clear_search_data(self) -> None:
+    def _clear_search_data(self) -> None:
         """Clear all stored search data for this function."""
         if not hasattr(self, 'search_data_manager'):
             self.search_data_manager = SearchDataManager()
@@ -193,7 +193,7 @@ class MachineLearningFunction(BaseTestFunction):
         function_name = getattr(self, '_name_', self.__class__.__name__)
         self.search_data_manager.clear_data(function_name)
     
-    def get_timing_statistics(self) -> Dict[str, float]:
+    def _get_timing_statistics(self) -> Dict[str, float]:
         """
         Get timing statistics for this function's evaluations.
         
