@@ -19,9 +19,9 @@ class RastriginFunction(MathematicalFunction):
 
     .. math::
 
-        f(\\vec{x}) = An + \\sum_{i=1}^{n} [x_i^2 - A\\cos(2\\pi x_i)]
+        f(\\vec{x}) = An + \\sum_{i=1}^{n} [x_i^2 - A\\cos(\\omega x_i)]
 
-    where :math:`A = 10` by default.
+    where :math:`A = 10` and :math:`\\omega = 2\\pi` by default.
 
     The global minimum is :math:`f(\\vec{0}) = 0`.
 

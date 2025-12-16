@@ -17,7 +17,10 @@ class HölderTableFunction(MathematicalFunction):
 
     .. math::
 
-        f(x, y) = -|\\sin x \\cos y \\exp(|1 - \\frac{\\sqrt{x^2 + y^2}}{\\pi}|)|
+        f(x, y) = -|\\sin(\\omega x) \\cos(\\omega y)
+        \\exp(|1 - \\frac{\\sqrt{x^2 + y^2}}{\\pi}|)|
+
+    where :math:`\\omega = 1` by default.
 
     The four global minima are at :math:`f(\\pm 8.05502, \\pm 9.66459) = -19.2085`.
 

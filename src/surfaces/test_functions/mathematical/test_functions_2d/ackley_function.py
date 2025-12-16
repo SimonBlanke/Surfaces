@@ -18,8 +18,10 @@ class AckleyFunction(MathematicalFunction):
 
     .. math::
 
-        f(x, y) = -20 \\exp\\left[-0.2\\sqrt{0.5(x^2+y^2)}\\right]
-        - \\exp\\left[0.5(\\cos 2\\pi x + \\cos 2\\pi y)\\right] + e + 20
+        f(x, y) = -A \\exp\\left[-0.2\\sqrt{0.5(x^2+y^2)}\\right]
+        - \\exp\\left[0.5(\\cos \\omega x + \\cos \\omega y)\\right] + e + A
+
+    where :math:`A = 20` and :math:`\\omega = 2\\pi` by default.
 
     The global minimum is :math:`f(0, 0) = 0`.
 

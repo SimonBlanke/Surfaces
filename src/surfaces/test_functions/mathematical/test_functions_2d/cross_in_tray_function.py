@@ -18,8 +18,10 @@ class CrossInTrayFunction(MathematicalFunction):
 
     .. math::
 
-        f(x, y) = -0.0001 \\left[|\\sin x \\sin y
-        \\exp(|100 - \\frac{\\sqrt{x^2+y^2}}{\\pi}|)| + 1\\right]^{0.1}
+        f(x, y) = A \\left[|\\sin(\\omega x) \\sin(\\omega y)
+        \\exp(|B - \\frac{\\sqrt{x^2+y^2}}{\\pi}|)| + 1\\right]^{0.1}
+
+    where :math:`A = -0.0001`, :math:`B = 100`, and :math:`\\omega = 1` by default.
 
     The global minima are at :math:`f(\\pm 1.34941, \\pm 1.34941) = -2.06261`.
 

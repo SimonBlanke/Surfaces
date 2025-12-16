@@ -15,7 +15,9 @@ class SphereFunction(MathematicalFunction):
 
     .. math::
 
-        f(\\vec{x}) = \\sum_{i=1}^{n} x_i^2
+        f(\\vec{x}) = A \\sum_{i=1}^{n} x_i^2
+
+    where :math:`A = 1` by default.
 
     The global minimum is :math:`f(\\vec{0}) = 0`.
 

@@ -19,8 +19,10 @@ class EasomFunction(MathematicalFunction):
 
     .. math::
 
-        f(x, y) = -\\cos(x) \\cos(y)
-        \\exp\\left[-(x - \\pi)^2 - (y - \\pi)^2\\right]
+        f(x, y) = A \\cos(\\omega x) \\cos(\\omega y)
+        \\exp\\left[-(x - \\pi/B)^2 - (y - \\pi/B)^2\\right]
+
+    where :math:`A = -1`, :math:`B = 1`, and :math:`\\omega = 1` by default.
 
     The global minimum is :math:`f(\\pi, \\pi) = -1`.
 

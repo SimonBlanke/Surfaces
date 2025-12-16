@@ -18,7 +18,7 @@ class SimionescuFunction(MathematicalFunction):
 
     .. math::
 
-        f(x, y) = 0.1xy
+        f(x, y) = Axy
 
     Subject to:
 
@@ -26,7 +26,8 @@ class SimionescuFunction(MathematicalFunction):
 
         x^2 + y^2 \\le [r_T + r_S \\cos(n \\arctan(x/y))]^2
 
-    where :math:`r_T = 1`, :math:`r_S = 0.2`, and :math:`n = 8`.
+    where :math:`A = 0.1`, :math:`r_T = 1`, :math:`r_S = 0.2`, and :math:`n = 8`
+    by default.
 
     The global minimum is :math:`f(\\pm 0.84852813, \\mp 0.84852813) = -0.072`.
 

@@ -15,7 +15,9 @@ class HimmelblausFunction(MathematicalFunction):
 
     .. math::
 
-        f(x, y) = (x^2 + y - 11)^2 + (x + y^2 - 7)^2
+        f(x, y) = (x^2 + y + A)^2 + (x + y^2 + B)^2
+
+    where :math:`A = -11` and :math:`B = -7` by default.
 
     The four global minima are:
         - :math:`f(3.0, 2.0) = 0`

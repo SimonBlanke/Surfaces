@@ -16,7 +16,9 @@ class BealeFunction(MathematicalFunction):
 
     .. math::
 
-        f(x, y) = (1.5 - x + xy)^2 + (2.25 - x + xy^2)^2 + (2.625 - x + xy^3)^2
+        f(x, y) = (A - x + xy)^2 + (B - x + xy^2)^2 + (C - x + xy^3)^2
+
+    where :math:`A = 1.5`, :math:`B = 2.25`, and :math:`C = 2.652` by default.
 
     The global minimum is :math:`f(3, 0.5) = 0`.
 

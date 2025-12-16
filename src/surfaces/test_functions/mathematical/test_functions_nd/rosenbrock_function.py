@@ -17,7 +17,9 @@ class RosenbrockFunction(MathematicalFunction):
 
     .. math::
 
-        f(\\vec{x}) = \\sum_{i=1}^{n-1} [100(x_{i+1} - x_i^2)^2 + (1 - x_i)^2]
+        f(\\vec{x}) = \\sum_{i=1}^{n-1} [B(x_{i+1} - x_i^2)^2 + (A - x_i)^2]
+
+    where :math:`A = 1` and :math:`B = 100` by default.
 
     The global minimum is :math:`f(\\vec{1}) = 0`.
 
