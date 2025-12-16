@@ -6,24 +6,112 @@ import time
 from typing import Dict, Any, Optional
 
 from .._base_test_function import BaseTestFunction
-from ...search_data_collection import SearchDataManager, SearchDataCollector
+from ..._search_data_collection import SearchDataManager, SearchDataCollector
 
 
 class MachineLearningFunction(BaseTestFunction):
-    def __init__(self, metric="loss", sleep=0, evaluate_from_data=False, **kwargs):
-        super().__init__(metric, sleep)
-        
+    """
+    Base class for machine learning hyperparameter optimization test functions.
+
+    ML functions evaluate model performance (e.g., accuracy, R2 score) based on
+    hyperparameter configurations. They naturally return score values where
+    higher is better.
+    """
+
+    def __init__(
+        self,
+        metric: str = "score",
+        sleep: float = 0,
+        validate: bool = True,
+        evaluate_from_data: bool = False,
+        **kwargs
+    ):
+        """
+        Initialize a machine learning test function.
+
+        Args:
+            metric: Either "score" (maximize, default) or "loss" (minimize).
+                   Controls the return value of objective_function() and __call__().
+                   For explicit control, use loss() or score() methods instead.
+            sleep: Artificial delay in seconds added to each evaluation
+            validate: Whether to validate parameters against search space
+            evaluate_from_data: If True, use pre-computed search data for fast lookups
+        """
+        super().__init__(metric, sleep, validate)
+
         self.evaluate_from_data = evaluate_from_data
-        
+
         if evaluate_from_data:
             self.search_data_manager = SearchDataManager()
             self.data_collector = SearchDataCollector(self.search_data_manager)
-            self._objective_function_ = self.objective_function_from_data
+
+    def _get_raw_value(self, params: Dict[str, Any]) -> float:
+        """Get the raw evaluation value, either computed or from stored data."""
+        if self.evaluate_from_data:
+            return self.objective_function_from_data(params)
         else:
-            self._objective_function_ = self.pure_objective_function
-    
+            return self.pure_objective_function(params)
+
+    def _evaluate_with_timing(self, params: Dict[str, Any]) -> float:
+        """Evaluate with sleep timing applied (overrides base class)."""
+        time.sleep(self.sleep)
+        raw_value = self._get_raw_value(params)
+        return self.return_metric(raw_value)
+
+    # Metrics that behave like scores (higher is better)
+    SCORE_LIKE_METRICS = {"score", "accuracy", "r2", "f1", "precision", "recall", "auc"}
+
+    def return_metric(self, score: float) -> float:
+        """
+        Transform raw score value based on metric setting.
+
+        ML functions naturally return score values (higher is better).
+        Supports standard metric names like 'accuracy', 'r2', 'f1', etc.
+        """
+        if self.metric in self.SCORE_LIKE_METRICS:
+            return score
+        elif self.metric == "loss":
+            return -score
+        else:
+            # Treat unknown metrics as score-like (common for ML)
+            return score
+
+    def _to_loss(self, raw_value: float) -> float:
+        """
+        Convert raw value to loss (for minimization).
+
+        ML functions naturally return score values (higher is better),
+        so loss is the negated score.
+        """
+        return -raw_value
+
+    def _to_score(self, raw_value: float) -> float:
+        """
+        Convert raw value to score (for maximization).
+
+        ML functions naturally return score values,
+        so this is an identity transformation.
+        """
+        return raw_value
+
     def evaluate(self, params):
-        """Evaluate the function with given parameters."""
+        """
+        Evaluate the function with given parameters.
+
+        This method accepts both dict and list/tuple inputs, converting
+        list/tuple to dict using param_names if available.
+
+        Args:
+            params: Either a dict of parameters or a list/tuple of values
+
+        Returns:
+            The objective function value
+
+        Note:
+            For ML functions, this overrides the positional-args evaluate()
+            from BaseTestFunction to maintain backward compatibility with
+            dict-based evaluation.
+        """
         if isinstance(params, (list, tuple)):
             # Convert list/tuple to dict using param_names if available
             if hasattr(self, 'param_names'):
@@ -33,8 +121,8 @@ class MachineLearningFunction(BaseTestFunction):
                 param_dict = {f'x{i}': val for i, val in enumerate(params)}
         else:
             param_dict = params
-        
-        return self._objective_function_(param_dict)
+
+        return self(param_dict)
 
     def objective_function_from_data(self, params: Dict[str, Any]) -> float:
         """

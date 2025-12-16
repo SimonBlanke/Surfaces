@@ -25,8 +25,8 @@ def test_all_functions(test_function):
     assert isinstance(search_space, dict)
     assert len(search_space) > 0
     
-    # Test that the objective function works
-    sample_params = {key: list(values)[0] if hasattr(values, '__iter__') else values 
+    # Test that the function works
+    sample_params = {key: list(values)[0] if hasattr(values, '__iter__') else values
                     for key, values in search_space.items()}
-    result = test_function_.objective_function(sample_params)
+    result = test_function_(sample_params)
     assert isinstance(result, (int, float))

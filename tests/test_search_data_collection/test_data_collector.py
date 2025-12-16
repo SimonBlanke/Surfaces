@@ -253,7 +253,7 @@ class TestSearchDataCollector:
         assert stats['evaluations_collected'] == 3
         assert stats['total_evaluations_stored'] == 3
     
-    @patch('surfaces.search_data_collection.data_collector.time.time')
+    @patch('surfaces._search_data_collection.data_collector.time.time')
     def test_timing_measurement_accuracy(self, mock_time, collector, mock_function):
         """Test that timing measurements are accurate."""
         # Mock time.time() to return predictable values

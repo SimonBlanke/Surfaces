@@ -64,7 +64,7 @@ def test_optimization_2D(test_function):
     }
 
     opt = RandomSearchOptimizer(search_space)
-    opt.search(test_function.objective_function, n_iter=30)
+    opt.search(test_function, n_iter=30)
 
 
 ############################################################
@@ -93,7 +93,7 @@ def test_optimization_3D(test_function):
     }
 
     opt = RandomSearchOptimizer(search_space)
-    opt.search(test_function.objective_function, n_iter=30)
+    opt.search(test_function, n_iter=30)
 
 
 ############################################################
@@ -123,4 +123,4 @@ def test_optimization_4D(test_function):
     }
 
     opt = RandomSearchOptimizer(search_space)
-    opt.search(test_function.objective_function, n_iter=30)
+    opt.search(test_function, n_iter=30)

@@ -23,6 +23,6 @@ def test_all_mathematical_functions(test_function):
     
     # Test that the objective function works
     sample_params = {key: values[0] for key, values in search_space.items()}
-    result = test_function_.objective_function(sample_params)
+    result = test_function_(sample_params)
     assert isinstance(result, (int, float))
     # Note: Some functions may return NaN for certain parameter combinations, which is valid

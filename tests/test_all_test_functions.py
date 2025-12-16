@@ -29,7 +29,7 @@ def test_all_mathematical_functions(test_function):
     
     # Test that the objective function works
     sample_params = {key: values[0] for key, values in search_space.items()}
-    result = test_function_.objective_function(sample_params)
+    result = test_function_(sample_params)
     assert isinstance(result, (int, float))
 
 
@@ -41,9 +41,9 @@ def test_all_machine_learning_functions(test_function):
     search_space = test_function_.search_space()
     assert isinstance(search_space, dict)
     assert len(search_space) > 0
-    
-    # Test that the objective function works (ML functions may take longer)
-    sample_params = {key: list(values)[0] if hasattr(values, '__iter__') else values 
+
+    # Test that the function works (ML functions may take longer)
+    sample_params = {key: list(values)[0] if hasattr(values, '__iter__') else values
                     for key, values in search_space.items()}
-    result = test_function_.objective_function(sample_params)
+    result = test_function_(sample_params)
     assert isinstance(result, (int, float))

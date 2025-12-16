@@ -4,61 +4,128 @@
 
 
 import numpy as np
+from typing import Dict, Any, Optional, Tuple, Union
 
 from .._base_test_function import BaseTestFunction
 
 
 class MathematicalFunction(BaseTestFunction):
+    """
+    Base class for mathematical optimization test functions.
+
+    Mathematical functions compute a loss value based on input parameters.
+    The loss can be transformed to a score (negated) via the metric parameter
+    or by using the explicit loss() and score() methods.
+    """
+
     explanation = """ """
 
     dimensions = " "
     formula = r" "
     global_minimum = r" "
 
+    # Default bounds for mathematical functions
+    default_bounds: Tuple[float, float] = (-5.0, 5.0)
+
     def __init__(
         self,
-        metric="loss",
-        sleep=0,
+        metric: str = "loss",
+        sleep: float = 0,
+        validate: bool = True,
     ):
-        super().__init__(metric, sleep)
+        """
+        Initialize a mathematical test function.
+
+        Args:
+            metric: Either "loss" (minimize, default) or "score" (maximize).
+                   Controls the return value of objective_function() and __call__().
+                   For explicit control, use loss() or score() methods instead.
+            sleep: Artificial delay in seconds added to each evaluation
+            validate: Whether to validate parameters against search space bounds
+        """
+        super().__init__(metric, sleep, validate)
 
         self.metric = metric
         self.sleep = sleep
 
-        self._objective_function_ = self.pure_objective_function
+    def return_metric(self, loss: float) -> float:
+        """
+        Transform raw loss value based on metric setting.
 
-    def return_metric(self, loss):
+        This maintains backward compatibility with existing code.
+        For new code, prefer using loss() or score() methods explicitly.
+        """
         if self.metric == "score":
             return -loss
         elif self.metric == "loss":
             return loss
         else:
-            raise ValueError
+            raise ValueError(f"Invalid metric: {self.metric}. Must be 'loss' or 'score'.")
+
+    def _to_loss(self, raw_value: float) -> float:
+        """
+        Convert raw value to loss (for minimization).
+
+        Mathematical functions naturally return loss values,
+        so this is an identity transformation.
+        """
+        return raw_value
+
+    def _to_score(self, raw_value: float) -> float:
+        """
+        Convert raw value to score (for maximization).
+
+        Mathematical functions naturally return loss values,
+        so the score is the negated loss.
+        """
+        return -raw_value
 
     @staticmethod
-    def conv_arrays2lists(search_space):
+    def conv_arrays2lists(search_space: Dict[str, Any]) -> Dict[str, list]:
+        """Convert array-valued search space to list-valued."""
         return {
             para_name: list(dim_values)
             for para_name, dim_values in search_space.items()
         }
 
     def create_n_dim_search_space(
-        self, min=-5, max=5, size=100, value_types="array"
-    ):
+        self,
+        min: Union[float, list] = -5,
+        max: Union[float, list] = 5,
+        size: int = 100,
+        value_types: str = "array"
+    ) -> Dict[str, Any]:
+        """
+        Create a search space for an N-dimensional function.
+
+        Args:
+            min: Lower bound(s). Either a single value for all dimensions
+                 or a list of per-dimension bounds.
+            max: Upper bound(s). Either a single value for all dimensions
+                 or a list of per-dimension bounds.
+            size: Total number of grid points across all dimensions
+            value_types: "array" for numpy arrays, "list" for Python lists
+
+        Returns:
+            Dictionary mapping parameter names ('x0', 'x1', ...) to value arrays/lists
+        """
         search_space_ = {}
         dim_size = size ** (1 / self.n_dim)
 
-        def add_dim(search_space_: dict, dim: int, min, max):
+        def add_dim(search_space_: dict, dim: int, min_val, max_val):
             dim_str = "x" + str(dim)
-            step_size = (max - min) / dim_size
-            values = np.arange(min, max, step_size)
+            step_size = (max_val - min_val) / dim_size
+            values = np.arange(min_val, max_val, step_size)
             if value_types == "list":
                 values = list(values)
             search_space_[dim_str] = values
 
         if isinstance(min, list) and isinstance(max, list):
             if len(min) != len(max) or len(min) != self.n_dim:
-                raise ValueError
+                raise ValueError(
+                    f"min and max lists must have length {self.n_dim}, "
+                    f"got {len(min)} and {len(max)}"
+                )
 
             for dim, (min_, max_) in enumerate(zip(min, max)):
                 add_dim(search_space_, dim, min_, max_)
