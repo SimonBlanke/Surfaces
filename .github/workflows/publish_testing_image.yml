@@ -1,12 +1,12 @@
 name: publish testing image
-on: 
+on:
   workflow_dispatch:
   push:
     branches:
       - 'main'
     paths:
-      - 'requirements/requirements.txt'
-      - 'requirements/requirements-test.txt'
+      - 'pyproject.toml'
+      - 'Dockerfile'
 
 jobs:
   build-publish:

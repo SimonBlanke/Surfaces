@@ -11,7 +11,6 @@ import plotly.express as px
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from typing import Dict, List, Optional, Union, Any
-from tqdm import tqdm
 
 color_scale = px.colors.sequential.Jet
 
@@ -92,20 +91,15 @@ def _plotly_surface_nd(
     xi, yi = np.meshgrid(x_all, y_all)
     zi = []
 
-    pbar_total = len(search_space_2d[para1]) * len(search_space_2d[para2])
-    pbar = tqdm(total=pbar_total, desc="Generating surface")
-    
     for dim_value1 in search_space_2d[para1]:
         zi_row = []
         for dim_value2 in search_space_2d[para2]:
             para_dict_2d = {para1: dim_value1, para2: dim_value2}
             para_dict = {**para_dict_2d, **para_dict_set_values}
             zi_row.append(objective_function(para_dict))
-            pbar.update(1)
         zi.append(zi_row)
 
     zi = np.array(zi).T
-    pbar.close()
 
     fig = go.Figure(
         data=go.Surface(
@@ -534,37 +528,28 @@ def _plotly_ml_hyperparameter_heatmap(
             test_params[param_name] = search_space[param_name][0]
     
     # Test once - if this fails, the whole configuration is wrong
-    test_result = ml_function.objective_function(test_params)
-    print(f"✓ ML function validation successful (test result: {test_result:.4f})")
-    
-    # Create evaluation grid - NO TRY-CATCH, let errors surface
+    ml_function.objective_function(test_params)
+
+    # Create evaluation grid
     results = []
-    
-    print(f"Evaluating {len(param1_values)} x {len(param2_values)} = {len(param1_values) * len(param2_values)} combinations...")
-    pbar = tqdm(total=len(param1_values) * len(param2_values), desc="ML Evaluation")
-    
+
     for p1_val in param1_values:
         row_results = []
-        
+
         for p2_val in param2_values:
-            # Create parameter dict
             params = fixed_params.copy()
             params[param1] = p1_val
             params[param2] = p2_val
-            
+
             # Fill in missing required parameters
             for param_name in search_space:
                 if param_name not in params:
                     params[param_name] = search_space[param_name][0]
-            
-            # Evaluate - NO TRY-CATCH, let real errors surface
+
             score = ml_function.objective_function(params)
             row_results.append(float(score))
-            pbar.update(1)
-        
+
         results.append(row_results)
-    
-    pbar.close()
     
     # Convert to numpy and create plot
     z_values = np.array(results)
@@ -646,8 +631,7 @@ def _plotly_dataset_hyperparameter_analysis(
             test_params[param_name] = search_space[param_name][0]
     
     # Test once - if this fails, the whole configuration is wrong
-    test_result = ml_function.objective_function(test_params)
-    print(f"✓ ML function validation successful (test result: {test_result:.4f})")
+    ml_function.objective_function(test_params)
         
     datasets = search_space['dataset']
     hyperparameter_values = search_space[hyperparameter]
@@ -658,34 +642,26 @@ def _plotly_dataset_hyperparameter_analysis(
         name = dataset_func.__name__.replace('_data', '').replace('_', ' ').title()
         dataset_names.append(name)
     
-    # Evaluate across datasets and hyperparameter values - NO TRY-CATCH
+    # Evaluate across datasets and hyperparameter values
     results = []
-    
-    print(f"Evaluating {len(datasets)} datasets x {len(hyperparameter_values)} {hyperparameter} values...")
-    pbar = tqdm(total=len(datasets) * len(hyperparameter_values), desc="Dataset Analysis")
-    
+
     for dataset_func in datasets:
         dataset_results = []
-        
+
         for hyperparam_val in hyperparameter_values:
-            # Create parameter dict
             params = fixed_params.copy()
             params['dataset'] = dataset_func
             params[hyperparameter] = hyperparam_val
-            
+
             # Fill in missing required parameters with defaults
             for param_name in search_space:
                 if param_name not in params:
                     params[param_name] = search_space[param_name][0]
-            
-            # Evaluate - NO TRY-CATCH, let real errors surface
+
             score = ml_function.objective_function(params)
             dataset_results.append(float(score))
-            pbar.update(1)
-        
+
         results.append(dataset_results)
-    
-    pbar.close()
     
     # Create heatmap
     z_values = np.array(results)
@@ -759,7 +735,6 @@ def _create_ml_function_analysis_suite(
             categorical_params.append(param_name)
     
     # 1. Hyperparameter vs Hyperparameter plots
-    print("Creating hyperparameter interaction plots...")
     for i, param1 in enumerate(numeric_params + categorical_params):
         for j, param2 in enumerate(numeric_params + categorical_params):
             if i >= j:  # Avoid duplicates and self-comparisons
@@ -773,7 +748,6 @@ def _create_ml_function_analysis_suite(
             figures[plot_name] = fig
     
     # 2. Dataset vs Hyperparameter plots
-    print("Creating dataset analysis plots...")
     for param_name in numeric_params + categorical_params:
         plot_name = f"dataset_vs_{param_name}"
         fig = _plotly_dataset_hyperparameter_analysis(

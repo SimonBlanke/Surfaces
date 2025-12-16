@@ -8,14 +8,14 @@ uninstall:
 	pip uninstall -y surfaces
 	rm -fr build dist *.egg-info
 
-install-requirements:
-	python -m pip install -r ./requirements/requirements.in
+install-dev:
+	pip install -e ".[dev]"
 
-install-test-requirements:
-	python -m pip install -r ./requirements/requirements-test.in
+install-test:
+	pip install -e ".[test]"
 
-install-build-requirements:
-	python -m pip install -r ./requirements/requirements-build.in
+install-build:
+	pip install build
 
 install-editable:
 	pip install -e .
@@ -32,12 +32,6 @@ py-test:
 	python -m pytest -x -p no:warnings tests/; \
 
 test:  py-test test-examples
-
-requirement:
-	cd requirements/; \
-		pip-compile requirements.in;\
-		pip-compile requirements-test.in;\
-		pip-compile requirements-build.in
 
 database:
 	python -m collect_search_data.py

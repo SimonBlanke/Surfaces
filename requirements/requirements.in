@@ -1,5 +1,0 @@
-numpy >=1.18.1
-pandas
-matplotlib
-plotly
-search-data-collector==0.6.0

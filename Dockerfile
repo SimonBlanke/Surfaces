@@ -1,7 +1,6 @@
 FROM python:3.10-slim
 
-COPY ./requirements/*.txt .
+COPY pyproject.toml .
+COPY src/ src/
 
-RUN echo $(ls -1) &&\
-    python -m pip install -r ./requirements.txt &&\
-    python -m pip install -r ./requirements-test.txt
+RUN python -m pip install ".[test]"

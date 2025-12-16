@@ -9,7 +9,6 @@ where = ["src"]
 name = "surfaces"
 version = "0.5.1"
 description = "A collection and visualization of black-box objective functions"
-dynamic = ["dependencies"]
 readme = "README.md"
 requires-python = ">=3.8"
 license = {file = "LICENSE"}
@@ -32,13 +31,30 @@ classifiers=[
     "Intended Audience :: Information Technology",
     "Intended Audience :: Science/Research",
 ]
-
-[tool.setuptools.dynamic]
-dependencies = {file = ["requirements/requirements.in"]}
+dependencies = [
+    "numpy>=1.18.1",
+    "pandas",
+    "matplotlib",
+    "plotly",
+    "scikit-learn",
+    "search-data-collector>=0.6.0",
+]
 
 [project.optional-dependencies]
-dev = ["check-manifest"]
-test = ["coverage"]
+dev = [
+    "flake8",
+    "check-manifest",
+]
+test = [
+    "pytest>=7.0.0",
+    "pytest-cov",
+    "flake8",
+    "tox",
+    "gradient-free-optimizers",
+]
+build = [
+    "build",
+]
 
 [project.urls]
 "Homepage" = "https://github.com/SimonBlanke/Surfaces"
