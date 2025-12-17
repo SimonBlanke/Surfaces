@@ -1,0 +1,441 @@
+.. _home:
+
+.. raw:: html
+
+   <div class="hero-section">
+      <div class="hero-content">
+         <h1 class="hero-title">Surfaces</h1>
+         <p class="hero-tagline">Black-box optimization test functions for benchmarking</p>
+      </div>
+   </div>
+
+   <!-- Stats are auto-counted in conf.py -->
+   <div class="stats-strip">
+      <a href="user_guide/mathematical.html" class="stat-item">
+         <div class="stat-value">24</div>
+         <div class="stat-label">Mathematical</div>
+      </a>
+      <a href="user_guide/machine_learning.html" class="stat-item">
+         <div class="stat-value">3</div>
+         <div class="stat-label">ML Functions</div>
+      </a>
+      <a href="user_guide/mathematical.html#n-dimensional-functions" class="stat-item">
+         <div class="stat-value">N-D</div>
+         <div class="stat-label">Scalable</div>
+      </a>
+      <a href="api_reference.html" class="stat-item">
+         <div class="stat-value">One</div>
+         <div class="stat-label">Unified API</div>
+      </a>
+   </div>
+
+
+Surfaces provides a collection of single-objective black-box optimization functions
+for benchmarking. The library includes mathematical test functions (1D, 2D, and N-dimensional)
+and machine learning test functions for evaluating optimization algorithms.
+
+.. raw:: html
+
+   <div class="badge-banner">
+      <div class="badge-items">
+         <a href="https://pypi.org/project/surfaces/" target="_blank">
+            <img src="https://img.shields.io/pypi/v/surfaces?color=8B5A5A&style=flat-square" alt="PyPI Version" />
+         </a>
+         <a href="https://pypi.org/project/surfaces/" target="_blank">
+            <img src="https://img.shields.io/pypi/pyversions/surfaces?color=A67979&style=flat-square" alt="Python Versions" />
+         </a>
+         <a href="https://github.com/SimonBlanke/Surfaces/blob/main/LICENSE" target="_blank">
+            <img src="https://img.shields.io/github/license/SimonBlanke/Surfaces?color=C49393&style=flat-square" alt="License" />
+         </a>
+      </div>
+   </div>
+
+
+----
+
+.. _features:
+
+Features
+========
+
+What makes Surfaces ideal for optimization benchmarking.
+
+.. grid:: 1 2 3 3
+   :gutter: 4
+
+   .. grid-item-card::
+      :class-card: feature-card
+
+      **24+ Test Functions**
+      ^^^
+      Classic mathematical optimization functions from the
+      literature: Ackley, Rosenbrock, Rastrigin, and more.
+
+      +++
+      :doc:`1D, 2D, and N-dimensional functions <user_guide/mathematical>`
+
+   .. grid-item-card::
+      :class-card: feature-card
+
+      **ML-Based Functions**
+      ^^^
+      Test functions based on real machine learning models:
+      hyperparameter tuning as optimization benchmark.
+
+      +++
+      :doc:`K-Neighbors, Gradient Boosting <user_guide/machine_learning>`
+
+   .. grid-item-card::
+      :class-card: feature-card
+
+      **scipy Integration**
+      ^^^
+      Convert any function to scipy.optimize format with
+      ``to_scipy()`` for seamless integration.
+
+      +++
+      :doc:`Works with scipy optimizers <user_guide/scipy_integration>`
+
+   .. grid-item-card::
+      :class-card: feature-card
+
+      **Flexible Evaluation**
+      ^^^
+      Call functions with dictionaries, keyword arguments,
+      numpy arrays, or batch evaluation.
+
+      +++
+      :doc:`Multiple evaluation interfaces <user_guide/introduction>`
+
+   .. grid-item-card::
+      :class-card: feature-card
+
+      **Loss or Score**
+      ^^^
+      Every function supports both minimization (loss)
+      and maximization (score) modes.
+
+      +++
+      :doc:`Metric handling <user_guide/introduction>`
+
+   .. grid-item-card::
+      :class-card: feature-card
+
+      **Built-in Visualization**
+      ^^^
+      Plotly-based surface plots and heatmaps
+      for 2D function visualization.
+
+      +++
+      :doc:`Visualization tools <user_guide/visualization>`
+
+----
+
+Function Categories
+===================
+
+Surfaces provides functions in two main categories, each with a consistent interface.
+
+.. grid:: 1 1 2 2
+   :gutter: 4
+
+   .. grid-item-card::
+      :class-card: category-card category-card-math
+
+      Mathematical Functions
+      ^^^
+      Classic test functions from the optimization literature with
+      known global optima and characteristics.
+
+      - **1D Functions**: Gramacy & Lee
+      - **2D Functions**: Ackley, Rosenbrock, Beale, Himmelblau, etc.
+      - **N-D Functions**: Sphere, Rastrigin, Griewank
+
+      +++
+      :doc:`Explore mathematical functions <user_guide/mathematical>`
+
+   .. grid-item-card::
+      :class-card: category-card category-card-ml
+
+      Machine Learning Functions
+      ^^^
+      Test functions based on real ML model training tasks,
+      providing realistic hyperparameter optimization landscapes.
+
+      - **Classification**: K-Neighbors Classifier
+      - **Regression**: K-Neighbors, Gradient Boosting
+
+      +++
+      :doc:`Explore ML functions <user_guide/machine_learning>`
+
+----
+
+Quick Install
+=============
+
+.. raw:: html
+
+   <div class="segmented-tabs" id="install-tabs">
+      <nav class="segmented-tabs-nav" role="tablist">
+         <button class="segmented-tab-btn active" role="tab" aria-selected="true" aria-controls="install-panel-pip">
+            pip install
+         </button>
+         <button class="segmented-tab-btn" role="tab" aria-selected="false" aria-controls="install-panel-dev">
+            Development
+         </button>
+      </nav>
+      <div class="segmented-tabs-content">
+         <div class="segmented-tab-panel active" id="install-panel-pip" role="tabpanel">
+            <div class="highlight"><pre><span class="gp">$ </span>pip install surfaces</pre></div>
+         </div>
+         <div class="segmented-tab-panel" id="install-panel-dev" role="tabpanel">
+            <div class="highlight"><pre><span class="gp">$ </span>pip install surfaces[dev,test]</pre></div>
+         </div>
+      </div>
+   </div>
+
+----
+
+Quick Example
+=============
+
+Get started in just a few lines of code:
+
+.. raw:: html
+
+   <div class="vertical-tabs" id="example-tabs">
+      <nav class="vertical-tabs-nav" role="tablist">
+         <button class="vertical-tab-btn active" role="tab" aria-selected="true" aria-controls="example-panel-basic" data-tab="example-basic">
+            <span class="tab-indicator"></span>
+            <span>Basic Usage</span>
+         </button>
+         <button class="vertical-tab-btn" role="tab" aria-selected="false" aria-controls="example-panel-scipy" data-tab="example-scipy">
+            <span class="tab-indicator"></span>
+            <span>scipy Integration</span>
+         </button>
+         <button class="vertical-tab-btn" role="tab" aria-selected="false" aria-controls="example-panel-ml" data-tab="example-ml">
+            <span class="tab-indicator"></span>
+            <span>ML Functions</span>
+         </button>
+      </nav>
+      <div class="vertical-tabs-content">
+         <div class="vertical-tab-panel active" id="example-panel-basic" role="tabpanel">
+
+.. code-block:: python
+
+    from surfaces.test_functions import SphereFunction
+
+    # Create a 3-dimensional Sphere function
+    func = SphereFunction(n_dim=3)
+
+    # Evaluate with a dictionary
+    result = func({"x0": 1.0, "x1": 2.0, "x2": 3.0})
+    print(f"Loss: {result}")  # Loss: 14.0
+
+    # Get the default search space
+    search_space = func.search_space()
+    # {"x0": array(...), "x1": array(...), "x2": array(...)}
+
+.. raw:: html
+
+         </div>
+         <div class="vertical-tab-panel" id="example-panel-scipy" role="tabpanel">
+
+.. code-block:: python
+
+    from surfaces.test_functions import RosenbrockFunction
+    from scipy.optimize import minimize
+
+    # Create the test function
+    func = RosenbrockFunction(n_dim=5)
+
+    # Convert to scipy format
+    objective, bounds, x0 = func.to_scipy()
+
+    # Run scipy optimizer
+    result = minimize(objective, x0, bounds=bounds, method='L-BFGS-B')
+    print(f"Optimal x: {result.x}")
+    print(f"Minimum value: {result.fun}")
+
+.. raw:: html
+
+         </div>
+         <div class="vertical-tab-panel" id="example-panel-ml" role="tabpanel">
+
+.. code-block:: python
+
+    from surfaces.test_functions import KNeighborsClassifierFunction
+
+    # Create an ML-based test function
+    func = KNeighborsClassifierFunction()
+
+    # Evaluate with hyperparameters
+    score = func({
+        "n_neighbors": 5,
+        "weights": "distance",
+        "p": 2
+    })
+    print(f"Accuracy: {score}")
+
+    # Get the hyperparameter search space
+    search_space = func.search_space()
+
+.. raw:: html
+
+         </div>
+      </div>
+   </div>
+
+   <script>
+   document.addEventListener('DOMContentLoaded', function() {
+      // Handle vertical tabs (Quick Example)
+      document.querySelectorAll('.vertical-tabs').forEach(function(tabContainer) {
+         const buttons = tabContainer.querySelectorAll('.vertical-tab-btn');
+         const panels = tabContainer.querySelectorAll('.vertical-tab-panel');
+
+         buttons.forEach(function(button) {
+            button.addEventListener('click', function() {
+               buttons.forEach(btn => {
+                  btn.classList.remove('active');
+                  btn.setAttribute('aria-selected', 'false');
+               });
+               panels.forEach(panel => panel.classList.remove('active'));
+
+               this.classList.add('active');
+               this.setAttribute('aria-selected', 'true');
+
+               const panelId = this.getAttribute('aria-controls');
+               const panel = document.getElementById(panelId);
+               if (panel) {
+                  panel.classList.add('active');
+               }
+            });
+         });
+      });
+
+      // Handle segmented tabs (Quick Install)
+      document.querySelectorAll('.segmented-tabs').forEach(function(tabContainer) {
+         const buttons = tabContainer.querySelectorAll('.segmented-tab-btn');
+         const panels = tabContainer.querySelectorAll('.segmented-tab-panel');
+
+         buttons.forEach(function(button) {
+            button.addEventListener('click', function() {
+               buttons.forEach(btn => {
+                  btn.classList.remove('active');
+                  btn.setAttribute('aria-selected', 'false');
+               });
+               panels.forEach(panel => panel.classList.remove('active'));
+
+               this.classList.add('active');
+               this.setAttribute('aria-selected', 'true');
+
+               const panelId = this.getAttribute('aria-controls');
+               const panel = document.getElementById(panelId);
+               if (panel) {
+                  panel.classList.add('active');
+               }
+            });
+         });
+      });
+
+      // Back to Top - inject into sidebar
+      const sidebar = document.querySelector('.bd-toc-nav.page-toc');
+      if (sidebar) {
+         const backToTopDiv = document.createElement('div');
+         backToTopDiv.className = 'back-to-top-sidebar';
+         backToTopDiv.innerHTML = '<a href="#">Back to top</a>';
+         sidebar.appendChild(backToTopDiv);
+
+         backToTopDiv.querySelector('a').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+         });
+
+         window.addEventListener('scroll', function() {
+            if (window.scrollY > 400) {
+               backToTopDiv.classList.add('visible');
+            } else {
+               backToTopDiv.classList.remove('visible');
+            }
+         });
+      }
+   });
+   </script>
+
+----
+
+Contents
+========
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+
+   get_started
+   installation
+   user_guide
+   api_reference
+   examples
+   faq
+   troubleshooting
+   get_involved
+   about
+
+.. raw:: html
+
+   <div class="contents-grid">
+      <a href="get_started.html" class="contents-card">
+         <div class="contents-card-inner">
+            <div class="contents-card-text">
+               <div class="contents-card-title">Get Started</div>
+               <div class="contents-card-desc">Quick introduction to Surfaces</div>
+            </div>
+            <div class="contents-card-arrow">...</div>
+         </div>
+      </a>
+      <a href="installation.html" class="contents-card">
+         <div class="contents-card-inner">
+            <div class="contents-card-text">
+               <div class="contents-card-title">Installation</div>
+               <div class="contents-card-desc">Setup guide and requirements</div>
+            </div>
+            <div class="contents-card-arrow">...</div>
+         </div>
+      </a>
+      <a href="user_guide.html" class="contents-card">
+         <div class="contents-card-inner">
+            <div class="contents-card-text">
+               <div class="contents-card-title">User Guide</div>
+               <div class="contents-card-desc">In-depth tutorials and explanations</div>
+            </div>
+            <div class="contents-card-arrow">...</div>
+         </div>
+      </a>
+      <a href="api_reference.html" class="contents-card">
+         <div class="contents-card-inner">
+            <div class="contents-card-text">
+               <div class="contents-card-title">API Reference</div>
+               <div class="contents-card-desc">Technical reference for all classes</div>
+            </div>
+            <div class="contents-card-arrow">...</div>
+         </div>
+      </a>
+      <a href="examples.html" class="contents-card">
+         <div class="contents-card-inner">
+            <div class="contents-card-text">
+               <div class="contents-card-title">Examples</div>
+               <div class="contents-card-desc">Code examples and use cases</div>
+            </div>
+            <div class="contents-card-arrow">...</div>
+         </div>
+      </a>
+      <a href="get_involved.html" class="contents-card">
+         <div class="contents-card-inner">
+            <div class="contents-card-text">
+               <div class="contents-card-title">Get Involved</div>
+               <div class="contents-card-desc">Contribute to Surfaces</div>
+            </div>
+            <div class="contents-card-arrow">...</div>
+         </div>
+      </a>
+   </div>
