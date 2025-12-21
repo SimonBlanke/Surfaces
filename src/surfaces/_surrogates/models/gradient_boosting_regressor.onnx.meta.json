@@ -1,0 +1,21 @@
+{
+  "function_name": "gradient_boosting_regressor",
+  "param_names": [
+    "cv",
+    "dataset",
+    "max_depth",
+    "n_estimators"
+  ],
+  "param_encodings": {
+    "dataset": {
+      "diabetes_data": 0
+    }
+  },
+  "n_samples": 1000,
+  "y_range": [
+    -0.18430274724960327,
+    0.4645007848739624
+  ],
+  "training_time": 0.9513494968414307,
+  "collection_time": 571.8018696308136
+}
