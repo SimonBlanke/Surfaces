@@ -55,6 +55,13 @@ test = [
 build = [
     "build",
 ]
+surrogate = [
+    "onnxruntime>=1.16.0",
+]
+surrogate-train = [
+    "onnxruntime>=1.16.0",
+    "skl2onnx>=1.16.0",
+]
 
 [project.urls]
 "Homepage" = "https://github.com/SimonBlanke/Surfaces"

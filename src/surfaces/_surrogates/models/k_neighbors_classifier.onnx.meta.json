@@ -1,0 +1,29 @@
+{
+  "function_name": "k_neighbors_classifier",
+  "param_names": [
+    "algorithm",
+    "cv",
+    "dataset",
+    "n_neighbors"
+  ],
+  "param_encodings": {
+    "algorithm": {
+      "auto": 0,
+      "ball_tree": 1,
+      "kd_tree": 2,
+      "brute": 3
+    },
+    "dataset": {
+      "digits_data": 0,
+      "wine_data": 1,
+      "iris_data": 2
+    }
+  },
+  "n_samples": 866,
+  "y_range": [
+    0.39886364340782166,
+    0.9802631735801697
+  ],
+  "training_time": 1.0907559394836426,
+  "collection_time": 40.40663194656372
+}
