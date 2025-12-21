@@ -176,10 +176,13 @@ class HybridFunction1(_HybridBase):
     - Scalable
     """
 
-    name = "Hybrid Function 1"
-    func_id = 17
     n_functions = 3
     proportions = [0.3, 0.3, 0.4]
+
+    _spec = {
+        "name": "Hybrid Function 1",
+        "func_id": 17,
+    }
 
     def _create_objective_function(self):
         functions = [_high_conditioned_elliptic, _bent_cigar, _rastrigin]
@@ -210,10 +213,13 @@ class HybridFunction2(_HybridBase):
     - Scalable
     """
 
-    name = "Hybrid Function 2"
-    func_id = 18
     n_functions = 3
     proportions = [0.3, 0.3, 0.4]
+
+    _spec = {
+        "name": "Hybrid Function 2",
+        "func_id": 18,
+    }
 
     def _create_objective_function(self):
         def weierstrass(z):
@@ -254,10 +260,13 @@ class HybridFunction3(_HybridBase):
     - Scalable
     """
 
-    name = "Hybrid Function 3"
-    func_id = 19
     n_functions = 4
     proportions = [0.2, 0.2, 0.3, 0.3]
+
+    _spec = {
+        "name": "Hybrid Function 3",
+        "func_id": 19,
+    }
 
     def _create_objective_function(self):
         def weierstrass(z):
@@ -298,10 +307,13 @@ class HybridFunction4(_HybridBase):
     - Scalable
     """
 
-    name = "Hybrid Function 4"
-    func_id = 20
     n_functions = 4
     proportions = [0.2, 0.2, 0.3, 0.3]
+
+    _spec = {
+        "name": "Hybrid Function 4",
+        "func_id": 20,
+    }
 
     def _create_objective_function(self):
         functions = [_hgbat, _discus, _expanded_griewank_rosenbrock, _rastrigin]
@@ -332,10 +344,13 @@ class HybridFunction5(_HybridBase):
     - Scalable
     """
 
-    name = "Hybrid Function 5"
-    func_id = 21
     n_functions = 5
     proportions = [0.1, 0.2, 0.2, 0.2, 0.3]
+
+    _spec = {
+        "name": "Hybrid Function 5",
+        "func_id": 21,
+    }
 
     def _create_objective_function(self):
         functions = [
@@ -372,10 +387,13 @@ class HybridFunction6(_HybridBase):
     - Scalable
     """
 
-    name = "Hybrid Function 6"
-    func_id = 22
     n_functions = 5
     proportions = [0.1, 0.2, 0.2, 0.2, 0.3]
+
+    _spec = {
+        "name": "Hybrid Function 6",
+        "func_id": 22,
+    }
 
     def _create_objective_function(self):
         functions = [

@@ -22,10 +22,9 @@ class EllipsoidalRotated(BBOBFunction):
     - Ill-conditioned (condition number: 10^6)
     """
 
-    name = "Ellipsoidal Function"
-    func_id = 10
-
     _spec = {
+        "name": "Ellipsoidal Function",
+        "func_id": 10,
         "unimodal": True,
         "convex": True,
         "separable": False,
@@ -55,10 +54,9 @@ class Discus(BBOBFunction):
     - Ill-conditioned
     """
 
-    name = "Discus Function"
-    func_id = 11
-
     _spec = {
+        "name": "Discus Function",
+        "func_id": 11,
         "unimodal": True,
         "convex": True,
         "separable": False,
@@ -85,10 +83,9 @@ class BentCigar(BBOBFunction):
     - Ill-conditioned
     """
 
-    name = "Bent Cigar Function"
-    func_id = 12
-
     _spec = {
+        "name": "Bent Cigar Function",
+        "func_id": 12,
         "unimodal": True,
         "convex": True,
         "separable": False,
@@ -115,10 +112,9 @@ class SharpRidge(BBOBFunction):
     - Ridge structure
     """
 
-    name = "Sharp Ridge Function"
-    func_id = 13
-
     _spec = {
+        "name": "Sharp Ridge Function",
+        "func_id": 13,
         "unimodal": True,
         "separable": False,
     }
@@ -146,10 +142,9 @@ class DifferentPowers(BBOBFunction):
     - Varying local sensitivity
     """
 
-    name = "Different Powers Function"
-    func_id = 14
-
     _spec = {
+        "name": "Different Powers Function",
+        "func_id": 14,
         "unimodal": True,
         "separable": False,
     }

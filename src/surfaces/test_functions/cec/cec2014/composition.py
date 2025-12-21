@@ -214,12 +214,15 @@ class CompositionFunction1(_CompositionBase):
     - Scalable
     """
 
-    name = "Composition Function 1"
-    func_id = 23
     n_functions = 5
     sigmas = [10, 20, 30, 40, 50]
     lambdas = [1, 1e-6, 1e-26, 1e-6, 1e-6]
     biases = [0, 100, 200, 300, 400]
+
+    _spec = {
+        "name": "Composition Function 1",
+        "func_id": 23,
+    }
 
     def _create_objective_function(self):
         functions = [
@@ -263,12 +266,15 @@ class CompositionFunction2(_CompositionBase):
     - Scalable
     """
 
-    name = "Composition Function 2"
-    func_id = 24
     n_functions = 3
     sigmas = [20, 20, 20]
     lambdas = [10, 1, 1e-6]
     biases = [0, 100, 200]
+
+    _spec = {
+        "name": "Composition Function 2",
+        "func_id": 24,
+    }
 
     def _create_objective_function(self):
         functions = [_schwefel, _rastrigin, _high_conditioned_elliptic]
@@ -306,12 +312,15 @@ class CompositionFunction3(_CompositionBase):
     - Scalable
     """
 
-    name = "Composition Function 3"
-    func_id = 25
     n_functions = 3
     sigmas = [10, 30, 50]
     lambdas = [10, 1, 1]
     biases = [0, 100, 200]
+
+    _spec = {
+        "name": "Composition Function 3",
+        "func_id": 25,
+    }
 
     def _create_objective_function(self):
         functions = [_schwefel, _rastrigin, _ackley]
@@ -351,12 +360,15 @@ class CompositionFunction4(_CompositionBase):
     - Scalable
     """
 
-    name = "Composition Function 4"
-    func_id = 26
     n_functions = 5
     sigmas = [10, 20, 30, 40, 50]
     lambdas = [10, 1, 1e-6, 1, 1]
     biases = [0, 100, 200, 300, 400]
+
+    _spec = {
+        "name": "Composition Function 4",
+        "func_id": 26,
+    }
 
     def _create_objective_function(self):
         functions = [
@@ -402,12 +414,15 @@ class CompositionFunction5(_CompositionBase):
     - Scalable
     """
 
-    name = "Composition Function 5"
-    func_id = 27
     n_functions = 5
     sigmas = [10, 20, 30, 40, 50]
     lambdas = [10, 10, 2.5, 25, 1e-6]
     biases = [0, 100, 200, 300, 400]
+
+    _spec = {
+        "name": "Composition Function 5",
+        "func_id": 27,
+    }
 
     def _create_objective_function(self):
         functions = [
@@ -453,12 +468,15 @@ class CompositionFunction6(_CompositionBase):
     - Scalable
     """
 
-    name = "Composition Function 6"
-    func_id = 28
     n_functions = 5
     sigmas = [10, 20, 30, 40, 50]
     lambdas = [10, 10, 2.5, 25, 1e-6]
     biases = [0, 100, 200, 300, 400]
+
+    _spec = {
+        "name": "Composition Function 6",
+        "func_id": 28,
+    }
 
     def _create_objective_function(self):
         functions = [
@@ -497,12 +515,15 @@ class CompositionFunction7(_CompositionBase):
     - Scalable
     """
 
-    name = "Composition Function 7"
-    func_id = 29
     n_functions = 3
     sigmas = [10, 30, 50]
     lambdas = [1, 1, 1]
     biases = [0, 100, 200]
+
+    _spec = {
+        "name": "Composition Function 7",
+        "func_id": 29,
+    }
 
     def _create_objective_function(self):
         # Hybrid function components
@@ -570,12 +591,15 @@ class CompositionFunction8(_CompositionBase):
     - Scalable
     """
 
-    name = "Composition Function 8"
-    func_id = 30
     n_functions = 3
     sigmas = [10, 30, 50]
     lambdas = [1, 1, 1]
     biases = [0, 100, 200]
+
+    _spec = {
+        "name": "Composition Function 8",
+        "func_id": 30,
+    }
 
     def _create_objective_function(self):
         def hybrid4(z):

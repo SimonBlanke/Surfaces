@@ -19,10 +19,10 @@ class ShiftedRotatedBentCigar(CEC2017Function):
     - Scalable
     """
 
-    name = "Shifted and Rotated Bent Cigar Function"
-    func_id = 1
 
     _spec = {
+        "name": "Shifted and Rotated Bent Cigar Function",
+        "func_id": 1,
         "unimodal": True,
         "convex": True,
         "separable": False,
@@ -48,10 +48,10 @@ class ShiftedRotatedSumDiffPow(CEC2017Function):
     - Scalable
     """
 
-    name = "Shifted and Rotated Sum of Different Power Function"
-    func_id = 2
 
     _spec = {
+        "name": "Shifted and Rotated Sum of Different Power Function",
+        "func_id": 2,
         "unimodal": True,
         "separable": False,
         "deprecated": True,
@@ -77,10 +77,10 @@ class ShiftedRotatedZakharov(CEC2017Function):
     - Scalable
     """
 
-    name = "Shifted and Rotated Zakharov Function"
-    func_id = 3
 
     _spec = {
+        "name": "Shifted and Rotated Zakharov Function",
+        "func_id": 3,
         "unimodal": True,
         "convex": True,
         "separable": False,
@@ -107,10 +107,10 @@ class ShiftedRotatedRosenbrock(CEC2017Function):
     - Scalable
     """
 
-    name = "Shifted and Rotated Rosenbrock's Function"
-    func_id = 4
 
     _spec = {
+        "name": "Shifted and Rotated Rosenbrock's Function",
+        "func_id": 4,
         "unimodal": False,
         "separable": False,
     }
@@ -139,10 +139,10 @@ class ShiftedRotatedRastrigin(CEC2017Function):
     - Scalable
     """
 
-    name = "Shifted and Rotated Rastrigin's Function"
-    func_id = 5
 
     _spec = {
+        "name": "Shifted and Rotated Rastrigin's Function",
+        "func_id": 5,
         "unimodal": False,
         "separable": False,
     }
@@ -170,10 +170,10 @@ class ShiftedRotatedSchafferF7(CEC2017Function):
     - Scalable
     """
 
-    name = "Shifted and Rotated Schaffer's F7 Function"
-    func_id = 6
 
     _spec = {
+        "name": "Shifted and Rotated Schaffer's F7 Function",
+        "func_id": 6,
         "unimodal": False,
         "separable": False,
     }
@@ -203,10 +203,10 @@ class ShiftedRotatedLunacekBiRastrigin(CEC2017Function):
     - Two global optima
     """
 
-    name = "Shifted and Rotated Lunacek Bi-Rastrigin's Function"
-    func_id = 7
 
     _spec = {
+        "name": "Shifted and Rotated Lunacek Bi-Rastrigin's Function",
+        "func_id": 7,
         "unimodal": False,
         "separable": False,
     }
@@ -250,10 +250,10 @@ class ShiftedRotatedNonContRastrigin(CEC2017Function):
     - Non-continuous
     """
 
-    name = "Shifted and Rotated Non-Continuous Rastrigin's Function"
-    func_id = 8
 
     _spec = {
+        "name": "Shifted and Rotated Non-Continuous Rastrigin's Function",
+        "func_id": 8,
         "unimodal": False,
         "separable": False,
         "continuous": False,
@@ -290,10 +290,10 @@ class ShiftedRotatedLevy(CEC2017Function):
     - Scalable
     """
 
-    name = "Shifted and Rotated Levy Function"
-    func_id = 9
 
     _spec = {
+        "name": "Shifted and Rotated Levy Function",
+        "func_id": 9,
         "unimodal": False,
         "separable": False,
     }
@@ -322,10 +322,10 @@ class ShiftedRotatedSchwefel(CEC2017Function):
     - Deceptive
     """
 
-    name = "Shifted and Rotated Schwefel's Function"
-    func_id = 10
 
     _spec = {
+        "name": "Shifted and Rotated Schwefel's Function",
+        "func_id": 10,
         "unimodal": False,
         "separable": False,
     }

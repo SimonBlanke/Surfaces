@@ -35,10 +35,10 @@ class RotatedHighConditionedElliptic(CEC2014Function):
         Artificial delay in seconds.
     """
 
-    name = "Rotated High Conditioned Elliptic Function"
-    func_id = 1
 
     _spec = {
+        "name": "Rotated High Conditioned Elliptic Function",
+        "func_id": 1,
         "unimodal": True,
         "convex": True,
         "separable": False,
@@ -80,10 +80,10 @@ class RotatedBentCigar(CEC2014Function):
         Artificial delay in seconds.
     """
 
-    name = "Rotated Bent Cigar Function"
-    func_id = 2
 
     _spec = {
+        "name": "Rotated Bent Cigar Function",
+        "func_id": 2,
         "unimodal": True,
         "convex": True,
         "separable": False,
@@ -123,10 +123,10 @@ class RotatedDiscus(CEC2014Function):
         Artificial delay in seconds.
     """
 
-    name = "Rotated Discus Function"
-    func_id = 3
 
     _spec = {
+        "name": "Rotated Discus Function",
+        "func_id": 3,
         "unimodal": True,
         "convex": True,
         "separable": False,

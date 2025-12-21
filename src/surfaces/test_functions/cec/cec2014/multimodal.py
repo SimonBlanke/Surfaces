@@ -31,10 +31,10 @@ class ShiftedRotatedRosenbrock(CEC2014Function):
         Number of dimensions. Supported: 10, 20, 30, 50, 100.
     """
 
-    name = "Shifted and Rotated Rosenbrock's Function"
-    func_id = 4
 
     _spec = {
+        "name": "Shifted and Rotated Rosenbrock's Function",
+        "func_id": 4,
         "unimodal": False,
         "separable": False,
     }
@@ -72,10 +72,10 @@ class ShiftedRotatedAckley(CEC2014Function):
         Number of dimensions. Supported: 10, 20, 30, 50, 100.
     """
 
-    name = "Shifted and Rotated Ackley's Function"
-    func_id = 5
 
     _spec = {
+        "name": "Shifted and Rotated Ackley's Function",
+        "func_id": 5,
         "unimodal": False,
         "separable": False,
     }
@@ -119,10 +119,10 @@ class ShiftedRotatedWeierstrass(CEC2014Function):
         Number of dimensions. Supported: 10, 20, 30, 50, 100.
     """
 
-    name = "Shifted and Rotated Weierstrass Function"
-    func_id = 6
 
     _spec = {
+        "name": "Shifted and Rotated Weierstrass Function",
+        "func_id": 6,
         "unimodal": False,
         "separable": False,
         "differentiable": False,
@@ -172,10 +172,10 @@ class ShiftedRotatedGriewank(CEC2014Function):
         Number of dimensions. Supported: 10, 20, 30, 50, 100.
     """
 
-    name = "Shifted and Rotated Griewank's Function"
-    func_id = 7
 
     _spec = {
+        "name": "Shifted and Rotated Griewank's Function",
+        "func_id": 7,
         "unimodal": False,
         "separable": False,
     }
@@ -213,10 +213,10 @@ class ShiftedRastrigin(CEC2014Function):
         Number of dimensions. Supported: 10, 20, 30, 50, 100.
     """
 
-    name = "Shifted Rastrigin's Function"
-    func_id = 8
 
     _spec = {
+        "name": "Shifted Rastrigin's Function",
+        "func_id": 8,
         "unimodal": False,
         "separable": True,  # No rotation
     }
@@ -252,10 +252,10 @@ class ShiftedRotatedRastrigin(CEC2014Function):
         Number of dimensions. Supported: 10, 20, 30, 50, 100.
     """
 
-    name = "Shifted and Rotated Rastrigin's Function"
-    func_id = 9
 
     _spec = {
+        "name": "Shifted and Rotated Rastrigin's Function",
+        "func_id": 9,
         "unimodal": False,
         "separable": False,
     }
@@ -293,10 +293,10 @@ class ShiftedSchwefel(CEC2014Function):
         Number of dimensions. Supported: 10, 20, 30, 50, 100.
     """
 
-    name = "Shifted Schwefel's Function"
-    func_id = 10
 
     _spec = {
+        "name": "Shifted Schwefel's Function",
+        "func_id": 10,
         "unimodal": False,
         "separable": True,
     }
@@ -345,10 +345,10 @@ class ShiftedRotatedSchwefel(CEC2014Function):
         Number of dimensions. Supported: 10, 20, 30, 50, 100.
     """
 
-    name = "Shifted and Rotated Schwefel's Function"
-    func_id = 11
 
     _spec = {
+        "name": "Shifted and Rotated Schwefel's Function",
+        "func_id": 11,
         "unimodal": False,
         "separable": False,
     }
@@ -397,10 +397,10 @@ class ShiftedRotatedKatsuura(CEC2014Function):
         Number of dimensions. Supported: 10, 20, 30, 50, 100.
     """
 
-    name = "Shifted and Rotated Katsuura Function"
-    func_id = 12
 
     _spec = {
+        "name": "Shifted and Rotated Katsuura Function",
+        "func_id": 12,
         "unimodal": False,
         "separable": False,
         "differentiable": False,
@@ -445,10 +445,10 @@ class ShiftedRotatedHappyCat(CEC2014Function):
         Number of dimensions. Supported: 10, 20, 30, 50, 100.
     """
 
-    name = "Shifted and Rotated HappyCat Function"
-    func_id = 13
 
     _spec = {
+        "name": "Shifted and Rotated HappyCat Function",
+        "func_id": 13,
         "unimodal": False,
         "separable": False,
     }
@@ -488,10 +488,10 @@ class ShiftedRotatedHGBat(CEC2014Function):
         Number of dimensions. Supported: 10, 20, 30, 50, 100.
     """
 
-    name = "Shifted and Rotated HGBat Function"
-    func_id = 14
 
     _spec = {
+        "name": "Shifted and Rotated HGBat Function",
+        "func_id": 14,
         "unimodal": False,
         "separable": False,
     }
@@ -529,10 +529,10 @@ class ShiftedRotatedExpandedGriewankRosenbrock(CEC2014Function):
         Number of dimensions. Supported: 10, 20, 30, 50, 100.
     """
 
-    name = "Shifted and Rotated Expanded Griewank's plus Rosenbrock's Function"
-    func_id = 15
 
     _spec = {
+        "name": "Shifted and Rotated Expanded Griewank's plus Rosenbrock's Function",
+        "func_id": 15,
         "unimodal": False,
         "separable": False,
     }
@@ -575,10 +575,10 @@ class ShiftedRotatedExpandedScafferF6(CEC2014Function):
         Number of dimensions. Supported: 10, 20, 30, 50, 100.
     """
 
-    name = "Shifted and Rotated Expanded Scaffer's F6 Function"
-    func_id = 16
 
     _spec = {
+        "name": "Shifted and Rotated Expanded Scaffer's F6 Function",
+        "func_id": 16,
         "unimodal": False,
         "separable": False,
     }

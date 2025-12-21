@@ -28,13 +28,23 @@ class BaseTestFunction:
 
     pure_objective_function: callable
 
-    default_bounds: Tuple[float, float] = (-5.0, 5.0)
-
     # =========================================================================
     # Spec: Function Characteristics (override in subclasses)
     # =========================================================================
+    # All function metadata should be defined in _spec. This includes:
+    # - name: Human-readable function name
+    # - n_dim: Number of dimensions (None if variable)
+    # - n_objectives: Number of objectives (1 for single-objective)
+    # - default_bounds: Tuple of (min, max) for search space
+    # - func_id: Function ID for benchmark suites (CEC, BBOB)
+    # - Boolean flags: continuous, differentiable, convex, separable, unimodal, scalable
 
     _spec: Dict[str, Any] = {
+        "name": None,
+        "n_dim": None,
+        "n_objectives": 1,
+        "default_bounds": (-5.0, 5.0),
+        "func_id": None,
         "continuous": True,
         "differentiable": True,
         "convex": False,
@@ -51,6 +61,12 @@ class BaseTestFunction:
             if hasattr(klass, "_spec"):
                 result.update(klass._spec)
         return result
+
+    # Backward compatibility properties that read from spec
+    @property
+    def default_bounds(self) -> Tuple[float, float]:
+        """Default parameter bounds for the search space."""
+        return self.spec.get("default_bounds", (-5.0, 5.0))
 
     # =========================================================================
     # Global Optimum Information (override in subclasses)

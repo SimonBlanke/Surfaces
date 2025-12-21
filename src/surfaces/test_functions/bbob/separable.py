@@ -23,10 +23,9 @@ class Sphere(BBOBFunction):
     - Condition number: 1
     """
 
-    name = "Sphere Function"
-    func_id = 1
-
     _spec = {
+        "name": "Sphere Function",
+        "func_id": 1,
         "unimodal": True,
         "convex": True,
         "separable": True,
@@ -53,10 +52,9 @@ class EllipsoidalSeparable(BBOBFunction):
     - Ill-conditioned (condition number: 10^6)
     """
 
-    name = "Separable Ellipsoidal Function"
-    func_id = 2
-
     _spec = {
+        "name": "Separable Ellipsoidal Function",
+        "func_id": 2,
         "unimodal": True,
         "convex": True,
         "separable": True,
@@ -86,10 +84,9 @@ class RastriginSeparable(BBOBFunction):
     - Regular structure
     """
 
-    name = "Rastrigin Function"
-    func_id = 3
-
     _spec = {
+        "name": "Rastrigin Function",
+        "func_id": 3,
         "unimodal": False,
         "separable": True,
     }
@@ -118,10 +115,9 @@ class BuecheRastrigin(BBOBFunction):
     - Asymmetric
     """
 
-    name = "Bueche-Rastrigin Function"
-    func_id = 4
-
     _spec = {
+        "name": "Bueche-Rastrigin Function",
+        "func_id": 4,
         "unimodal": False,
         "separable": True,
     }
@@ -168,10 +164,9 @@ class LinearSlope(BBOBFunction):
     - Optimum at boundary
     """
 
-    name = "Linear Slope Function"
-    func_id = 5
-
     _spec = {
+        "name": "Linear Slope Function",
+        "func_id": 5,
         "unimodal": True,
         "convex": True,
         "separable": True,

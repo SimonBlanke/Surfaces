@@ -22,10 +22,9 @@ class Schwefel(BBOBFunction):
     - Deceptive (second-best regions far from optimum)
     """
 
-    name = "Schwefel Function"
-    func_id = 20
-
     _spec = {
+        "name": "Schwefel Function",
+        "func_id": 20,
         "unimodal": False,
         "separable": False,
     }
@@ -76,10 +75,9 @@ class Gallagher101(BBOBFunction):
     - Gaussian peaks
     """
 
-    name = "Gallagher's Gaussian 101-me Peaks Function"
-    func_id = 21
-
     _spec = {
+        "name": "Gallagher's Gaussian 101-me Peaks Function",
+        "func_id": 21,
         "unimodal": False,
         "separable": False,
     }
@@ -140,10 +138,9 @@ class Gallagher21(BBOBFunction):
     - Gaussian peaks (higher)
     """
 
-    name = "Gallagher's Gaussian 21-hi Peaks Function"
-    func_id = 22
-
     _spec = {
+        "name": "Gallagher's Gaussian 21-hi Peaks Function",
+        "func_id": 22,
         "unimodal": False,
         "separable": False,
     }
@@ -205,10 +202,9 @@ class Katsuura(BBOBFunction):
     - Extremely rugged
     """
 
-    name = "Katsuura Function"
-    func_id = 23
-
     _spec = {
+        "name": "Katsuura Function",
+        "func_id": 23,
         "unimodal": False,
         "separable": False,
     }
@@ -248,10 +244,9 @@ class LunacekBiRastrigin(BBOBFunction):
     - Deceptive
     """
 
-    name = "Lunacek Bi-Rastrigin Function"
-    func_id = 24
-
     _spec = {
+        "name": "Lunacek Bi-Rastrigin Function",
+        "func_id": 24,
         "unimodal": False,
         "separable": False,
     }

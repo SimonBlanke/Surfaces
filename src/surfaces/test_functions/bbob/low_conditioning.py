@@ -22,10 +22,9 @@ class AttractiveSector(BBOBFunction):
     - Highly asymmetric
     """
 
-    name = "Attractive Sector Function"
-    func_id = 6
-
     _spec = {
+        "name": "Attractive Sector Function",
+        "func_id": 6,
         "unimodal": True,
         "separable": False,
     }
@@ -57,10 +56,9 @@ class StepEllipsoidal(BBOBFunction):
     - Ill-conditioned
     """
 
-    name = "Step Ellipsoidal Function"
-    func_id = 7
-
     _spec = {
+        "name": "Step Ellipsoidal Function",
+        "func_id": 7,
         "unimodal": False,
         "separable": False,
         "continuous": False,
@@ -103,10 +101,9 @@ class RosenbrockOriginal(BBOBFunction):
     - Valley structure
     """
 
-    name = "Rosenbrock Function, Original"
-    func_id = 8
-
     _spec = {
+        "name": "Rosenbrock Function, Original",
+        "func_id": 8,
         "unimodal": False,
         "separable": False,
     }
@@ -143,10 +140,9 @@ class RosenbrockRotated(BBOBFunction):
     - Valley structure (rotated)
     """
 
-    name = "Rosenbrock Function, Rotated"
-    func_id = 9
-
     _spec = {
+        "name": "Rosenbrock Function, Rotated",
+        "func_id": 9,
         "unimodal": False,
         "separable": False,
     }

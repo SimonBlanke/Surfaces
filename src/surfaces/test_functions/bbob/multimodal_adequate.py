@@ -22,10 +22,9 @@ class RastriginRotated(BBOBFunction):
     - Regular structure
     """
 
-    name = "Rastrigin Function"
-    func_id = 15
-
     _spec = {
+        "name": "Rastrigin Function",
+        "func_id": 15,
         "unimodal": False,
         "separable": False,
     }
@@ -55,10 +54,9 @@ class Weierstrass(BBOBFunction):
     - Fractal structure
     """
 
-    name = "Weierstrass Function"
-    func_id = 16
-
     _spec = {
+        "name": "Weierstrass Function",
+        "func_id": 16,
         "unimodal": False,
         "separable": False,
         "differentiable": False,
@@ -102,10 +100,9 @@ class SchaffersF7(BBOBFunction):
     - Asymmetric
     """
 
-    name = "Schaffer's F7 Function"
-    func_id = 17
-
     _spec = {
+        "name": "Schaffer's F7 Function",
+        "func_id": 17,
         "unimodal": False,
         "separable": False,
     }
@@ -138,10 +135,9 @@ class SchaffersF7Ill(BBOBFunction):
     - Ill-conditioned
     """
 
-    name = "Schaffer's F7 Function, Ill-Conditioned"
-    func_id = 18
-
     _spec = {
+        "name": "Schaffer's F7 Function, Ill-Conditioned",
+        "func_id": 18,
         "unimodal": False,
         "separable": False,
     }
@@ -174,10 +170,9 @@ class GriewankRosenbrock(BBOBFunction):
     - Combines two functions
     """
 
-    name = "Composite Griewank-Rosenbrock Function F8F2"
-    func_id = 19
-
     _spec = {
+        "name": "Composite Griewank-Rosenbrock Function F8F2",
+        "func_id": 19,
         "unimodal": False,
         "separable": False,
     }

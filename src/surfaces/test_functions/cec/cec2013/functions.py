@@ -24,12 +24,12 @@ class Sphere(CEC2013Function):
     - Scalable
     """
 
-    name = "Sphere Function"
-    func_id = 1
     shift_index = 1
     uses_rotation = False
 
     _spec = {
+        "name": "Sphere Function",
+        "func_id": 1,
         "unimodal": True,
         "convex": True,
         "separable": True,
@@ -53,12 +53,12 @@ class RotatedHighConditionedElliptic(CEC2013Function):
     - Scalable
     """
 
-    name = "Rotated High Conditioned Elliptic Function"
-    func_id = 2
     shift_index = 1
     uses_rotation = True
 
     _spec = {
+        "name": "Rotated High Conditioned Elliptic Function",
+        "func_id": 2,
         "unimodal": True,
         "convex": True,
         "separable": False,
@@ -88,12 +88,12 @@ class RotatedBentCigar(CEC2013Function):
     - Scalable
     """
 
-    name = "Rotated Bent Cigar Function"
-    func_id = 3
     shift_index = 1
     uses_rotation = True
 
     _spec = {
+        "name": "Rotated Bent Cigar Function",
+        "func_id": 3,
         "unimodal": True,
         "convex": True,
         "separable": False,
@@ -119,12 +119,12 @@ class RotatedDiscus(CEC2013Function):
     - Scalable
     """
 
-    name = "Rotated Discus Function"
-    func_id = 4
     shift_index = 1
     uses_rotation = True
 
     _spec = {
+        "name": "Rotated Discus Function",
+        "func_id": 4,
         "unimodal": True,
         "convex": True,
         "separable": False,
@@ -149,12 +149,12 @@ class DifferentPowers(CEC2013Function):
     - Scalable
     """
 
-    name = "Different Powers Function"
-    func_id = 5
     shift_index = 1
     uses_rotation = False
 
     _spec = {
+        "name": "Different Powers Function",
+        "func_id": 5,
         "unimodal": True,
         "separable": True,
     }
@@ -188,12 +188,12 @@ class RotatedRosenbrock(CEC2013Function):
     - Scalable
     """
 
-    name = "Rotated Rosenbrock's Function"
-    func_id = 6
     shift_index = 1
     uses_rotation = True
 
     _spec = {
+        "name": "Rotated Rosenbrock's Function",
+        "func_id": 6,
         "unimodal": False,
         "separable": False,
     }
@@ -222,12 +222,12 @@ class RotatedSchafferF7(CEC2013Function):
     - Scalable
     """
 
-    name = "Rotated Schaffer's F7 Function"
-    func_id = 7
     shift_index = 1
     uses_rotation = True
 
     _spec = {
+        "name": "Rotated Schaffer's F7 Function",
+        "func_id": 7,
         "unimodal": False,
         "separable": False,
     }
@@ -263,12 +263,12 @@ class RotatedAckley(CEC2013Function):
     - Scalable
     """
 
-    name = "Rotated Ackley's Function"
-    func_id = 8
     shift_index = 1
     uses_rotation = True
 
     _spec = {
+        "name": "Rotated Ackley's Function",
+        "func_id": 8,
         "unimodal": False,
         "separable": False,
     }
@@ -305,12 +305,12 @@ class RotatedWeierstrass(CEC2013Function):
     - Continuous but not differentiable
     """
 
-    name = "Rotated Weierstrass Function"
-    func_id = 9
     shift_index = 1
     uses_rotation = True
 
     _spec = {
+        "name": "Rotated Weierstrass Function",
+        "func_id": 9,
         "unimodal": False,
         "separable": False,
         "differentiable": False,
@@ -350,12 +350,12 @@ class RotatedGriewank(CEC2013Function):
     - Scalable
     """
 
-    name = "Rotated Griewank's Function"
-    func_id = 10
     shift_index = 1
     uses_rotation = True
 
     _spec = {
+        "name": "Rotated Griewank's Function",
+        "func_id": 10,
         "unimodal": False,
         "separable": False,
     }
@@ -384,12 +384,12 @@ class Rastrigin(CEC2013Function):
     - Scalable
     """
 
-    name = "Rastrigin's Function"
-    func_id = 11
     shift_index = 1
     uses_rotation = False
 
     _spec = {
+        "name": "Rastrigin's Function",
+        "func_id": 11,
         "unimodal": False,
         "separable": True,
     }
@@ -417,12 +417,12 @@ class RotatedRastrigin(CEC2013Function):
     - Scalable
     """
 
-    name = "Rotated Rastrigin's Function"
-    func_id = 12
     shift_index = 1
     uses_rotation = True
 
     _spec = {
+        "name": "Rotated Rastrigin's Function",
+        "func_id": 12,
         "unimodal": False,
         "separable": False,
     }
@@ -451,12 +451,12 @@ class StepRastrigin(CEC2013Function):
     - Non-continuous
     """
 
-    name = "Non-Continuous Rotated Rastrigin's Function"
-    func_id = 13
     shift_index = 1
     uses_rotation = True
 
     _spec = {
+        "name": "Non-Continuous Rotated Rastrigin's Function",
+        "func_id": 13,
         "unimodal": False,
         "separable": False,
         "continuous": False,
@@ -492,12 +492,12 @@ class Schwefel(CEC2013Function):
     - Deceptive
     """
 
-    name = "Schwefel's Function"
-    func_id = 14
     shift_index = 1
     uses_rotation = False
 
     _spec = {
+        "name": "Schwefel's Function",
+        "func_id": 14,
         "unimodal": False,
         "separable": True,
     }
@@ -537,12 +537,12 @@ class RotatedSchwefel(CEC2013Function):
     - Deceptive
     """
 
-    name = "Rotated Schwefel's Function"
-    func_id = 15
     shift_index = 1
     uses_rotation = True
 
     _spec = {
+        "name": "Rotated Schwefel's Function",
+        "func_id": 15,
         "unimodal": False,
         "separable": False,
     }
@@ -582,12 +582,12 @@ class RotatedKatsuura(CEC2013Function):
     - Non-differentiable
     """
 
-    name = "Rotated Katsuura Function"
-    func_id = 16
     shift_index = 1
     uses_rotation = True
 
     _spec = {
+        "name": "Rotated Katsuura Function",
+        "func_id": 16,
         "unimodal": False,
         "separable": False,
         "differentiable": False,
@@ -623,12 +623,12 @@ class LunacekBiRastrigin(CEC2013Function):
     - Two global optima
     """
 
-    name = "Lunacek Bi-Rastrigin Function"
-    func_id = 17
     shift_index = 1
     uses_rotation = False
 
     _spec = {
+        "name": "Lunacek Bi-Rastrigin Function",
+        "func_id": 17,
         "unimodal": False,
         "separable": True,
     }
@@ -665,12 +665,12 @@ class RotatedLunacekBiRastrigin(CEC2013Function):
     - Two global optima
     """
 
-    name = "Rotated Lunacek Bi-Rastrigin Function"
-    func_id = 18
     shift_index = 1
     uses_rotation = True
 
     _spec = {
+        "name": "Rotated Lunacek Bi-Rastrigin Function",
+        "func_id": 18,
         "unimodal": False,
         "separable": False,
     }
@@ -709,12 +709,12 @@ class RotatedExpandedGriewankRosenbrock(CEC2013Function):
     - Scalable
     """
 
-    name = "Rotated Expanded Griewank's plus Rosenbrock's Function"
-    func_id = 19
     shift_index = 1
     uses_rotation = True
 
     _spec = {
+        "name": "Rotated Expanded Griewank's plus Rosenbrock's Function",
+        "func_id": 19,
         "unimodal": False,
         "separable": False,
     }
@@ -748,12 +748,12 @@ class RotatedExpandedScafferF6(CEC2013Function):
     - Scalable
     """
 
-    name = "Rotated Expanded Scaffer's F6 Function"
-    func_id = 20
     shift_index = 1
     uses_rotation = True
 
     _spec = {
+        "name": "Rotated Expanded Scaffer's F6 Function",
+        "func_id": 20,
         "unimodal": False,
         "separable": False,
     }
@@ -830,8 +830,11 @@ class CompositionFunction1(_CompositionBase):
     Discus, High Conditioned Elliptic.
     """
 
-    name = "Composition Function 1"
-    func_id = 21
+    _spec = {
+        "name": "Composition Function 1",
+        "func_id": 21,
+    }
+
     n_functions = 5
     sigmas = [10, 20, 30, 40, 50]
     lambdas = [1, 1e-6, 1e-26, 1e-6, 1e-6]
@@ -878,8 +881,11 @@ class CompositionFunction2(_CompositionBase):
     Combines: Schwefel, Rastrigin, High Conditioned Elliptic.
     """
 
-    name = "Composition Function 2"
-    func_id = 22
+    _spec = {
+        "name": "Composition Function 2",
+        "func_id": 22,
+    }
+
     n_functions = 3
     sigmas = [20, 20, 20]
     lambdas = [10, 1, 1e-6]
@@ -931,8 +937,11 @@ class CompositionFunction2(_CompositionBase):
 class CompositionFunction3(_CompositionBase):
     """F23: Composition Function 3."""
 
-    name = "Composition Function 3"
-    func_id = 23
+    _spec = {
+        "name": "Composition Function 3",
+        "func_id": 23,
+    }
+
     n_functions = 3
     sigmas = [20, 20, 20]
     lambdas = [10, 1, 1e-6]
@@ -985,8 +994,11 @@ class CompositionFunction3(_CompositionBase):
 class CompositionFunction4(_CompositionBase):
     """F24: Composition Function 4."""
 
-    name = "Composition Function 4"
-    func_id = 24
+    _spec = {
+        "name": "Composition Function 4",
+        "func_id": 24,
+    }
+
     n_functions = 3
     sigmas = [20, 20, 20]
     lambdas = [10, 1, 1e-6]
@@ -1041,8 +1053,11 @@ class CompositionFunction4(_CompositionBase):
 class CompositionFunction5(_CompositionBase):
     """F25: Composition Function 5."""
 
-    name = "Composition Function 5"
-    func_id = 25
+    _spec = {
+        "name": "Composition Function 5",
+        "func_id": 25,
+    }
+
     n_functions = 3
     sigmas = [10, 30, 50]
     lambdas = [10, 1, 1]
@@ -1092,8 +1107,11 @@ class CompositionFunction5(_CompositionBase):
 class CompositionFunction6(_CompositionBase):
     """F26: Composition Function 6."""
 
-    name = "Composition Function 6"
-    func_id = 26
+    _spec = {
+        "name": "Composition Function 6",
+        "func_id": 26,
+    }
+
     n_functions = 5
     sigmas = [10, 20, 30, 40, 50]
     lambdas = [10, 1, 1e-6, 1, 1]
@@ -1157,8 +1175,11 @@ class CompositionFunction6(_CompositionBase):
 class CompositionFunction7(_CompositionBase):
     """F27: Composition Function 7."""
 
-    name = "Composition Function 7"
-    func_id = 27
+    _spec = {
+        "name": "Composition Function 7",
+        "func_id": 27,
+    }
+
     n_functions = 5
     sigmas = [10, 20, 30, 40, 50]
     lambdas = [10, 10, 2.5, 25, 1e-6]
@@ -1222,8 +1243,11 @@ class CompositionFunction7(_CompositionBase):
 class CompositionFunction8(_CompositionBase):
     """F28: Composition Function 8."""
 
-    name = "Composition Function 8"
-    func_id = 28
+    _spec = {
+        "name": "Composition Function 8",
+        "func_id": 28,
+    }
+
     n_functions = 5
     sigmas = [10, 20, 30, 40, 50]
     lambdas = [10, 10, 2.5, 25, 1e-6]
@@ -1277,3 +1301,6 @@ class CompositionFunction8(_CompositionBase):
             return result + self.f_global
 
         self.pure_objective_function = composition
+
+    name = "Composition Function 1"
+    func_id = 21
