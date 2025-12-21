@@ -3,9 +3,8 @@
 # License: MIT License
 
 import time
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
-from ..._search_data_collection import SearchDataCollector, SearchDataManager
 from ..._surrogates import load_surrogate
 from .._base_test_function import BaseTestFunction
 
@@ -50,18 +49,12 @@ class MachineLearningFunction(BaseTestFunction):
         self,
         objective: str = "maximize",
         sleep: float = 0,
-        evaluate_from_data: bool = False,
         use_surrogate: bool = False,
         **kwargs,
     ):
         super().__init__(objective, sleep)
-        self.evaluate_from_data = evaluate_from_data
         self.use_surrogate = use_surrogate
         self._surrogate = None
-
-        if evaluate_from_data:
-            self.search_data_manager = SearchDataManager()
-            self.data_collector = SearchDataCollector(self.search_data_manager)
 
         if use_surrogate:
             self._load_surrogate()
@@ -90,62 +83,9 @@ class MachineLearningFunction(BaseTestFunction):
 
         if self.use_surrogate and self._surrogate is not None:
             raw_value = self._surrogate.predict(params)
-        elif self.evaluate_from_data:
-            raw_value = self._objective_function_from_data(params)
         else:
             raw_value = self.pure_objective_function(params)
 
         if self.objective == "minimize":
             return -raw_value
         return raw_value
-
-    def _objective_function_from_data(self, params: Dict[str, Any]) -> float:
-        """Evaluate using stored search data."""
-        function_name = getattr(self, "_name_", self.__class__.__name__)
-
-        result = self.search_data_manager.lookup_evaluation(function_name, params)
-        if result is None:
-            raise ValueError(
-                f"No stored evaluation found for parameters: {params}. "
-                f"Run data collection first for function: {function_name}"
-            )
-
-        score, eval_time = result
-        return score
-
-    def _collect_search_data(
-        self,
-        search_space: Optional[Dict[str, Any]] = None,
-        batch_size: int = 100,
-        verbose: bool = True,
-    ) -> Dict[str, Any]:
-        """Collect search data for this function."""
-        if not hasattr(self, "data_collector"):
-            self.search_data_manager = SearchDataManager()
-            self.data_collector = SearchDataCollector(self.search_data_manager)
-
-        return self.data_collector.collect_search_data(self, search_space, batch_size, verbose)
-
-    def _get_search_data_status(self) -> Dict[str, Any]:
-        """Get information about stored search data."""
-        if not hasattr(self, "data_collector"):
-            self.search_data_manager = SearchDataManager()
-            self.data_collector = SearchDataCollector(self.search_data_manager)
-
-        return self.data_collector.get_collection_status(self)
-
-    def _clear_search_data(self) -> None:
-        """Clear all stored search data for this function."""
-        if not hasattr(self, "search_data_manager"):
-            self.search_data_manager = SearchDataManager()
-
-        function_name = getattr(self, "_name_", self.__class__.__name__)
-        self.search_data_manager.clear_data(function_name)
-
-    def _get_timing_statistics(self) -> Dict[str, float]:
-        """Get timing statistics for this function's evaluations."""
-        if not hasattr(self, "data_collector"):
-            self.search_data_manager = SearchDataManager()
-            self.data_collector = SearchDataCollector(self.search_data_manager)
-
-        return self.data_collector.get_timing_statistics(self)
