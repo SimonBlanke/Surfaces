@@ -1,7 +1,6 @@
 import pytest
 
-from surfaces.test_functions import mathematical_functions, machine_learning_functions
-
+from surfaces.test_functions import machine_learning_functions, mathematical_functions
 
 mathematical_functions_d = (
     "test_function",
@@ -43,7 +42,9 @@ def test_all_machine_learning_functions(test_function):
     assert len(search_space) > 0
 
     # Test that the function works (ML functions may take longer)
-    sample_params = {key: list(values)[0] if hasattr(values, '__iter__') else values
-                    for key, values in search_space.items()}
+    sample_params = {
+        key: list(values)[0] if hasattr(values, "__iter__") else values
+        for key, values in search_space.items()
+    }
     result = test_function_(sample_params)
     assert isinstance(result, (int, float))

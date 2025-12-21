@@ -4,8 +4,9 @@
 
 """BBOB Separable Functions (f1-f5)."""
 
+from typing import Any, Dict
+
 import numpy as np
-from typing import Dict, Any
 
 from ._base_bbob import BBOBFunction
 
@@ -35,7 +36,7 @@ class Sphere(BBOBFunction):
         def sphere(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = x - self.x_opt
-            return np.sum(z ** 2) + self.f_opt
+            return np.sum(z**2) + self.f_opt
 
         self.pure_objective_function = sphere
 
@@ -67,7 +68,7 @@ class EllipsoidalSeparable(BBOBFunction):
         def ellipsoidal(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self.t_osz(x - self.x_opt)
-            return np.sum(coeffs * z ** 2) + self.f_opt
+            return np.sum(coeffs * z**2) + self.f_opt
 
         self.pure_objective_function = ellipsoidal
 
@@ -98,7 +99,7 @@ class RastriginSeparable(BBOBFunction):
             x = self._params_to_array(params)
             z = Lambda @ self.t_asy(self.t_osz(x - self.x_opt), 0.2)
             D = self.n_dim
-            return 10 * (D - np.sum(np.cos(2 * np.pi * z))) + np.sum(z ** 2) + self.f_opt
+            return 10 * (D - np.sum(np.cos(2 * np.pi * z))) + np.sum(z**2) + self.f_opt
 
         self.pure_objective_function = rastrigin
 
@@ -145,7 +146,7 @@ class BuecheRastrigin(BBOBFunction):
             z = Lambda @ z
 
             D = self.n_dim
-            result = 10 * (D - np.sum(np.cos(2 * np.pi * z))) + np.sum(z ** 2)
+            result = 10 * (D - np.sum(np.cos(2 * np.pi * z))) + np.sum(z**2)
             return result + 100 * self.f_pen(x) + self.f_opt
 
         self.pure_objective_function = bueche_rastrigin
@@ -179,7 +180,11 @@ class LinearSlope(BBOBFunction):
 
     def _create_objective_function(self):
         i = np.arange(self.n_dim)
-        s = np.sign(self.x_opt) * np.power(10, i / (self.n_dim - 1)) if self.n_dim > 1 else np.sign(self.x_opt)
+        s = (
+            np.sign(self.x_opt) * np.power(10, i / (self.n_dim - 1))
+            if self.n_dim > 1
+            else np.sign(self.x_opt)
+        )
 
         def linear_slope(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)

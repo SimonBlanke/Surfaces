@@ -4,8 +4,9 @@
 
 """Pressure vessel design optimization problem."""
 
+from typing import Any, Dict, List
+
 import numpy as np
-from typing import Dict, Any, List
 
 from ._base_engineering_function import EngineeringFunction
 
@@ -144,7 +145,7 @@ class PressureVesselFunction(EngineeringFunction):
         min_volume: float = 750.0,
         objective: str = "minimize",
         sleep: float = 0,
-        penalty_coefficient: float = 1e6
+        penalty_coefficient: float = 1e6,
     ):
         self.min_volume = min_volume
         super().__init__(objective, sleep, penalty_coefficient)
@@ -156,12 +157,7 @@ class PressureVesselFunction(EngineeringFunction):
         R = params["R"]
         L = params["L"]
 
-        cost = (
-            0.6224 * Ts * R * L +
-            1.7781 * Th * R**2 +
-            3.1661 * Ts**2 * L +
-            19.84 * Ts**2 * R
-        )
+        cost = 0.6224 * Ts * R * L + 1.7781 * Th * R**2 + 3.1661 * Ts**2 * L + 19.84 * Ts**2 * R
         return cost
 
     def constraints(self, params: Dict[str, Any]) -> List[float]:
@@ -182,7 +178,7 @@ class PressureVesselFunction(EngineeringFunction):
         # g3: Volume constraint (must be at least min_volume ft^3)
         # Volume = pi*R^2*L + (4/3)*pi*R^3 (cylinder + two hemispheres)
         # Convert to cubic feet (1 ft = 12 inches)
-        volume_in3 = np.pi * R**2 * L + (4/3) * np.pi * R**3
+        volume_in3 = np.pi * R**2 * L + (4 / 3) * np.pi * R**3
         volume_ft3 = volume_in3 / (12**3)  # Convert cubic inches to cubic feet
         g3 = self.min_volume - volume_ft3  # Negative when volume is sufficient
 

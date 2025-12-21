@@ -5,7 +5,6 @@
 
 from .k_neighbors_classifier import KNeighborsClassifierFunction
 
-
 __all__ = [
     "KNeighborsClassifierFunction",
 ]

@@ -1,22 +1,22 @@
-import pytest
 import numpy as np
+import pytest
 from gradient_free_optimizers import RandomSearchOptimizer
 
 from surfaces.test_functions.algebraic import (
-    SphereFunction,
-    RastriginFunction,
     AckleyFunction,
-    RosenbrockFunction,
     BealeFunction,
+    BoothFunction,
+    BukinFunctionN6,
+    CrossInTrayFunction,
+    EasomFunction,
+    GoldsteinPriceFunction,
     HimmelblausFunction,
     HölderTableFunction,
-    CrossInTrayFunction,
+    RastriginFunction,
+    RosenbrockFunction,
     SimionescuFunction,
-    EasomFunction,
-    BoothFunction,
-    GoldsteinPriceFunction,
+    SphereFunction,
     StyblinskiTangFunction,
-    BukinFunctionN6,
 )
 
 sphere_function = SphereFunction(2)

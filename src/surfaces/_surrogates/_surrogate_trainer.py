@@ -9,11 +9,11 @@ This module is intended for package maintainers to create
 pre-trained surrogate models for expensive functions.
 """
 
-from pathlib import Path
-from typing import Dict, Any, List, Tuple, Optional, Callable
-from itertools import product
 import json
 import time
+from itertools import product
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 
@@ -47,9 +47,7 @@ class SurrogateTrainer:
         output_dir: Optional[Path] = None,
     ):
         self.function = function
-        self.output_dir = Path(output_dir) if output_dir else (
-            Path(__file__).parent / "models"
-        )
+        self.output_dir = Path(output_dir) if output_dir else (Path(__file__).parent / "models")
 
         self.X: Optional[np.ndarray] = None
         self.y: Optional[np.ndarray] = None
@@ -67,7 +65,7 @@ class SurrogateTrainer:
         """Check if a value is numeric (including numpy types)."""
         if isinstance(value, (int, float)):
             return True
-        if hasattr(value, 'dtype'):
+        if hasattr(value, "dtype"):
             return np.issubdtype(value.dtype, np.number)
         return False
 
@@ -327,8 +325,7 @@ class SurrogateTrainer:
             from skl2onnx.common.data_types import FloatTensorType
         except ImportError:
             raise ImportError(
-                "skl2onnx is required for ONNX export. "
-                "Install it with: pip install skl2onnx"
+                "skl2onnx is required for ONNX export. Install it with: pip install skl2onnx"
             )
 
         self.output_dir.mkdir(parents=True, exist_ok=True)
@@ -337,10 +334,13 @@ class SurrogateTrainer:
 
         # Create a wrapper pipeline that includes scaling
         from sklearn.pipeline import Pipeline
-        pipeline = Pipeline([
-            ("scaler", self.scaler_X),
-            ("mlp", self.model),
-        ])
+
+        pipeline = Pipeline(
+            [
+                ("scaler", self.scaler_X),
+                ("mlp", self.model),
+            ]
+        )
 
         # Convert regression model to ONNX
         n_features = self.X.shape[1]

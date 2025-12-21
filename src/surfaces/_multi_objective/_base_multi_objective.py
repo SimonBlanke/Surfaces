@@ -5,7 +5,7 @@
 """Base class for multi-objective optimization test functions."""
 
 import time
-from typing import Dict, Any, Optional, Tuple, Union
+from typing import Any, Dict, Optional, Tuple, Union
 
 import numpy as np
 
@@ -62,9 +62,11 @@ class MultiObjectiveFunction:
 
     def _create_objective_function_(func):
         """Decorator that calls _create_objective_function after __init__."""
+
         def wrapper(self, *args, **kwargs):
             func(self, *args, **kwargs)
             self._create_objective_function()
+
         return wrapper
 
     @_create_objective_function_
@@ -100,8 +102,7 @@ class MultiObjectiveFunction:
         return search_space
 
     def __call__(
-        self, params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None,
-        **kwargs
+        self, params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None, **kwargs
     ) -> np.ndarray:
         """Evaluate the multi-objective function.
 
@@ -125,16 +126,13 @@ class MultiObjectiveFunction:
         return self._evaluate(params)
 
     def _normalize_input(
-        self, params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None,
-        **kwargs
+        self, params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None, **kwargs
     ) -> Dict[str, Any]:
         """Convert any input format to dict."""
         if isinstance(params, (np.ndarray, list, tuple)):
             param_names = sorted(self.search_space.keys())
             if len(params) != len(param_names):
-                raise ValueError(
-                    f"Expected {len(param_names)} values, got {len(params)}"
-                )
+                raise ValueError(f"Expected {len(param_names)} values, got {len(params)}")
             return {name: params[i] for i, name in enumerate(param_names)}
 
         if params is None:

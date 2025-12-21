@@ -21,38 +21,6 @@ Reference:
 """
 
 from ._base_cec2014 import CEC2014Function
-
-from .unimodal import (
-    RotatedHighConditionedElliptic,
-    RotatedBentCigar,
-    RotatedDiscus,
-)
-
-from .multimodal import (
-    ShiftedRotatedRosenbrock,
-    ShiftedRotatedAckley,
-    ShiftedRotatedWeierstrass,
-    ShiftedRotatedGriewank,
-    ShiftedRastrigin,
-    ShiftedRotatedRastrigin,
-    ShiftedSchwefel,
-    ShiftedRotatedSchwefel,
-    ShiftedRotatedKatsuura,
-    ShiftedRotatedHappyCat,
-    ShiftedRotatedHGBat,
-    ShiftedRotatedExpandedGriewankRosenbrock,
-    ShiftedRotatedExpandedScafferF6,
-)
-
-from .hybrid import (
-    HybridFunction1,
-    HybridFunction2,
-    HybridFunction3,
-    HybridFunction4,
-    HybridFunction5,
-    HybridFunction6,
-)
-
 from .composition import (
     CompositionFunction1,
     CompositionFunction2,
@@ -62,6 +30,34 @@ from .composition import (
     CompositionFunction6,
     CompositionFunction7,
     CompositionFunction8,
+)
+from .hybrid import (
+    HybridFunction1,
+    HybridFunction2,
+    HybridFunction3,
+    HybridFunction4,
+    HybridFunction5,
+    HybridFunction6,
+)
+from .multimodal import (
+    ShiftedRastrigin,
+    ShiftedRotatedAckley,
+    ShiftedRotatedExpandedGriewankRosenbrock,
+    ShiftedRotatedExpandedScafferF6,
+    ShiftedRotatedGriewank,
+    ShiftedRotatedHappyCat,
+    ShiftedRotatedHGBat,
+    ShiftedRotatedKatsuura,
+    ShiftedRotatedRastrigin,
+    ShiftedRotatedRosenbrock,
+    ShiftedRotatedSchwefel,
+    ShiftedRotatedWeierstrass,
+    ShiftedSchwefel,
+)
+from .unimodal import (
+    RotatedBentCigar,
+    RotatedDiscus,
+    RotatedHighConditionedElliptic,
 )
 
 __all__ = [

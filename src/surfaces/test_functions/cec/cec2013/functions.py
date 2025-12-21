@@ -4,11 +4,11 @@
 
 """CEC 2013 Benchmark Functions (F1-F28)."""
 
+from typing import Any, Dict
+
 import numpy as np
-from typing import Dict, Any
 
 from ._base_cec2013 import CEC2013Function
-
 
 # =============================================================================
 # Unimodal Functions (F1-F5)
@@ -39,7 +39,7 @@ class Sphere(CEC2013Function):
         def sphere(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift(x)
-            return np.sum(z ** 2) + self.f_global
+            return np.sum(z**2) + self.f_global
 
         self.pure_objective_function = sphere
 
@@ -72,7 +72,7 @@ class RotatedHighConditionedElliptic(CEC2013Function):
             D = self.n_dim
             result = 0.0
             for i in range(D):
-                result += (10 ** 6) ** (i / (D - 1)) * z[i] ** 2
+                result += (10**6) ** (i / (D - 1)) * z[i] ** 2
 
             return result + self.f_global
 
@@ -105,7 +105,7 @@ class RotatedBentCigar(CEC2013Function):
             z = self._asymmetric(self._shift_rotate(x), 0.5)
             z = self._rotate(z)
 
-            return z[0] ** 2 + 10 ** 6 * np.sum(z[1:] ** 2) + self.f_global
+            return z[0] ** 2 + 10**6 * np.sum(z[1:] ** 2) + self.f_global
 
         self.pure_objective_function = bent_cigar
 
@@ -135,7 +135,7 @@ class RotatedDiscus(CEC2013Function):
             x = self._params_to_array(params)
             z = self._oscillation(self._shift_rotate(x))
 
-            return 10 ** 6 * z[0] ** 2 + np.sum(z[1:] ** 2) + self.f_global
+            return 10**6 * z[0] ** 2 + np.sum(z[1:] ** 2) + self.f_global
 
         self.pure_objective_function = discus
 
@@ -280,15 +280,10 @@ class RotatedAckley(CEC2013Function):
             z = self._rotate(z)
 
             D = self.n_dim
-            sum1 = np.sum(z ** 2)
+            sum1 = np.sum(z**2)
             sum2 = np.sum(np.cos(2 * np.pi * z))
 
-            result = (
-                -20 * np.exp(-0.2 * np.sqrt(sum1 / D))
-                - np.exp(sum2 / D)
-                + 20
-                + np.e
-            )
+            result = -20 * np.exp(-0.2 * np.sqrt(sum1 / D)) - np.exp(sum2 / D) + 20 + np.e
 
             return result + self.f_global
 
@@ -331,9 +326,9 @@ class RotatedWeierstrass(CEC2013Function):
             result = 0.0
             for i in range(D):
                 for k in range(k_max + 1):
-                    result += a ** k * np.cos(2 * np.pi * b ** k * (z[i] + 0.5))
+                    result += a**k * np.cos(2 * np.pi * b**k * (z[i] + 0.5))
 
-            offset = D * sum(a ** k * np.cos(2 * np.pi * b ** k * 0.5) for k in range(k_max + 1))
+            offset = D * sum(a**k * np.cos(2 * np.pi * b**k * 0.5) for k in range(k_max + 1))
             result -= offset
 
             return result + self.f_global
@@ -367,7 +362,7 @@ class RotatedGriewank(CEC2013Function):
             z = z * 600 / 100
 
             D = self.n_dim
-            sum_sq = np.sum(z ** 2) / 4000
+            sum_sq = np.sum(z**2) / 4000
             prod_cos = np.prod(np.cos(z / np.sqrt(np.arange(1, D + 1))))
 
             return sum_sq - prod_cos + 1 + self.f_global
@@ -401,7 +396,7 @@ class Rastrigin(CEC2013Function):
             z = z * 5.12 / 100
 
             D = self.n_dim
-            result = 10 * D + np.sum(z ** 2 - 10 * np.cos(2 * np.pi * z))
+            result = 10 * D + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
 
             return result + self.f_global
 
@@ -435,7 +430,7 @@ class RotatedRastrigin(CEC2013Function):
             z = z * 5.12 / 100
 
             D = self.n_dim
-            result = 10 * D + np.sum(z ** 2 - 10 * np.cos(2 * np.pi * z))
+            result = 10 * D + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
 
             return result + self.f_global
 
@@ -476,7 +471,7 @@ class StepRastrigin(CEC2013Function):
                     y[i] = np.round(2 * y[i]) / 2
 
             D = self.n_dim
-            result = 10 * D + np.sum(y ** 2 - 10 * np.cos(2 * np.pi * y))
+            result = 10 * D + np.sum(y**2 - 10 * np.cos(2 * np.pi * y))
 
             return result + self.f_global
 
@@ -604,10 +599,10 @@ class RotatedKatsuura(CEC2013Function):
             for i in range(D):
                 inner_sum = 0.0
                 for j in range(1, 33):
-                    inner_sum += abs(2 ** j * z[i] - round(2 ** j * z[i])) / (2 ** j)
-                result *= (1 + (i + 1) * inner_sum) ** (10 / (D ** 1.2))
+                    inner_sum += abs(2**j * z[i] - round(2**j * z[i])) / (2**j)
+                result *= (1 + (i + 1) * inner_sum) ** (10 / (D**1.2))
 
-            result = (10 / D ** 2) * result - (10 / D ** 2)
+            result = (10 / D**2) * result - (10 / D**2)
 
             return result + self.f_global
 
@@ -642,7 +637,7 @@ class LunacekBiRastrigin(CEC2013Function):
             D = self.n_dim
             mu0 = 2.5
             s = 1 - 1 / (2 * np.sqrt(D + 20) - 8.2)
-            mu1 = -np.sqrt((mu0 ** 2 - 1) / s)
+            mu1 = -np.sqrt((mu0**2 - 1) / s)
             d = 1
 
             sum1 = np.sum((z - mu0) ** 2)
@@ -684,7 +679,7 @@ class RotatedLunacekBiRastrigin(CEC2013Function):
             D = self.n_dim
             mu0 = 2.5
             s = 1 - 1 / (2 * np.sqrt(D + 20) - 8.2)
-            mu1 = -np.sqrt((mu0 ** 2 - 1) / s)
+            mu1 = -np.sqrt((mu0**2 - 1) / s)
             d = 1
 
             y = self._rotate(z - mu0)
@@ -729,10 +724,10 @@ class RotatedExpandedGriewankRosenbrock(CEC2013Function):
             result = 0.0
             for i in range(D - 1):
                 t = 100 * (z[i] ** 2 - z[i + 1]) ** 2 + (z[i] - 1) ** 2
-                result += t ** 2 / 4000 - np.cos(t) + 1
+                result += t**2 / 4000 - np.cos(t) + 1
 
             t = 100 * (z[-1] ** 2 - z[0]) ** 2 + (z[-1] - 1) ** 2
-            result += t ** 2 / 4000 - np.cos(t) + 1
+            result += t**2 / 4000 - np.cos(t) + 1
 
             return result + self.f_global
 
@@ -760,7 +755,7 @@ class RotatedExpandedScafferF6(CEC2013Function):
 
     def _create_objective_function(self):
         def schaffer_f6(x1: float, x2: float) -> float:
-            t = x1 ** 2 + x2 ** 2
+            t = x1**2 + x2**2
             return 0.5 + (np.sin(np.sqrt(t)) ** 2 - 0.5) / (1 + 0.001 * t) ** 2
 
         def expanded_scaffer(params: Dict[str, Any]) -> float:
@@ -803,9 +798,9 @@ class _CompositionBase(CEC2013Function):
         data = self._load_data()
 
         for i in range(self.n_functions):
-            shift = data.get(f"shift_{i+1}", np.zeros(self.n_dim))
+            shift = data.get(f"shift_{i + 1}", np.zeros(self.n_dim))
             diff = x - shift
-            dist_sq = np.sum(diff ** 2)
+            dist_sq = np.sum(diff**2)
             if dist_sq != 0:
                 weights[i] = np.exp(-dist_sq / (2 * self.n_dim * self.sigmas[i] ** 2))
             else:
@@ -817,7 +812,7 @@ class _CompositionBase(CEC2013Function):
         else:
             for i in range(self.n_functions):
                 if weights[i] != max_weight:
-                    weights[i] *= 1 - max_weight ** 10
+                    weights[i] *= 1 - max_weight**10
             weights = weights / np.sum(weights)
 
         return weights
@@ -843,17 +838,19 @@ class CompositionFunction1(_CompositionBase):
     def _create_objective_function(self):
         def rosenbrock(z):
             z = z * 2.048 / 100 + 1
-            return sum(100 * (z[i] ** 2 - z[i + 1]) ** 2 + (z[i] - 1) ** 2 for i in range(len(z) - 1))
+            return sum(
+                100 * (z[i] ** 2 - z[i + 1]) ** 2 + (z[i] - 1) ** 2 for i in range(len(z) - 1)
+            )
 
         def elliptic(z):
             D = len(z)
-            return sum((10 ** 6) ** (i / (D - 1)) * z[i] ** 2 for i in range(D))
+            return sum((10**6) ** (i / (D - 1)) * z[i] ** 2 for i in range(D))
 
         def bent_cigar(z):
-            return z[0] ** 2 + 10 ** 6 * np.sum(z[1:] ** 2)
+            return z[0] ** 2 + 10**6 * np.sum(z[1:] ** 2)
 
         def discus(z):
-            return 10 ** 6 * z[0] ** 2 + np.sum(z[1:] ** 2)
+            return 10**6 * z[0] ** 2 + np.sum(z[1:] ** 2)
 
         functions = [rosenbrock, elliptic, bent_cigar, discus, elliptic]
 
@@ -864,8 +861,8 @@ class CompositionFunction1(_CompositionBase):
 
             result = 0.0
             for i in range(self.n_functions):
-                shift = data.get(f"shift_{i+1}", np.zeros(self.n_dim))
-                M = data.get(f"rotation_{i+1}", np.eye(self.n_dim))
+                shift = data.get(f"shift_{i + 1}", np.zeros(self.n_dim))
+                M = data.get(f"rotation_{i + 1}", np.eye(self.n_dim))
                 z = M @ (x - shift)
                 f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
                 result += weights[i] * f_val
@@ -909,11 +906,11 @@ class CompositionFunction2(_CompositionBase):
         def rastrigin(z):
             z = z * 5.12 / 100
             D = len(z)
-            return 10 * D + np.sum(z ** 2 - 10 * np.cos(2 * np.pi * z))
+            return 10 * D + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
 
         def elliptic(z):
             D = len(z)
-            return sum((10 ** 6) ** (i / (D - 1)) * z[i] ** 2 for i in range(D))
+            return sum((10**6) ** (i / (D - 1)) * z[i] ** 2 for i in range(D))
 
         functions = [schwefel, rastrigin, elliptic]
 
@@ -924,7 +921,7 @@ class CompositionFunction2(_CompositionBase):
 
             result = 0.0
             for i in range(self.n_functions):
-                shift = data.get(f"shift_{i+1}", np.zeros(self.n_dim))
+                shift = data.get(f"shift_{i + 1}", np.zeros(self.n_dim))
                 z = x - shift  # No rotation for F22
                 f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
                 result += weights[i] * f_val
@@ -965,11 +962,11 @@ class CompositionFunction3(_CompositionBase):
         def rastrigin(z):
             z = z * 5.12 / 100
             D = len(z)
-            return 10 * D + np.sum(z ** 2 - 10 * np.cos(2 * np.pi * z))
+            return 10 * D + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
 
         def elliptic(z):
             D = len(z)
-            return sum((10 ** 6) ** (i / (D - 1)) * z[i] ** 2 for i in range(D))
+            return sum((10**6) ** (i / (D - 1)) * z[i] ** 2 for i in range(D))
 
         functions = [schwefel, rastrigin, elliptic]
 
@@ -980,8 +977,8 @@ class CompositionFunction3(_CompositionBase):
 
             result = 0.0
             for i in range(self.n_functions):
-                shift = data.get(f"shift_{i+1}", np.zeros(self.n_dim))
-                M = data.get(f"rotation_{i+1}", np.eye(self.n_dim))
+                shift = data.get(f"shift_{i + 1}", np.zeros(self.n_dim))
+                M = data.get(f"rotation_{i + 1}", np.eye(self.n_dim))
                 z = M @ (x - shift)
                 f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
                 result += weights[i] * f_val
@@ -1017,7 +1014,7 @@ class CompositionFunction4(_CompositionBase):
         def rastrigin(z):
             z = z * 5.12 / 100
             D = len(z)
-            return 10 * D + np.sum(z ** 2 - 10 * np.cos(2 * np.pi * z))
+            return 10 * D + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
 
         def weierstrass(z):
             a, b, k_max = 0.5, 3, 20
@@ -1026,8 +1023,8 @@ class CompositionFunction4(_CompositionBase):
             result = 0.0
             for i in range(D):
                 for k in range(k_max + 1):
-                    result += a ** k * np.cos(2 * np.pi * b ** k * (z[i] + 0.5))
-            offset = D * sum(a ** k * np.cos(2 * np.pi * b ** k * 0.5) for k in range(k_max + 1))
+                    result += a**k * np.cos(2 * np.pi * b**k * (z[i] + 0.5))
+            offset = D * sum(a**k * np.cos(2 * np.pi * b**k * 0.5) for k in range(k_max + 1))
             return result - offset
 
         functions = [schwefel, rastrigin, weierstrass]
@@ -1039,8 +1036,8 @@ class CompositionFunction4(_CompositionBase):
 
             result = 0.0
             for i in range(self.n_functions):
-                shift = data.get(f"shift_{i+1}", np.zeros(self.n_dim))
-                M = data.get(f"rotation_{i+1}", np.eye(self.n_dim))
+                shift = data.get(f"shift_{i + 1}", np.zeros(self.n_dim))
+                M = data.get(f"rotation_{i + 1}", np.eye(self.n_dim))
                 z = M @ (x - shift)
                 f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
                 result += weights[i] * f_val
@@ -1076,11 +1073,11 @@ class CompositionFunction5(_CompositionBase):
         def rastrigin(z):
             z = z * 5.12 / 100
             D = len(z)
-            return 10 * D + np.sum(z ** 2 - 10 * np.cos(2 * np.pi * z))
+            return 10 * D + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
 
         def ackley(z):
             D = len(z)
-            sum1 = np.sum(z ** 2)
+            sum1 = np.sum(z**2)
             sum2 = np.sum(np.cos(2 * np.pi * z))
             return -20 * np.exp(-0.2 * np.sqrt(sum1 / D)) - np.exp(sum2 / D) + 20 + np.e
 
@@ -1093,8 +1090,8 @@ class CompositionFunction5(_CompositionBase):
 
             result = 0.0
             for i in range(self.n_functions):
-                shift = data.get(f"shift_{i+1}", np.zeros(self.n_dim))
-                M = data.get(f"rotation_{i+1}", np.eye(self.n_dim))
+                shift = data.get(f"shift_{i + 1}", np.zeros(self.n_dim))
+                M = data.get(f"rotation_{i + 1}", np.eye(self.n_dim))
                 z = M @ (x - shift)
                 f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
                 result += weights[i] * f_val
@@ -1130,11 +1127,11 @@ class CompositionFunction6(_CompositionBase):
         def rastrigin(z):
             z = z * 5.12 / 100
             D = len(z)
-            return 10 * D + np.sum(z ** 2 - 10 * np.cos(2 * np.pi * z))
+            return 10 * D + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
 
         def elliptic(z):
             D = len(z)
-            return sum((10 ** 6) ** (i / (D - 1)) * z[i] ** 2 for i in range(D))
+            return sum((10**6) ** (i / (D - 1)) * z[i] ** 2 for i in range(D))
 
         def weierstrass(z):
             a, b, k_max = 0.5, 3, 20
@@ -1143,14 +1140,14 @@ class CompositionFunction6(_CompositionBase):
             result = 0.0
             for i in range(D):
                 for k in range(k_max + 1):
-                    result += a ** k * np.cos(2 * np.pi * b ** k * (z[i] + 0.5))
-            offset = D * sum(a ** k * np.cos(2 * np.pi * b ** k * 0.5) for k in range(k_max + 1))
+                    result += a**k * np.cos(2 * np.pi * b**k * (z[i] + 0.5))
+            offset = D * sum(a**k * np.cos(2 * np.pi * b**k * 0.5) for k in range(k_max + 1))
             return result - offset
 
         def griewank(z):
             D = len(z)
             z = z * 600 / 100
-            return np.sum(z ** 2) / 4000 - np.prod(np.cos(z / np.sqrt(np.arange(1, D + 1)))) + 1
+            return np.sum(z**2) / 4000 - np.prod(np.cos(z / np.sqrt(np.arange(1, D + 1)))) + 1
 
         functions = [schwefel, rastrigin, elliptic, weierstrass, griewank]
 
@@ -1161,8 +1158,8 @@ class CompositionFunction6(_CompositionBase):
 
             result = 0.0
             for i in range(self.n_functions):
-                shift = data.get(f"shift_{i+1}", np.zeros(self.n_dim))
-                M = data.get(f"rotation_{i+1}", np.eye(self.n_dim))
+                shift = data.get(f"shift_{i + 1}", np.zeros(self.n_dim))
+                M = data.get(f"rotation_{i + 1}", np.eye(self.n_dim))
                 z = M @ (x - shift)
                 f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
                 result += weights[i] * f_val
@@ -1189,12 +1186,12 @@ class CompositionFunction7(_CompositionBase):
         def griewank(z):
             D = len(z)
             z = z * 600 / 100
-            return np.sum(z ** 2) / 4000 - np.prod(np.cos(z / np.sqrt(np.arange(1, D + 1)))) + 1
+            return np.sum(z**2) / 4000 - np.prod(np.cos(z / np.sqrt(np.arange(1, D + 1)))) + 1
 
         def rastrigin(z):
             z = z * 5.12 / 100
             D = len(z)
-            return 10 * D + np.sum(z ** 2 - 10 * np.cos(2 * np.pi * z))
+            return 10 * D + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
 
         def schwefel(z):
             z = z * 1000 / 100 + 4.209687462275036e2
@@ -1212,13 +1209,13 @@ class CompositionFunction7(_CompositionBase):
             result = 0.0
             for i in range(D):
                 for k in range(k_max + 1):
-                    result += a ** k * np.cos(2 * np.pi * b ** k * (z[i] + 0.5))
-            offset = D * sum(a ** k * np.cos(2 * np.pi * b ** k * 0.5) for k in range(k_max + 1))
+                    result += a**k * np.cos(2 * np.pi * b**k * (z[i] + 0.5))
+            offset = D * sum(a**k * np.cos(2 * np.pi * b**k * 0.5) for k in range(k_max + 1))
             return result - offset
 
         def elliptic(z):
             D = len(z)
-            return sum((10 ** 6) ** (i / (D - 1)) * z[i] ** 2 for i in range(D))
+            return sum((10**6) ** (i / (D - 1)) * z[i] ** 2 for i in range(D))
 
         functions = [griewank, rastrigin, schwefel, weierstrass, elliptic]
 
@@ -1229,8 +1226,8 @@ class CompositionFunction7(_CompositionBase):
 
             result = 0.0
             for i in range(self.n_functions):
-                shift = data.get(f"shift_{i+1}", np.zeros(self.n_dim))
-                M = data.get(f"rotation_{i+1}", np.eye(self.n_dim))
+                shift = data.get(f"shift_{i + 1}", np.zeros(self.n_dim))
+                M = data.get(f"rotation_{i + 1}", np.eye(self.n_dim))
                 z = M @ (x - shift)
                 f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
                 result += weights[i] * f_val
@@ -1256,14 +1253,14 @@ class CompositionFunction8(_CompositionBase):
     def _create_objective_function(self):
         def ackley(z):
             D = len(z)
-            sum1 = np.sum(z ** 2)
+            sum1 = np.sum(z**2)
             sum2 = np.sum(np.cos(2 * np.pi * z))
             return -20 * np.exp(-0.2 * np.sqrt(sum1 / D)) - np.exp(sum2 / D) + 20 + np.e
 
         def griewank(z):
             D = len(z)
             z = z * 600 / 100
-            return np.sum(z ** 2) / 4000 - np.prod(np.cos(z / np.sqrt(np.arange(1, D + 1)))) + 1
+            return np.sum(z**2) / 4000 - np.prod(np.cos(z / np.sqrt(np.arange(1, D + 1)))) + 1
 
         def schwefel(z):
             z = z * 1000 / 100 + 4.209687462275036e2
@@ -1277,11 +1274,11 @@ class CompositionFunction8(_CompositionBase):
         def rastrigin(z):
             z = z * 5.12 / 100
             D = len(z)
-            return 10 * D + np.sum(z ** 2 - 10 * np.cos(2 * np.pi * z))
+            return 10 * D + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
 
         def elliptic(z):
             D = len(z)
-            return sum((10 ** 6) ** (i / (D - 1)) * z[i] ** 2 for i in range(D))
+            return sum((10**6) ** (i / (D - 1)) * z[i] ** 2 for i in range(D))
 
         functions = [ackley, griewank, schwefel, rastrigin, elliptic]
 
@@ -1292,8 +1289,8 @@ class CompositionFunction8(_CompositionBase):
 
             result = 0.0
             for i in range(self.n_functions):
-                shift = data.get(f"shift_{i+1}", np.zeros(self.n_dim))
-                M = data.get(f"rotation_{i+1}", np.eye(self.n_dim))
+                shift = data.get(f"shift_{i + 1}", np.zeros(self.n_dim))
+                M = data.get(f"rotation_{i + 1}", np.eye(self.n_dim))
                 z = M @ (x - shift)
                 f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
                 result += weights[i] * f_val

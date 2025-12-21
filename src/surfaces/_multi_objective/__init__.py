@@ -29,9 +29,9 @@ Examples
 """
 
 from ._base_multi_objective import MultiObjectiveFunction
-from .zdt1 import ZDT1
 from .fonseca_fleming import FonsecaFleming
 from .kursawe import Kursawe
+from .zdt1 import ZDT1
 
 __all__ = [
     "MultiObjectiveFunction",

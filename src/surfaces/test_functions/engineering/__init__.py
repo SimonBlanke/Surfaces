@@ -58,11 +58,11 @@ Most problems originate from:
 """
 
 from ._base_engineering_function import EngineeringFunction
-from .three_bar_truss import ThreeBarTrussFunction
-from .welded_beam import WeldedBeamFunction
+from .cantilever_beam import CantileverBeamFunction
 from .pressure_vessel import PressureVesselFunction
 from .tension_compression_spring import TensionCompressionSpringFunction
-from .cantilever_beam import CantileverBeamFunction
+from .three_bar_truss import ThreeBarTrussFunction
+from .welded_beam import WeldedBeamFunction
 
 __all__ = [
     "EngineeringFunction",

@@ -17,8 +17,9 @@ References:
     Technical Report 2009/20, Research Center PPE.
 """
 
+from typing import Any, Dict, Optional
+
 import numpy as np
-from typing import Dict, Any, Optional, Tuple
 
 from ..algebraic._base_algebraic_function import AlgebraicFunction
 
@@ -122,10 +123,7 @@ class BBOBFunction(AlgebraicFunction):
 
     def _generate_f_opt(self) -> float:
         """Generate optimal value from Cauchy distribution."""
-        f = np.round(np.clip(
-            self._rng.standard_cauchy() * 100,
-            -1000, 1000
-        ), decimals=2)
+        f = np.round(np.clip(self._rng.standard_cauchy() * 100, -1000, 1000), decimals=2)
         return float(f)
 
     @property

@@ -4,37 +4,10 @@
 
 """Tests for CEC 2014 benchmark functions."""
 
-import pytest
 import numpy as np
+import pytest
 
 from surfaces.test_functions.cec.cec2014 import (
-    CEC2014Function,
-    # Unimodal
-    RotatedHighConditionedElliptic,
-    RotatedBentCigar,
-    RotatedDiscus,
-    # Multimodal
-    ShiftedRotatedRosenbrock,
-    ShiftedRotatedAckley,
-    ShiftedRotatedWeierstrass,
-    ShiftedRotatedGriewank,
-    ShiftedRastrigin,
-    ShiftedRotatedRastrigin,
-    ShiftedSchwefel,
-    ShiftedRotatedSchwefel,
-    ShiftedRotatedKatsuura,
-    ShiftedRotatedHappyCat,
-    ShiftedRotatedHGBat,
-    ShiftedRotatedExpandedGriewankRosenbrock,
-    ShiftedRotatedExpandedScafferF6,
-    # Hybrid
-    HybridFunction1,
-    HybridFunction2,
-    HybridFunction3,
-    HybridFunction4,
-    HybridFunction5,
-    HybridFunction6,
-    # Composition
     CompositionFunction1,
     CompositionFunction2,
     CompositionFunction3,
@@ -43,8 +16,32 @@ from surfaces.test_functions.cec.cec2014 import (
     CompositionFunction6,
     CompositionFunction7,
     CompositionFunction8,
+    # Hybrid
+    HybridFunction1,
+    HybridFunction2,
+    HybridFunction3,
+    HybridFunction4,
+    HybridFunction5,
+    HybridFunction6,
+    RotatedBentCigar,
+    RotatedDiscus,
+    # Unimodal
+    RotatedHighConditionedElliptic,
+    ShiftedRastrigin,
+    ShiftedRotatedAckley,
+    ShiftedRotatedExpandedGriewankRosenbrock,
+    ShiftedRotatedExpandedScafferF6,
+    ShiftedRotatedGriewank,
+    ShiftedRotatedHappyCat,
+    ShiftedRotatedHGBat,
+    ShiftedRotatedKatsuura,
+    ShiftedRotatedRastrigin,
+    # Multimodal
+    ShiftedRotatedRosenbrock,
+    ShiftedRotatedSchwefel,
+    ShiftedRotatedWeierstrass,
+    ShiftedSchwefel,
 )
-
 
 # All CEC 2014 function classes
 CEC2014_FUNCTIONS = [
@@ -93,9 +90,9 @@ class TestCEC2014GlobalOptimum:
         """Test global optimum for unimodal and multimodal functions (F1-F16)."""
         func = func_class(n_dim=10)
         result = func(func.x_global)
-        assert np.isclose(result, func.f_global, rtol=1e-6), (
-            f"{func.name}: f(x_global)={result}, expected {func.f_global}"
-        )
+        assert np.isclose(
+            result, func.f_global, rtol=1e-6
+        ), f"{func.name}: f(x_global)={result}, expected {func.f_global}"
 
 
 class TestCEC2014FunctionProperties:

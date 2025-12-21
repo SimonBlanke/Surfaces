@@ -5,10 +5,7 @@
 """Algebraic test functions with closed-form analytical expressions."""
 
 from ._base_algebraic_function import AlgebraicFunction, MathematicalFunction
-
 from .test_functions_1d.gramacy_and_lee_function import GramacyAndLeeFunction
-
-
 from .test_functions_2d.ackley_function import AckleyFunction
 from .test_functions_2d.beale_function import BealeFunction
 from .test_functions_2d.booth_function import BoothFunction
@@ -27,14 +24,11 @@ from .test_functions_2d.mccormick_function import McCormickFunction
 from .test_functions_2d.schaffer_function_n2 import SchafferFunctionN2
 from .test_functions_2d.simionescu_function import SimionescuFunction
 from .test_functions_2d.three_hump_camel_function import ThreeHumpCamelFunction
-
-
+from .test_functions_nd.griewank_function import GriewankFunction
 from .test_functions_nd.rastrigin_function import RastriginFunction
 from .test_functions_nd.rosenbrock_function import RosenbrockFunction
 from .test_functions_nd.sphere_function import SphereFunction
 from .test_functions_nd.styblinski_tang_function import StyblinskiTangFunction
-from .test_functions_nd.griewank_function import GriewankFunction
-
 
 __all__ = [
     "AckleyFunction",

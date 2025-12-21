@@ -13,8 +13,8 @@ This module provides:
 
 from ._surrogate_loader import (
     SurrogateLoader,
-    load_surrogate,
     get_surrogate_path,
+    load_surrogate,
 )
 from ._surrogate_trainer import (
     SurrogateTrainer,

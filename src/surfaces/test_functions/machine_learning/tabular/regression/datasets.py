@@ -4,7 +4,6 @@
 
 from sklearn.datasets import load_diabetes
 
-
 diabetes_dataset = load_diabetes()
 
 

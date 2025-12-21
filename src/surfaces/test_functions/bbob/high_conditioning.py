@@ -4,8 +4,9 @@
 
 """BBOB Functions with High Conditioning and Unimodal (f10-f14)."""
 
+from typing import Any, Dict
+
 import numpy as np
-from typing import Dict, Any
 
 from ._base_bbob import BBOBFunction
 
@@ -37,7 +38,7 @@ class EllipsoidalRotated(BBOBFunction):
         def ellipsoidal(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self.t_osz(self.R @ (x - self.x_opt))
-            return np.sum(coeffs * z ** 2) + self.f_opt
+            return np.sum(coeffs * z**2) + self.f_opt
 
         self.pure_objective_function = ellipsoidal
 

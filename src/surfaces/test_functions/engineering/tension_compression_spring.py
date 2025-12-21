@@ -4,8 +4,9 @@
 
 """Tension/compression spring design optimization problem."""
 
+from typing import Any, Dict, List
+
 import numpy as np
-from typing import Dict, Any, List
 
 from ._base_engineering_function import EngineeringFunction
 
@@ -133,10 +134,7 @@ class TensionCompressionSpringFunction(EngineeringFunction):
     x_global = np.array([0.05169, 0.35673, 11.2885])
 
     def __init__(
-        self,
-        objective: str = "minimize",
-        sleep: float = 0,
-        penalty_coefficient: float = 1e6
+        self, objective: str = "minimize", sleep: float = 0, penalty_coefficient: float = 1e6
     ):
         super().__init__(objective, sleep, penalty_coefficient)
 
@@ -167,10 +165,7 @@ class TensionCompressionSpringFunction(EngineeringFunction):
 
         # g2: Shear stress constraint
         # (4*C^2 - C) / (12566*(C-1)*d^3) + 1/(5108*d^2) - 1 <= 0
-        g2 = (
-            (4 * C**2 - C) / (12566 * (C - 1) * d**3 + eps) +
-            1 / (5108 * d**2 + eps) - 1
-        )
+        g2 = (4 * C**2 - C) / (12566 * (C - 1) * d**3 + eps) + 1 / (5108 * d**2 + eps) - 1
 
         # g3: Surge frequency constraint
         # 1 - 140.45*d / (D^2*N) <= 0

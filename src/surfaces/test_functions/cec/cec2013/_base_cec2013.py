@@ -4,8 +4,9 @@
 
 """Base class for CEC 2013 benchmark functions."""
 
-import numpy as np
 from typing import Optional
+
+import numpy as np
 
 from .._base_cec import CECFunction
 

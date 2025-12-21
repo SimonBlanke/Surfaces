@@ -7,24 +7,24 @@ This script analyzes the stored search data and creates markdown tables
 documenting the parameter coverage for each ML function.
 """
 
-import sys
+import json
 import os
 import sqlite3
-import json
-from typing import Dict, List, Any, Set, Union
+import sys
 from collections import defaultdict
+from typing import Any, Dict
 
 # Add the src directory to Python path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
+from surfaces.test_functions.machine_learning.tabular.classification.test_functions.k_neighbors_classifier import (
+    KNeighborsClassifierFunction,
+)
 from surfaces.test_functions.machine_learning.tabular.regression.test_functions.gradient_boosting_regressor import (
     GradientBoostingRegressorFunction,
 )
 from surfaces.test_functions.machine_learning.tabular.regression.test_functions.k_neighbors_regressor import (
     KNeighborsRegressorFunction,
-)
-from surfaces.test_functions.machine_learning.tabular.classification.test_functions.k_neighbors_classifier import (
-    KNeighborsClassifierFunction,
 )
 
 # Available ML functions
@@ -35,9 +35,7 @@ ML_FUNCTIONS = {
 }
 
 
-def get_parameter_ranges_from_db(
-    function_name: str, data_dir: str = None
-) -> Dict[str, Any]:
+def get_parameter_ranges_from_db(function_name: str, data_dir: str = None) -> Dict[str, Any]:
     """
     Extract parameter ranges from stored database data.
 
@@ -49,9 +47,7 @@ def get_parameter_ranges_from_db(
         Dictionary containing parameter statistics and ranges
     """
     if data_dir is None:
-        data_dir = os.path.join(
-            os.path.dirname(__file__), "src", "surfaces", "search_data"
-        )
+        data_dir = os.path.join(os.path.dirname(__file__), "src", "surfaces", "search_data")
 
     db_path = os.path.join(data_dir, f"{function_name}.db")
 
@@ -150,8 +146,7 @@ def get_default_parameter_ranges(function_class) -> Dict[str, Any]:
         param_info = {
             "type": (
                 "categorical"
-                if isinstance(param_values, list)
-                and any(isinstance(v, str) for v in param_values)
+                if isinstance(param_values, list) and any(isinstance(v, str) for v in param_values)
                 else "numeric"
             ),
             "default_count": len(param_values),
@@ -200,9 +195,7 @@ def generate_markdown_table(function_name: str, function_class) -> str:
 
     if not stored_ranges.get("exists", False):
         markdown += "⚠️ **No database found** - Run data collection first using:\n"
-        markdown += (
-            f"```bash\npython collect_ml_search_data.py {function_name}\n```\n\n"
-        )
+        markdown += f"```bash\npython collect_ml_search_data.py {function_name}\n```\n\n"
 
         # Show default ranges
         markdown += "### Default Parameter Ranges\n\n"
@@ -231,9 +224,7 @@ def generate_markdown_table(function_name: str, function_class) -> str:
         markdown += f"ℹ️ **Status:** {stored_ranges['message']}\n\n"
         return markdown
 
-    markdown += (
-        f"**Total evaluations stored:** {stored_ranges['total_evaluations']:,}\n\n"
-    )
+    markdown += f"**Total evaluations stored:** {stored_ranges['total_evaluations']:,}\n\n"
 
     # Compare default vs stored
     markdown += "### Parameter Coverage\n\n"
@@ -260,9 +251,7 @@ def generate_markdown_table(function_name: str, function_class) -> str:
                     stored_range = f"{stored_info['unique_count']} unique values"
 
             # Calculate coverage percentage
-            coverage_pct = (
-                stored_info["unique_count"] / default_info["default_count"]
-            ) * 100
+            coverage_pct = (stored_info["unique_count"] / default_info["default_count"]) * 100
             if coverage_pct >= 100:
                 coverage = "✅ Complete"
             elif coverage_pct >= 80:
@@ -298,7 +287,7 @@ def generate_all_docs(output_file: str = "ML_PARAMETER_COVERAGE.md") -> None:
 
     ## Legend
     - ✅ **Complete**: All default parameter combinations are stored
-    - 🟡 **Good coverage**: 80-99% of default combinations stored  
+    - 🟡 **Good coverage**: 80-99% of default combinations stored
     - 🟠 **Partial coverage**: 50-79% of default combinations stored
     - 🔴 **Limited coverage**: <50% of default combinations stored
     - ❌ **Not found**: Parameter not found in stored data
@@ -380,9 +369,7 @@ def main():
             }
 
         output = (
-            args.output
-            if args.output.endswith(".json")
-            else args.output.replace(".md", ".json")
+            args.output if args.output.endswith(".json") else args.output.replace(".md", ".json")
         )
         with open(output, "w") as f:
             json.dump(all_data, f, indent=2, default=str)

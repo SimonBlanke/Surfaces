@@ -4,6 +4,7 @@
 
 try:
     from sklearn.neighbors import KNeighborsClassifier  # noqa: F401
+
     _HAS_SKLEARN = True
 except ImportError:
     _HAS_SKLEARN = False
@@ -20,9 +21,9 @@ def _check_sklearn():
 
 if _HAS_SKLEARN:
     from .tabular import (
+        GradientBoostingRegressorFunction,
         KNeighborsClassifierFunction,
         KNeighborsRegressorFunction,
-        GradientBoostingRegressorFunction,
     )
 
     __all__ = [

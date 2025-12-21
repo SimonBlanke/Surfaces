@@ -4,8 +4,9 @@
 
 """BBOB Multimodal Functions with Adequate Global Structure (f15-f19)."""
 
+from typing import Any, Dict
+
 import numpy as np
-from typing import Dict, Any
 
 from ._base_bbob import BBOBFunction
 
@@ -36,7 +37,7 @@ class RastriginRotated(BBOBFunction):
             x = self._params_to_array(params)
             z = self.R @ Lambda @ self.Q @ self.t_asy(self.t_osz(self.R @ (x - self.x_opt)), 0.2)
             D = self.n_dim
-            return 10 * (D - np.sum(np.cos(2 * np.pi * z))) + np.sum(z ** 2) + self.f_opt
+            return 10 * (D - np.sum(np.cos(2 * np.pi * z))) + np.sum(z**2) + self.f_opt
 
         self.pure_objective_function = rastrigin
 
@@ -69,7 +70,7 @@ class Weierstrass(BBOBFunction):
         b = 3
 
         # Precompute the offset
-        f0 = sum(a ** k * np.cos(np.pi * b ** k) for k in range(k_max))
+        f0 = sum(a**k * np.cos(np.pi * b**k) for k in range(k_max))
 
         def weierstrass(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
@@ -80,7 +81,7 @@ class Weierstrass(BBOBFunction):
             result = 0.0
             for i in range(D):
                 for k in range(k_max):
-                    result += a ** k * np.cos(2 * np.pi * b ** k * (z[i] + 0.5))
+                    result += a**k * np.cos(2 * np.pi * b**k * (z[i] + 0.5))
 
             result = 10 * ((result / D - f0) ** 3)
             return result + self.f_pen(x) / D + self.f_opt
@@ -115,7 +116,7 @@ class SchaffersF7(BBOBFunction):
             z = Lambda @ self.Q @ self.t_asy(self.R @ (x - self.x_opt), 0.5)
 
             s = np.sqrt(z[:-1] ** 2 + z[1:] ** 2)
-            result = np.sum(np.sqrt(s) * (np.sin(50 * s ** 0.2) ** 2 + 1))
+            result = np.sum(np.sqrt(s) * (np.sin(50 * s**0.2) ** 2 + 1))
             result = (result / (self.n_dim - 1)) ** 2
 
             return result + self.f_pen(x) + self.f_opt
@@ -150,7 +151,7 @@ class SchaffersF7Ill(BBOBFunction):
             z = Lambda @ self.Q @ self.t_asy(self.R @ (x - self.x_opt), 0.5)
 
             s = np.sqrt(z[:-1] ** 2 + z[1:] ** 2)
-            result = np.sum(np.sqrt(s) * (np.sin(50 * s ** 0.2) ** 2 + 1))
+            result = np.sum(np.sqrt(s) * (np.sin(50 * s**0.2) ** 2 + 1))
             result = (result / (self.n_dim - 1)) ** 2
 
             return result + self.f_pen(x) + self.f_opt

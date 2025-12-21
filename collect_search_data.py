@@ -1,6 +1,5 @@
-from surfaces.test_functions import machine_learning_functions
 from surfaces.data_collector import SurfacesDataCollector
-
+from surfaces.test_functions import machine_learning_functions
 
 for machine_learning_function in machine_learning_functions:
     test_function = machine_learning_function(evaluate_from_data=False)

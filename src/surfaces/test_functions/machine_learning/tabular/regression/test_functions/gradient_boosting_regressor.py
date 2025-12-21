@@ -4,13 +4,11 @@
 
 
 import numpy as np
-
 from sklearn.ensemble import GradientBoostingRegressor
-
 from sklearn.model_selection import cross_val_score
-from ..datasets import diabetes_data
 
 from .._base_regression import BaseRegression
+from ..datasets import diabetes_data
 
 
 class GradientBoostingRegressorFunction(BaseRegression):
@@ -74,9 +72,7 @@ class GradientBoostingRegressorFunction(BaseRegression):
         search_space["n_estimators"] = (
             self.n_estimators_default if n_estimators is None else n_estimators
         )
-        search_space["max_depth"] = (
-            self.max_depth_default if max_depth is None else max_depth
-        )
+        search_space["max_depth"] = self.max_depth_default if max_depth is None else max_depth
         search_space["cv"] = self.cv_default if cv is None else cv
         search_space["dataset"] = self.dataset_default if dataset is None else dataset
 

@@ -4,10 +4,11 @@
 
 """Base class for all CEC competition benchmark functions."""
 
-import numpy as np
 from abc import abstractmethod
 from pathlib import Path
-from typing import Dict, Any, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple
+
+import numpy as np
 
 from ..algebraic._base_algebraic_function import AlgebraicFunction
 
@@ -76,9 +77,7 @@ class CECFunction(AlgebraicFunction):
         sleep: float = 0,
     ):
         if n_dim not in self.supported_dims:
-            raise ValueError(
-                f"n_dim must be one of {self.supported_dims}, got {n_dim}"
-            )
+            raise ValueError(f"n_dim must be one of {self.supported_dims}, got {n_dim}")
         self.n_dim = n_dim
         super().__init__(objective, sleep)
 
@@ -217,7 +216,9 @@ class CECFunction(AlgebraicFunction):
         """
         return self._get_rotation_matrix(index) @ x
 
-    def _shift_rotate(self, x: np.ndarray, shift_index: int = None, rotate_index: int = None) -> np.ndarray:
+    def _shift_rotate(
+        self, x: np.ndarray, shift_index: int = None, rotate_index: int = None
+    ) -> np.ndarray:
         """Apply shift then rotation: z = M @ (x - o).
 
         Parameters

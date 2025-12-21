@@ -2,7 +2,6 @@ import pytest
 
 from surfaces.test_functions import mathematical_functions
 
-
 mathematical_functions_d = (
     "test_function",
     mathematical_functions,
@@ -20,7 +19,7 @@ def test_all_mathematical_functions(test_function):
     search_space = test_function_.search_space
     assert isinstance(search_space, dict)
     assert len(search_space) > 0
-    
+
     # Test that the objective function works
     sample_params = {key: values[0] for key, values in search_space.items()}
     result = test_function_(sample_params)

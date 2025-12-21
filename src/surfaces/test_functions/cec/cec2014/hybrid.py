@@ -8,8 +8,9 @@ Hybrid functions divide the variables into groups and apply different
 basic functions to each group.
 """
 
+from typing import Any, Dict, List
+
 import numpy as np
-from typing import Dict, Any, List, Callable
 
 from ._base_cec2014 import CEC2014Function
 
@@ -47,7 +48,7 @@ class _HybridBase(CEC2014Function):
         groups = []
         start = 0
         for size in self._get_group_sizes():
-            groups.append(z_shuffled[start:start + size])
+            groups.append(z_shuffled[start : start + size])
             start += size
         return groups
 
@@ -59,16 +60,16 @@ def _high_conditioned_elliptic(z: np.ndarray) -> float:
         return z[0] ** 2
     result = 0.0
     for i in range(D):
-        result += (10 ** 6) ** (i / (D - 1)) * z[i] ** 2
+        result += (10**6) ** (i / (D - 1)) * z[i] ** 2
     return result
 
 
 def _bent_cigar(z: np.ndarray) -> float:
-    return z[0] ** 2 + 10 ** 6 * np.sum(z[1:] ** 2)
+    return z[0] ** 2 + 10**6 * np.sum(z[1:] ** 2)
 
 
 def _discus(z: np.ndarray) -> float:
-    return 10 ** 6 * z[0] ** 2 + np.sum(z[1:] ** 2)
+    return 10**6 * z[0] ** 2 + np.sum(z[1:] ** 2)
 
 
 def _rosenbrock(z: np.ndarray) -> float:
@@ -81,21 +82,21 @@ def _rosenbrock(z: np.ndarray) -> float:
 
 def _ackley(z: np.ndarray) -> float:
     D = len(z)
-    sum1 = np.sum(z ** 2)
+    sum1 = np.sum(z**2)
     sum2 = np.sum(np.cos(2 * np.pi * z))
     return -20 * np.exp(-0.2 * np.sqrt(sum1 / D)) - np.exp(sum2 / D) + 20 + np.e
 
 
 def _griewank(z: np.ndarray) -> float:
     D = len(z)
-    sum_sq = np.sum(z ** 2) / 4000
+    sum_sq = np.sum(z**2) / 4000
     prod_cos = np.prod(np.cos(z / np.sqrt(np.arange(1, D + 1))))
     return sum_sq - prod_cos + 1
 
 
 def _rastrigin(z: np.ndarray) -> float:
     D = len(z)
-    return 10 * D + np.sum(z ** 2 - 10 * np.cos(2 * np.pi * z))
+    return 10 * D + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
 
 
 def _schwefel(z: np.ndarray) -> float:
@@ -119,24 +120,24 @@ def _katsuura(z: np.ndarray) -> float:
     for i in range(D):
         inner_sum = 0.0
         for j in range(1, 33):
-            inner_sum += abs(2 ** j * z[i] - round(2 ** j * z[i])) / (2 ** j)
-        result *= (1 + (i + 1) * inner_sum) ** (10 / (D ** 1.2))
-    return (10 / D ** 2) * result - (10 / D ** 2)
+            inner_sum += abs(2**j * z[i] - round(2**j * z[i])) / (2**j)
+        result *= (1 + (i + 1) * inner_sum) ** (10 / (D**1.2))
+    return (10 / D**2) * result - (10 / D**2)
 
 
 def _happycat(z: np.ndarray) -> float:
     D = len(z)
     alpha = 1.0 / 8.0
-    sum_sq = np.sum(z ** 2)
+    sum_sq = np.sum(z**2)
     sum_z = np.sum(z)
     return abs(sum_sq - D) ** (2 * alpha) + (0.5 * sum_sq + sum_z) / D + 0.5
 
 
 def _hgbat(z: np.ndarray) -> float:
     D = len(z)
-    sum_sq = np.sum(z ** 2)
+    sum_sq = np.sum(z**2)
     sum_z = np.sum(z)
-    return abs(sum_sq ** 2 - sum_z ** 2) ** 0.5 + (0.5 * sum_sq + sum_z) / D + 0.5
+    return abs(sum_sq**2 - sum_z**2) ** 0.5 + (0.5 * sum_sq + sum_z) / D + 0.5
 
 
 def _expanded_griewank_rosenbrock(z: np.ndarray) -> float:
@@ -145,9 +146,9 @@ def _expanded_griewank_rosenbrock(z: np.ndarray) -> float:
     result = 0.0
     for i in range(D - 1):
         t = 100 * (z[i] ** 2 - z[i + 1]) ** 2 + (z[i] - 1) ** 2
-        result += t ** 2 / 4000 - np.cos(t) + 1
+        result += t**2 / 4000 - np.cos(t) + 1
     t = 100 * (z[-1] ** 2 - z[0]) ** 2 + (z[-1] - 1) ** 2
-    result += t ** 2 / 4000 - np.cos(t) + 1
+    result += t**2 / 4000 - np.cos(t) + 1
     return result
 
 
@@ -155,7 +156,7 @@ def _expanded_scaffer(z: np.ndarray) -> float:
     D = len(z)
 
     def schaffer_f6(x1, x2):
-        t = x1 ** 2 + x2 ** 2
+        t = x1**2 + x2**2
         return 0.5 + (np.sin(np.sqrt(t)) ** 2 - 0.5) / (1 + 0.001 * t) ** 2
 
     result = 0.0
@@ -228,8 +229,8 @@ class HybridFunction2(_HybridBase):
             result = 0.0
             for i in range(D):
                 for k in range(k_max + 1):
-                    result += a ** k * np.cos(2 * np.pi * b ** k * (z[i] + 0.5))
-            offset = sum(a ** k * np.cos(2 * np.pi * b ** k * 0.5) for k in range(k_max + 1))
+                    result += a**k * np.cos(2 * np.pi * b**k * (z[i] + 0.5))
+            offset = sum(a**k * np.cos(2 * np.pi * b**k * 0.5) for k in range(k_max + 1))
             return result - D * offset
 
         functions = [_griewank, weierstrass, _rosenbrock]
@@ -275,8 +276,8 @@ class HybridFunction3(_HybridBase):
             result = 0.0
             for i in range(D):
                 for k in range(k_max + 1):
-                    result += a ** k * np.cos(2 * np.pi * b ** k * (z[i] + 0.5))
-            offset = sum(a ** k * np.cos(2 * np.pi * b ** k * 0.5) for k in range(k_max + 1))
+                    result += a**k * np.cos(2 * np.pi * b**k * (z[i] + 0.5))
+            offset = sum(a**k * np.cos(2 * np.pi * b**k * 0.5) for k in range(k_max + 1))
             return result - D * offset
 
         functions = [_griewank, weierstrass, _rosenbrock, _expanded_scaffer]

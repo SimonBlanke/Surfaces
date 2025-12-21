@@ -3,10 +3,9 @@
 # License: MIT License
 
 from .test_functions import (
-    KNeighborsRegressorFunction,
     GradientBoostingRegressorFunction,
+    KNeighborsRegressorFunction,
 )
-
 
 __all__ = [
     "KNeighborsRegressorFunction",

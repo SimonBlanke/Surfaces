@@ -7,8 +7,9 @@
 These functions have a single global optimum and no local optima.
 """
 
+from typing import Any, Dict
+
 import numpy as np
-from typing import Dict, Any
 
 from ._base_cec2014 import CEC2014Function
 
@@ -35,7 +36,6 @@ class RotatedHighConditionedElliptic(CEC2014Function):
         Artificial delay in seconds.
     """
 
-
     _spec = {
         "name": "Rotated High Conditioned Elliptic Function",
         "func_id": 1,
@@ -52,7 +52,7 @@ class RotatedHighConditionedElliptic(CEC2014Function):
             D = self.n_dim
             result = 0.0
             for i in range(D):
-                result += (10 ** 6) ** (i / (D - 1)) * z[i] ** 2
+                result += (10**6) ** (i / (D - 1)) * z[i] ** 2
 
             return result + self.f_global
 
@@ -80,7 +80,6 @@ class RotatedBentCigar(CEC2014Function):
         Artificial delay in seconds.
     """
 
-
     _spec = {
         "name": "Rotated Bent Cigar Function",
         "func_id": 2,
@@ -94,7 +93,7 @@ class RotatedBentCigar(CEC2014Function):
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
 
-            result = z[0] ** 2 + 10 ** 6 * np.sum(z[1:] ** 2)
+            result = z[0] ** 2 + 10**6 * np.sum(z[1:] ** 2)
 
             return result + self.f_global
 
@@ -123,7 +122,6 @@ class RotatedDiscus(CEC2014Function):
         Artificial delay in seconds.
     """
 
-
     _spec = {
         "name": "Rotated Discus Function",
         "func_id": 3,
@@ -137,7 +135,7 @@ class RotatedDiscus(CEC2014Function):
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
 
-            result = 10 ** 6 * z[0] ** 2 + np.sum(z[1:] ** 2)
+            result = 10**6 * z[0] ** 2 + np.sum(z[1:] ** 2)
 
             return result + self.f_global
 

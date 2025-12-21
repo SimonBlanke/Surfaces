@@ -27,44 +27,39 @@ Reference:
 """
 
 from ._base_bbob import BBOBFunction
-
-from .separable import (
-    Sphere,
-    EllipsoidalSeparable,
-    RastriginSeparable,
-    BuecheRastrigin,
-    LinearSlope,
+from .high_conditioning import (
+    BentCigar,
+    DifferentPowers,
+    Discus,
+    EllipsoidalRotated,
+    SharpRidge,
 )
-
 from .low_conditioning import (
     AttractiveSector,
-    StepEllipsoidal,
     RosenbrockOriginal,
     RosenbrockRotated,
+    StepEllipsoidal,
 )
-
-from .high_conditioning import (
-    EllipsoidalRotated,
-    Discus,
-    BentCigar,
-    SharpRidge,
-    DifferentPowers,
-)
-
 from .multimodal_adequate import (
+    GriewankRosenbrock,
     RastriginRotated,
-    Weierstrass,
     SchaffersF7,
     SchaffersF7Ill,
-    GriewankRosenbrock,
+    Weierstrass,
 )
-
 from .multimodal_weak import (
-    Schwefel,
-    Gallagher101,
     Gallagher21,
+    Gallagher101,
     Katsuura,
     LunacekBiRastrigin,
+    Schwefel,
+)
+from .separable import (
+    BuecheRastrigin,
+    EllipsoidalSeparable,
+    LinearSlope,
+    RastriginSeparable,
+    Sphere,
 )
 
 __all__ = [

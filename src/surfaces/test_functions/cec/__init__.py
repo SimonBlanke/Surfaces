@@ -14,12 +14,8 @@ Available suites:
 - CEC 2017: 30 functions (simple, hybrid, composition)
 """
 
+from . import cec2013, cec2014, cec2017
 from ._base_cec import CECFunction
-
-from . import cec2013
-from . import cec2014
-from . import cec2017
-
 from .cec2013 import *
 from .cec2014 import *
 from .cec2017 import *

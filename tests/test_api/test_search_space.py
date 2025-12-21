@@ -1,7 +1,6 @@
 import pytest
 from gradient_free_optimizers import RandomSearchOptimizer
 
-
 from surfaces.test_functions import (
     machine_learning_functions,
 )
@@ -94,7 +93,9 @@ def test_ml_search_space(test_function):
     assert len(search_space) > 0
 
     # Test that the function works
-    sample_params = {key: list(values)[0] if hasattr(values, '__iter__') else values
-                    for key, values in search_space.items()}
+    sample_params = {
+        key: list(values)[0] if hasattr(values, "__iter__") else values
+        for key, values in search_space.items()
+    }
     result = test_function_(sample_params)
     assert isinstance(result, (int, float))

@@ -105,6 +105,4 @@ class RosenbrockFunction(AlgebraicFunction):
         self.pure_objective_function = rosenbrock_function
 
     def _search_space(self, min=-5, max=5, size=10000, value_types="array"):
-        return super()._create_n_dim_search_space(
-            min, max, size=size, value_types=value_types
-        )
+        return super()._create_n_dim_search_space(min, max, size=size, value_types=value_types)

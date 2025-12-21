@@ -52,17 +52,22 @@ full = [
 # Development
 dev = [
     "surfaces[full]",
-    "flake8",
+    "ruff",
+    "pre-commit",
     "check-manifest",
 ]
-# Testing
+# Testing (with all optional deps)
 test = [
     "surfaces[full]",
     "pytest>=7.0.0",
     "pytest-cov",
-    "flake8",
-    "tox",
+    "ruff",
     "gradient-free-optimizers",
+]
+# Testing (minimal, no optional deps)
+test-minimal = [
+    "pytest>=7.0.0",
+    "pytest-cov",
 ]
 # Build
 build = [
@@ -81,3 +86,54 @@ surrogate-train = [
 "Homepage" = "https://github.com/SimonBlanke/Surfaces"
 "Bug Reports" = "https://github.com/SimonBlanke/Surfaces/issues"
 "Source" = "https://github.com/SimonBlanke/Surfaces/"
+
+# =============================================================================
+# Ruff Configuration
+# =============================================================================
+[tool.ruff]
+line-length = 100
+target-version = "py38"
+exclude = [
+    ".git",
+    ".venv",
+    "__pycache__",
+    "build",
+    "dist",
+    "*.egg-info",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes
+    "I",      # isort
+]
+ignore = [
+    "E501",   # line too long (handled by formatter)
+    "E731",   # lambda assignment
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "S311", "S603", "S607", "F841"]
+"examples/*" = ["S101", "F841"]
+"docs/*" = ["S101", "S603", "S607", "F841", "S110"]
+"scripts/*" = ["F403", "F405", "E402", "S603"]
+"*/__init__.py" = ["F401", "F403", "F405", "E402"]
+"collect_*.py" = ["S603", "S607"]
+# CEC benchmark implementations follow mathematical conventions
+"src/surfaces/test_functions/cec/*" = ["F841", "E741"]
+# Engineering functions use standard notation (l for length)
+"src/surfaces/test_functions/engineering/*" = ["E741", "F841"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["surfaces"]
+
+# =============================================================================
+# Pytest Configuration
+# =============================================================================
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-p no:warnings"

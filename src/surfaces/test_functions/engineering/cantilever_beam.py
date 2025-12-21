@@ -4,8 +4,9 @@
 
 """Cantilever beam design optimization problem."""
 
+from typing import Any, Dict, List
+
 import numpy as np
-from typing import Dict, Any, List
 
 from ._base_engineering_function import EngineeringFunction
 
@@ -139,10 +140,7 @@ class CantileverBeamFunction(EngineeringFunction):
     x_global = np.array([6.0089, 5.3049, 4.5023, 3.5077, 2.1504])
 
     def __init__(
-        self,
-        objective: str = "minimize",
-        sleep: float = 0,
-        penalty_coefficient: float = 1e6
+        self, objective: str = "minimize", sleep: float = 0, penalty_coefficient: float = 1e6
     ):
         super().__init__(objective, sleep, penalty_coefficient)
 
@@ -171,11 +169,11 @@ class CantileverBeamFunction(EngineeringFunction):
         # Deflection constraint
         # Sum of contributions from each segment
         deflection = (
-            61 / (x1**3 + eps) +
-            37 / (x2**3 + eps) +
-            19 / (x3**3 + eps) +
-            7 / (x4**3 + eps) +
-            1 / (x5**3 + eps)
+            61 / (x1**3 + eps)
+            + 37 / (x2**3 + eps)
+            + 19 / (x3**3 + eps)
+            + 7 / (x4**3 + eps)
+            + 1 / (x5**3 + eps)
         )
 
         # g <= 0 is feasible, so deflection - 1 <= 0

@@ -1,17 +1,17 @@
 import os
-import numpy as np
 
+import numpy as np
 from bbox_functions.convex import (
     SphereFunction,
 )
 from bbox_functions.non_convex import (
-    RastriginFunction,
     AckleyFunction,
-    RosenbrockFunction,
     BealeFunction,
+    CrossInTrayFunction,
     HimmelblausFunction,
     HölderTableFunction,
-    CrossInTrayFunction,
+    RastriginFunction,
+    RosenbrockFunction,
 )
 from bbox_functions.visualize import (
     matplotlib_heatmap,

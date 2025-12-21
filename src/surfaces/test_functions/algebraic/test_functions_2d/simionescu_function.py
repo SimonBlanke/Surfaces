@@ -71,10 +71,12 @@ class SimionescuFunction(AlgebraicFunction):
     }
 
     f_global = -0.072
-    x_global = np.array([
-        [0.84852813, -0.84852813],
-        [-0.84852813, 0.84852813],
-    ])
+    x_global = np.array(
+        [
+            [0.84852813, -0.84852813],
+            [-0.84852813, 0.84852813],
+        ]
+    )
 
     default_bounds = (-1.25, 1.25)
     n_dim = 2

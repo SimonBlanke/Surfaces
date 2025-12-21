@@ -4,8 +4,9 @@
 
 """ZDT1 multi-objective test function."""
 
+from typing import Any, Dict
+
 import numpy as np
-from typing import Dict, Any
 
 from ._base_multi_objective import MultiObjectiveFunction
 

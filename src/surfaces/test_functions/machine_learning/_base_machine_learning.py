@@ -3,11 +3,11 @@
 # License: MIT License
 
 import time
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
-from .._base_test_function import BaseTestFunction
-from ..._search_data_collection import SearchDataManager, SearchDataCollector
+from ..._search_data_collection import SearchDataCollector, SearchDataManager
 from ..._surrogates import load_surrogate
+from .._base_test_function import BaseTestFunction
 
 
 class MachineLearningFunction(BaseTestFunction):
@@ -52,7 +52,7 @@ class MachineLearningFunction(BaseTestFunction):
         sleep: float = 0,
         evaluate_from_data: bool = False,
         use_surrogate: bool = False,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(objective, sleep)
         self.evaluate_from_data = evaluate_from_data
@@ -73,9 +73,9 @@ class MachineLearningFunction(BaseTestFunction):
 
         if self._surrogate is None:
             import warnings
+
             warnings.warn(
-                f"No surrogate model found for '{function_name}'. "
-                f"Falling back to real evaluation.",
+                f"No surrogate model found for '{function_name}'. Falling back to real evaluation.",
                 UserWarning,
             )
             self.use_surrogate = False
@@ -101,7 +101,7 @@ class MachineLearningFunction(BaseTestFunction):
 
     def _objective_function_from_data(self, params: Dict[str, Any]) -> float:
         """Evaluate using stored search data."""
-        function_name = getattr(self, '_name_', self.__class__.__name__)
+        function_name = getattr(self, "_name_", self.__class__.__name__)
 
         result = self.search_data_manager.lookup_evaluation(function_name, params)
         if result is None:
@@ -117,20 +117,18 @@ class MachineLearningFunction(BaseTestFunction):
         self,
         search_space: Optional[Dict[str, Any]] = None,
         batch_size: int = 100,
-        verbose: bool = True
+        verbose: bool = True,
     ) -> Dict[str, Any]:
         """Collect search data for this function."""
-        if not hasattr(self, 'data_collector'):
+        if not hasattr(self, "data_collector"):
             self.search_data_manager = SearchDataManager()
             self.data_collector = SearchDataCollector(self.search_data_manager)
 
-        return self.data_collector.collect_search_data(
-            self, search_space, batch_size, verbose
-        )
+        return self.data_collector.collect_search_data(self, search_space, batch_size, verbose)
 
     def _get_search_data_status(self) -> Dict[str, Any]:
         """Get information about stored search data."""
-        if not hasattr(self, 'data_collector'):
+        if not hasattr(self, "data_collector"):
             self.search_data_manager = SearchDataManager()
             self.data_collector = SearchDataCollector(self.search_data_manager)
 
@@ -138,15 +136,15 @@ class MachineLearningFunction(BaseTestFunction):
 
     def _clear_search_data(self) -> None:
         """Clear all stored search data for this function."""
-        if not hasattr(self, 'search_data_manager'):
+        if not hasattr(self, "search_data_manager"):
             self.search_data_manager = SearchDataManager()
 
-        function_name = getattr(self, '_name_', self.__class__.__name__)
+        function_name = getattr(self, "_name_", self.__class__.__name__)
         self.search_data_manager.clear_data(function_name)
 
     def _get_timing_statistics(self) -> Dict[str, float]:
         """Get timing statistics for this function's evaluations."""
-        if not hasattr(self, 'data_collector'):
+        if not hasattr(self, "data_collector"):
             self.search_data_manager = SearchDataManager()
             self.data_collector = SearchDataCollector(self.search_data_manager)
 

@@ -4,8 +4,9 @@
 
 """Base class for engineering design optimization test functions."""
 
+from typing import Any, Dict, List, Tuple
+
 import numpy as np
-from typing import Dict, Any, List, Tuple, Union
 
 from .._base_test_function import BaseTestFunction
 
@@ -68,10 +69,7 @@ class EngineeringFunction(BaseTestFunction):
     variable_bounds: List[Tuple[float, float]] = []
 
     def __init__(
-        self,
-        objective: str = "minimize",
-        sleep: float = 0,
-        penalty_coefficient: float = 1e6
+        self, objective: str = "minimize", sleep: float = 0, penalty_coefficient: float = 1e6
     ):
         self.penalty_coefficient = penalty_coefficient
         super().__init__(objective, sleep)
@@ -88,9 +86,7 @@ class EngineeringFunction(BaseTestFunction):
         total_size = self.default_size
         dim_size = int(total_size ** (1 / self.n_dim))
 
-        for i, (name, (lb, ub)) in enumerate(
-            zip(self.variable_names, self.variable_bounds)
-        ):
+        for i, (name, (lb, ub)) in enumerate(zip(self.variable_names, self.variable_bounds)):
             step_size = (ub - lb) / dim_size
             values = np.arange(lb, ub, step_size)
             search_space_[name] = values
@@ -163,7 +159,7 @@ class EngineeringFunction(BaseTestFunction):
             Penalty value (sum of squared violations times coefficient).
         """
         violations = self.constraint_violations(params)
-        return self.penalty_coefficient * sum(v ** 2 for v in violations)
+        return self.penalty_coefficient * sum(v**2 for v in violations)
 
     def raw_objective(self, params: Dict[str, Any]) -> float:
         """Evaluate the raw objective function without penalties.
@@ -184,6 +180,7 @@ class EngineeringFunction(BaseTestFunction):
 
     def _create_objective_function(self):
         """Create objective function with penalty for constraint violations."""
+
         def penalized_objective(params):
             return self.raw_objective(params) + self.penalty(params)
 

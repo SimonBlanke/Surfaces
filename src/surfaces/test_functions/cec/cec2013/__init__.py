@@ -20,30 +20,7 @@ Reference:
 """
 
 from ._base_cec2013 import CEC2013Function
-
 from .functions import (
-    # Unimodal (F1-F5)
-    Sphere,
-    RotatedHighConditionedElliptic,
-    RotatedBentCigar,
-    RotatedDiscus,
-    DifferentPowers,
-    # Multimodal (F6-F20)
-    RotatedRosenbrock,
-    RotatedSchafferF7,
-    RotatedAckley,
-    RotatedWeierstrass,
-    RotatedGriewank,
-    Rastrigin,
-    RotatedRastrigin,
-    StepRastrigin,
-    Schwefel,
-    RotatedSchwefel,
-    RotatedKatsuura,
-    LunacekBiRastrigin,
-    RotatedLunacekBiRastrigin,
-    RotatedExpandedGriewankRosenbrock,
-    RotatedExpandedScafferF6,
     # Composition (F21-F28)
     CompositionFunction1,
     CompositionFunction2,
@@ -53,6 +30,28 @@ from .functions import (
     CompositionFunction6,
     CompositionFunction7,
     CompositionFunction8,
+    DifferentPowers,
+    LunacekBiRastrigin,
+    Rastrigin,
+    RotatedAckley,
+    RotatedBentCigar,
+    RotatedDiscus,
+    RotatedExpandedGriewankRosenbrock,
+    RotatedExpandedScafferF6,
+    RotatedGriewank,
+    RotatedHighConditionedElliptic,
+    RotatedKatsuura,
+    RotatedLunacekBiRastrigin,
+    RotatedRastrigin,
+    # Multimodal (F6-F20)
+    RotatedRosenbrock,
+    RotatedSchafferF7,
+    RotatedSchwefel,
+    RotatedWeierstrass,
+    Schwefel,
+    # Unimodal (F1-F5)
+    Sphere,
+    StepRastrigin,
 )
 
 __all__ = [

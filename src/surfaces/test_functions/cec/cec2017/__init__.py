@@ -22,18 +22,17 @@ Reference:
 """
 
 from ._base_cec2017 import CEC2017Function
-
 from .simple import (
     ShiftedRotatedBentCigar,
-    ShiftedRotatedSumDiffPow,
-    ShiftedRotatedZakharov,
-    ShiftedRotatedRosenbrock,
-    ShiftedRotatedRastrigin,
-    ShiftedRotatedSchafferF7,
+    ShiftedRotatedLevy,
     ShiftedRotatedLunacekBiRastrigin,
     ShiftedRotatedNonContRastrigin,
-    ShiftedRotatedLevy,
+    ShiftedRotatedRastrigin,
+    ShiftedRotatedRosenbrock,
+    ShiftedRotatedSchafferF7,
     ShiftedRotatedSchwefel,
+    ShiftedRotatedSumDiffPow,
+    ShiftedRotatedZakharov,
 )
 
 __all__ = [

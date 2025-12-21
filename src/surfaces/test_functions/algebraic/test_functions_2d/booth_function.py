@@ -68,7 +68,6 @@ class BoothFunction(AlgebraicFunction):
         self.n_dim = 2
 
     def _create_objective_function(self):
-
         def booth_function(params):
             x = params["x0"]
             y = params["x1"]

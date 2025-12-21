@@ -4,8 +4,9 @@
 
 """BBOB Multimodal Functions with Weak Global Structure (f20-f24)."""
 
+from typing import Any, Dict
+
 import numpy as np
-from typing import Dict, Any
 
 from ._base_bbob import BBOBFunction
 
@@ -54,7 +55,9 @@ class Schwefel(BBOBFunction):
                     result += zi * np.sin(np.sqrt(np.abs(zi)))
                 else:
                     # Penalty for out-of-bounds
-                    result += (500 - np.abs(zi) % 500) * np.sin(np.sqrt(np.abs(500 - np.abs(zi) % 500)))
+                    result += (500 - np.abs(zi) % 500) * np.sin(
+                        np.sqrt(np.abs(500 - np.abs(zi) % 500))
+                    )
                     result -= (zi - 500) ** 2 / (10000 * D) * np.sign(zi)
 
             result = -result / (100 * D)
@@ -93,19 +96,20 @@ class Gallagher101(BBOBFunction):
 
         # Alpha values for conditioning
         alpha_base = np.power(1000, 2 * np.arange(n_peaks - 1) / (n_peaks - 2))
-        self._alpha = np.hstack([1000 ** 2, self._rng.permutation(alpha_base)])
+        self._alpha = np.hstack([1000**2, self._rng.permutation(alpha_base)])
 
         # Peak locations
-        self._y = np.vstack([
-            self.x_opt,
-            self._rng.uniform(-4.9, 4.9, (n_peaks - 1, self.n_dim))
-        ])
+        self._y = np.vstack([self.x_opt, self._rng.uniform(-4.9, 4.9, (n_peaks - 1, self.n_dim))])
 
         # Condition matrices
         self._C = []
         for k in range(n_peaks):
             i = np.arange(self.n_dim)
-            diag = np.power(self._alpha[k], 0.5 * i / (self.n_dim - 1)) if self.n_dim > 1 else np.ones(1)
+            diag = (
+                np.power(self._alpha[k], 0.5 * i / (self.n_dim - 1))
+                if self.n_dim > 1
+                else np.ones(1)
+            )
             C = np.diag(diag / np.power(self._alpha[k], 0.25))
             self._C.append(self.R.T @ C @ self.R)
 
@@ -156,19 +160,20 @@ class Gallagher21(BBOBFunction):
 
         # Alpha values for conditioning (higher for f22)
         alpha_base = np.power(1000, 2 * np.arange(n_peaks - 1) / (n_peaks - 2))
-        self._alpha = np.hstack([1000 ** 2, self._rng.permutation(alpha_base)])
+        self._alpha = np.hstack([1000**2, self._rng.permutation(alpha_base)])
 
         # Peak locations (narrower range for f22)
-        self._y = np.vstack([
-            self.x_opt,
-            self._rng.uniform(-4.0, 4.0, (n_peaks - 1, self.n_dim))
-        ])
+        self._y = np.vstack([self.x_opt, self._rng.uniform(-4.0, 4.0, (n_peaks - 1, self.n_dim))])
 
         # Condition matrices
         self._C = []
         for k in range(n_peaks):
             i = np.arange(self.n_dim)
-            diag = np.power(self._alpha[k], 0.5 * i / (self.n_dim - 1)) if self.n_dim > 1 else np.ones(1)
+            diag = (
+                np.power(self._alpha[k], 0.5 * i / (self.n_dim - 1))
+                if self.n_dim > 1
+                else np.ones(1)
+            )
             C = np.diag(diag / np.power(self._alpha[k], 0.25))
             self._C.append(self.R.T @ C @ self.R)
 
@@ -222,10 +227,10 @@ class Katsuura(BBOBFunction):
             for i in range(D):
                 inner_sum = 0.0
                 for j in range(1, 33):
-                    inner_sum += np.abs(2 ** j * z[i] - np.round(2 ** j * z[i])) / (2 ** j)
-                result *= (1 + (i + 1) * inner_sum) ** (10 / D ** 1.2)
+                    inner_sum += np.abs(2**j * z[i] - np.round(2**j * z[i])) / (2**j)
+                result *= (1 + (i + 1) * inner_sum) ** (10 / D**1.2)
 
-            result = 10 / (D ** 2) * result - 10 / (D ** 2)
+            result = 10 / (D**2) * result - 10 / (D**2)
             return result + self.f_pen(x) + self.f_opt
 
         self.pure_objective_function = katsuura
@@ -259,7 +264,7 @@ class LunacekBiRastrigin(BBOBFunction):
         mu0 = 2.5
         D = self.n_dim
         s = 1 - 1 / (2 * np.sqrt(D + 20) - 8.2)
-        mu1 = -np.sqrt((mu0 ** 2 - 1) / s)
+        mu1 = -np.sqrt((mu0**2 - 1) / s)
 
         Lambda = self.lambda_alpha(100)
 

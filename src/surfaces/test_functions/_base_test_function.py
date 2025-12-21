@@ -3,7 +3,7 @@
 # License: MIT License
 
 import time
-from typing import Dict, Any, Optional, Tuple, Union
+from typing import Any, Dict, Optional, Tuple, Union
 
 import numpy as np
 
@@ -77,17 +77,17 @@ class BaseTestFunction:
 
     def _create_objective_function_(func):
         """Decorator that calls _create_objective_function after __init__."""
+
         def wrapper(self, *args, **kwargs):
             func(self, *args, **kwargs)
             self._create_objective_function()
+
         return wrapper
 
     @_create_objective_function_
     def __init__(self, objective="minimize", sleep=0):
         if objective not in ("minimize", "maximize"):
-            raise ValueError(
-                f"objective must be 'minimize' or 'maximize', got '{objective}'"
-            )
+            raise ValueError(f"objective must be 'minimize' or 'maximize', got '{objective}'")
         self.objective = objective
         self.sleep = sleep
 
@@ -104,8 +104,7 @@ class BaseTestFunction:
     # =========================================================================
 
     def __call__(
-        self, params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None,
-        **kwargs
+        self, params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None, **kwargs
     ) -> float:
         """
         Evaluate the objective function.
@@ -127,16 +126,13 @@ class BaseTestFunction:
         return self._evaluate(params)
 
     def _normalize_input(
-        self, params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None,
-        **kwargs
+        self, params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None, **kwargs
     ) -> Dict[str, Any]:
         """Convert any input format to dict."""
         if isinstance(params, (np.ndarray, list, tuple)):
             param_names = sorted(self.search_space.keys())
             if len(params) != len(param_names):
-                raise ValueError(
-                    f"Expected {len(param_names)} values, got {len(params)}"
-                )
+                raise ValueError(f"Expected {len(param_names)} values, got {len(params)}")
             return {name: params[i] for i, name in enumerate(param_names)}
 
         if params is None:

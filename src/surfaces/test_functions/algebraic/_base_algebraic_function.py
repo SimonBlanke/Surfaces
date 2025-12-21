@@ -4,8 +4,9 @@
 
 """Base class for algebraic test functions with closed-form expressions."""
 
+from typing import Any, Dict, Union
+
 import numpy as np
-from typing import Dict, Any, Tuple, Union
 
 from .._base_test_function import BaseTestFunction
 
@@ -52,7 +53,7 @@ class AlgebraicFunction(BaseTestFunction):
         min: Union[float, list] = -5,
         max: Union[float, list] = 5,
         size: int = 100,
-        value_types: str = "array"
+        value_types: str = "array",
     ) -> Dict[str, Any]:
         """Create search space for N-dimensional function."""
         search_space_ = {}

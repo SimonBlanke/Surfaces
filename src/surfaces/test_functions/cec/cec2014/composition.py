@@ -8,8 +8,9 @@ Composition functions create complex landscapes by combining multiple
 basic functions with different optima locations.
 """
 
+from typing import Any, Dict, List
+
 import numpy as np
-from typing import Dict, Any, List, Callable, Tuple
 
 from ._base_cec2014 import CEC2014Function
 
@@ -44,7 +45,7 @@ class _CompositionBase(CEC2014Function):
 
         for i in range(self.n_functions):
             diff = x - optima[i]
-            dist_sq = np.sum(diff ** 2)
+            dist_sq = np.sum(diff**2)
             if dist_sq != 0:
                 weights[i] = np.exp(-dist_sq / (2 * self.n_dim * self.sigmas[i] ** 2))
             else:
@@ -58,7 +59,7 @@ class _CompositionBase(CEC2014Function):
             # Only keep weights that are significant
             for i in range(self.n_functions):
                 if weights[i] != max_weight:
-                    weights[i] *= 1 - max_weight ** 10
+                    weights[i] *= 1 - max_weight**10
             weights = weights / np.sum(weights)
 
         return weights
@@ -66,7 +67,7 @@ class _CompositionBase(CEC2014Function):
 
 # Basic functions for composition (same as hybrid but standalone)
 def _sphere(z: np.ndarray) -> float:
-    return np.sum(z ** 2)
+    return np.sum(z**2)
 
 
 def _high_conditioned_elliptic(z: np.ndarray) -> float:
@@ -75,20 +76,20 @@ def _high_conditioned_elliptic(z: np.ndarray) -> float:
         return z[0] ** 2
     result = 0.0
     for i in range(D):
-        result += (10 ** 6) ** (i / (D - 1)) * z[i] ** 2
+        result += (10**6) ** (i / (D - 1)) * z[i] ** 2
     return result
 
 
 def _bent_cigar(z: np.ndarray) -> float:
     if len(z) == 1:
         return z[0] ** 2
-    return z[0] ** 2 + 10 ** 6 * np.sum(z[1:] ** 2)
+    return z[0] ** 2 + 10**6 * np.sum(z[1:] ** 2)
 
 
 def _discus(z: np.ndarray) -> float:
     if len(z) == 1:
-        return 10 ** 6 * z[0] ** 2
-    return 10 ** 6 * z[0] ** 2 + np.sum(z[1:] ** 2)
+        return 10**6 * z[0] ** 2
+    return 10**6 * z[0] ** 2 + np.sum(z[1:] ** 2)
 
 
 def _rosenbrock(z: np.ndarray) -> float:
@@ -101,21 +102,21 @@ def _rosenbrock(z: np.ndarray) -> float:
 
 def _ackley(z: np.ndarray) -> float:
     D = len(z)
-    sum1 = np.sum(z ** 2)
+    sum1 = np.sum(z**2)
     sum2 = np.sum(np.cos(2 * np.pi * z))
     return -20 * np.exp(-0.2 * np.sqrt(sum1 / D)) - np.exp(sum2 / D) + 20 + np.e
 
 
 def _griewank(z: np.ndarray) -> float:
     D = len(z)
-    sum_sq = np.sum(z ** 2) / 4000
+    sum_sq = np.sum(z**2) / 4000
     prod_cos = np.prod(np.cos(z / np.sqrt(np.arange(1, D + 1))))
     return sum_sq - prod_cos + 1
 
 
 def _rastrigin(z: np.ndarray) -> float:
     D = len(z)
-    return 10 * D + np.sum(z ** 2 - 10 * np.cos(2 * np.pi * z))
+    return 10 * D + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
 
 
 def _schwefel(z: np.ndarray) -> float:
@@ -139,24 +140,24 @@ def _weierstrass(z: np.ndarray) -> float:
     result = 0.0
     for i in range(D):
         for k in range(k_max + 1):
-            result += a ** k * np.cos(2 * np.pi * b ** k * (z[i] + 0.5))
-    offset = sum(a ** k * np.cos(2 * np.pi * b ** k * 0.5) for k in range(k_max + 1))
+            result += a**k * np.cos(2 * np.pi * b**k * (z[i] + 0.5))
+    offset = sum(a**k * np.cos(2 * np.pi * b**k * 0.5) for k in range(k_max + 1))
     return result - D * offset
 
 
 def _happycat(z: np.ndarray) -> float:
     D = len(z)
     alpha = 1.0 / 8.0
-    sum_sq = np.sum(z ** 2)
+    sum_sq = np.sum(z**2)
     sum_z = np.sum(z)
     return abs(sum_sq - D) ** (2 * alpha) + (0.5 * sum_sq + sum_z) / D + 0.5
 
 
 def _hgbat(z: np.ndarray) -> float:
     D = len(z)
-    sum_sq = np.sum(z ** 2)
+    sum_sq = np.sum(z**2)
     sum_z = np.sum(z)
-    return abs(sum_sq ** 2 - sum_z ** 2) ** 0.5 + (0.5 * sum_sq + sum_z) / D + 0.5
+    return abs(sum_sq**2 - sum_z**2) ** 0.5 + (0.5 * sum_sq + sum_z) / D + 0.5
 
 
 def _katsuura(z: np.ndarray) -> float:
@@ -165,9 +166,9 @@ def _katsuura(z: np.ndarray) -> float:
     for i in range(D):
         inner_sum = 0.0
         for j in range(1, 33):
-            inner_sum += abs(2 ** j * z[i] - round(2 ** j * z[i])) / (2 ** j)
-        result *= (1 + (i + 1) * inner_sum) ** (10 / (D ** 1.2))
-    return (10 / D ** 2) * result - (10 / D ** 2)
+            inner_sum += abs(2**j * z[i] - round(2**j * z[i])) / (2**j)
+        result *= (1 + (i + 1) * inner_sum) ** (10 / (D**1.2))
+    return (10 / D**2) * result - (10 / D**2)
 
 
 def _expanded_griewank_rosenbrock(z: np.ndarray) -> float:
@@ -176,9 +177,9 @@ def _expanded_griewank_rosenbrock(z: np.ndarray) -> float:
     result = 0.0
     for i in range(D - 1):
         t = 100 * (z[i] ** 2 - z[i + 1]) ** 2 + (z[i] - 1) ** 2
-        result += t ** 2 / 4000 - np.cos(t) + 1
+        result += t**2 / 4000 - np.cos(t) + 1
     t = 100 * (z[-1] ** 2 - z[0]) ** 2 + (z[-1] - 1) ** 2
-    result += t ** 2 / 4000 - np.cos(t) + 1
+    result += t**2 / 4000 - np.cos(t) + 1
     return result
 
 
@@ -186,7 +187,7 @@ def _expanded_scaffer(z: np.ndarray) -> float:
     D = len(z)
 
     def schaffer_f6(x1, x2):
-        t = x1 ** 2 + x2 ** 2
+        t = x1**2 + x2**2
         return 0.5 + (np.sin(np.sqrt(t)) ** 2 - 0.5) / (1 + 0.001 * t) ** 2
 
     result = 0.0
@@ -533,19 +534,15 @@ class CompositionFunction7(_CompositionBase):
             g1, g2, g3 = D // 3, D // 3, D - 2 * (D // 3)
             return (
                 _high_conditioned_elliptic(z[:g1])
-                + _bent_cigar(z[g1:g1+g2])
-                + _rastrigin(z[g1+g2:])
+                + _bent_cigar(z[g1 : g1 + g2])
+                + _rastrigin(z[g1 + g2 :])
             )
 
         def hybrid2(z):
             # Similar to F18: Griewank + Weierstrass + Rosenbrock
             D = len(z)
             g1, g2, g3 = D // 3, D // 3, D - 2 * (D // 3)
-            return (
-                _griewank(z[:g1])
-                + _weierstrass(z[g1:g1+g2])
-                + _rosenbrock(z[g1+g2:])
-            )
+            return _griewank(z[:g1]) + _weierstrass(z[g1 : g1 + g2]) + _rosenbrock(z[g1 + g2 :])
 
         def hybrid3(z):
             # Similar to F19
@@ -556,9 +553,9 @@ class CompositionFunction7(_CompositionBase):
             g4 = D - 3 * (D // 4)
             return (
                 _griewank(z[:g1])
-                + _weierstrass(z[g1:g1+g2])
-                + _rosenbrock(z[g1+g2:g1+g2+g3])
-                + _expanded_scaffer(z[g1+g2+g3:])
+                + _weierstrass(z[g1 : g1 + g2])
+                + _rosenbrock(z[g1 + g2 : g1 + g2 + g3])
+                + _expanded_scaffer(z[g1 + g2 + g3 :])
             )
 
         functions = [hybrid1, hybrid2, hybrid3]
@@ -611,9 +608,9 @@ class CompositionFunction8(_CompositionBase):
             g4 = D - 3 * (D // 4)
             return (
                 _hgbat(z[:g1])
-                + _discus(z[g1:g1+g2])
-                + _expanded_griewank_rosenbrock(z[g1+g2:g1+g2+g3])
-                + _rastrigin(z[g1+g2+g3:])
+                + _discus(z[g1 : g1 + g2])
+                + _expanded_griewank_rosenbrock(z[g1 + g2 : g1 + g2 + g3])
+                + _rastrigin(z[g1 + g2 + g3 :])
             )
 
         def hybrid5(z):
@@ -622,10 +619,10 @@ class CompositionFunction8(_CompositionBase):
             g = D // 5
             return (
                 _expanded_scaffer(z[:g])
-                + _hgbat(z[g:2*g])
-                + _rosenbrock(z[2*g:3*g])
-                + _high_conditioned_elliptic(z[3*g:4*g])
-                + _ackley(z[4*g:])
+                + _hgbat(z[g : 2 * g])
+                + _rosenbrock(z[2 * g : 3 * g])
+                + _high_conditioned_elliptic(z[3 * g : 4 * g])
+                + _ackley(z[4 * g :])
             )
 
         def hybrid6(z):
@@ -634,10 +631,10 @@ class CompositionFunction8(_CompositionBase):
             g = D // 5
             return (
                 _katsuura(z[:g])
-                + _happycat(z[g:2*g])
-                + _expanded_griewank_rosenbrock(z[2*g:3*g])
-                + _schwefel(z[3*g:4*g])
-                + _ackley(z[4*g:])
+                + _happycat(z[g : 2 * g])
+                + _expanded_griewank_rosenbrock(z[2 * g : 3 * g])
+                + _schwefel(z[3 * g : 4 * g])
+                + _ackley(z[4 * g :])
             )
 
         functions = [hybrid4, hybrid5, hybrid6]

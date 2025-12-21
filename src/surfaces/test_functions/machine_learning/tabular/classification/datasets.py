@@ -2,8 +2,7 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from sklearn.datasets import load_digits, load_wine, load_iris
-
+from sklearn.datasets import load_digits, load_iris, load_wine
 
 digits_dataset = load_digits()
 wine_dataset = load_wine()

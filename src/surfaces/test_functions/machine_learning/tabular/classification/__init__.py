@@ -6,7 +6,6 @@ from .test_functions import (
     KNeighborsClassifierFunction,
 )
 
-
 __all__ = [
     "KNeighborsClassifierFunction",
 ]

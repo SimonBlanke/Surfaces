@@ -25,7 +25,7 @@
 ### Use Cases
 
 - **Algorithm Development**: Test new optimization algorithms against established benchmarks
-- **Performance Comparison**: Compare different optimizers on standardized problem sets  
+- **Performance Comparison**: Compare different optimizers on standardized problem sets
 - **Research Publications**: Use well-known test functions with consistent implementations
 - **Educational Purposes**: Learn optimization concepts with visual and mathematical examples
 - **Hyperparameter Tuning**: Benchmark autoML and hyperparameter optimization methods
@@ -40,7 +40,7 @@
 <table style="width:100%">
   <tr>
     <th> <b>Objective Function</b> </th>
-    <th> <b>Heatmap</b> </th> 
+    <th> <b>Heatmap</b> </th>
     <th> <b>Surface Plot</b> </th>
   </tr>
   <tr>
@@ -125,7 +125,7 @@ Import from `surfaces.test_functions.mathematical`:
 Import from `surfaces.test_functions.machine_learning`:
 
 - `KNeighborsClassifierFunction` - K-nearest neighbors classification
-- `KNeighborsRegressorFunction` - K-nearest neighbors regression  
+- `KNeighborsRegressorFunction` - K-nearest neighbors regression
 - `GradientBoostingRegressorFunction` - Gradient boosting regression
 
 ### Common Interface
@@ -175,7 +175,7 @@ print(search_space.keys())  # dict_keys(['n_neighbors', 'algorithm', 'cv', 'data
 # Evaluate function
 params = {
     'n_neighbors': 5,
-    'algorithm': 'auto', 
+    'algorithm': 'auto',
     'cv': 3,
     'dataset': knn_func.search_space()['dataset'][0]
 }
@@ -190,7 +190,7 @@ from surfaces.test_functions.mathematical import SphereFunction
 
 # Create functions with different dimensionalities
 sphere_1d = SphereFunction(n_dim=1)
-sphere_3d = SphereFunction(n_dim=3) 
+sphere_3d = SphereFunction(n_dim=3)
 sphere_10d = SphereFunction(n_dim=10)
 
 # Each has appropriate search space
@@ -198,4 +198,3 @@ print(sphere_1d.search_space().keys())   # dict_keys(['x0'])
 print(sphere_3d.search_space().keys())   # dict_keys(['x0', 'x1', 'x2'])
 print(sphere_10d.search_space().keys())  # dict_keys(['x0', 'x1', ..., 'x9'])
 ```
-

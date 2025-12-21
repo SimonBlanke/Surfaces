@@ -3,8 +3,7 @@
 # License: MIT License
 
 from .classification import KNeighborsClassifierFunction
-from .regression import KNeighborsRegressorFunction, GradientBoostingRegressorFunction
-
+from .regression import GradientBoostingRegressorFunction, KNeighborsRegressorFunction
 
 __all__ = [
     "KNeighborsClassifierFunction",

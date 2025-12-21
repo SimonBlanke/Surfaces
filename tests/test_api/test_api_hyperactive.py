@@ -2,7 +2,6 @@ import pytest
 
 from surfaces.test_functions import test_functions
 
-
 test_functions_d = (
     "test_function",
     test_functions,
@@ -23,7 +22,9 @@ def test_all_functions(test_function):
     assert len(search_space) > 0
 
     # Test that the function works
-    sample_params = {key: list(values)[0] if hasattr(values, '__iter__') else values
-                    for key, values in search_space.items()}
+    sample_params = {
+        key: list(values)[0] if hasattr(values, "__iter__") else values
+        for key, values in search_space.items()
+    }
     result = test_function_(sample_params)
     assert isinstance(result, (int, float))

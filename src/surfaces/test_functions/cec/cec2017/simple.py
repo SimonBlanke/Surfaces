@@ -4,8 +4,9 @@
 
 """CEC 2017 Simple Benchmark Functions (F1-F10)."""
 
+from typing import Any, Dict
+
 import numpy as np
-from typing import Dict, Any
 
 from ._base_cec2017 import CEC2017Function
 
@@ -18,7 +19,6 @@ class ShiftedRotatedBentCigar(CEC2017Function):
     - Non-separable
     - Scalable
     """
-
 
     _spec = {
         "name": "Shifted and Rotated Bent Cigar Function",
@@ -48,7 +48,6 @@ class ShiftedRotatedSumDiffPow(CEC2017Function):
     - Scalable
     """
 
-
     _spec = {
         "name": "Shifted and Rotated Sum of Different Power Function",
         "func_id": 2,
@@ -77,7 +76,6 @@ class ShiftedRotatedZakharov(CEC2017Function):
     - Scalable
     """
 
-
     _spec = {
         "name": "Shifted and Rotated Zakharov Function",
         "func_id": 3,
@@ -91,9 +89,9 @@ class ShiftedRotatedZakharov(CEC2017Function):
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
             D = self.n_dim
-            sum1 = np.sum(z ** 2)
+            sum1 = np.sum(z**2)
             sum2 = np.sum(0.5 * np.arange(1, D + 1) * z)
-            return sum1 + sum2 ** 2 + sum2 ** 4 + self.f_global
+            return sum1 + sum2**2 + sum2**4 + self.f_global
 
         self.pure_objective_function = zakharov
 
@@ -106,7 +104,6 @@ class ShiftedRotatedRosenbrock(CEC2017Function):
     - Non-separable
     - Scalable
     """
-
 
     _spec = {
         "name": "Shifted and Rotated Rosenbrock's Function",
@@ -139,7 +136,6 @@ class ShiftedRotatedRastrigin(CEC2017Function):
     - Scalable
     """
 
-
     _spec = {
         "name": "Shifted and Rotated Rastrigin's Function",
         "func_id": 5,
@@ -154,7 +150,7 @@ class ShiftedRotatedRastrigin(CEC2017Function):
             z = 0.0512 * z
 
             D = self.n_dim
-            result = 10 * D + np.sum(z ** 2 - 10 * np.cos(2 * np.pi * z))
+            result = 10 * D + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
 
             return result + self.f_global
 
@@ -170,7 +166,6 @@ class ShiftedRotatedSchafferF7(CEC2017Function):
     - Scalable
     """
 
-
     _spec = {
         "name": "Shifted and Rotated Schaffer's F7 Function",
         "func_id": 6,
@@ -185,9 +180,9 @@ class ShiftedRotatedSchafferF7(CEC2017Function):
 
             D = self.n_dim
             si = np.sqrt(z[:-1] ** 2 + z[1:] ** 2)
-            tmp = np.sin(50 * (si ** 0.2))
-            sm = np.sum(np.sqrt(si) * (tmp ** 2 + 1))
-            result = (sm ** 2) / ((D - 1) ** 2)
+            tmp = np.sin(50 * (si**0.2))
+            sm = np.sum(np.sqrt(si) * (tmp**2 + 1))
+            result = (sm**2) / ((D - 1) ** 2)
 
             return result + self.f_global
 
@@ -202,7 +197,6 @@ class ShiftedRotatedLunacekBiRastrigin(CEC2017Function):
     - Non-separable
     - Two global optima
     """
-
 
     _spec = {
         "name": "Shifted and Rotated Lunacek Bi-Rastrigin's Function",
@@ -220,7 +214,7 @@ class ShiftedRotatedLunacekBiRastrigin(CEC2017Function):
             D = self.n_dim
             mu0 = 2.5
             s = 1 - 1 / (2 * np.sqrt(D + 20) - 8.2)
-            mu1 = -np.sqrt((mu0 ** 2 - 1) / s)
+            mu1 = -np.sqrt((mu0**2 - 1) / s)
 
             y = 0.1 * (x - shift)
             tmpx = 2 * y.copy()
@@ -250,7 +244,6 @@ class ShiftedRotatedNonContRastrigin(CEC2017Function):
     - Non-continuous
     """
 
-
     _spec = {
         "name": "Shifted and Rotated Non-Continuous Rastrigin's Function",
         "func_id": 8,
@@ -274,7 +267,7 @@ class ShiftedRotatedNonContRastrigin(CEC2017Function):
             z = M @ z
 
             D = self.n_dim
-            result = np.sum(z ** 2 - 10 * np.cos(2 * np.pi * z) + 10)
+            result = np.sum(z**2 - 10 * np.cos(2 * np.pi * z) + 10)
 
             return result + self.f_global
 
@@ -289,7 +282,6 @@ class ShiftedRotatedLevy(CEC2017Function):
     - Non-separable
     - Scalable
     """
-
 
     _spec = {
         "name": "Shifted and Rotated Levy Function",
@@ -322,7 +314,6 @@ class ShiftedRotatedSchwefel(CEC2017Function):
     - Deceptive
     """
 
-
     _spec = {
         "name": "Shifted and Rotated Schwefel's Function",
         "func_id": 10,
@@ -343,11 +334,11 @@ class ShiftedRotatedSchwefel(CEC2017Function):
                 if abs(zi) <= 500:
                     result += zi * np.sin(np.sqrt(abs(zi)))
                 elif zi > 500:
-                    zm = (500 - zi % 500)
+                    zm = 500 - zi % 500
                     result += zm * np.sin(np.sqrt(abs(zm)))
                     result -= (zi - 500) ** 2 / (10000 * D)
                 else:
-                    zm = (abs(zi) % 500 - 500)
+                    zm = abs(zi) % 500 - 500
                     result += zm * np.sin(np.sqrt(abs(zm)))
                     result -= (zi + 500) ** 2 / (10000 * D)
 

@@ -1,6 +1,5 @@
 from surfaces.test_functions.mathematical import SphereFunction
 
-
 sphere_function_1d = SphereFunction(n_dim=1)
 
 objective_function = sphere_function_1d.objective_function

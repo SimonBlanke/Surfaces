@@ -9,10 +9,9 @@ Compare surrogate predictions against real function evaluations
 to assess approximation accuracy.
 """
 
-from pathlib import Path
-from typing import Dict, Any, List, Optional, Tuple
-from itertools import product
 import time
+from itertools import product
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 
@@ -40,7 +39,7 @@ class SurrogateValidator:
         self.function = function
 
         # Ensure we have both real and surrogate versions
-        if getattr(function, 'use_surrogate', False):
+        if getattr(function, "use_surrogate", False):
             raise ValueError(
                 "Function should have use_surrogate=False. "
                 "The validator will create its own surrogate instance."
@@ -54,9 +53,7 @@ class SurrogateValidator:
         )
 
         if not self._surrogate_func.use_surrogate:
-            raise ValueError(
-                f"No surrogate model available for {func_class.__name__}"
-            )
+            raise ValueError(f"No surrogate model available for {func_class.__name__}")
 
     def _get_search_space_values(self) -> Dict[str, List]:
         """Get search space as dict of lists."""
@@ -196,11 +193,11 @@ class SurrogateValidator:
         # Compute metrics
         n_valid = len(y_real)
         mae = np.mean(np.abs(errors))
-        rmse = np.sqrt(np.mean(errors ** 2))
+        rmse = np.sqrt(np.mean(errors**2))
         max_error = np.max(np.abs(errors))
 
         # R² score
-        ss_res = np.sum(errors ** 2)
+        ss_res = np.sum(errors**2)
         ss_tot = np.sum((y_real - np.mean(y_real)) ** 2)
         r2 = 1 - (ss_res / ss_tot) if ss_tot > 0 else 0.0
 
@@ -249,7 +246,7 @@ class SurrogateValidator:
         print(f"Surrogate Validation Results ({results['method']} sampling)")
         print(f"{'=' * 50}")
         print(f"Samples evaluated: {results['n_samples']}")
-        if results['n_skipped'] > 0:
+        if results["n_skipped"] > 0:
             print(f"Samples skipped:   {results['n_skipped']}")
 
         print(f"\n{'Accuracy Metrics':}")

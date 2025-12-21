@@ -4,8 +4,9 @@
 
 """BBOB Functions with Low or Moderate Conditioning (f6-f9)."""
 
+from typing import Any, Dict
+
 import numpy as np
-from typing import Dict, Any
 
 from ._base_bbob import BBOBFunction
 
@@ -73,9 +74,7 @@ class StepEllipsoidal(BBOBFunction):
 
             # Apply step function
             z_tilde = np.where(
-                np.abs(z_hat) > 0.5,
-                np.floor(0.5 + z_hat),
-                np.floor(0.5 + 10 * z_hat) / 10
+                np.abs(z_hat) > 0.5, np.floor(0.5 + z_hat), np.floor(0.5 + 10 * z_hat) / 10
             )
 
             z = self.Q @ z_tilde
@@ -83,7 +82,7 @@ class StepEllipsoidal(BBOBFunction):
             i = np.arange(self.n_dim)
             coeffs = np.power(10, 2 * i / (self.n_dim - 1)) if self.n_dim > 1 else np.ones(1)
 
-            result = 0.1 * max(np.abs(z_hat[0]) / 1e4, np.sum(coeffs * z ** 2))
+            result = 0.1 * max(np.abs(z_hat[0]) / 1e4, np.sum(coeffs * z**2))
             return result + self.f_pen(x) + self.f_opt
 
         self.pure_objective_function = step_ellipsoidal

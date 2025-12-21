@@ -4,8 +4,9 @@
 
 """Welded beam design optimization problem."""
 
+from typing import Any, Dict, List
+
 import numpy as np
-from typing import Dict, Any, List
 
 from ._base_engineering_function import EngineeringFunction
 
@@ -150,7 +151,7 @@ class WeldedBeamFunction(EngineeringFunction):
         delta_max: float = 0.25,
         objective: str = "minimize",
         sleep: float = 0,
-        penalty_coefficient: float = 1e6
+        penalty_coefficient: float = 1e6,
     ):
         self.P = P
         self.L = L
@@ -187,17 +188,15 @@ class WeldedBeamFunction(EngineeringFunction):
 
         # Secondary shear stress (due to moment)
         M = P * (L + l / 2)
-        R = np.sqrt(l**2 / 4 + ((h + t) / 2)**2)
-        J = 2 * (np.sqrt(2) * h * l * (l**2 / 12 + ((h + t) / 2)**2))
+        R = np.sqrt(l**2 / 4 + ((h + t) / 2) ** 2)
+        J = 2 * (np.sqrt(2) * h * l * (l**2 / 12 + ((h + t) / 2) ** 2))
 
         tau_double_prime = M * R / J
 
         # Combined shear stress (using resultant)
         cos_theta = l / (2 * R)
         tau = np.sqrt(
-            tau_prime**2 +
-            2 * tau_prime * tau_double_prime * cos_theta +
-            tau_double_prime**2
+            tau_prime**2 + 2 * tau_prime * tau_double_prime * cos_theta + tau_double_prime**2
         )
 
         # Bending stress in beam
@@ -229,8 +228,11 @@ class WeldedBeamFunction(EngineeringFunction):
         # g4: Buckling constraint
         # Critical buckling load
         P_c = (
-            4.013 * E * np.sqrt(t**2 * b**6 / 36) / L**2 *
-            (1 - t / (2 * L) * np.sqrt(E / (4 * self.G)))
+            4.013
+            * E
+            * np.sqrt(t**2 * b**6 / 36)
+            / L**2
+            * (1 - t / (2 * L) * np.sqrt(E / (4 * self.G)))
         )
         g4 = P - P_c
 

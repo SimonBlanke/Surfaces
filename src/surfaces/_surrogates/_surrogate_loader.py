@@ -9,9 +9,9 @@ Loads pre-trained ONNX models and provides a callable interface
 that matches the pure_objective_function signature.
 """
 
-from pathlib import Path
-from typing import Dict, Any, Callable, List, Optional
 import json
+from pathlib import Path
+from typing import Any, Callable, Dict, List, Optional
 
 import numpy as np
 
@@ -92,10 +92,7 @@ class SurrogateLoader:
     @property
     def has_validity_model(self) -> bool:
         """Check if a validity model exists."""
-        return (
-            self.metadata.get("has_validity_model", False)
-            and self.validity_model_path.exists()
-        )
+        return self.metadata.get("has_validity_model", False) and self.validity_model_path.exists()
 
     @property
     def metadata(self) -> Dict[str, Any]:

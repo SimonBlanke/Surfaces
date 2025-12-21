@@ -3,13 +3,11 @@
 # License: MIT License
 
 import numpy as np
-
+from sklearn.model_selection import cross_val_score
 from sklearn.neighbors import KNeighborsClassifier
 
-from sklearn.model_selection import cross_val_score
-from ..datasets import digits_data, wine_data, iris_data
-
 from .._base_classification import BaseClassification
+from ..datasets import digits_data, iris_data, wine_data
 
 
 class KNeighborsClassifierFunction(BaseClassification):
@@ -73,9 +71,7 @@ class KNeighborsClassifierFunction(BaseClassification):
         search_space["n_neighbors"] = (
             self.n_neighbors_default if n_neighbors is None else n_neighbors
         )
-        search_space["algorithm"] = (
-            self.algorithm_default if algorithm is None else algorithm
-        )
+        search_space["algorithm"] = self.algorithm_default if algorithm is None else algorithm
         search_space["cv"] = self.cv_default if cv is None else cv
         search_space["dataset"] = self.dataset_default if dataset is None else dataset
 

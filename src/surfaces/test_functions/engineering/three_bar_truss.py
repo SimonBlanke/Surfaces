@@ -4,8 +4,9 @@
 
 """Three-bar truss design optimization problem."""
 
+from typing import Any, Dict, List
+
 import numpy as np
-from typing import Dict, Any, List
 
 from ._base_engineering_function import EngineeringFunction
 
@@ -136,7 +137,7 @@ class ThreeBarTrussFunction(EngineeringFunction):
         sigma_max: float = 2.0,
         objective: str = "minimize",
         sleep: float = 0,
-        penalty_coefficient: float = 1e6
+        penalty_coefficient: float = 1e6,
     ):
         self.P = P
         self.sigma_max = sigma_max

@@ -3,9 +3,8 @@
 # License: MIT License
 
 
-from .k_neighbors_regressor import KNeighborsRegressorFunction
 from .gradient_boosting_regressor import GradientBoostingRegressorFunction
-
+from .k_neighbors_regressor import KNeighborsRegressorFunction
 
 __all__ = [
     "KNeighborsRegressorFunction",
