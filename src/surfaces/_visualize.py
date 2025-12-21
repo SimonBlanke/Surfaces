@@ -5,26 +5,52 @@
 # Internal module - not part of public API
 # Visualization utilities for test functions (experimental)
 
-import numpy as np
-import plotly.graph_objects as go
-import plotly.express as px
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-from typing import Dict, List, Optional, Union, Any
+from __future__ import annotations
 
-color_scale = px.colors.sequential.Jet
+import numpy as np
+from typing import Dict, List, Optional, Union, Any, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import plotly.graph_objects as go
+    import matplotlib.pyplot as plt
+
+try:
+    import plotly.graph_objects as go
+    import plotly.express as px
+    import matplotlib as mpl
+    import matplotlib.pyplot as plt
+    _HAS_VIZ_DEPS = True
+    color_scale = px.colors.sequential.Jet
+except ImportError:
+    _HAS_VIZ_DEPS = False
+    go = None  # type: ignore[assignment]
+    px = None
+    mpl = None
+    plt = None  # type: ignore[assignment]
+    color_scale = None
+
+
+def _check_viz_deps():
+    """Check if visualization dependencies are available."""
+    if not _HAS_VIZ_DEPS:
+        raise ImportError(
+            "Visualization features require matplotlib and plotly. "
+            "Install with: pip install surfaces[viz]"
+        )
 
 
 def _create_grid(objective_function, search_space: Dict[str, np.ndarray]):
     """Create a 2D grid for visualization from a search space and objective function.
-    
+
     Args:
         objective_function: Function that takes a dict of parameters and returns a scalar
         search_space: Dictionary with exactly 2 keys, each mapping to numpy arrays
-        
+
     Returns:
         tuple: (xi, yi, zi) meshgrid arrays for plotting
     """
+    _check_viz_deps()
+
     def objective_function_np(*args):
         para = {}
         for arg, key in zip(args, search_space.keys()):

@@ -9,15 +9,15 @@ This page covers various ways to install Surfaces and its dependencies.
 Requirements
 ============
 
-Surfaces requires:
+Surfaces has minimal core requirements:
 
 - Python |min_python| or higher
 - NumPy >= 1.18.1
-- pandas
-- matplotlib
-- plotly
-- scikit-learn
-- search-data-collector >= 0.6.0
+
+Optional dependencies for additional features:
+
+- **Visualization**: matplotlib, plotly
+- **Machine Learning functions**: scikit-learn
 
 Installing from PyPI
 ====================
@@ -26,25 +26,43 @@ The recommended way to install Surfaces is via pip:
 
 .. code-block:: bash
 
+    # Minimal install (algebraic + engineering functions only)
     pip install surfaces
 
-This will install Surfaces and all required dependencies.
+    # With visualization support
+    pip install surfaces[viz]
+
+    # With machine learning functions
+    pip install surfaces[ml]
+
+    # Full installation (all features)
+    pip install surfaces[full]
+
+The minimal installation includes all algebraic (mathematical) and engineering
+test functions. These require only NumPy and are ideal for CI/CD pipelines
+where minimal dependencies are preferred.
 
 Installing with Extras
 ======================
 
-For development or testing, you can install additional dependencies:
+Available optional dependency groups:
 
 .. code-block:: bash
+
+    # Visualization (matplotlib + plotly)
+    pip install surfaces[viz]
+
+    # Machine learning functions (scikit-learn)
+    pip install surfaces[ml]
+
+    # All optional features
+    pip install surfaces[full]
 
     # Development dependencies
     pip install surfaces[dev]
 
     # Test dependencies
     pip install surfaces[test]
-
-    # All extras
-    pip install surfaces[dev,test]
 
 Installing from Source
 ======================
@@ -116,11 +134,18 @@ Troubleshooting
 Import Errors
 -------------
 
-If you get import errors, make sure all dependencies are installed:
+If you get import errors for visualization or ML functions:
 
 .. code-block:: bash
 
-    pip install numpy pandas matplotlib plotly scikit-learn
+    # For visualization functions
+    pip install surfaces[viz]
+
+    # For machine learning functions
+    pip install surfaces[ml]
+
+    # For all features
+    pip install surfaces[full]
 
 Version Conflicts
 -----------------

@@ -2,22 +2,18 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
+# Algebraic functions (always available - numpy only)
 from .algebraic import algebraic_functions
 from .algebraic import *  # noqa: F401,F403
 
+# Machine learning functions (require sklearn)
 from .machine_learning import machine_learning_functions
-from .machine_learning import *  # noqa: F401,F403
+if machine_learning_functions:  # Only import if sklearn available
+    from .machine_learning import *  # noqa: F401,F403
 
+# Engineering functions (always available - numpy only)
 from .engineering import *  # noqa: F401,F403
-
-# Engineering function list
-engineering_functions = [
-    "ThreeBarTrussFunction",
-    "WeldedBeamFunction",
-    "PressureVesselFunction",
-    "TensionCompressionSpringFunction",
-    "CantileverBeamFunction",
-]
+from .engineering import engineering_functions
 
 # Backwards compatibility alias
 mathematical_functions = algebraic_functions

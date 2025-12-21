@@ -33,28 +33,42 @@ classifiers=[
 ]
 dependencies = [
     "numpy>=1.18.1",
-    "pandas",
-    "matplotlib",
-    "plotly",
-    "scikit-learn",
-    "search-data-collector>=0.6.0",
 ]
 
 [project.optional-dependencies]
+# Visualization (matplotlib + plotly)
+viz = [
+    "matplotlib",
+    "plotly",
+]
+# Machine learning test functions
+ml = [
+    "scikit-learn",
+]
+# All optional features
+full = [
+    "surfaces[viz,ml]",
+]
+# Development
 dev = [
+    "surfaces[full]",
     "flake8",
     "check-manifest",
 ]
+# Testing
 test = [
+    "surfaces[full]",
     "pytest>=7.0.0",
     "pytest-cov",
     "flake8",
     "tox",
     "gradient-free-optimizers",
 ]
+# Build
 build = [
     "build",
 ]
+# Surrogate models
 surrogate = [
     "onnxruntime>=1.16.0",
 ]

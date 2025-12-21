@@ -71,4 +71,13 @@ __all__ = [
     "PressureVesselFunction",
     "TensionCompressionSpringFunction",
     "CantileverBeamFunction",
+    "engineering_functions",
+]
+
+engineering_functions = [
+    ThreeBarTrussFunction,
+    WeldedBeamFunction,
+    PressureVesselFunction,
+    TensionCompressionSpringFunction,
+    CantileverBeamFunction,
 ]
