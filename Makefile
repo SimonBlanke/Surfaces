@@ -55,9 +55,22 @@ test-examples:
 
 test: py-test test-examples
 
-# Test with minimal dependencies (no sklearn, no viz)
+# Test with minimal dependencies (no sklearn, no viz, no GFO)
 test-minimal:
-	python -m pytest -x -p no:warnings tests/test_1d_functions.py tests/test_2d_functions.py tests/test_nd_functions.py
+	python -m pytest -x -p no:warnings \
+		tests/test_1d_functions.py \
+		tests/test_2d_functions.py \
+		tests/test_nd_functions.py \
+		tests/test_all_test_functions.py \
+		tests/test_api/test_input_type.py \
+		tests/test_api/test_metric.py \
+		tests/test_api/test_sleep.py
+
+# Integration tests with optimization libraries (requires GFO, optuna, scipy)
+test-integrations:
+	python -m pytest -x -p no:warnings \
+		tests/test_optimization.py \
+		tests/test_api/test_search_space.py
 
 # Test with coverage
 test-cov:
@@ -130,7 +143,8 @@ help:
 	@echo "Testing:"
 	@echo "  test                  Run all tests"
 	@echo "  py-test               Run pytest only"
-	@echo "  test-minimal          Run tests for core functions (no optional deps)"
+	@echo "  test-minimal          Run core tests (no optional deps)"
+	@echo "  test-integrations     Run integration tests (GFO, optuna, scipy)"
 	@echo "  test-cov              Run tests with coverage"
 	@echo ""
 	@echo "Code Quality:"
