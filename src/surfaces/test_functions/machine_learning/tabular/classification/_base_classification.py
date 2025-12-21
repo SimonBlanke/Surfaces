@@ -7,5 +7,4 @@ from .._base_tabular import BaseTabular
 
 
 class BaseClassification(BaseTabular):
-    def __init__(self, scoring="accuracy", *args, **kwargs):
-        super().__init__(*args, scoring=scoring, **kwargs)
+    pass

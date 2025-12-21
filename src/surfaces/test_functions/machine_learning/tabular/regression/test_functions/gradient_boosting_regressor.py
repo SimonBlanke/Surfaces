@@ -89,7 +89,7 @@ class GradientBoostingRegressorFunction(BaseRegression):
                 max_depth=params["max_depth"],
             )
             X, y = params["dataset"]()
-            scores = cross_val_score(knc, X, y, cv=params["cv"], scoring=self.scoring)
+            scores = cross_val_score(knc, X, y, cv=params["cv"], scoring="r2")
             return scores.mean()
 
         self.pure_objective_function = gradient_boosting_regressor

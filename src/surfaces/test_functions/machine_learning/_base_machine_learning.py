@@ -13,16 +13,13 @@ class MachineLearningFunction(BaseTestFunction):
     """
     Base class for machine learning hyperparameter optimization test functions.
 
-    ML functions evaluate model performance (e.g., accuracy, R2 score) based on
-    hyperparameter configurations. They naturally return score values where
-    higher is better.
+    ML functions evaluate model performance based on hyperparameter configurations.
+    They naturally return score values where higher is better.
 
     Parameters
     ----------
     objective : str, default="maximize"
         Either "minimize" or "maximize".
-    scoring : str, default="accuracy"
-        Sklearn scoring metric (e.g., "accuracy", "r2", "f1").
     sleep : float, default=0
         Artificial delay in seconds added to each evaluation.
     """
@@ -48,13 +45,11 @@ class MachineLearningFunction(BaseTestFunction):
     def __init__(
         self,
         objective: str = "maximize",
-        scoring: str = "accuracy",
         sleep: float = 0,
         evaluate_from_data: bool = False,
         **kwargs
     ):
         super().__init__(objective, sleep)
-        self.scoring = scoring
         self.evaluate_from_data = evaluate_from_data
 
         if evaluate_from_data:

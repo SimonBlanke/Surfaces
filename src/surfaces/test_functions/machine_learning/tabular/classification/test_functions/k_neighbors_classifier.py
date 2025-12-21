@@ -88,7 +88,7 @@ class KNeighborsClassifierFunction(BaseClassification):
                 algorithm=params["algorithm"],
             )
             X, y = params["dataset"]()
-            scores = cross_val_score(knc, X, y, cv=params["cv"], scoring=self.scoring)
+            scores = cross_val_score(knc, X, y, cv=params["cv"], scoring="accuracy")
             return scores.mean()
 
         self.pure_objective_function = k_neighbors_classifier
