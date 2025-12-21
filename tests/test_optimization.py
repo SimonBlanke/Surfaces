@@ -124,3 +124,27 @@ def test_optimization_4D(test_function):
 
     opt = RandomSearchOptimizer(search_space)
     opt.search(test_function, n_iter=30)
+
+
+############################################################
+# scipy integration test
+
+
+def test_scipy_integration():
+    """Test that Surfaces functions work directly with scipy.optimize."""
+    from scipy.optimize import minimize
+
+    func = SphereFunction(n_dim=2)
+
+    # func accepts numpy arrays directly
+    result = minimize(
+        func,
+        x0=[1.0, 1.0],
+        bounds=[(-5, 5), (-5, 5)],
+        method="L-BFGS-B",
+    )
+
+    # Should find minimum near [0, 0]
+    assert result.success
+    assert abs(result.fun) < 0.01
+    assert np.allclose(result.x, [0, 0], atol=0.1)
