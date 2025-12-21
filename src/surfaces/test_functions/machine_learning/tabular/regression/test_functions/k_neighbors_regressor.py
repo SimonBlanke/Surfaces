@@ -89,7 +89,7 @@ class KNeighborsRegressorFunction(BaseRegression):
                 algorithm=params["algorithm"],
             )
             X, y = params["dataset"]()
-            scores = cross_val_score(knc, X, y, cv=params["cv"], scoring=self.metric)
+            scores = cross_val_score(knc, X, y, cv=params["cv"], scoring=self.scoring)
             return scores.mean()
 
         self.pure_objective_function = k_neighbors_regressor

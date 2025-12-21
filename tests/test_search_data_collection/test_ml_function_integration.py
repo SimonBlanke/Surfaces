@@ -36,7 +36,7 @@ class TestMLFunctionIntegration:
                 'dataset': func.dataset_default[0]
             }
             
-            result_normal = func.evaluate(test_params)
+            result_normal = func(test_params)
             assert isinstance(result_normal, float)
             
             # Test search data collection with small space
@@ -182,7 +182,7 @@ class TestMLFunctionIntegration:
             }
             
             # Get result from normal evaluation
-            result_normal = func.evaluate(test_params)
+            result_normal = func(test_params)
             
             # Collect data including this parameter combination
             small_search_space = {
