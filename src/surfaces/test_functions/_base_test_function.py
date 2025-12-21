@@ -79,9 +79,9 @@ class BaseTestFunction:
         raise NotImplementedError("'_create_objective_function' must be implemented")
 
     @property
-    def default_search_space(self) -> Dict[str, Any]:
-        """Default search space for this function (override in subclasses)."""
-        raise NotImplementedError("'default_search_space' must be implemented")
+    def search_space(self) -> Dict[str, Any]:
+        """Search space for this function (override in subclasses)."""
+        raise NotImplementedError("'search_space' must be implemented")
 
     # =========================================================================
     # Primary Interface: __call__
@@ -116,7 +116,7 @@ class BaseTestFunction:
     ) -> Dict[str, Any]:
         """Convert any input format to dict."""
         if isinstance(params, (np.ndarray, list, tuple)):
-            param_names = sorted(self.default_search_space.keys())
+            param_names = sorted(self.search_space.keys())
             if len(params) != len(param_names):
                 raise ValueError(
                     f"Expected {len(param_names)} values, got {len(params)}"

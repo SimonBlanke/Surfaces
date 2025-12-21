@@ -46,7 +46,7 @@ class GramacyAndLeeFunction(MathematicalFunction):
     >>> func = GramacyAndLeeFunction()
     >>> func({"x0": 1.0})
     0.0
-    >>> search_space = func.default_search_space
+    >>> search_space = func.search_space
     >>> len(search_space)
     1
     """

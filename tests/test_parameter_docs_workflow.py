@@ -39,7 +39,7 @@ def test_workflow():
         'n_neighbors': [3, 5, 7],
         'algorithm': ['auto', 'ball_tree'],
         'cv': [2, 3],
-        'dataset': func.default_search_space['dataset'][:1]  # Just one dataset
+        'dataset': func.search_space['dataset'][:1]  # Just one dataset
     }
 
     print(f"Collecting data with custom search space: {custom_search_space}")

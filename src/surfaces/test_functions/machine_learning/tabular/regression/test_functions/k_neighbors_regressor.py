@@ -43,7 +43,7 @@ class KNeighborsRegressorFunction(BaseRegression):
     --------
     >>> from surfaces.test_functions import KNeighborsRegressorFunction
     >>> func = KNeighborsRegressorFunction()
-    >>> search_space = func.default_search_space
+    >>> search_space = func.search_space
     >>> list(search_space.keys())
     ['n_neighbors', 'algorithm', 'cv', 'dataset']
     """

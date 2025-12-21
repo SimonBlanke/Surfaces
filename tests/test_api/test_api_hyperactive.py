@@ -16,7 +16,7 @@ def test_all_functions(test_function):
     except TypeError:
         test_function_ = test_function(n_dim=3)
 
-    search_space = test_function_.default_search_space
+    search_space = test_function_.search_space
 
     # Test that the function can be created and evaluated
     assert isinstance(search_space, dict)

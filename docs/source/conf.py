@@ -144,8 +144,8 @@ exclude_patterns = [
 
 add_module_names = False
 
-# Hide class name prefix in page TOC (e.g., show "default_search_space" instead of
-# "AckleyFunction.default_search_space")
+# Hide class name prefix in page TOC (e.g., show "search_space" instead of
+# "AckleyFunction.search_space")
 toc_object_entries_show_parents = "hide"
 
 # The name of the Pygments (syntax highlighting) style to use.

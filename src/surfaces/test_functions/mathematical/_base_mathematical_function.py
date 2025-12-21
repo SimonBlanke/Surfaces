@@ -35,8 +35,8 @@ class MathematicalFunction(BaseTestFunction):
     default_size: int = 10000
 
     @property
-    def default_search_space(self) -> Dict[str, Any]:
-        """Default search space based on default_bounds and n_dim."""
+    def search_space(self) -> Dict[str, Any]:
+        """Search space based on default_bounds and n_dim."""
         min_val, max_val = self.default_bounds
         return self._create_n_dim_search_space(min=min_val, max=max_val, size=self.default_size)
 

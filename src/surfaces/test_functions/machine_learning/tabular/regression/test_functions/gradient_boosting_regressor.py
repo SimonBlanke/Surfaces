@@ -43,7 +43,7 @@ class GradientBoostingRegressorFunction(BaseRegression):
     --------
     >>> from surfaces.test_functions import GradientBoostingRegressorFunction
     >>> func = GradientBoostingRegressorFunction()
-    >>> search_space = func.default_search_space
+    >>> search_space = func.search_space
     >>> list(search_space.keys())
     ['n_estimators', 'max_depth', 'cv', 'dataset']
     """

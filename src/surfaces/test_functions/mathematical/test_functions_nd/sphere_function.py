@@ -50,7 +50,7 @@ class SphereFunction(MathematicalFunction):
     >>> result = func({"x0": 0.0, "x1": 0.0, "x2": 0.0})
     >>> abs(result) < 1e-10
     True
-    >>> len(func.default_search_space)
+    >>> len(func.search_space)
     3
     """
 

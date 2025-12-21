@@ -22,8 +22,8 @@ def test_all_mathematical_functions(test_function):
     except TypeError:
         test_function_ = test_function(n_dim=2)
 
-    # Test that the function can be created and has default_search_space
-    search_space = test_function_.default_search_space
+    # Test that the function can be created and has search_space
+    search_space = test_function_.search_space
     assert isinstance(search_space, dict)
     assert len(search_space) > 0
 
@@ -37,8 +37,8 @@ def test_all_mathematical_functions(test_function):
 def test_all_machine_learning_functions(test_function):
     test_function_ = test_function()
 
-    # Test that the function can be created and has default_search_space
-    search_space = test_function_.default_search_space
+    # Test that the function can be created and has search_space
+    search_space = test_function_.search_space
     assert isinstance(search_space, dict)
     assert len(search_space) > 0
 

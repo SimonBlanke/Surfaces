@@ -35,10 +35,10 @@ machine_learning_functions_d = (
 
 @pytest.mark.parametrize(*mathematical_functions_1d)
 def test_search_space_1d_default(test_function):
-    """Test that 1D functions have valid default_search_space."""
+    """Test that 1D functions have valid search_space."""
     test_function_ = test_function()
 
-    search_space = test_function_.default_search_space
+    search_space = test_function_.search_space
     n_iter = 20
 
     opt = RandomSearchOptimizer(search_space)
@@ -47,10 +47,10 @@ def test_search_space_1d_default(test_function):
 
 @pytest.mark.parametrize(*mathematical_functions_2d)
 def test_search_space_2d_default(test_function):
-    """Test that 2D functions have valid default_search_space."""
+    """Test that 2D functions have valid search_space."""
     test_function_ = test_function()
 
-    search_space = test_function_.default_search_space
+    search_space = test_function_.search_space
     n_iter = 20
 
     opt = RandomSearchOptimizer(search_space)
@@ -59,10 +59,10 @@ def test_search_space_2d_default(test_function):
 
 @pytest.mark.parametrize(*mathematical_functions_nd)
 def test_search_space_nd_default(test_function):
-    """Test that ND functions have valid default_search_space."""
+    """Test that ND functions have valid search_space."""
     test_function_ = test_function(n_dim=3)
 
-    search_space = test_function_.default_search_space
+    search_space = test_function_.search_space
     n_iter = 20
 
     opt = RandomSearchOptimizer(search_space)
@@ -85,11 +85,11 @@ def test_search_space_nd_custom_bounds(test_function):
 
 
 @pytest.mark.parametrize(*machine_learning_functions_d)
-def test_ml_default_search_space(test_function):
-    """Test that ML functions have valid default_search_space."""
+def test_ml_search_space(test_function):
+    """Test that ML functions have valid search_space."""
     test_function_ = test_function()
 
-    search_space = test_function_.default_search_space
+    search_space = test_function_.search_space
     assert isinstance(search_space, dict)
     assert len(search_space) > 0
 
