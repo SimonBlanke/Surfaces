@@ -4,10 +4,10 @@
 
 import numpy as np
 
-from .._base_mathematical_function import MathematicalFunction
+from .._base_algebraic_function import AlgebraicFunction
 
 
-class GriewankFunction(MathematicalFunction):
+class GriewankFunction(AlgebraicFunction):
     """Griewank N-dimensional test function.
 
     A multimodal function with many regularly distributed local minima.

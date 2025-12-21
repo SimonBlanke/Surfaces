@@ -5,10 +5,10 @@
 
 import numpy as np
 
-from .._base_mathematical_function import MathematicalFunction
+from .._base_algebraic_function import AlgebraicFunction
 
 
-class GramacyAndLeeFunction(MathematicalFunction):
+class GramacyAndLeeFunction(AlgebraicFunction):
     """Gramacy and Lee one-dimensional test function.
 
     A simple one-dimensional test function commonly used for testing

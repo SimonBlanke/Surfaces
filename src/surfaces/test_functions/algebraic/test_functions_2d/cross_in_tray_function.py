@@ -4,10 +4,10 @@
 
 import numpy as np
 
-from .._base_mathematical_function import MathematicalFunction
+from .._base_algebraic_function import AlgebraicFunction
 
 
-class CrossInTrayFunction(MathematicalFunction):
+class CrossInTrayFunction(AlgebraicFunction):
     """Cross-in-Tray two-dimensional test function.
 
     A multimodal function with four identical global minima arranged

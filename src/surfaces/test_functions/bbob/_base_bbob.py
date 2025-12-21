@@ -20,10 +20,10 @@ References:
 import numpy as np
 from typing import Dict, Any, Optional, Tuple
 
-from ..mathematical._base_mathematical_function import MathematicalFunction
+from ..algebraic._base_algebraic_function import AlgebraicFunction
 
 
-class BBOBFunction(MathematicalFunction):
+class BBOBFunction(AlgebraicFunction):
     """Base class for BBOB benchmark functions.
 
     BBOB functions feature:
@@ -55,14 +55,18 @@ class BBOBFunction(MathematicalFunction):
         Optimal function value.
     """
 
-    func_id: int = None
-    default_bounds: Tuple[float, float] = (-5.0, 5.0)
-
     _spec = {
+        "func_id": None,
+        "default_bounds": (-5.0, 5.0),
         "continuous": True,
         "differentiable": True,
         "scalable": True,
     }
+
+    @property
+    def func_id(self) -> Optional[int]:
+        """Function ID (1-24) within BBOB suite."""
+        return self.spec.get("func_id")
 
     def __init__(
         self,

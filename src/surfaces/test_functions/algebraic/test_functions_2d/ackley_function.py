@@ -4,10 +4,10 @@
 
 import numpy as np
 
-from .._base_mathematical_function import MathematicalFunction
+from .._base_algebraic_function import AlgebraicFunction
 
 
-class AckleyFunction(MathematicalFunction):
+class AckleyFunction(AlgebraicFunction):
     """Ackley two-dimensional test function.
 
     A non-convex function used as a performance test problem for optimization

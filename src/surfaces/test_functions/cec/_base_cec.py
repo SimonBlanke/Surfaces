@@ -9,10 +9,10 @@ from abc import abstractmethod
 from pathlib import Path
 from typing import Dict, Any, Optional, Tuple
 
-from ..mathematical._base_mathematical_function import MathematicalFunction
+from ..algebraic._base_algebraic_function import AlgebraicFunction
 
 
-class CECFunction(MathematicalFunction):
+class CECFunction(AlgebraicFunction):
     """Base class for all CEC competition benchmark functions.
 
     CEC (IEEE Congress on Evolutionary Computation) benchmark functions are
@@ -50,16 +50,21 @@ class CECFunction(MathematicalFunction):
         Global optimum location (typically the shift vector).
     """
 
-    func_id: int = None
     data_prefix: str = None
-    default_bounds: Tuple[float, float] = (-100.0, 100.0)
     supported_dims: Tuple[int, ...] = ()
 
     _spec = {
+        "func_id": None,
+        "default_bounds": (-100.0, 100.0),
         "continuous": True,
         "differentiable": True,
         "scalable": True,
     }
+
+    @property
+    def func_id(self) -> Optional[int]:
+        """Function ID within the CEC suite."""
+        return self.spec.get("func_id")
 
     # Class-level cache for loaded data, keyed by (data_prefix, n_dim)
     _data_cache: Dict[Tuple[str, int], Dict[str, np.ndarray]] = {}

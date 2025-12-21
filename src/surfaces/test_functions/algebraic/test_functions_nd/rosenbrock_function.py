@@ -4,10 +4,10 @@
 
 import numpy as np
 
-from .._base_mathematical_function import MathematicalFunction
+from .._base_algebraic_function import AlgebraicFunction
 
 
-class RosenbrockFunction(MathematicalFunction):
+class RosenbrockFunction(AlgebraicFunction):
     """Rosenbrock N-dimensional test function.
 
     Also known as the "banana function" due to the shape of its contour

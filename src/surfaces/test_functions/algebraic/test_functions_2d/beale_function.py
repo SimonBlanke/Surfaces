@@ -4,10 +4,10 @@
 
 import numpy as np
 
-from .._base_mathematical_function import MathematicalFunction
+from .._base_algebraic_function import AlgebraicFunction
 
 
-class BealeFunction(MathematicalFunction):
+class BealeFunction(AlgebraicFunction):
     """Beale two-dimensional test function.
 
     A multimodal function with sharp peaks at the corners of the input domain.

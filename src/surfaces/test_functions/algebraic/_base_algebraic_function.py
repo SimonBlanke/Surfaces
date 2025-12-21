@@ -2,6 +2,7 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
+"""Base class for algebraic test functions with closed-form expressions."""
 
 import numpy as np
 from typing import Dict, Any, Tuple, Union
@@ -9,8 +10,11 @@ from typing import Dict, Any, Tuple, Union
 from .._base_test_function import BaseTestFunction
 
 
-class MathematicalFunction(BaseTestFunction):
-    """Base class for mathematical optimization test functions.
+class AlgebraicFunction(BaseTestFunction):
+    """Base class for algebraic optimization test functions.
+
+    Algebraic functions are defined by closed-form analytical expressions,
+    as opposed to data-driven (ML) or externally-defined (CEC/BBOB) functions.
 
     Parameters
     ----------
@@ -27,11 +31,11 @@ class MathematicalFunction(BaseTestFunction):
     """
 
     _spec = {
+        "default_bounds": (-5.0, 5.0),
         "continuous": True,
         "differentiable": True,
     }
 
-    default_bounds: Tuple[float, float] = (-5.0, 5.0)
     default_size: int = 10000
 
     @property
@@ -75,3 +79,7 @@ class MathematicalFunction(BaseTestFunction):
                 add_dim(search_space_, dim, min, max)
 
         return search_space_
+
+
+# Backwards compatibility alias
+MathematicalFunction = AlgebraicFunction

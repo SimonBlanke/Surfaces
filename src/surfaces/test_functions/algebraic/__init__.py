@@ -2,6 +2,9 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
+"""Algebraic test functions with closed-form analytical expressions."""
+
+from ._base_algebraic_function import AlgebraicFunction, MathematicalFunction
 
 from .test_functions_1d.gramacy_and_lee_function import GramacyAndLeeFunction
 
@@ -60,7 +63,7 @@ __all__ = [
     "ThreeHumpCamelFunction",
 ]
 
-mathematical_functions = [
+algebraic_functions = [
     AckleyFunction,
     BealeFunction,
     BoothFunction,
@@ -87,13 +90,16 @@ mathematical_functions = [
     ThreeHumpCamelFunction,
 ]
 
+# Backwards compatibility aliases
+mathematical_functions = algebraic_functions
 
-mathematical_functions_1d = [
+algebraic_functions_1d = [
     GramacyAndLeeFunction,
 ]
+mathematical_functions_1d = algebraic_functions_1d
 
 
-mathematical_functions_2d = [
+algebraic_functions_2d = [
     AckleyFunction,
     BealeFunction,
     BoothFunction,
@@ -113,12 +119,14 @@ mathematical_functions_2d = [
     SimionescuFunction,
     ThreeHumpCamelFunction,
 ]
+mathematical_functions_2d = algebraic_functions_2d
 
 
-mathematical_functions_nd = [
+algebraic_functions_nd = [
     GriewankFunction,
     RastriginFunction,
     RosenbrockFunction,
     SphereFunction,
     StyblinskiTangFunction,
 ]
+mathematical_functions_nd = algebraic_functions_nd

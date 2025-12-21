@@ -4,10 +4,10 @@
 
 import numpy as np
 
-from .._base_mathematical_function import MathematicalFunction
+from .._base_algebraic_function import AlgebraicFunction
 
 
-class EasomFunction(MathematicalFunction):
+class EasomFunction(AlgebraicFunction):
     """Easom two-dimensional test function.
 
     A unimodal function with a very small area relative to the search space

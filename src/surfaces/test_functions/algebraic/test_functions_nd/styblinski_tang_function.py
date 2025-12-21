@@ -4,10 +4,10 @@
 
 import numpy as np
 
-from .._base_mathematical_function import MathematicalFunction
+from .._base_algebraic_function import AlgebraicFunction
 
 
-class StyblinskiTangFunction(MathematicalFunction):
+class StyblinskiTangFunction(AlgebraicFunction):
     """Styblinski-Tang N-dimensional test function.
 
     A polynomial function with multiple local minima.

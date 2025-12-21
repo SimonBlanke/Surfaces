@@ -4,22 +4,22 @@
 
 import numpy as np
 
-from .._base_mathematical_function import MathematicalFunction
+from .._base_algebraic_function import AlgebraicFunction
 
 
-class ThreeHumpCamelFunction(MathematicalFunction):
-    """Three-Hump Camel two-dimensional test function.
+class McCormickFunction(AlgebraicFunction):
+    """McCormick two-dimensional test function.
 
-    A function with three local minima, two of which are symmetric about
-    the origin.
+    A function with a single global minimum, commonly used for testing
+    optimization algorithms.
 
     The function is defined as:
 
     .. math::
 
-        f(x, y) = 2x^2 - 1.05x^4 + \\frac{x^6}{6} + xy + y^2
+        f(x, y) = \\sin(x + y) + (x - y)^2 - 1.5x + 2.5y + 1
 
-    The global minimum is :math:`f(0, 0) = 0`.
+    The global minimum is :math:`f(-0.54719, -1.54719) = -1.9133`.
 
     Parameters
     ----------
@@ -37,26 +37,24 @@ class ThreeHumpCamelFunction(MathematicalFunction):
 
     Examples
     --------
-    >>> from surfaces.test_functions import ThreeHumpCamelFunction
-    >>> func = ThreeHumpCamelFunction()
-    >>> result = func({"x0": 0.0, "x1": 0.0})
-    >>> abs(result) < 1e-10
-    True
+    >>> from surfaces.test_functions import McCormickFunction
+    >>> func = McCormickFunction()
+    >>> result = func({"x0": -0.54719, "x1": -1.54719})
     """
 
-    name = "Three Hump Camel Function"
-    _name_ = "three_hump_camel_function"
-    __name__ = "ThreeHumpCamelFunction"
+    name = "Mc Cormick Function"
+    _name_ = "mccormick_function"
+    __name__ = "McCormickFunction"
 
     _spec = {
         "convex": False,
-        "unimodal": False,
+        "unimodal": True,
         "separable": False,
         "scalable": False,
     }
 
-    f_global = 0.0
-    x_global = np.array([0.0, 0.0])
+    f_global = -1.9133
+    x_global = np.array([-0.54719, -1.54719])
 
     default_bounds = (-5.0, 5.0)
     n_dim = 2
@@ -66,13 +64,13 @@ class ThreeHumpCamelFunction(MathematicalFunction):
         self.n_dim = 2
 
     def _create_objective_function(self):
-        def three_hump_camel_function(params):
+        def mccormick_function(params):
             x = params["x0"]
             y = params["x1"]
 
-            return 2 * x**2 - 1.05 * x**4 + x**6 / 6 + x * y + y**2
+            return np.sin(x + y) + (x - y) ** 2 - 1.5 * x + 2.5 * y + 1
 
-        self.pure_objective_function = three_hump_camel_function
+        self.pure_objective_function = mccormick_function
 
     def _search_space(self, min=-5, max=5, value_types="array", size=10000):
         return super()._create_n_dim_search_space(

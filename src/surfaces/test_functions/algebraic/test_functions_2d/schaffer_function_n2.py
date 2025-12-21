@@ -4,10 +4,10 @@
 
 import numpy as np
 
-from .._base_mathematical_function import MathematicalFunction
+from .._base_algebraic_function import AlgebraicFunction
 
 
-class SchafferFunctionN2(MathematicalFunction):
+class SchafferFunctionN2(AlgebraicFunction):
     """Schaffer N.2 two-dimensional test function.
 
     A multimodal function with many local minima.

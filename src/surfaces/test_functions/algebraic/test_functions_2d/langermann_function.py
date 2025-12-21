@@ -4,10 +4,10 @@
 
 import numpy as np
 
-from .._base_mathematical_function import MathematicalFunction
+from .._base_algebraic_function import AlgebraicFunction
 
 
-class LangermannFunction(MathematicalFunction):
+class LangermannFunction(AlgebraicFunction):
     """Langermann two-dimensional test function.
 
     A multimodal function with many unevenly distributed local minima.

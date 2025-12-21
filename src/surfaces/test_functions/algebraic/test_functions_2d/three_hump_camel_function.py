@@ -4,22 +4,22 @@
 
 import numpy as np
 
-from .._base_mathematical_function import MathematicalFunction
+from .._base_algebraic_function import AlgebraicFunction
 
 
-class DropWaveFunction(MathematicalFunction):
-    """Drop-Wave two-dimensional test function.
+class ThreeHumpCamelFunction(AlgebraicFunction):
+    """Three-Hump Camel two-dimensional test function.
 
-    A highly multimodal function with many local minima arranged in a
-    concentric wave pattern.
+    A function with three local minima, two of which are symmetric about
+    the origin.
 
     The function is defined as:
 
     .. math::
 
-        f(x, y) = -\\frac{1 + \\cos(12\\sqrt{x^2 + y^2})}{0.5(x^2 + y^2) + 2}
+        f(x, y) = 2x^2 - 1.05x^4 + \\frac{x^6}{6} + xy + y^2
 
-    The global minimum is :math:`f(0, 0) = -1`.
+    The global minimum is :math:`f(0, 0) = 0`.
 
     Parameters
     ----------
@@ -37,16 +37,16 @@ class DropWaveFunction(MathematicalFunction):
 
     Examples
     --------
-    >>> from surfaces.test_functions import DropWaveFunction
-    >>> func = DropWaveFunction()
+    >>> from surfaces.test_functions import ThreeHumpCamelFunction
+    >>> func = ThreeHumpCamelFunction()
     >>> result = func({"x0": 0.0, "x1": 0.0})
-    >>> abs(result + 1.0) < 1e-10
+    >>> abs(result) < 1e-10
     True
     """
 
-    name = "Drop Wave Function"
-    _name_ = "drop_wave_function"
-    __name__ = "DropWaveFunction"
+    name = "Three Hump Camel Function"
+    _name_ = "three_hump_camel_function"
+    __name__ = "ThreeHumpCamelFunction"
 
     _spec = {
         "convex": False,
@@ -55,7 +55,7 @@ class DropWaveFunction(MathematicalFunction):
         "scalable": False,
     }
 
-    f_global = -1.0
+    f_global = 0.0
     x_global = np.array([0.0, 0.0])
 
     default_bounds = (-5.0, 5.0)
@@ -66,13 +66,13 @@ class DropWaveFunction(MathematicalFunction):
         self.n_dim = 2
 
     def _create_objective_function(self):
-        def drop_wave_function(params):
+        def three_hump_camel_function(params):
             x = params["x0"]
             y = params["x1"]
 
-            return -(1 + np.cos(12 * np.sqrt(x**2 + y**2))) / (0.5 * (x**2 + y**2) + 2)
+            return 2 * x**2 - 1.05 * x**4 + x**6 / 6 + x * y + y**2
 
-        self.pure_objective_function = drop_wave_function
+        self.pure_objective_function = three_hump_camel_function
 
     def _search_space(self, min=-5, max=5, value_types="array", size=10000):
         return super()._create_n_dim_search_space(

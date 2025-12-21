@@ -4,10 +4,10 @@
 
 import numpy as np
 
-from .._base_mathematical_function import MathematicalFunction
+from .._base_algebraic_function import AlgebraicFunction
 
 
-class LeviFunctionN13(MathematicalFunction):
+class LeviFunctionN13(AlgebraicFunction):
     """Levi N.13 two-dimensional test function.
 
     A multimodal function with a single global minimum.

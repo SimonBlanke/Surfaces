@@ -4,10 +4,10 @@
 
 import numpy as np
 
-from .._base_mathematical_function import MathematicalFunction
+from .._base_algebraic_function import AlgebraicFunction
 
 
-class SimionescuFunction(MathematicalFunction):
+class SimionescuFunction(AlgebraicFunction):
     """Simionescu two-dimensional constrained test function.
 
     A function with a bumpy constraint boundary. Points outside the

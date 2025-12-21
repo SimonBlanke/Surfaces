@@ -4,10 +4,10 @@
 
 import numpy as np
 
-from .._base_mathematical_function import MathematicalFunction
+from .._base_algebraic_function import AlgebraicFunction
 
 
-class EggholderFunction(MathematicalFunction):
+class EggholderFunction(AlgebraicFunction):
     """Eggholder two-dimensional test function.
 
     A difficult optimization test problem due to its many local minima.

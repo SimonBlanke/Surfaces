@@ -4,22 +4,22 @@
 
 import numpy as np
 
-from .._base_mathematical_function import MathematicalFunction
+from .._base_algebraic_function import AlgebraicFunction
 
 
-class McCormickFunction(MathematicalFunction):
-    """McCormick two-dimensional test function.
+class DropWaveFunction(AlgebraicFunction):
+    """Drop-Wave two-dimensional test function.
 
-    A function with a single global minimum, commonly used for testing
-    optimization algorithms.
+    A highly multimodal function with many local minima arranged in a
+    concentric wave pattern.
 
     The function is defined as:
 
     .. math::
 
-        f(x, y) = \\sin(x + y) + (x - y)^2 - 1.5x + 2.5y + 1
+        f(x, y) = -\\frac{1 + \\cos(12\\sqrt{x^2 + y^2})}{0.5(x^2 + y^2) + 2}
 
-    The global minimum is :math:`f(-0.54719, -1.54719) = -1.9133`.
+    The global minimum is :math:`f(0, 0) = -1`.
 
     Parameters
     ----------
@@ -37,24 +37,26 @@ class McCormickFunction(MathematicalFunction):
 
     Examples
     --------
-    >>> from surfaces.test_functions import McCormickFunction
-    >>> func = McCormickFunction()
-    >>> result = func({"x0": -0.54719, "x1": -1.54719})
+    >>> from surfaces.test_functions import DropWaveFunction
+    >>> func = DropWaveFunction()
+    >>> result = func({"x0": 0.0, "x1": 0.0})
+    >>> abs(result + 1.0) < 1e-10
+    True
     """
 
-    name = "Mc Cormick Function"
-    _name_ = "mccormick_function"
-    __name__ = "McCormickFunction"
+    name = "Drop Wave Function"
+    _name_ = "drop_wave_function"
+    __name__ = "DropWaveFunction"
 
     _spec = {
         "convex": False,
-        "unimodal": True,
+        "unimodal": False,
         "separable": False,
         "scalable": False,
     }
 
-    f_global = -1.9133
-    x_global = np.array([-0.54719, -1.54719])
+    f_global = -1.0
+    x_global = np.array([0.0, 0.0])
 
     default_bounds = (-5.0, 5.0)
     n_dim = 2
@@ -64,13 +66,13 @@ class McCormickFunction(MathematicalFunction):
         self.n_dim = 2
 
     def _create_objective_function(self):
-        def mccormick_function(params):
+        def drop_wave_function(params):
             x = params["x0"]
             y = params["x1"]
 
-            return np.sin(x + y) + (x - y) ** 2 - 1.5 * x + 2.5 * y + 1
+            return -(1 + np.cos(12 * np.sqrt(x**2 + y**2))) / (0.5 * (x**2 + y**2) + 2)
 
-        self.pure_objective_function = mccormick_function
+        self.pure_objective_function = drop_wave_function
 
     def _search_space(self, min=-5, max=5, value_types="array", size=10000):
         return super()._create_n_dim_search_space(

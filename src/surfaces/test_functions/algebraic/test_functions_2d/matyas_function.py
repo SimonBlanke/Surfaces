@@ -4,21 +4,21 @@
 
 import numpy as np
 
-from .._base_mathematical_function import MathematicalFunction
+from .._base_algebraic_function import AlgebraicFunction
 
 
-class BoothFunction(MathematicalFunction):
-    """Booth two-dimensional test function.
+class MatyasFunction(AlgebraicFunction):
+    """Matyas two-dimensional test function.
 
-    A simple polynomial optimization test function.
+    A bowl-shaped, unimodal function.
 
     The function is defined as:
 
     .. math::
 
-        f(x, y) = (x + 2y - 7)^2 + (2x + y - 5)^2
+        f(x, y) = 0.26(x^2 + y^2) - 0.48xy
 
-    The global minimum is :math:`f(1, 3) = 0`.
+    The global minimum is :math:`f(0, 0) = 0`.
 
     Parameters
     ----------
@@ -34,31 +34,28 @@ class BoothFunction(MathematicalFunction):
     default_bounds : tuple
         Default parameter bounds (-10.0, 10.0).
 
-    References
-    ----------
-    .. [1] Global Optimization Test Problems. Retrieved June 2013, from
-       http://www-optima.amp.i.kyoto-u.ac.jp/member/student/hedar/Hedar_files/TestGO
-
     Examples
     --------
-    >>> from surfaces.test_functions import BoothFunction
-    >>> func = BoothFunction()
-    >>> result = func({"x0": 1.0, "x1": 3.0})
+    >>> from surfaces.test_functions import MatyasFunction
+    >>> func = MatyasFunction()
+    >>> result = func({"x0": 0.0, "x1": 0.0})
+    >>> abs(result) < 1e-10
+    True
     """
 
-    name = "Booth Function"
-    _name_ = "booth_function"
-    __name__ = "BoothFunction"
+    name = "Matyas Function"
+    _name_ = "matyas_function"
+    __name__ = "MatyasFunction"
 
     _spec = {
-        "convex": False,
+        "convex": True,
         "unimodal": True,
         "separable": False,
         "scalable": False,
     }
 
     f_global = 0.0
-    x_global = np.array([1.0, 3.0])
+    x_global = np.array([0.0, 0.0])
 
     default_bounds = (-10.0, 10.0)
     n_dim = 2
@@ -68,17 +65,13 @@ class BoothFunction(MathematicalFunction):
         self.n_dim = 2
 
     def _create_objective_function(self):
-
-        def booth_function(params):
+        def matyas_function(params):
             x = params["x0"]
             y = params["x1"]
 
-            loss1 = (x + 2 * y - 7) ** 2
-            loss2 = (2 * x + y - 5) ** 2
+            return 0.26 * (x**2 + y**2) - 0.48 * x * y
 
-            return loss1 * loss2
-
-        self.pure_objective_function = booth_function
+        self.pure_objective_function = matyas_function
 
     def _search_space(self, min=-10, max=10, value_types="array", size=10000):
         return super()._create_n_dim_search_space(

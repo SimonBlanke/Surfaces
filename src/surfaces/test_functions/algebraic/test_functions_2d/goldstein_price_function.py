@@ -4,10 +4,10 @@
 
 import numpy as np
 
-from .._base_mathematical_function import MathematicalFunction
+from .._base_algebraic_function import AlgebraicFunction
 
 
-class GoldsteinPriceFunction(MathematicalFunction):
+class GoldsteinPriceFunction(AlgebraicFunction):
     """Goldstein-Price two-dimensional test function.
 
     A polynomial function with several local minima, commonly used in

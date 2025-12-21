@@ -4,10 +4,10 @@
 
 import numpy as np
 
-from .._base_mathematical_function import MathematicalFunction
+from .._base_algebraic_function import AlgebraicFunction
 
 
-class BukinFunctionN6(MathematicalFunction):
+class BukinFunctionN6(AlgebraicFunction):
     """Bukin N.6 two-dimensional test function.
 
     A non-convex function with a ridge along a parabola, making it challenging
