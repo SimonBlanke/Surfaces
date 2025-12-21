@@ -2,6 +2,7 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
+import numpy as np
 
 from .._base_mathematical_function import MathematicalFunction
 
@@ -47,11 +48,20 @@ class StyblinskiTangFunction(MathematicalFunction):
     _name_ = "styblinski_tang_function"
     __name__ = "StyblinskiTangFunction"
 
+    _spec = {
+        "convex": False,
+        "unimodal": False,
+        "separable": True,
+        "scalable": True,
+    }
+
     default_bounds = (-5.0, 5.0)
 
     def __init__(self, n_dim, metric="score", sleep=0):
         super().__init__(metric, sleep)
         self.n_dim = n_dim
+        self.x_global = np.full(n_dim, -2.903534)
+        self.f_global = -39.16617 * n_dim
 
     def _create_objective_function(self):
         def styblinski_tang_function(params):

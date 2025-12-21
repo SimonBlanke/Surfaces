@@ -2,6 +2,7 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
+import numpy as np
 
 from .._base_mathematical_function import MathematicalFunction
 
@@ -56,7 +57,23 @@ class HimmelblausFunction(MathematicalFunction):
     _name_ = "himmelblaus_function"
     __name__ = "HimmelblausFunction"
 
+    _spec = {
+        "convex": False,
+        "unimodal": False,
+        "separable": False,
+        "scalable": False,
+    }
+
+    f_global = 0.0
+    x_global = np.array([
+        [3.0, 2.0],
+        [-2.805118, 3.131312],
+        [-3.779310, -3.283186],
+        [3.584428, -1.848126],
+    ])
+
     default_bounds = (-5.0, 5.0)
+    n_dim = 2
 
     def __init__(self, A=-11, B=-7, metric="score", sleep=0):
         super().__init__(metric, sleep)

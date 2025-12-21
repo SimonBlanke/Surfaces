@@ -2,7 +2,6 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-
 import numpy as np
 
 from .._base_mathematical_function import MathematicalFunction
@@ -49,7 +48,18 @@ class DropWaveFunction(MathematicalFunction):
     _name_ = "drop_wave_function"
     __name__ = "DropWaveFunction"
 
+    _spec = {
+        "convex": False,
+        "unimodal": False,
+        "separable": False,
+        "scalable": False,
+    }
+
+    f_global = -1.0
+    x_global = np.array([0.0, 0.0])
+
     default_bounds = (-5.0, 5.0)
+    n_dim = 2
 
     def __init__(self, metric="score", sleep=0):
         super().__init__(metric, sleep)

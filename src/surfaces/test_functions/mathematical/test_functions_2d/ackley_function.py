@@ -61,7 +61,18 @@ class AckleyFunction(MathematicalFunction):
     _name_ = "ackley_function"
     __name__ = "AckleyFunction"
 
+    _spec = {
+        "convex": False,
+        "unimodal": False,
+        "separable": False,
+        "scalable": False,
+    }
+
+    f_global = 0.0
+    x_global = np.array([0.0, 0.0])
+
     default_bounds = (-5.0, 5.0)
+    n_dim = 2
 
     def __init__(
         self,

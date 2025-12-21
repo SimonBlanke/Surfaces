@@ -34,6 +34,11 @@ class MathematicalFunction(BaseTestFunction):
     >>> result = func({"x0": 0.0, "x1": 0.0})
     """
 
+    _spec = {
+        "continuous": True,
+        "differentiable": True,
+    }
+
     # Default bounds for mathematical functions (can be overridden by subclasses)
     default_bounds: Tuple[float, float] = (-5.0, 5.0)
     default_size: int = 10000

@@ -18,6 +18,12 @@ class MachineLearningFunction(BaseTestFunction):
     higher is better.
     """
 
+    _spec = {
+        "continuous": False,
+        "differentiable": False,
+        "stochastic": True,
+    }
+
     # Subclasses should define para_names and corresponding *_default attributes
     para_names: list = []
 

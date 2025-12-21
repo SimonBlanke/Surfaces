@@ -2,7 +2,6 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-
 import numpy as np
 
 from .._base_mathematical_function import MathematicalFunction
@@ -56,7 +55,23 @@ class CrossInTrayFunction(MathematicalFunction):
     _name_ = "cross_in_tray_function"
     __name__ = "CrossInTrayFunction"
 
+    _spec = {
+        "convex": False,
+        "unimodal": False,
+        "separable": False,
+        "scalable": False,
+    }
+
+    f_global = -2.06261
+    x_global = np.array([
+        [1.34941, 1.34941],
+        [1.34941, -1.34941],
+        [-1.34941, 1.34941],
+        [-1.34941, -1.34941],
+    ])
+
     default_bounds = (-10.0, 10.0)
+    n_dim = 2
 
     def __init__(
         self,

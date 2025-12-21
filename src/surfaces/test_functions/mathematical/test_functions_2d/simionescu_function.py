@@ -2,7 +2,6 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-
 import numpy as np
 
 from .._base_mathematical_function import MathematicalFunction
@@ -64,7 +63,21 @@ class SimionescuFunction(MathematicalFunction):
     _name_ = "simionescu_function"
     __name__ = "SimionescuFunction"
 
+    _spec = {
+        "convex": False,
+        "unimodal": False,
+        "separable": False,
+        "scalable": False,
+    }
+
+    f_global = -0.072
+    x_global = np.array([
+        [0.84852813, -0.84852813],
+        [-0.84852813, 0.84852813],
+    ])
+
     default_bounds = (-1.25, 1.25)
+    n_dim = 2
 
     def __init__(
         self,

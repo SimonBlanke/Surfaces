@@ -2,6 +2,7 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
+import numpy as np
 
 from .._base_mathematical_function import MathematicalFunction
 
@@ -62,6 +63,15 @@ class RosenbrockFunction(MathematicalFunction):
     _name_ = "rosenbrock_function"
     __name__ = "RosenbrockFunction"
 
+    _spec = {
+        "convex": False,
+        "unimodal": True,
+        "separable": False,
+        "scalable": True,
+    }
+
+    f_global = 0.0
+
     default_bounds = (-5.0, 5.0)
 
     def __init__(
@@ -77,6 +87,7 @@ class RosenbrockFunction(MathematicalFunction):
 
         self.A = A
         self.B = B
+        self.x_global = np.ones(n_dim)
 
     def _create_objective_function(self):
         def rosenbrock_function(params):

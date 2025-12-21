@@ -2,7 +2,6 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-
 import numpy as np
 
 from .._base_mathematical_function import MathematicalFunction
@@ -60,7 +59,18 @@ class EasomFunction(MathematicalFunction):
     _name_ = "easom_function"
     __name__ = "EasomFunction"
 
+    _spec = {
+        "convex": False,
+        "unimodal": True,
+        "separable": True,
+        "scalable": False,
+    }
+
+    f_global = -1.0
+    x_global = np.array([np.pi, np.pi])
+
     default_bounds = (-10.0, 10.0)
+    n_dim = 2
 
     def __init__(self, A=-1, B=1, angle=1, metric="score", sleep=0):
         super().__init__(metric, sleep)

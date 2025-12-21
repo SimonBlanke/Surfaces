@@ -2,6 +2,7 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
+import numpy as np
 
 from .._base_mathematical_function import MathematicalFunction
 
@@ -60,7 +61,18 @@ class BealeFunction(MathematicalFunction):
     _name_ = "beale_function"
     __name__ = "BealeFunction"
 
+    _spec = {
+        "convex": False,
+        "unimodal": True,
+        "separable": False,
+        "scalable": False,
+    }
+
+    f_global = 0.0
+    x_global = np.array([3.0, 0.5])
+
     default_bounds = (-4.5, 4.5)
+    n_dim = 2
 
     def __init__(self, A=1.5, B=2.25, C=2.652, metric="score", sleep=0):
         super().__init__(metric, sleep)

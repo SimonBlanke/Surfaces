@@ -3,7 +3,7 @@
 # License: MIT License
 
 import time
-from typing import Dict, Any, Optional, Tuple
+from typing import Dict, Any, Optional, Tuple, Union
 
 import numpy as np
 
@@ -41,6 +41,35 @@ class BaseTestFunction:
 
     # Default bounds for the search space (override in subclasses)
     default_bounds: Tuple[float, float] = (-5.0, 5.0)
+
+    # =========================================================================
+    # Spec: Function Characteristics (override in subclasses)
+    # =========================================================================
+
+    _spec: Dict[str, Any] = {
+        "continuous": True,
+        "differentiable": True,
+        "convex": False,
+        "separable": False,
+        "unimodal": False,
+        "scalable": False,
+    }
+
+    @property
+    def spec(self) -> Dict[str, Any]:
+        """Function characteristics merged from class hierarchy (read-only)."""
+        result = {}
+        for klass in reversed(type(self).__mro__):
+            if hasattr(klass, "_spec"):
+                result.update(klass._spec)
+        return result
+
+    # =========================================================================
+    # Global Optimum Information (override in subclasses)
+    # =========================================================================
+
+    f_global: Optional[float] = None
+    x_global: Optional[np.ndarray] = None
 
     def _create_objective_function_(func):
         """Decorator that calls _create_objective_function after __init__."""
@@ -303,7 +332,7 @@ class BaseTestFunction:
         """
         from scipy.optimize import Bounds
 
-        space = self.search_space()
+        space = self.default_search_space
         param_names = sorted(space.keys())
 
         # Extract bounds
@@ -350,7 +379,7 @@ class BaseTestFunction:
         Example:
             lower, upper = func.get_bounds()
         """
-        space = self.search_space()
+        space = self.default_search_space
         param_names = sorted(space.keys())
 
         lower = []
@@ -371,3 +400,113 @@ class BaseTestFunction:
                 upper.append(float('inf'))
 
         return np.array(lower), np.array(upper)
+
+    # =========================================================================
+    # Bounds Properties (numpy array format)
+    # =========================================================================
+
+    @property
+    def bounds(self) -> np.ndarray:
+        """Parameter bounds as (n_dim, 2) array.
+
+        Returns
+        -------
+        np.ndarray
+            Array of shape (n_dim, 2) where each row is [lower, upper].
+        """
+        lb, ub = self.get_bounds()
+        return np.column_stack([lb, ub])
+
+    @property
+    def lb(self) -> np.ndarray:
+        """Lower bounds vector.
+
+        Returns
+        -------
+        np.ndarray
+            Array of shape (n_dim,) with lower bounds.
+        """
+        return self.get_bounds()[0]
+
+    @property
+    def ub(self) -> np.ndarray:
+        """Upper bounds vector.
+
+        Returns
+        -------
+        np.ndarray
+            Array of shape (n_dim,) with upper bounds.
+        """
+        return self.get_bounds()[1]
+
+    # =========================================================================
+    # Validation and Utilities
+    # =========================================================================
+
+    def sample_random(self, n: int = 1) -> np.ndarray:
+        """Generate random points within bounds.
+
+        Parameters
+        ----------
+        n : int, default=1
+            Number of random points to generate.
+
+        Returns
+        -------
+        np.ndarray
+            Array of shape (n, n_dim) with random points.
+        """
+        lb, ub = self.get_bounds()
+        return np.random.uniform(lb, ub, size=(n, len(lb)))
+
+    def is_within_bounds(self, x: np.ndarray) -> bool:
+        """Check if solution is within bounds.
+
+        Parameters
+        ----------
+        x : np.ndarray
+            Solution to check.
+
+        Returns
+        -------
+        bool
+            True if all values are within bounds.
+        """
+        lb, ub = self.get_bounds()
+        return bool(np.all(x >= lb) and np.all(x <= ub))
+
+    def is_at_optimum(
+        self, x: Union[np.ndarray, Dict[str, Any]], tol: float = 1e-5
+    ) -> bool:
+        """Check if solution x is at the global optimum within tolerance.
+
+        Parameters
+        ----------
+        x : np.ndarray or dict
+            Solution to check.
+        tol : float, default=1e-5
+            Tolerance for comparison.
+
+        Returns
+        -------
+        bool
+            True if solution is within tolerance of global optimum.
+
+        Raises
+        ------
+        ValueError
+            If global optimum is not known for this function.
+        """
+        if self.f_global is None:
+            raise ValueError(
+                f"Global optimum not known for {self.__class__.__name__}"
+            )
+
+        if isinstance(x, np.ndarray):
+            value = self.evaluate_array(x)
+        elif isinstance(x, dict):
+            value = self.loss(x)
+        else:
+            raise TypeError(f"Expected ndarray or dict, got {type(x)}")
+
+        return abs(value - self.f_global) <= tol

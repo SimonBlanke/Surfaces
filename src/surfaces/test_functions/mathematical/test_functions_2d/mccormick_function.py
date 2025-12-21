@@ -2,7 +2,6 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-
 import numpy as np
 
 from .._base_mathematical_function import MathematicalFunction
@@ -47,7 +46,18 @@ class McCormickFunction(MathematicalFunction):
     _name_ = "mccormick_function"
     __name__ = "McCormickFunction"
 
+    _spec = {
+        "convex": False,
+        "unimodal": True,
+        "separable": False,
+        "scalable": False,
+    }
+
+    f_global = -1.9133
+    x_global = np.array([-0.54719, -1.54719])
+
     default_bounds = (-5.0, 5.0)
+    n_dim = 2
 
     def __init__(self, metric="score", sleep=0):
         super().__init__(metric, sleep)

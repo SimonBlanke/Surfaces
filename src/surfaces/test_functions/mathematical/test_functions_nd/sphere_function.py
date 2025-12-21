@@ -2,6 +2,8 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
+import numpy as np
+
 from .._base_mathematical_function import MathematicalFunction
 
 
@@ -56,12 +58,22 @@ class SphereFunction(MathematicalFunction):
     _name_ = "sphere_function"
     __name__ = "SphereFunction"
 
+    _spec = {
+        "convex": True,
+        "unimodal": True,
+        "separable": True,
+        "scalable": True,
+    }
+
+    f_global = 0.0
+
     default_bounds = (-5.0, 5.0)
 
     def __init__(self, n_dim, A=1, metric="score", sleep=0, validate=True):
         super().__init__(metric, sleep, validate)
         self.n_dim = n_dim
         self.A = A
+        self.x_global = np.zeros(n_dim)
 
     def _create_objective_function(self):
         def sphere_function(params):

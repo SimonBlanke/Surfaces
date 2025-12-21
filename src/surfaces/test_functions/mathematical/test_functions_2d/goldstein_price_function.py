@@ -2,6 +2,7 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
+import numpy as np
 
 from .._base_mathematical_function import MathematicalFunction
 
@@ -41,7 +42,18 @@ class GoldsteinPriceFunction(MathematicalFunction):
     _name_ = "goldstein_price_function"
     __name__ = "GoldsteinPriceFunction"
 
+    _spec = {
+        "convex": False,
+        "unimodal": False,
+        "separable": False,
+        "scalable": False,
+    }
+
+    f_global = 3.0
+    x_global = np.array([0.0, -1.0])
+
     default_bounds = (-2.0, 2.0)
+    n_dim = 2
 
     def __init__(self, metric="score", sleep=0):
         super().__init__(metric, sleep)

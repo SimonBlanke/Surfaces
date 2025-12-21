@@ -2,7 +2,6 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-
 import numpy as np
 
 from .._base_mathematical_function import MathematicalFunction
@@ -47,7 +46,18 @@ class EggholderFunction(MathematicalFunction):
     _name_ = "eggholder_function"
     __name__ = "EggholderFunction"
 
+    _spec = {
+        "convex": False,
+        "unimodal": False,
+        "separable": False,
+        "scalable": False,
+    }
+
+    f_global = -959.6407
+    x_global = np.array([512.0, 404.2319])
+
     default_bounds = (-1000.0, 1000.0)
+    n_dim = 2
 
     def __init__(self, metric="score", sleep=0):
         super().__init__(metric, sleep)

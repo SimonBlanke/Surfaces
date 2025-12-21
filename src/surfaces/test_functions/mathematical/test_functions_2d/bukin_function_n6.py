@@ -2,7 +2,6 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-
 import numpy as np
 
 from .._base_mathematical_function import MathematicalFunction
@@ -49,7 +48,19 @@ class BukinFunctionN6(MathematicalFunction):
     _name_ = "bukin_function_n6"
     __name__ = "BukinFunctionN6"
 
+    _spec = {
+        "convex": False,
+        "unimodal": True,
+        "separable": False,
+        "scalable": False,
+        "differentiable": False,
+    }
+
+    f_global = 0.0
+    x_global = np.array([-10.0, 1.0])
+
     default_bounds = (-8.0, 8.0)
+    n_dim = 2
 
     def __init__(self, metric="score", sleep=0):
         super().__init__(metric, sleep)

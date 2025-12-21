@@ -2,6 +2,7 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
+import numpy as np
 
 from .._base_mathematical_function import MathematicalFunction
 
@@ -46,7 +47,18 @@ class MatyasFunction(MathematicalFunction):
     _name_ = "matyas_function"
     __name__ = "MatyasFunction"
 
+    _spec = {
+        "convex": True,
+        "unimodal": True,
+        "separable": False,
+        "scalable": False,
+    }
+
+    f_global = 0.0
+    x_global = np.array([0.0, 0.0])
+
     default_bounds = (-10.0, 10.0)
+    n_dim = 2
 
     def __init__(self, metric="score", sleep=0):
         super().__init__(metric, sleep)

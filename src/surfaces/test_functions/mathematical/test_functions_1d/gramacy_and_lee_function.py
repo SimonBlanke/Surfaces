@@ -55,7 +55,18 @@ class GramacyAndLeeFunction(MathematicalFunction):
     _name_ = "gramacy_and_lee_function"
     __name__ = "GramacyAndLeeFunction"
 
+    _spec = {
+        "convex": False,
+        "unimodal": False,
+        "separable": True,
+        "scalable": False,
+    }
+
+    f_global = -0.869011134989500
+    x_global = np.array([0.548563444114526])
+
     default_bounds = (0.5, 2.5)
+    n_dim = 1
 
     def __init__(self, metric="score", sleep=0):
         super().__init__(metric, sleep)

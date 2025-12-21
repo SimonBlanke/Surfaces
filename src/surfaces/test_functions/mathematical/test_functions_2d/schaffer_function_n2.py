@@ -2,7 +2,6 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-
 import numpy as np
 
 from .._base_mathematical_function import MathematicalFunction
@@ -47,7 +46,18 @@ class SchafferFunctionN2(MathematicalFunction):
     _name_ = "schaffer_function_n2"
     __name__ = "SchafferFunctionN2"
 
+    _spec = {
+        "convex": False,
+        "unimodal": False,
+        "separable": False,
+        "scalable": False,
+    }
+
+    f_global = 0.0
+    x_global = np.array([0.0, 0.0])
+
     default_bounds = (-50.0, 50.0)
+    n_dim = 2
 
     def __init__(self, metric="score", sleep=0):
         super().__init__(metric, sleep)

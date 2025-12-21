@@ -2,7 +2,6 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-
 import numpy as np
 
 from .._base_mathematical_function import MathematicalFunction
@@ -52,11 +51,21 @@ class GriewankFunction(MathematicalFunction):
     _name_ = "griewank_function"
     __name__ = "GriewankFunction"
 
+    _spec = {
+        "convex": False,
+        "unimodal": False,
+        "separable": False,
+        "scalable": True,
+    }
+
+    f_global = 0.0
+
     default_bounds = (-100.0, 100.0)
 
     def __init__(self, n_dim, metric="score", sleep=0):
         super().__init__(metric, sleep)
         self.n_dim = n_dim
+        self.x_global = np.zeros(n_dim)
 
     def _create_objective_function(self):
         def griewank_function(params):

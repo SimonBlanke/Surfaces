@@ -2,7 +2,6 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-
 import numpy as np
 
 from .._base_mathematical_function import MathematicalFunction
@@ -58,6 +57,15 @@ class RastriginFunction(MathematicalFunction):
     _name_ = "rastrigin_function"
     __name__ = "RastriginFunction"
 
+    _spec = {
+        "convex": False,
+        "unimodal": False,
+        "separable": True,
+        "scalable": True,
+    }
+
+    f_global = 0.0
+
     default_bounds = (-5.0, 5.0)
 
     def __init__(
@@ -73,6 +81,7 @@ class RastriginFunction(MathematicalFunction):
         self.n_dim = n_dim
         self.A = A
         self.angle = angle
+        self.x_global = np.zeros(n_dim)
 
     def _create_objective_function(self):
         def rastrigin_function(params):

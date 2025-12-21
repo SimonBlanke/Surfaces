@@ -2,7 +2,6 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-
 import numpy as np
 
 from .._base_mathematical_function import MathematicalFunction
@@ -53,7 +52,23 @@ class HölderTableFunction(MathematicalFunction):
     _name_ = "hölder_table_function"
     __name__ = "HölderTableFunction"
 
+    _spec = {
+        "convex": False,
+        "unimodal": False,
+        "separable": False,
+        "scalable": False,
+    }
+
+    f_global = -19.2085
+    x_global = np.array([
+        [8.05502, 9.66459],
+        [8.05502, -9.66459],
+        [-8.05502, 9.66459],
+        [-8.05502, -9.66459],
+    ])
+
     default_bounds = (-10.0, 10.0)
+    n_dim = 2
 
     def __init__(self, A=10, angle=1, metric="score", sleep=0):
         super().__init__(metric, sleep)

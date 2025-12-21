@@ -2,7 +2,6 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-
 import numpy as np
 
 from .._base_mathematical_function import MathematicalFunction
@@ -41,6 +40,19 @@ class LangermannFunction(MathematicalFunction):
     name = "Langermann Function"
     _name_ = "langermann_function"
     __name__ = "LangermannFunction"
+
+    _spec = {
+        "convex": False,
+        "unimodal": False,
+        "separable": False,
+        "scalable": False,
+    }
+
+    f_global = None  # Complex to determine analytically
+    x_global = None
+
+    default_bounds = (-15.0, 15.0)
+    n_dim = 2
 
     c = np.array([1, 2, 5, 2, 3])
     m = 5

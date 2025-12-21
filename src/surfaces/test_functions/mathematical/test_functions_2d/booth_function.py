@@ -2,6 +2,7 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
+import numpy as np
 
 from .._base_mathematical_function import MathematicalFunction
 
@@ -49,7 +50,18 @@ class BoothFunction(MathematicalFunction):
     _name_ = "booth_function"
     __name__ = "BoothFunction"
 
+    _spec = {
+        "convex": False,
+        "unimodal": True,
+        "separable": False,
+        "scalable": False,
+    }
+
+    f_global = 0.0
+    x_global = np.array([1.0, 3.0])
+
     default_bounds = (-10.0, 10.0)
+    n_dim = 2
 
     def __init__(self, metric="score", sleep=0):
         super().__init__(metric, sleep)
