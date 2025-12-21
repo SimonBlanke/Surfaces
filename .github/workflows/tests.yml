@@ -41,6 +41,9 @@ jobs:
     name: Test Minimal (Py ${{ matrix.python-version }}, ${{ matrix.os }})
     needs: code-quality
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
     strategy:
       fail-fast: false
       matrix:
@@ -88,15 +91,7 @@ jobs:
           "
 
       - name: Test algebraic and engineering functions
-        run: |
-          python -m pytest -x -p no:warnings \
-            tests/test_1d_functions.py \
-            tests/test_2d_functions.py \
-            tests/test_nd_functions.py \
-            tests/test_all_test_functions.py \
-            tests/test_api/test_input_type.py \
-            tests/test_api/test_metric.py \
-            tests/test_api/test_sleep.py
+        run: python -m pytest -x -p no:warnings tests/test_1d_functions.py tests/test_2d_functions.py tests/test_nd_functions.py tests/test_all_test_functions.py tests/test_api/test_input_type.py tests/test_api/test_metric.py tests/test_api/test_sleep.py
 
   # ===========================================================================
   # Stage 3: Test with Full Dependencies
@@ -105,6 +100,9 @@ jobs:
     name: Test Full (Py ${{ matrix.python-version }}, ${{ matrix.os }})
     needs: code-quality
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
     strategy:
       fail-fast: false
       matrix:
