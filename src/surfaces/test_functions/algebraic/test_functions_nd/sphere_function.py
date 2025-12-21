@@ -69,8 +69,8 @@ class SphereFunction(AlgebraicFunction):
 
     default_bounds = (-5.0, 5.0)
 
-    def __init__(self, n_dim, A=1, objective="minimize", sleep=0):
-        super().__init__(objective, sleep)
+    def __init__(self, n_dim, A=1, objective="minimize", sleep=0, memory=False):
+        super().__init__(objective, sleep, memory)
         self.n_dim = n_dim
         self.A = A
         self.x_global = np.zeros(n_dim)

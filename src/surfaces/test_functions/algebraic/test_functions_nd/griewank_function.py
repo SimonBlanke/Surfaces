@@ -62,8 +62,8 @@ class GriewankFunction(AlgebraicFunction):
 
     default_bounds = (-100.0, 100.0)
 
-    def __init__(self, n_dim, objective="minimize", sleep=0):
-        super().__init__(objective, sleep)
+    def __init__(self, n_dim, objective="minimize", sleep=0, memory=False):
+        super().__init__(objective, sleep, memory)
         self.n_dim = n_dim
         self.x_global = np.zeros(n_dim)
 

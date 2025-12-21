@@ -17,6 +17,9 @@ class BaseTestFunction:
         Either "minimize" or "maximize".
     sleep : float, default=0
         Artificial delay in seconds added to each evaluation.
+    memory : bool, default=False
+        If True, caches evaluated positions to avoid redundant computations.
+        The cache key is the position as a tuple of sorted parameter values.
 
     Examples
     --------
@@ -85,11 +88,13 @@ class BaseTestFunction:
         return wrapper
 
     @_create_objective_function_
-    def __init__(self, objective="minimize", sleep=0):
+    def __init__(self, objective="minimize", sleep=0, memory=False):
         if objective not in ("minimize", "maximize"):
             raise ValueError(f"objective must be 'minimize' or 'maximize', got '{objective}'")
         self.objective = objective
         self.sleep = sleep
+        self.memory = memory
+        self._memory_cache: Dict[Tuple, float] = {}
 
     def _create_objective_function(self):
         raise NotImplementedError("'_create_objective_function' must be implemented")
@@ -123,6 +128,15 @@ class BaseTestFunction:
             func(x0=1.0, x1=2.0)             # kwargs
         """
         params = self._normalize_input(params, **kwargs)
+
+        if self.memory:
+            cache_key = self._params_to_cache_key(params)
+            if cache_key in self._memory_cache:
+                return self._memory_cache[cache_key]
+            result = self._evaluate(params)
+            self._memory_cache[cache_key] = result
+            return result
+
         return self._evaluate(params)
 
     def _normalize_input(
@@ -138,6 +152,10 @@ class BaseTestFunction:
         if params is None:
             params = {}
         return {**params, **kwargs}
+
+    def _params_to_cache_key(self, params: Dict[str, Any]) -> Tuple:
+        """Convert params dict to a hashable cache key (sorted tuple of values)."""
+        return tuple(params[k] for k in sorted(params.keys()))
 
     def _evaluate(self, params: Dict[str, Any]) -> float:
         """Evaluate with timing and objective transformation."""

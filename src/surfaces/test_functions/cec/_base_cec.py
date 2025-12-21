@@ -75,11 +75,12 @@ class CECFunction(AlgebraicFunction):
         n_dim: int = 10,
         objective: str = "minimize",
         sleep: float = 0,
+        memory: bool = False,
     ):
         if n_dim not in self.supported_dims:
             raise ValueError(f"n_dim must be one of {self.supported_dims}, got {n_dim}")
         self.n_dim = n_dim
-        super().__init__(objective, sleep)
+        super().__init__(objective, sleep, memory)
 
     @property
     @abstractmethod

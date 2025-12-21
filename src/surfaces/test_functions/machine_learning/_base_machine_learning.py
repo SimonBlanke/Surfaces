@@ -49,10 +49,11 @@ class MachineLearningFunction(BaseTestFunction):
         self,
         objective: str = "maximize",
         sleep: float = 0,
+        memory: bool = False,
         use_surrogate: bool = False,
         **kwargs,
     ):
-        super().__init__(objective, sleep)
+        super().__init__(objective, sleep, memory)
         self.use_surrogate = use_surrogate
         self._surrogate = None
 

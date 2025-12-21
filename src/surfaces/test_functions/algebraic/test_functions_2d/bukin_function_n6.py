@@ -62,8 +62,8 @@ class BukinFunctionN6(AlgebraicFunction):
     default_bounds = (-8.0, 8.0)
     n_dim = 2
 
-    def __init__(self, objective="minimize", sleep=0):
-        super().__init__(objective, sleep)
+    def __init__(self, objective="minimize", sleep=0, memory=False):
+        super().__init__(objective, sleep, memory)
         self.n_dim = 2
 
     def _create_objective_function(self):

@@ -75,8 +75,9 @@ class RastriginFunction(AlgebraicFunction):
         angle=2 * np.pi,
         objective="minimize",
         sleep=0,
+        memory=False,
     ):
-        super().__init__(objective, sleep)
+        super().__init__(objective, sleep, memory)
 
         self.n_dim = n_dim
         self.A = A

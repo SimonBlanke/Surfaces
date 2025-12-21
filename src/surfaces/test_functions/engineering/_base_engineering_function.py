@@ -69,10 +69,14 @@ class EngineeringFunction(BaseTestFunction):
     variable_bounds: List[Tuple[float, float]] = []
 
     def __init__(
-        self, objective: str = "minimize", sleep: float = 0, penalty_coefficient: float = 1e6
+        self,
+        objective: str = "minimize",
+        sleep: float = 0,
+        memory: bool = False,
+        penalty_coefficient: float = 1e6,
     ):
         self.penalty_coefficient = penalty_coefficient
-        super().__init__(objective, sleep)
+        super().__init__(objective, sleep, memory)
 
     @property
     def n_dim(self) -> int:

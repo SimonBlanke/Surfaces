@@ -72,8 +72,8 @@ class HölderTableFunction(AlgebraicFunction):
     default_bounds = (-10.0, 10.0)
     n_dim = 2
 
-    def __init__(self, A=10, angle=1, objective="minimize", sleep=0):
-        super().__init__(objective, sleep)
+    def __init__(self, A=10, angle=1, objective="minimize", sleep=0, memory=False):
+        super().__init__(objective, sleep, memory)
         self.n_dim = 2
 
         self.A = A

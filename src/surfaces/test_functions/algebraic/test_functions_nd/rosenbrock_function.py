@@ -81,8 +81,9 @@ class RosenbrockFunction(AlgebraicFunction):
         B=100,
         objective="minimize",
         sleep=0,
+        memory=False,
     ):
-        super().__init__(objective, sleep)
+        super().__init__(objective, sleep, memory)
         self.n_dim = n_dim
 
         self.A = A

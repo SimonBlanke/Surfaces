@@ -89,8 +89,9 @@ class SimionescuFunction(AlgebraicFunction):
         n=8,
         objective="minimize",
         sleep=0,
+        memory=False,
     ):
-        super().__init__(objective, sleep)
+        super().__init__(objective, sleep, memory)
         self.n_dim = 2
 
         self.A = A
