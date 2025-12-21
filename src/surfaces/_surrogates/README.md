@@ -223,6 +223,38 @@ Each ONNX model has an accompanying `.meta.json` file:
 }
 ```
 
+## Validity Model
+
+Some hyperparameter combinations are invalid (e.g., `n_neighbors > dataset_size` in KNN). The real function returns `NaN` for these cases.
+
+The surrogate system handles this by training a **validity classifier** alongside the regression model:
+
+1. During training, both valid and invalid samples are collected
+2. A binary classifier learns to predict validity
+3. During inference, validity is checked first
+4. Invalid combinations return `NaN`, just like the real function
+
+```python
+# Surrogate correctly returns NaN for invalid combinations
+func = KNeighborsClassifierFunction(use_surrogate=True)
+
+# Valid: returns score
+result = func({'n_neighbors': 5, 'cv': 5, 'dataset': digits_data, ...})
+# 0.9560
+
+# Invalid: returns NaN (n_neighbors too large for dataset)
+result = func({'n_neighbors': 140, 'cv': 5, 'dataset': iris_data, ...})
+# nan
+```
+
+Files for a function with validity model:
+```
+models/
+├── k_neighbors_classifier.onnx              # Regression model
+├── k_neighbors_classifier.validity.onnx     # Validity classifier
+└── k_neighbors_classifier.onnx.meta.json    # Metadata (has_validity_model: true)
+```
+
 ## Limitations
 
 1. **Interpolation only**: Surrogates work best within the training search space

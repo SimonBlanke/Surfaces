@@ -53,9 +53,12 @@ class SurrogateTrainer:
 
         self.X: Optional[np.ndarray] = None
         self.y: Optional[np.ndarray] = None
+        self.X_all: Optional[np.ndarray] = None  # All samples (valid + invalid)
+        self.y_valid: Optional[np.ndarray] = None  # Validity labels (0/1)
         self.param_names: List[str] = []
         self.param_encodings: Dict[str, Dict[str, int]] = {}
         self.model = None
+        self.validity_model = None
 
         self._training_time: float = 0
         self._collection_time: float = 0
@@ -145,8 +148,10 @@ class SurrogateTrainer:
             grid_points = [grid_points[i] for i in indices]
 
         n_samples = len(grid_points)
-        X_list = []
+        X_valid_list = []
         y_list = []
+        X_all_list = []
+        validity_list = []
 
         if verbose:
             print(f"Collecting {n_samples} samples...")
@@ -169,29 +174,42 @@ class SurrogateTrainer:
             # Evaluate function (use pure_objective_function to get raw value)
             try:
                 score = self.function.pure_objective_function(params)
-                # Skip NaN values (can happen with invalid hyperparameter combos)
+
+                # Track all samples for validity model
+                X_all_list.append(x_row)
+
                 if np.isnan(score):
-                    continue
-                X_list.append(x_row)
-                y_list.append(score)
+                    # Invalid combination
+                    validity_list.append(0)
+                else:
+                    # Valid combination
+                    validity_list.append(1)
+                    X_valid_list.append(x_row)
+                    y_list.append(score)
 
                 if verbose and (i + 1) % 100 == 0:
                     print(f"  Collected {len(y_list)}/{n_samples} valid samples")
             except Exception as e:
+                # Treat exceptions as invalid
+                X_all_list.append(x_row)
+                validity_list.append(0)
                 if verbose:
                     print(f"  Error at sample {i}: {e}")
 
-        self.X = np.array(X_list, dtype=np.float32)
+        self.X = np.array(X_valid_list, dtype=np.float32)
         self.y = np.array(y_list, dtype=np.float32)
+        self.X_all = np.array(X_all_list, dtype=np.float32)
+        self.y_valid = np.array(validity_list, dtype=np.int32)
 
         self._collection_time = time.time() - start_time
 
+        n_valid = len(self.y)
+        n_invalid = len(self.y_valid) - n_valid
+
         if verbose:
-            n_valid = len(self.y)
-            n_skipped = n_samples - n_valid
             print(f"Collected {n_valid} valid samples in {self._collection_time:.1f}s")
-            if n_skipped > 0:
-                print(f"  Skipped {n_skipped} samples (NaN or errors)")
+            if n_invalid > 0:
+                print(f"  Invalid samples: {n_invalid} (will train validity model)")
             if n_valid > 0:
                 print(f"  y range: [{self.y.min():.4f}, {self.y.max():.4f}]")
 
@@ -204,6 +222,8 @@ class SurrogateTrainer:
         verbose: bool = True,
     ):
         """Train an MLP regressor on collected samples.
+
+        Also trains a validity classifier if invalid samples were found.
 
         Parameters
         ----------
@@ -225,11 +245,13 @@ class SurrogateTrainer:
 
         start_time = time.time()
 
-        # Normalize inputs
+        # Normalize inputs for regression model
         self.scaler_X = StandardScaler()
         X_scaled = self.scaler_X.fit_transform(self.X)
 
-        # Train MLP
+        # Train regression MLP
+        if verbose:
+            print("Training regression model...")
         self.model = MLPRegressor(
             hidden_layer_sizes=hidden_layer_sizes,
             max_iter=max_iter,
@@ -240,17 +262,43 @@ class SurrogateTrainer:
         )
         self.model.fit(X_scaled, self.y)
 
-        self._training_time = time.time() - start_time
-
-        # Evaluate on training data
+        # Evaluate regression on training data
         y_pred = self.model.predict(X_scaled)
         mse = np.mean((self.y - y_pred) ** 2)
         r2 = 1 - mse / np.var(self.y)
 
+        # Train validity classifier if there are invalid samples
+        n_invalid = np.sum(self.y_valid == 0)
+        if n_invalid > 0:
+            if verbose:
+                print("\nTraining validity classifier (DecisionTree)...")
+
+            from sklearn.tree import DecisionTreeClassifier
+
+            # Decision tree doesn't need scaling, but we keep scaler for API consistency
+            self.scaler_X_validity = None
+
+            self.validity_model = DecisionTreeClassifier(
+                max_depth=10,
+                min_samples_leaf=5,
+                random_state=42,
+            )
+            self.validity_model.fit(self.X_all, self.y_valid)
+
+            # Evaluate validity classifier
+            validity_pred = self.validity_model.predict(self.X_all)
+            validity_acc = np.mean(validity_pred == self.y_valid)
+
+            if verbose:
+                print(f"  Validity classifier accuracy: {validity_acc:.4f}")
+                print(f"  Tree depth: {self.validity_model.get_depth()}")
+
+        self._training_time = time.time() - start_time
+
         if verbose:
             print(f"\nTraining completed in {self._training_time:.1f}s")
-            print(f"  MSE: {mse:.6f}")
-            print(f"  R2:  {r2:.4f}")
+            print(f"  Regression MSE: {mse:.6f}")
+            print(f"  Regression R2:  {r2:.4f}")
 
     def export(
         self,
@@ -294,7 +342,7 @@ class SurrogateTrainer:
             ("mlp", self.model),
         ])
 
-        # Convert to ONNX
+        # Convert regression model to ONNX
         n_features = self.X.shape[1]
         initial_type = [("input", FloatTensorType([None, n_features]))]
         onnx_model = convert_sklearn(pipeline, initial_types=initial_type)
@@ -303,12 +351,33 @@ class SurrogateTrainer:
         with open(output_path, "wb") as f:
             f.write(onnx_model.SerializeToString())
 
+        # Export validity model if it exists
+        has_validity_model = self.validity_model is not None
+        if has_validity_model:
+            validity_path = output_path.with_suffix(".validity.onnx")
+
+            # DecisionTree doesn't need a scaler pipeline
+            onnx_validity = convert_sklearn(
+                self.validity_model,
+                initial_types=initial_type,
+                options={id(self.validity_model): {"zipmap": False}},
+            )
+
+            with open(validity_path, "wb") as f:
+                f.write(onnx_validity.SerializeToString())
+
+            if verbose:
+                print(f"Exported validity model to: {validity_path}")
+
         # Save metadata
+        n_invalid = int(np.sum(self.y_valid == 0))
         metadata = {
             "function_name": getattr(self.function, "_name_", self.function.__class__.__name__),
             "param_names": self.param_names,
             "param_encodings": self.param_encodings,
             "n_samples": len(self.y),
+            "n_invalid_samples": n_invalid,
+            "has_validity_model": has_validity_model,
             "y_range": [float(self.y.min()), float(self.y.max())],
             "training_time": self._training_time,
             "collection_time": self._collection_time,

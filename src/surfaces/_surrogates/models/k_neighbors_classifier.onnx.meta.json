@@ -19,11 +19,13 @@
       "iris_data": 2
     }
   },
-  "n_samples": 866,
+  "n_samples": 868,
+  "n_invalid_samples": 132,
+  "has_validity_model": true,
   "y_range": [
     0.39886364340782166,
     0.9802631735801697
   ],
-  "training_time": 1.0907559394836426,
-  "collection_time": 40.40663194656372
+  "training_time": 0.5762979984283447,
+  "collection_time": 41.40630507469177
 }

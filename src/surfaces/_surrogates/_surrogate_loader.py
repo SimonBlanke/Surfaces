@@ -44,13 +44,15 @@ class SurrogateLoader:
         self.metadata_path = metadata_path or self.model_path.with_suffix(
             self.model_path.suffix + ".meta.json"
         )
+        self.validity_model_path = self.model_path.with_suffix(".validity.onnx")
 
         self._session = None
+        self._validity_session = None
         self._metadata = None
 
     @property
     def session(self):
-        """Lazy-load ONNX runtime session."""
+        """Lazy-load ONNX runtime session for regression model."""
         if self._session is None:
             try:
                 import onnxruntime as ort
@@ -65,6 +67,35 @@ class SurrogateLoader:
                 providers=["CPUExecutionProvider"],
             )
         return self._session
+
+    @property
+    def validity_session(self):
+        """Lazy-load ONNX runtime session for validity model."""
+        if self._validity_session is None:
+            if not self.has_validity_model:
+                return None
+
+            try:
+                import onnxruntime as ort
+            except ImportError:
+                raise ImportError(
+                    "onnxruntime is required for surrogate models. "
+                    "Install it with: pip install onnxruntime"
+                )
+
+            self._validity_session = ort.InferenceSession(
+                str(self.validity_model_path),
+                providers=["CPUExecutionProvider"],
+            )
+        return self._validity_session
+
+    @property
+    def has_validity_model(self) -> bool:
+        """Check if a validity model exists."""
+        return (
+            self.metadata.get("has_validity_model", False)
+            and self.validity_model_path.exists()
+        )
 
     @property
     def metadata(self) -> Dict[str, Any]:
@@ -114,6 +145,30 @@ class SurrogateLoader:
 
         return np.array([values], dtype=np.float32)
 
+    def is_valid(self, params: Dict[str, Any]) -> bool:
+        """Check if parameter combination is valid.
+
+        Parameters
+        ----------
+        params : dict
+            Parameter dictionary.
+
+        Returns
+        -------
+        bool
+            True if valid, False if invalid (would return NaN).
+        """
+        if not self.has_validity_model:
+            return True  # No validity model, assume all valid
+
+        input_array = self._encode_params(params)
+        input_name = self.validity_session.get_inputs()[0].name
+        output = self.validity_session.run(None, {input_name: input_array})
+
+        # Output is class label (0=invalid, 1=valid)
+        predicted_class = int(output[0][0])
+        return predicted_class == 1
+
     def predict(self, params: Dict[str, Any]) -> float:
         """Run inference on the surrogate model.
 
@@ -125,8 +180,12 @@ class SurrogateLoader:
         Returns
         -------
         float
-            Predicted objective value.
+            Predicted objective value, or NaN if parameters are invalid.
         """
+        # Check validity first
+        if not self.is_valid(params):
+            return float("nan")
+
         input_array = self._encode_params(params)
         input_name = self.session.get_inputs()[0].name
         output = self.session.run(None, {input_name: input_array})

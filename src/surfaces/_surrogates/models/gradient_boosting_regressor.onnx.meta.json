@@ -12,10 +12,12 @@
     }
   },
   "n_samples": 1000,
+  "n_invalid_samples": 0,
+  "has_validity_model": false,
   "y_range": [
-    -0.18430274724960327,
-    0.4645007848739624
+    -0.188394695520401,
+    0.46403050422668457
   ],
-  "training_time": 0.9513494968414307,
-  "collection_time": 571.8018696308136
+  "training_time": 0.9096114635467529,
+  "collection_time": 581.1047446727753
 }
