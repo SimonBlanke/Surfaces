@@ -58,7 +58,7 @@ class LangermannFunction(MathematicalFunction):
     m = 5
     A = np.array([[3, 5, 2, 1, 7], [5, 2, 1, 4, 9]])
 
-    def __init__(self, metric="score", sleep=0):
+    def __init__(self, objective="minimize", sleep=0):
         super().__init__()
         self.n_dim = 2
 

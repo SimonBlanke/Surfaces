@@ -74,8 +74,8 @@ class BealeFunction(MathematicalFunction):
     default_bounds = (-4.5, 4.5)
     n_dim = 2
 
-    def __init__(self, A=1.5, B=2.25, C=2.652, metric="score", sleep=0):
-        super().__init__(metric, sleep)
+    def __init__(self, A=1.5, B=2.25, C=2.652, objective="minimize", sleep=0):
+        super().__init__(objective, sleep)
         self.n_dim = 2
 
         self.A = A

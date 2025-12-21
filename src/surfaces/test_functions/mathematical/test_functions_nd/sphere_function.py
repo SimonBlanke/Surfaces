@@ -69,8 +69,8 @@ class SphereFunction(MathematicalFunction):
 
     default_bounds = (-5.0, 5.0)
 
-    def __init__(self, n_dim, A=1, metric="score", sleep=0, validate=True):
-        super().__init__(metric, sleep, validate)
+    def __init__(self, n_dim, A=1, objective="minimize", sleep=0):
+        super().__init__(objective, sleep)
         self.n_dim = n_dim
         self.A = A
         self.x_global = np.zeros(n_dim)

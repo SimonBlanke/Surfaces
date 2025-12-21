@@ -73,10 +73,10 @@ class RastriginFunction(MathematicalFunction):
         n_dim,
         A=10,
         angle=2 * np.pi,
-        metric="score",
+        objective="minimize",
         sleep=0,
     ):
-        super().__init__(metric, sleep)
+        super().__init__(objective, sleep)
 
         self.n_dim = n_dim
         self.A = A

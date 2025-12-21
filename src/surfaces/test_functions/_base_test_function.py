@@ -11,35 +11,23 @@ import numpy as np
 class BaseTestFunction:
     """Base class for all test functions in the Surfaces library.
 
-    This class provides the core interface for optimization test functions,
-    including evaluation, search space definition, and integration with
-    external optimization libraries.
-
-    Primary interface:
-        func(params)      - Evaluate the function (uses metric setting)
-        func.loss(params) - Always returns value to minimize
-        func.score(params) - Always returns value to maximize
-
     Parameters
     ----------
-    metric : str, default="loss"
-        Either "loss" (minimize) or "score" (maximize).
-        Controls the return value of __call__().
+    objective : str, default="minimize"
+        Either "minimize" or "maximize".
     sleep : float, default=0
         Artificial delay in seconds added to each evaluation.
-    validate : bool, default=True
-        Whether to validate parameters against the search space.
 
     Examples
     --------
-    >>> from surfaces.test_functions import SphereFunction
     >>> func = SphereFunction(n_dim=2)
-    >>> result = func({"x0": 1.0, "x1": 2.0})
+    >>> func({"x0": 1.0, "x1": 2.0})      # dict input
+    >>> func(np.array([1.0, 2.0]))        # array input
+    >>> func([1.0, 2.0])                  # list input
     """
 
     pure_objective_function: callable
 
-    # Default bounds for the search space (override in subclasses)
     default_bounds: Tuple[float, float] = (-5.0, 5.0)
 
     # =========================================================================
@@ -79,10 +67,13 @@ class BaseTestFunction:
         return wrapper
 
     @_create_objective_function_
-    def __init__(self, metric, sleep, validate=True):
+    def __init__(self, objective="minimize", sleep=0):
+        if objective not in ("minimize", "maximize"):
+            raise ValueError(
+                f"objective must be 'minimize' or 'maximize', got '{objective}'"
+            )
+        self.objective = objective
         self.sleep = sleep
-        self.metric = metric
-        self._validate = validate
 
     def _create_objective_function(self):
         raise NotImplementedError("'_create_objective_function' must be implemented")
@@ -92,221 +83,58 @@ class BaseTestFunction:
         """Default search space for this function (override in subclasses)."""
         raise NotImplementedError("'default_search_space' must be implemented")
 
-    def _return_metric(self, value):
-        """Transform raw value based on metric setting (override in subclasses)."""
-        return value
-
     # =========================================================================
     # Primary Interface: __call__
     # =========================================================================
 
     def __call__(
-        self, params: Optional[Dict[str, Any]] = None, **kwargs
+        self, params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None,
+        **kwargs
     ) -> float:
         """
         Evaluate the objective function.
 
-        This is the primary interface for function evaluation. Supports
-        multiple invocation styles for convenience.
-
         Args:
-            params: Dictionary of parameter name -> value mappings
-            **kwargs: Parameters as keyword arguments
+            params: Parameter values as dict, array, list, or tuple
+            **kwargs: Parameters as keyword arguments (only with dict input)
 
         Returns:
             The objective function value
 
         Examples:
-            # Dict style
-            result = func({'x0': 1.0, 'x1': 2.0})
-
-            # Kwargs style
-            result = func(x0=1.0, x1=2.0)
-
-            # Mixed style
-            result = func({'x0': 1.0}, x1=2.0)
+            func({"x0": 1.0, "x1": 2.0})     # dict
+            func(np.array([1.0, 2.0]))       # array
+            func([1.0, 2.0])                 # list
+            func(x0=1.0, x1=2.0)             # kwargs
         """
+        params = self._normalize_input(params, **kwargs)
+        return self._evaluate(params)
+
+    def _normalize_input(
+        self, params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None,
+        **kwargs
+    ) -> Dict[str, Any]:
+        """Convert any input format to dict."""
+        if isinstance(params, (np.ndarray, list, tuple)):
+            param_names = sorted(self.default_search_space.keys())
+            if len(params) != len(param_names):
+                raise ValueError(
+                    f"Expected {len(param_names)} values, got {len(params)}"
+                )
+            return {name: params[i] for i, name in enumerate(param_names)}
+
         if params is None:
             params = {}
-        params = {**params, **kwargs}
+        return {**params, **kwargs}
 
-        if self._validate:
-            self._validate_params(params)
-
-        return self._evaluate_with_timing(params)
-
-    def _evaluate_with_timing(self, params: Dict[str, Any]) -> float:
-        """Evaluate with sleep timing applied."""
+    def _evaluate(self, params: Dict[str, Any]) -> float:
+        """Evaluate with timing and objective transformation."""
         time.sleep(self.sleep)
         raw_value = self.pure_objective_function(params)
-        return self._return_metric(raw_value)
 
-    def _evaluate_raw(self, params: Dict[str, Any]) -> float:
-        """Evaluate without metric transformation (internal use)."""
-        return self.pure_objective_function(params)
-
-    # =========================================================================
-    # Explicit loss/score Methods
-    # =========================================================================
-
-    def loss(self, params: Optional[Dict[str, Any]] = None, **kwargs) -> float:
-        """
-        Evaluate and return a value to MINIMIZE.
-
-        For functions that naturally return a loss (lower is better),
-        this returns the raw value. For functions that return a score
-        (higher is better), this returns the negated value.
-
-        Args:
-            params: Dictionary of parameter name -> value mappings
-            **kwargs: Parameters as keyword arguments
-
-        Returns:
-            Loss value (lower is better)
-        """
-        if params is None:
-            params = {}
-        params = {**params, **kwargs}
-
-        if self._validate:
-            self._validate_params(params)
-
-        time.sleep(self.sleep)
-        raw_value = self.pure_objective_function(params)
-        return self._to_loss(raw_value)
-
-    def score(self, params: Optional[Dict[str, Any]] = None, **kwargs) -> float:
-        """
-        Evaluate and return a value to MAXIMIZE.
-
-        For functions that naturally return a score (higher is better),
-        this returns the raw value. For functions that return a loss
-        (lower is better), this returns the negated value.
-
-        Args:
-            params: Dictionary of parameter name -> value mappings
-            **kwargs: Parameters as keyword arguments
-
-        Returns:
-            Score value (higher is better)
-        """
-        if params is None:
-            params = {}
-        params = {**params, **kwargs}
-
-        if self._validate:
-            self._validate_params(params)
-
-        time.sleep(self.sleep)
-        raw_value = self.pure_objective_function(params)
-        return self._to_score(raw_value)
-
-    def _to_loss(self, raw_value: float) -> float:
-        """Convert raw value to loss (override in subclasses if needed)."""
+        if self.objective == "maximize":
+            return -raw_value
         return raw_value
-
-    def _to_score(self, raw_value: float) -> float:
-        """Convert raw value to score (override in subclasses if needed)."""
-        return -raw_value
-
-    # =========================================================================
-    # Input Validation
-    # =========================================================================
-
-    def _validate_params(self, params: Dict[str, Any]) -> None:
-        """
-        Validate that parameters match the expected search space.
-
-        Validates that all required parameter keys are present and no
-        unexpected keys are provided. Does not validate bounds since
-        custom search spaces may use different ranges.
-
-        Args:
-            params: Parameters to validate
-
-        Raises:
-            ValueError: If parameters are missing or unexpected
-        """
-        space = self.default_search_space
-        expected_keys = set(space.keys())
-        provided_keys = set(params.keys())
-
-        # Check for missing parameters
-        missing = expected_keys - provided_keys
-        if missing:
-            raise ValueError(
-                f"Missing required parameters: {missing}. "
-                f"Expected: {expected_keys}"
-            )
-
-        # Check for unexpected parameters
-        extra = provided_keys - expected_keys
-        if extra:
-            raise ValueError(
-                f"Unexpected parameters: {extra}. "
-                f"Expected: {expected_keys}"
-            )
-
-    # =========================================================================
-    # Alternative Evaluation Methods
-    # =========================================================================
-
-    def evaluate(self, *args) -> float:
-        """
-        Evaluate using positional arguments.
-
-        Arguments are mapped to parameters in sorted key order.
-
-        Args:
-            *args: Parameter values in order of sorted(search_space.keys())
-
-        Returns:
-            The objective function value
-
-        Example:
-            func.evaluate(1.0, 2.0, 3.0)  # For x0, x1, x2
-        """
-        param_names = sorted(self.search_space().keys())
-        if len(args) != len(param_names):
-            raise ValueError(
-                f"Expected {len(param_names)} arguments for parameters "
-                f"{param_names}, got {len(args)}"
-            )
-        params = {name: args[i] for i, name in enumerate(param_names)}
-        return self(params)
-
-    def evaluate_array(self, x: np.ndarray) -> float:
-        """
-        Evaluate using a numpy array.
-
-        Array elements are mapped to parameters in sorted key order.
-        This format is compatible with scipy.optimize.
-
-        Args:
-            x: 1D array of parameter values
-
-        Returns:
-            The objective function value
-
-        Example:
-            func.evaluate_array(np.array([1.0, 2.0, 3.0]))
-        """
-        return self.evaluate(*x)
-
-    def evaluate_batch(self, X: np.ndarray) -> np.ndarray:
-        """
-        Evaluate multiple points at once.
-
-        Args:
-            X: 2D array of shape (n_points, n_params)
-
-        Returns:
-            1D array of objective values
-
-        Example:
-            results = func.evaluate_batch(np.array([[1,2], [3,4], [5,6]]))
-        """
-        return np.array([self.evaluate_array(x) for x in X])
 
     # =========================================================================
     # scipy Integration
@@ -318,16 +146,14 @@ class BaseTestFunction:
 
         Returns:
             Tuple of (objective_function, bounds, x0) where:
-            - objective_function: Callable taking numpy array
+            - objective_function: Callable taking numpy array (always minimizes)
             - bounds: scipy.optimize.Bounds object
             - x0: Initial guess (center of bounds)
 
         Example:
             from scipy.optimize import minimize
-
             func = SphereFunction(n_dim=3)
             objective, bounds, x0 = func.to_scipy()
-
             result = minimize(objective, x0, bounds=bounds, method='L-BFGS-B')
         """
         from scipy.optimize import Bounds
@@ -335,7 +161,6 @@ class BaseTestFunction:
         space = self.default_search_space
         param_names = sorted(space.keys())
 
-        # Extract bounds
         lower = []
         upper = []
         for name in param_names:
@@ -359,26 +184,19 @@ class BaseTestFunction:
         upper = np.array(upper)
         x0 = (lower + upper) / 2
 
-        # Create objective that uses loss (scipy minimizes)
         def objective(x: np.ndarray) -> float:
-            params = {name: x[i] for i, name in enumerate(param_names)}
-            # Bypass validation for performance in optimization loops
             time.sleep(self.sleep)
-            raw_value = self.pure_objective_function(params)
-            return self._to_loss(raw_value)
+            params = {name: x[i] for i, name in enumerate(param_names)}
+            return self.pure_objective_function(params)
 
         return objective, Bounds(lower, upper), x0
 
-    def get_bounds(self) -> Tuple[np.ndarray, np.ndarray]:
-        """
-        Get parameter bounds as numpy arrays.
+    # =========================================================================
+    # Bounds
+    # =========================================================================
 
-        Returns:
-            Tuple of (lower_bounds, upper_bounds) arrays
-
-        Example:
-            lower, upper = func.get_bounds()
-        """
+    def _get_bounds(self) -> Tuple[np.ndarray, np.ndarray]:
+        """Get parameter bounds as numpy arrays."""
         space = self.default_search_space
         param_names = sorted(space.keys())
 
@@ -401,112 +219,18 @@ class BaseTestFunction:
 
         return np.array(lower), np.array(upper)
 
-    # =========================================================================
-    # Bounds Properties (numpy array format)
-    # =========================================================================
-
     @property
     def bounds(self) -> np.ndarray:
-        """Parameter bounds as (n_dim, 2) array.
-
-        Returns
-        -------
-        np.ndarray
-            Array of shape (n_dim, 2) where each row is [lower, upper].
-        """
-        lb, ub = self.get_bounds()
+        """Parameter bounds as (n_dim, 2) array."""
+        lb, ub = self._get_bounds()
         return np.column_stack([lb, ub])
 
     @property
     def lb(self) -> np.ndarray:
-        """Lower bounds vector.
-
-        Returns
-        -------
-        np.ndarray
-            Array of shape (n_dim,) with lower bounds.
-        """
-        return self.get_bounds()[0]
+        """Lower bounds vector."""
+        return self._get_bounds()[0]
 
     @property
     def ub(self) -> np.ndarray:
-        """Upper bounds vector.
-
-        Returns
-        -------
-        np.ndarray
-            Array of shape (n_dim,) with upper bounds.
-        """
-        return self.get_bounds()[1]
-
-    # =========================================================================
-    # Validation and Utilities
-    # =========================================================================
-
-    def sample_random(self, n: int = 1) -> np.ndarray:
-        """Generate random points within bounds.
-
-        Parameters
-        ----------
-        n : int, default=1
-            Number of random points to generate.
-
-        Returns
-        -------
-        np.ndarray
-            Array of shape (n, n_dim) with random points.
-        """
-        lb, ub = self.get_bounds()
-        return np.random.uniform(lb, ub, size=(n, len(lb)))
-
-    def is_within_bounds(self, x: np.ndarray) -> bool:
-        """Check if solution is within bounds.
-
-        Parameters
-        ----------
-        x : np.ndarray
-            Solution to check.
-
-        Returns
-        -------
-        bool
-            True if all values are within bounds.
-        """
-        lb, ub = self.get_bounds()
-        return bool(np.all(x >= lb) and np.all(x <= ub))
-
-    def is_at_optimum(
-        self, x: Union[np.ndarray, Dict[str, Any]], tol: float = 1e-5
-    ) -> bool:
-        """Check if solution x is at the global optimum within tolerance.
-
-        Parameters
-        ----------
-        x : np.ndarray or dict
-            Solution to check.
-        tol : float, default=1e-5
-            Tolerance for comparison.
-
-        Returns
-        -------
-        bool
-            True if solution is within tolerance of global optimum.
-
-        Raises
-        ------
-        ValueError
-            If global optimum is not known for this function.
-        """
-        if self.f_global is None:
-            raise ValueError(
-                f"Global optimum not known for {self.__class__.__name__}"
-            )
-
-        if isinstance(x, np.ndarray):
-            value = self.evaluate_array(x)
-        elif isinstance(x, dict):
-            value = self.loss(x)
-        else:
-            raise TypeError(f"Expected ndarray or dict, got {type(x)}")
-
-        return abs(value - self.f_global) <= tol
+        """Upper bounds vector."""
+        return self._get_bounds()[1]

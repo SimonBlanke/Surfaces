@@ -59,8 +59,8 @@ class SchafferFunctionN2(MathematicalFunction):
     default_bounds = (-50.0, 50.0)
     n_dim = 2
 
-    def __init__(self, metric="score", sleep=0):
-        super().__init__(metric, sleep)
+    def __init__(self, objective="minimize", sleep=0):
+        super().__init__(objective, sleep)
         self.n_dim = 2
 
     def _create_objective_function(self):
