@@ -1,110 +1,28 @@
-<H1 align="center">
-    Surfaces
-</H1>
+# Surfaces
 
-<br>
+A collection of objective functions for optimization algorithm benchmarking.
 
-<H2 align="center">
-    A collection of single-objective black-box functions for optimization benchmarking
-</H2>
+## Overview
 
-<br>
-
-## Introduction
-
-**Surfaces** is a Python library designed for researchers and practitioners in optimization and machine learning. It provides a comprehensive collection of benchmark functions to evaluate and compare optimization algorithms under standardized conditions.
-
-### Key Features
-
-- **Mathematical Test Functions**: 24 test functions covering 1D, 2D, and N-dimensional optimization landscapes
-- **Machine Learning Test Functions**: Real-world ML benchmarks using scikit-learn models with hyperparameter optimization
-- **Standardized Interface**: Consistent API across all functions for easy algorithm evaluation
-- **Flexible Configuration**: Support for different metrics (loss/score), dimensionalities, and evaluation modes
-- **Optimization Research**: Ideal for testing metaheuristics, gradient-free methods, and hyperparameter optimization algorithms
-
-### Use Cases
-
-- **Algorithm Development**: Test new optimization algorithms against established benchmarks
-- **Performance Comparison**: Compare different optimizers on standardized problem sets
-- **Research Publications**: Use well-known test functions with consistent implementations
-- **Educational Purposes**: Learn optimization concepts with visual and mathematical examples
-- **Hyperparameter Tuning**: Benchmark autoML and hyperparameter optimization methods
-
-
-<br>
-
-## Visualizations
-
-### Mathematical Functions
-
-<table style="width:100%">
-  <tr>
-    <th> <b>Objective Function</b> </th>
-    <th> <b>Heatmap</b> </th>
-    <th> <b>Surface Plot</b> </th>
-  </tr>
-  <tr>
-    <th> <ins>Sphere function</ins> <br><br>  </th>
-    <td> <img src="./doc/images/mathematical/sphere_function_heatmap.jpg" width="90%"> </td>
-    <td> <img src="./doc/images/mathematical/sphere_function_surface.jpg" width="100%"> </td>
-  </tr>
-  <tr>
-    <th> <ins>Rastrigin function</ins> <br><br> </th>
-    <td> <img src="./doc/images/mathematical/rastrigin_function_heatmap.jpg" width="90%"> </td>
-    <td> <img src="./doc/images/mathematical/rastrigin_function_surface.jpg" width="100%"> </td>
-  </tr>
-  <tr>
-    <th> <ins>Ackley function</ins> <br><br> </th>
-    <td> <img src="./doc/images/mathematical/ackley_function_heatmap.jpg" width="90%"> </td>
-    <td> <img src="./doc/images/mathematical/ackley_function_surface.jpg" width="100%"> </td>
-  </tr>
-  <tr>
-    <th> <ins>Rosenbrock function</ins> <br><br> </th>
-    <td> <img src="./doc/images/mathematical/rosenbrock_function_heatmap.jpg" width="90%"> </td>
-    <td> <img src="./doc/images/mathematical/rosenbrock_function_surface.jpg" width="100%"> </td>
-  </tr>
-  <tr>
-    <th> <ins>Beale function</ins> <br><br> </th>
-    <td> <img src="./doc/images/mathematical/beale_function_heatmap.jpg" width="90%"> </td>
-    <td> <img src="./doc/images/mathematical/beale_function_surface.jpg" width="100%"> </td>
-  </tr>
-  <tr>
-    <th> <ins>Himmelblaus function</ins> <br><br> </th>
-    <td> <img src="./doc/images/mathematical/himmelblaus_function_heatmap.jpg" width="90%"> </td>
-    <td> <img src="./doc/images/mathematical/himmelblaus_function_surface.jpg" width="100%"> </td>
-  </tr>
-  <tr>
-    <th> <ins>Hölder Table function</ins> <br><br> </th>
-    <td> <img src="./doc/images/mathematical/hölder_table_function_heatmap.jpg" width="90%"> </td>
-    <td> <img src="./doc/images/mathematical/hölder_table_function_surface.jpg" width="100%"> </td>
-  </tr>
-  <tr>
-    <th> <ins>Cross-In-Tray function</ins> <br><br> </th>
-    <td> <img src="./doc/images/mathematical/cross_in_tray_function_heatmap.jpg" width="90%"> </td>
-    <td> <img src="./doc/images/mathematical/cross_in_tray_function_surface.jpg" width="100%"> </td>
-  </tr>
-</table>
-
-
-<br>
+Surfaces provides standardized test functions for evaluating and comparing optimization algorithms. The library includes algebraic test functions (mathematical benchmark problems), machine learning test functions (hyperparameter optimization scenarios), and engineering design problems.
 
 ## Installation
 
-The most recent version of Surfaces is available on PyPi:
-
-```console
+```bash
 pip install surfaces
 ```
 
-## Public API
+For machine learning test functions (requires scikit-learn):
 
-### Test Functions
+```bash
+pip install surfaces[ml]
+```
 
-Surfaces provides two main categories of test functions for optimization benchmarking:
+## Function Categories
 
-#### Mathematical Functions
+### Algebraic Functions
 
-Import from `surfaces.test_functions.mathematical`:
+Algebraic benchmark functions from optimization literature. These functions have known optima and well-characterized difficulty properties.
 
 **1D Functions:**
 - `GramacyAndLeeFunction`
@@ -112,7 +30,7 @@ Import from `surfaces.test_functions.mathematical`:
 **2D Functions:**
 - `AckleyFunction`, `BealeFunction`, `BoothFunction`, `BukinFunctionN6`
 - `CrossInTrayFunction`, `DropWaveFunction`, `EasomFunction`, `EggholderFunction`
-- `GoldsteinPriceFunction`, `HimmelblausFunction`, `HölderTableFunction`
+- `GoldsteinPriceFunction`, `HimmelblausFunction`, `HoelderTableFunction`
 - `LangermannFunction`, `LeviFunctionN13`, `MatyasFunction`, `McCormickFunction`
 - `SchafferFunctionN2`, `SimionescuFunction`, `ThreeHumpCamelFunction`
 
@@ -120,81 +38,171 @@ Import from `surfaces.test_functions.mathematical`:
 - `GriewankFunction`, `RastriginFunction`, `RosenbrockFunction`
 - `SphereFunction`, `StyblinskiTangFunction`
 
-#### Machine Learning Functions
+### Machine Learning Functions
 
-Import from `surfaces.test_functions.machine_learning`:
+Hyperparameter optimization problems based on scikit-learn models. Each function evaluates model performance via cross-validation on built-in datasets.
 
-- `KNeighborsClassifierFunction` - K-nearest neighbors classification
-- `KNeighborsRegressorFunction` - K-nearest neighbors regression
-- `GradientBoostingRegressorFunction` - Gradient boosting regression
+**Classification (5 models x 5 datasets):**
 
-### Common Interface
+| Model | Hyperparameters |
+|-------|-----------------|
+| `KNeighborsClassifierFunction` | n_neighbors, algorithm |
+| `DecisionTreeClassifierFunction` | max_depth, min_samples_split, min_samples_leaf |
+| `RandomForestClassifierFunction` | n_estimators, max_depth, min_samples_split |
+| `GradientBoostingClassifierFunction` | n_estimators, max_depth, learning_rate |
+| `SVMClassifierFunction` | C, kernel, gamma |
 
-All test functions provide:
+**Regression (5 models x 5 datasets):**
 
-- `objective_function(parameters)` - Evaluate the function
-- `search_space()` - Get parameter bounds/ranges
-- Constructor parameters:
-  - `metric="loss"` or `"score"` - Optimization direction
-  - `sleep=0` - Add artificial delays for benchmarking
-  - `n_dim=N` (for N-dimensional functions) - Set dimensionality
+| Model | Hyperparameters |
+|-------|-----------------|
+| `KNeighborsRegressorFunction` | n_neighbors, algorithm |
+| `DecisionTreeRegressorFunction` | max_depth, min_samples_split, min_samples_leaf |
+| `RandomForestRegressorFunction` | n_estimators, max_depth, min_samples_split |
+| `GradientBoostingRegressorFunction` | n_estimators, max_depth |
+| `SVMRegressorFunction` | C, kernel, gamma |
 
-## Usage Examples
+**Datasets:**
+- Classification: digits, iris, wine, breast_cancer, covtype
+- Regression: diabetes, california, friedman1, friedman2, linear
 
-### Basic Mathematical Function
+### Engineering Functions
+
+Constrained engineering design optimization problems with penalty-based constraint handling.
+
+- `CantileverBeamFunction` - Cantilever beam weight minimization
+- `PressureVesselFunction` - Cylindrical pressure vessel cost minimization
+- `TensionCompressionSpringFunction` - Spring weight minimization
+- `ThreeBarTrussFunction` - Truss structure weight minimization
+- `WeldedBeamFunction` - Welded beam fabrication cost minimization
+
+## Usage
+
+### Algebraic Function
 
 ```python
-from surfaces.test_functions.mathematical import SphereFunction, AckleyFunction
+from surfaces.test_functions import SphereFunction
 
-# Create functions
-sphere_function = SphereFunction(n_dim=2, metric="score")
-ackley_function = AckleyFunction(metric="loss")
+# Create function
+sphere = SphereFunction(n_dim=3, objective="minimize")
 
 # Get search space
-search_space = sphere_function.search_space()
-print(search_space)  # {'x0': array([...]), 'x1': array([...])}
+print(sphere.search_space)
+# {'x0': array([-5.12, ..., 5.12]), 'x1': array([...]), 'x2': array([...])}
 
-# Evaluate function
-params = {'x0': 0.5, 'x1': -0.3}
-result = sphere_function.objective_function(params)
-print(f"Sphere function result: {result}")
+# Evaluate
+result = sphere({"x0": 0.5, "x1": -0.3, "x2": 0.1})
+print(result)  # 0.35
 ```
 
 ### Machine Learning Function
 
 ```python
-from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
+from surfaces.test_functions import KNeighborsClassifierFunction
 
-# Create ML function
-knn_func = KNeighborsClassifierFunction(metric="accuracy")
+# Create function with fixed dataset and cv
+knn = KNeighborsClassifierFunction(dataset="iris", cv=5)
 
-# Get search space
-search_space = knn_func.search_space()
-print(search_space.keys())  # dict_keys(['n_neighbors', 'algorithm', 'cv', 'dataset'])
+# Search space contains only hyperparameters
+print(knn.search_space)
+# {'n_neighbors': [3, 8, 13, ...], 'algorithm': ['auto', 'ball_tree', ...]}
 
-# Evaluate function
-params = {
-    'n_neighbors': 5,
-    'algorithm': 'auto',
-    'cv': 3,
-    'dataset': knn_func.search_space()['dataset'][0]
-}
-accuracy = knn_func.objective_function(params)
-print(f"KNN accuracy: {accuracy}")
+# Evaluate
+accuracy = knn({"n_neighbors": 5, "algorithm": "auto"})
+print(f"Accuracy: {accuracy:.4f}")
 ```
 
-### N-Dimensional Functions
+### Engineering Function
 
 ```python
-from surfaces.test_functions.mathematical import SphereFunction
+from surfaces.test_functions import WeldedBeamFunction
 
-# Create functions with different dimensionalities
-sphere_1d = SphereFunction(n_dim=1)
-sphere_3d = SphereFunction(n_dim=3)
-sphere_10d = SphereFunction(n_dim=10)
+# Create function
+beam = WeldedBeamFunction(objective="minimize")
 
-# Each has appropriate search space
-print(sphere_1d.search_space().keys())   # dict_keys(['x0'])
-print(sphere_3d.search_space().keys())   # dict_keys(['x0', 'x1', 'x2'])
-print(sphere_10d.search_space().keys())  # dict_keys(['x0', 'x1', ..., 'x9'])
+# Evaluate with constraint penalties
+cost = beam({"h": 0.2, "l": 6.0, "t": 8.0, "b": 0.3})
 ```
+
+### Integration with Optimizers
+
+```python
+from surfaces.test_functions import AckleyFunction
+
+# Works with any optimizer that accepts callable + search space
+func = AckleyFunction(objective="minimize")
+
+# Example with Hyperactive
+from hyperactive import Hyperactive
+
+hyper = Hyperactive()
+hyper.add_search(func, func.search_space, n_iter=100)
+hyper.run()
+```
+
+## Common Parameters
+
+All test functions support:
+
+| Parameter | Description |
+|-----------|-------------|
+| `objective` | "minimize" or "maximize" |
+| `sleep` | Artificial delay per evaluation (seconds) |
+| `memory` | Cache repeated evaluations |
+| `collect_data` | Store evaluation history |
+| `callbacks` | List of callback functions |
+
+N-dimensional functions additionally support:
+| Parameter | Description |
+|-----------|-------------|
+| `n_dim` | Number of dimensions |
+
+ML functions additionally support:
+| Parameter | Description |
+|-----------|-------------|
+| `dataset` | Dataset name (e.g., "iris", "diabetes") |
+| `cv` | Cross-validation folds (2, 3, 5, or 10) |
+
+## Visualizations
+
+<table>
+  <tr>
+    <th>Function</th>
+    <th>Heatmap</th>
+    <th>Surface</th>
+  </tr>
+  <tr>
+    <td><b>Sphere</b></td>
+    <td><img src="./doc/images/mathematical/sphere_function_heatmap.jpg" width="90%"></td>
+    <td><img src="./doc/images/mathematical/sphere_function_surface.jpg" width="100%"></td>
+  </tr>
+  <tr>
+    <td><b>Rastrigin</b></td>
+    <td><img src="./doc/images/mathematical/rastrigin_function_heatmap.jpg" width="90%"></td>
+    <td><img src="./doc/images/mathematical/rastrigin_function_surface.jpg" width="100%"></td>
+  </tr>
+  <tr>
+    <td><b>Ackley</b></td>
+    <td><img src="./doc/images/mathematical/ackley_function_heatmap.jpg" width="90%"></td>
+    <td><img src="./doc/images/mathematical/ackley_function_surface.jpg" width="100%"></td>
+  </tr>
+  <tr>
+    <td><b>Rosenbrock</b></td>
+    <td><img src="./doc/images/mathematical/rosenbrock_function_heatmap.jpg" width="90%"></td>
+    <td><img src="./doc/images/mathematical/rosenbrock_function_surface.jpg" width="100%"></td>
+  </tr>
+</table>
+
+## Roadmap
+
+Planned additions:
+
+- **BBOB Functions**: Black-Box Optimization Benchmarking suite (24 functions)
+- **CEC Functions**: Competition on Evolutionary Computation benchmark suites
+- **Surrogate Models**: Pre-trained ONNX models for fast ML function approximation
+- **Additional ML Models**: Neural networks, XGBoost, LightGBM
+- **Multi-objective Functions**: Test functions with multiple objectives
+
+## License
+
+MIT License
