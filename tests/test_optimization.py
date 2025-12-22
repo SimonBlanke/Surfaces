@@ -148,3 +148,78 @@ def test_scipy_integration():
     assert result.success
     assert abs(result.fun) < 0.01
     assert np.allclose(result.x, [0, 0], atol=0.1)
+
+
+############################################################
+# Optuna integration test
+
+
+def test_optuna_integration():
+    """Test that Surfaces functions work with Optuna."""
+    import optuna
+
+    optuna.logging.set_verbosity(optuna.logging.WARNING)
+
+    func = SphereFunction(n_dim=2)
+
+    def objective(trial):
+        x0 = trial.suggest_float("x0", -5, 5)
+        x1 = trial.suggest_float("x1", -5, 5)
+        # Surfaces accepts dict input
+        return func({"x0": x0, "x1": x1})
+
+    study = optuna.create_study(direction="minimize")
+    study.optimize(objective, n_trials=50, show_progress_bar=False)
+
+    # Should find minimum near [0, 0]
+    assert study.best_value < 0.5
+    assert abs(study.best_params["x0"]) < 1.0
+    assert abs(study.best_params["x1"]) < 1.0
+
+
+def test_optuna_integration_rastrigin():
+    """Test Optuna with a more complex function."""
+    import optuna
+
+    optuna.logging.set_verbosity(optuna.logging.WARNING)
+
+    func = RastriginFunction(n_dim=2)
+
+    def objective(trial):
+        params = {f"x{i}": trial.suggest_float(f"x{i}", -5, 5) for i in range(2)}
+        return func(params)
+
+    study = optuna.create_study(direction="minimize")
+    study.optimize(objective, n_trials=100, show_progress_bar=False)
+
+    # Rastrigin has global minimum at origin with value 0
+    # With 100 trials, we should get reasonably close
+    assert study.best_value < 5.0
+
+
+############################################################
+# scikit-optimize integration test
+
+
+def test_skopt_integration():
+    """Test that Surfaces functions work with scikit-optimize."""
+    pytest.importorskip("skopt")
+    from skopt import gp_minimize
+
+    func = SphereFunction(n_dim=2)
+
+    # skopt passes list of values
+    def objective(x):
+        return func(x)
+
+    result = gp_minimize(
+        objective,
+        [(-5.0, 5.0), (-5.0, 5.0)],
+        n_calls=30,
+        random_state=42,
+    )
+
+    # Should find minimum near [0, 0]
+    assert result.fun < 0.5
+    assert abs(result.x[0]) < 1.0
+    assert abs(result.x[1]) < 1.0
