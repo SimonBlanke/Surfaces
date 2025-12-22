@@ -74,8 +74,8 @@ class BealeFunction(AlgebraicFunction):
     default_bounds = (-4.5, 4.5)
     n_dim = 2
 
-    def __init__(self, A=1.5, B=2.25, C=2.652, objective="minimize", sleep=0, memory=False, collect_data=True):
-        super().__init__(objective, sleep, memory, collect_data)
+    def __init__(self, A=1.5, B=2.25, C=2.652, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None):
+        super().__init__(objective, sleep, memory, collect_data, callbacks)
         self.n_dim = 2
 
         self.A = A

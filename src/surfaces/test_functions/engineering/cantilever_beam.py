@@ -140,9 +140,15 @@ class CantileverBeamFunction(EngineeringFunction):
     x_global = np.array([6.0089, 5.3049, 4.5023, 3.5077, 2.1504])
 
     def __init__(
-        self, objective: str = "minimize", sleep: float = 0, penalty_coefficient: float = 1e6
+        self,
+        objective: str = "minimize",
+        sleep: float = 0,
+        memory: bool = False,
+        collect_data: bool = True,
+        callbacks=None,
+        penalty_coefficient: float = 1e6,
     ):
-        super().__init__(objective, sleep, penalty_coefficient)
+        super().__init__(objective, sleep, memory, collect_data, callbacks, penalty_coefficient)
 
     def raw_objective(self, params: Dict[str, Any]) -> float:
         """Calculate beam weight (total volume)."""

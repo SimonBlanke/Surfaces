@@ -137,11 +137,14 @@ class ThreeBarTrussFunction(EngineeringFunction):
         sigma_max: float = 2.0,
         objective: str = "minimize",
         sleep: float = 0,
+        memory: bool = False,
+        collect_data: bool = True,
+        callbacks=None,
         penalty_coefficient: float = 1e6,
     ):
         self.P = P
         self.sigma_max = sigma_max
-        super().__init__(objective, sleep, penalty_coefficient)
+        super().__init__(objective, sleep, memory, collect_data, callbacks, penalty_coefficient)
 
     def raw_objective(self, params: Dict[str, Any]) -> float:
         """Calculate weight of the truss structure."""

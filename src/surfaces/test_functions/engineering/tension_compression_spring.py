@@ -134,9 +134,15 @@ class TensionCompressionSpringFunction(EngineeringFunction):
     x_global = np.array([0.05169, 0.35673, 11.2885])
 
     def __init__(
-        self, objective: str = "minimize", sleep: float = 0, penalty_coefficient: float = 1e6
+        self,
+        objective: str = "minimize",
+        sleep: float = 0,
+        memory: bool = False,
+        collect_data: bool = True,
+        callbacks=None,
+        penalty_coefficient: float = 1e6,
     ):
-        super().__init__(objective, sleep, penalty_coefficient)
+        super().__init__(objective, sleep, memory, collect_data, callbacks, penalty_coefficient)
 
     def raw_objective(self, params: Dict[str, Any]) -> float:
         """Calculate spring weight (proportional to wire volume)."""

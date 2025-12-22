@@ -3,7 +3,7 @@
 # License: MIT License
 
 import time
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 
@@ -24,6 +24,10 @@ class BaseTestFunction:
         If True, collects evaluation data including search_data, best_score,
         best_params, n_evaluations, and total_time. Set to False to disable
         tracking for performance-critical applications.
+    callbacks : callable or list of callables, optional
+        Function(s) called after each evaluation with the record dict.
+        Signature: callback(record: dict) -> None
+        The record contains all parameters plus 'score'.
 
     Attributes
     ----------
@@ -47,6 +51,13 @@ class BaseTestFunction:
     >>> func.n_evaluations                 # 3
     >>> func.best_score                    # best value seen
     >>> func.search_data                   # [{"x0": 1.0, "x1": 2.0, "score": 5.0}, ...]
+
+    Callbacks Example
+    -----------------
+    >>> records = []
+    >>> func = SphereFunction(n_dim=2, callbacks=lambda r: records.append(r))
+    >>> func([1.0, 2.0])
+    >>> print(records)  # [{"x0": 1.0, "x1": 2.0, "score": 5.0}]
     """
 
     pure_objective_function: callable
@@ -107,8 +118,18 @@ class BaseTestFunction:
 
         return wrapper
 
+    # Type alias for callbacks
+    CallbackType = Union[Callable[[Dict[str, Any]], None], List[Callable[[Dict[str, Any]], None]]]
+
     @_create_objective_function_
-    def __init__(self, objective="minimize", sleep=0, memory=False, collect_data=True):
+    def __init__(
+        self,
+        objective="minimize",
+        sleep=0,
+        memory=False,
+        collect_data=True,
+        callbacks=None,
+    ):
         if objective not in ("minimize", "maximize"):
             raise ValueError(f"objective must be 'minimize' or 'maximize', got '{objective}'")
         self.objective = objective
@@ -116,6 +137,14 @@ class BaseTestFunction:
         self.memory = memory
         self.collect_data = collect_data
         self._memory_cache: Dict[Tuple, float] = {}
+
+        # Normalize callbacks to list
+        if callbacks is None:
+            self._callbacks: List[Callable] = []
+        elif callable(callbacks):
+            self._callbacks = [callbacks]
+        else:
+            self._callbacks = list(callbacks)
 
         # Data collection attributes
         self.n_evaluations: int = 0
@@ -161,7 +190,7 @@ class BaseTestFunction:
             cache_key = self._params_to_cache_key(params)
             if cache_key in self._memory_cache:
                 result = self._memory_cache[cache_key]
-                if self.collect_data:
+                if self.collect_data or self._callbacks:
                     self._record_evaluation(params, result, from_cache=True)
                 return result
 
@@ -173,7 +202,7 @@ class BaseTestFunction:
             cache_key = self._params_to_cache_key(params)
             self._memory_cache[cache_key] = result
 
-        if self.collect_data:
+        if self.collect_data or self._callbacks:
             self._record_evaluation(params, result, elapsed_time=elapsed_time)
 
         return result
@@ -212,26 +241,30 @@ class BaseTestFunction:
         elapsed_time: float = 0.0,
         from_cache: bool = False,
     ) -> None:
-        """Record an evaluation in the search data."""
-        self.n_evaluations += 1
-
-        # Record in search_data
+        """Record an evaluation and invoke callbacks."""
         record = {**params, "score": score}
-        self.search_data.append(record)
 
-        # Update timing (only for non-cached evaluations)
-        if not from_cache:
-            self.total_time += elapsed_time
+        if self.collect_data:
+            self.n_evaluations += 1
+            self.search_data.append(record)
 
-        # Update best score/params
-        is_better = (
-            self.best_score is None
-            or (self.objective == "minimize" and score < self.best_score)
-            or (self.objective == "maximize" and score > self.best_score)
-        )
-        if is_better:
-            self.best_score = score
-            self.best_params = params.copy()
+            # Update timing (only for non-cached evaluations)
+            if not from_cache:
+                self.total_time += elapsed_time
+
+            # Update best score/params
+            is_better = (
+                self.best_score is None
+                or (self.objective == "minimize" and score < self.best_score)
+                or (self.objective == "maximize" and score > self.best_score)
+            )
+            if is_better:
+                self.best_score = score
+                self.best_params = params.copy()
+
+        # Invoke callbacks
+        for callback in self._callbacks:
+            callback(record)
 
     def reset_data(self) -> None:
         """Reset all collected evaluation data.
@@ -253,3 +286,46 @@ class BaseTestFunction:
         """Reset all state including collected data and memory cache."""
         self.reset_data()
         self.reset_memory()
+
+    # =========================================================================
+    # Callback Management
+    # =========================================================================
+
+    def add_callback(self, callback: Callable[[Dict[str, Any]], None]) -> None:
+        """Add a callback to be invoked after each evaluation.
+
+        Parameters
+        ----------
+        callback : callable
+            Function that takes a record dict with parameters and 'score'.
+
+        Examples
+        --------
+        >>> func = SphereFunction(n_dim=2)
+        >>> func.add_callback(lambda r: print(f"Score: {r['score']}"))
+        """
+        self._callbacks.append(callback)
+
+    def remove_callback(self, callback: Callable[[Dict[str, Any]], None]) -> None:
+        """Remove a previously added callback.
+
+        Parameters
+        ----------
+        callback : callable
+            The callback to remove.
+
+        Raises
+        ------
+        ValueError
+            If the callback is not in the list.
+        """
+        self._callbacks.remove(callback)
+
+    def clear_callbacks(self) -> None:
+        """Remove all callbacks."""
+        self._callbacks = []
+
+    @property
+    def callbacks(self) -> List[Callable[[Dict[str, Any]], None]]:
+        """List of registered callbacks (read-only copy)."""
+        return self._callbacks.copy()

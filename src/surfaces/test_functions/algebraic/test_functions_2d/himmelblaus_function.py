@@ -77,8 +77,8 @@ class HimmelblausFunction(AlgebraicFunction):
     default_bounds = (-5.0, 5.0)
     n_dim = 2
 
-    def __init__(self, A=-11, B=-7, objective="minimize", sleep=0, memory=False, collect_data=True):
-        super().__init__(objective, sleep, memory, collect_data)
+    def __init__(self, A=-11, B=-7, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None):
+        super().__init__(objective, sleep, memory, collect_data, callbacks)
         self.n_dim = 2
 
         self.A = A
