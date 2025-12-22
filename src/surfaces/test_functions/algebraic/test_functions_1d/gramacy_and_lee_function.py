@@ -68,8 +68,8 @@ class GramacyAndLeeFunction(AlgebraicFunction):
     default_bounds = (0.5, 2.5)
     n_dim = 1
 
-    def __init__(self, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None):
-        super().__init__(objective, sleep, memory, collect_data, callbacks)
+    def __init__(self, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None):
+        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 1
 
     def _create_objective_function(self):

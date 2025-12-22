@@ -154,6 +154,7 @@ class WeldedBeamFunction(EngineeringFunction):
         memory: bool = False,
         collect_data: bool = True,
         callbacks=None,
+        catch_errors: bool = False,
         penalty_coefficient: float = 1e6,
     ):
         self.P = P
@@ -163,7 +164,7 @@ class WeldedBeamFunction(EngineeringFunction):
         self.tau_max = tau_max
         self.sigma_max = sigma_max
         self.delta_max = delta_max
-        super().__init__(objective, sleep, memory, collect_data, callbacks, penalty_coefficient)
+        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, penalty_coefficient)
 
     def raw_objective(self, params: Dict[str, Any]) -> float:
         """Calculate fabrication cost."""

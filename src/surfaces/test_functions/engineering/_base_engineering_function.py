@@ -75,10 +75,11 @@ class EngineeringFunction(BaseTestFunction):
         memory: bool = False,
         collect_data: bool = True,
         callbacks=None,
+        catch_errors=None,
         penalty_coefficient: float = 1e6,
     ):
         self.penalty_coefficient = penalty_coefficient
-        super().__init__(objective, sleep, memory, collect_data, callbacks)
+        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors)
 
     @property
     def n_dim(self) -> int:

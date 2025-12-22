@@ -63,8 +63,8 @@ class BoothFunction(AlgebraicFunction):
     default_bounds = (-10.0, 10.0)
     n_dim = 2
 
-    def __init__(self, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None):
-        super().__init__(objective, sleep, memory, collect_data, callbacks)
+    def __init__(self, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None):
+        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 2
 
     def _create_objective_function(self):

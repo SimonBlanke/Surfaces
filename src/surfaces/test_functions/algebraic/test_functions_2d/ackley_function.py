@@ -83,8 +83,9 @@ class AckleyFunction(AlgebraicFunction):
         memory=False,
         collect_data=True,
         callbacks=None,
+        catch_errors=None,
     ):
-        super().__init__(objective, sleep, memory, collect_data, callbacks)
+        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors)
 
         self.n_dim = 2
 

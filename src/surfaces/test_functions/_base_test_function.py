@@ -3,7 +3,7 @@
 # License: MIT License
 
 import time
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
 
 import numpy as np
 
@@ -28,6 +28,12 @@ class BaseTestFunction:
         Function(s) called after each evaluation with the record dict.
         Signature: callback(record: dict) -> None
         The record contains all parameters plus 'score'.
+    catch_errors : dict, optional
+        Dictionary mapping exception types to return values. When an
+        exception of a specified type occurs during evaluation, the
+        corresponding value is returned instead of propagating the error.
+        Use ... (Ellipsis) as a catch-all key for any unmatched exceptions.
+        Exceptions not matching any key will still propagate normally.
 
     Attributes
     ----------
@@ -44,6 +50,8 @@ class BaseTestFunction:
 
     Examples
     --------
+    Basic usage with different input formats:
+
     >>> func = SphereFunction(n_dim=2)
     >>> func({"x0": 1.0, "x1": 2.0})      # dict input
     >>> func(np.array([1.0, 2.0]))        # array input
@@ -54,10 +62,73 @@ class BaseTestFunction:
 
     Callbacks Example
     -----------------
+    Callbacks are invoked after each evaluation with a record dict containing
+    all parameters and the score. Use callbacks for logging, streaming to
+    external systems, or custom processing.
+
+    Single callback:
+
     >>> records = []
     >>> func = SphereFunction(n_dim=2, callbacks=lambda r: records.append(r))
     >>> func([1.0, 2.0])
     >>> print(records)  # [{"x0": 1.0, "x1": 2.0, "score": 5.0}]
+
+    Multiple callbacks:
+
+    >>> func = SphereFunction(
+    ...     n_dim=2,
+    ...     callbacks=[
+    ...         lambda r: print(f"Score: {r['score']}"),
+    ...         lambda r: my_database.insert(r),
+    ...     ]
+    ... )
+
+    Adding callbacks at runtime:
+
+    >>> func = SphereFunction(n_dim=2)
+    >>> func.add_callback(lambda r: print(r))
+    >>> func([1.0, 2.0])  # prints the record
+    >>> func.clear_callbacks()
+
+    Catch Errors Example
+    --------------------
+    Use catch_errors to handle exceptions during evaluation gracefully.
+    This is useful for optimization where some parameter combinations
+    may cause numerical errors (division by zero, log of negative, etc.).
+    The optimizer can continue exploring while the return value guides
+    it away from problematic regions.
+
+    Catch specific exceptions with custom return values:
+
+    >>> func = SphereFunction(
+    ...     n_dim=2,
+    ...     catch_errors={
+    ...         ZeroDivisionError: float('inf'),
+    ...         ValueError: 1000.0,
+    ...     }
+    ... )
+    >>> # ZeroDivisionError returns inf
+    >>> # ValueError returns 1000.0
+    >>> # Other exceptions still propagate
+
+    Use ... (Ellipsis) as a catch-all for any unmatched exceptions:
+
+    >>> func = SphereFunction(
+    ...     n_dim=2,
+    ...     catch_errors={
+    ...         ValueError: 1000.0,   # Specific handling
+    ...         ...: float('inf'),    # Everything else
+    ...     }
+    ... )
+    >>> # ValueError returns 1000.0
+    >>> # Any other exception returns inf
+
+    Simple catch-all pattern:
+
+    >>> func = SphereFunction(
+    ...     n_dim=2,
+    ...     catch_errors={...: float('inf')}
+    ... )
     """
 
     pure_objective_function: callable
@@ -129,6 +200,7 @@ class BaseTestFunction:
         memory=False,
         collect_data=True,
         callbacks=None,
+        catch_errors=None,
     ):
         if objective not in ("minimize", "maximize"):
             raise ValueError(f"objective must be 'minimize' or 'maximize', got '{objective}'")
@@ -136,6 +208,7 @@ class BaseTestFunction:
         self.sleep = sleep
         self.memory = memory
         self.collect_data = collect_data
+        self.catch_errors: Optional[Dict[Type[Exception], float]] = catch_errors
         self._memory_cache: Dict[Tuple, float] = {}
 
         # Normalize callbacks to list
@@ -226,9 +299,23 @@ class BaseTestFunction:
         return tuple(params[k] for k in sorted(params.keys()))
 
     def _evaluate(self, params: Dict[str, Any]) -> float:
-        """Evaluate with timing and objective transformation."""
+        """Evaluate with timing and objective transformation.
+
+        If catch_errors is provided, exceptions matching the specified types
+        return the corresponding value instead of propagating. Use ... (Ellipsis)
+        as a catch-all key for any unmatched exceptions.
+        """
         time.sleep(self.sleep)
-        raw_value = self.pure_objective_function(params)
+
+        try:
+            raw_value = self.pure_objective_function(params)
+        except Exception as e:
+            if self.catch_errors is not None:
+                # Check if this exception type should be caught
+                for exc_type, return_value in self.catch_errors.items():
+                    if exc_type is ... or isinstance(e, exc_type):
+                        return return_value
+            raise
 
         if self.objective == "maximize":
             return -raw_value
