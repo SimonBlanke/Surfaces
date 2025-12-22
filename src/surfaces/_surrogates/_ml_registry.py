@@ -68,39 +68,97 @@ def _ensure_registered():
         return  # Already registered
 
     from surfaces.test_functions import (
+        # Classification
+        DecisionTreeClassifierFunction,
+        GradientBoostingClassifierFunction,
         KNeighborsClassifierFunction,
-        KNeighborsRegressorFunction,
+        RandomForestClassifierFunction,
+        SVMClassifierFunction,
+        # Regression
+        DecisionTreeRegressorFunction,
         GradientBoostingRegressorFunction,
+        KNeighborsRegressorFunction,
+        RandomForestRegressorFunction,
+        SVMRegressorFunction,
     )
 
+    # Dataset grids
+    classification_datasets = ["digits", "iris", "wine", "breast_cancer", "covtype"]
+    regression_datasets = ["diabetes", "california", "friedman1", "friedman2", "linear"]
+    cv_options = [2, 3, 5, 10]
+
+    # =========================================================================
     # Classification functions
+    # =========================================================================
+    register_ml_function(
+        name="decision_tree_classifier",
+        function_class=DecisionTreeClassifierFunction,
+        fixed_params={"dataset": classification_datasets, "cv": cv_options},
+        hyperparams=["max_depth", "min_samples_split", "min_samples_leaf"],
+    )
+
+    register_ml_function(
+        name="gradient_boosting_classifier",
+        function_class=GradientBoostingClassifierFunction,
+        fixed_params={"dataset": classification_datasets, "cv": cv_options},
+        hyperparams=["n_estimators", "max_depth", "learning_rate"],
+    )
+
     register_ml_function(
         name="k_neighbors_classifier",
         function_class=KNeighborsClassifierFunction,
-        fixed_params={
-            "dataset": ["digits", "iris", "wine"],
-            "cv": [2, 3, 5, 10],
-        },
+        fixed_params={"dataset": classification_datasets, "cv": cv_options},
         hyperparams=["n_neighbors", "algorithm"],
     )
 
-    # Regression functions
     register_ml_function(
-        name="k_neighbors_regressor",
-        function_class=KNeighborsRegressorFunction,
-        fixed_params={
-            "dataset": ["diabetes", "california"],
-            "cv": [2, 3, 5, 10],
-        },
-        hyperparams=["n_neighbors", "algorithm"],
+        name="random_forest_classifier",
+        function_class=RandomForestClassifierFunction,
+        fixed_params={"dataset": classification_datasets, "cv": cv_options},
+        hyperparams=["n_estimators", "max_depth", "min_samples_split"],
+    )
+
+    register_ml_function(
+        name="svm_classifier",
+        function_class=SVMClassifierFunction,
+        fixed_params={"dataset": classification_datasets, "cv": cv_options},
+        hyperparams=["C", "kernel", "gamma"],
+    )
+
+    # =========================================================================
+    # Regression functions
+    # =========================================================================
+    register_ml_function(
+        name="decision_tree_regressor",
+        function_class=DecisionTreeRegressorFunction,
+        fixed_params={"dataset": regression_datasets, "cv": cv_options},
+        hyperparams=["max_depth", "min_samples_split", "min_samples_leaf"],
     )
 
     register_ml_function(
         name="gradient_boosting_regressor",
         function_class=GradientBoostingRegressorFunction,
-        fixed_params={
-            "dataset": ["diabetes", "california"],
-            "cv": [2, 3, 5, 10],
-        },
+        fixed_params={"dataset": regression_datasets, "cv": cv_options},
         hyperparams=["n_estimators", "max_depth"],
+    )
+
+    register_ml_function(
+        name="k_neighbors_regressor",
+        function_class=KNeighborsRegressorFunction,
+        fixed_params={"dataset": regression_datasets, "cv": cv_options},
+        hyperparams=["n_neighbors", "algorithm"],
+    )
+
+    register_ml_function(
+        name="random_forest_regressor",
+        function_class=RandomForestRegressorFunction,
+        fixed_params={"dataset": regression_datasets, "cv": cv_options},
+        hyperparams=["n_estimators", "max_depth", "min_samples_split"],
+    )
+
+    register_ml_function(
+        name="svm_regressor",
+        function_class=SVMRegressorFunction,
+        fixed_params={"dataset": regression_datasets, "cv": cv_options},
+        hyperparams=["C", "kernel", "gamma"],
     )

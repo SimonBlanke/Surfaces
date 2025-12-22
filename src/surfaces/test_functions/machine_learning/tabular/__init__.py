@@ -2,11 +2,32 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from .classification import KNeighborsClassifierFunction
-from .regression import GradientBoostingRegressorFunction, KNeighborsRegressorFunction
+from .classification import (
+    DecisionTreeClassifierFunction,
+    GradientBoostingClassifierFunction,
+    KNeighborsClassifierFunction,
+    RandomForestClassifierFunction,
+    SVMClassifierFunction,
+)
+from .regression import (
+    DecisionTreeRegressorFunction,
+    GradientBoostingRegressorFunction,
+    KNeighborsRegressorFunction,
+    RandomForestRegressorFunction,
+    SVMRegressorFunction,
+)
 
 __all__ = [
+    # Classification
+    "DecisionTreeClassifierFunction",
+    "GradientBoostingClassifierFunction",
     "KNeighborsClassifierFunction",
-    "KNeighborsRegressorFunction",
+    "RandomForestClassifierFunction",
+    "SVMClassifierFunction",
+    # Regression
+    "DecisionTreeRegressorFunction",
     "GradientBoostingRegressorFunction",
+    "KNeighborsRegressorFunction",
+    "RandomForestRegressorFunction",
+    "SVMRegressorFunction",
 ]

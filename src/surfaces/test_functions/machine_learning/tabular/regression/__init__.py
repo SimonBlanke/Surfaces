@@ -3,11 +3,17 @@
 # License: MIT License
 
 from .test_functions import (
+    DecisionTreeRegressorFunction,
     GradientBoostingRegressorFunction,
     KNeighborsRegressorFunction,
+    RandomForestRegressorFunction,
+    SVMRegressorFunction,
 )
 
 __all__ = [
-    "KNeighborsRegressorFunction",
+    "DecisionTreeRegressorFunction",
     "GradientBoostingRegressorFunction",
+    "KNeighborsRegressorFunction",
+    "RandomForestRegressorFunction",
+    "SVMRegressorFunction",
 ]

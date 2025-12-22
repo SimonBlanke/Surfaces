@@ -21,21 +21,48 @@ def _check_sklearn():
 
 if _HAS_SKLEARN:
     from .tabular import (
-        GradientBoostingRegressorFunction,
+        # Classification
+        DecisionTreeClassifierFunction,
+        GradientBoostingClassifierFunction,
         KNeighborsClassifierFunction,
+        RandomForestClassifierFunction,
+        SVMClassifierFunction,
+        # Regression
+        DecisionTreeRegressorFunction,
+        GradientBoostingRegressorFunction,
         KNeighborsRegressorFunction,
+        RandomForestRegressorFunction,
+        SVMRegressorFunction,
     )
 
     __all__ = [
+        # Classification
+        "DecisionTreeClassifierFunction",
+        "GradientBoostingClassifierFunction",
         "KNeighborsClassifierFunction",
-        "KNeighborsRegressorFunction",
+        "RandomForestClassifierFunction",
+        "SVMClassifierFunction",
+        # Regression
+        "DecisionTreeRegressorFunction",
         "GradientBoostingRegressorFunction",
+        "KNeighborsRegressorFunction",
+        "RandomForestRegressorFunction",
+        "SVMRegressorFunction",
     ]
 
     machine_learning_functions = [
+        # Classification
+        DecisionTreeClassifierFunction,
+        GradientBoostingClassifierFunction,
         KNeighborsClassifierFunction,
+        RandomForestClassifierFunction,
+        SVMClassifierFunction,
+        # Regression
+        DecisionTreeRegressorFunction,
         GradientBoostingRegressorFunction,
         KNeighborsRegressorFunction,
+        RandomForestRegressorFunction,
+        SVMRegressorFunction,
     ]
 else:
     __all__ = []

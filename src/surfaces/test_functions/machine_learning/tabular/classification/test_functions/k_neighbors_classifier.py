@@ -9,14 +9,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.neighbors import KNeighborsClassifier
 
 from .._base_classification import BaseClassification
-from ..datasets import digits_data, iris_data, wine_data
-
-# Dataset registry: maps string names to loader functions
-DATASETS = {
-    "digits": digits_data,
-    "iris": iris_data,
-    "wine": wine_data,
-}
+from ..datasets import DATASETS
 
 
 class KNeighborsClassifierFunction(BaseClassification):
