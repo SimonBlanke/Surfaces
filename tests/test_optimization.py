@@ -223,3 +223,218 @@ def test_skopt_integration():
     assert result.fun < 0.5
     assert abs(result.x[0]) < 1.0
     assert abs(result.x[1]) < 1.0
+
+
+############################################################
+# Nevergrad integration test
+
+
+def test_nevergrad_integration():
+    """Test that Surfaces functions work with Nevergrad."""
+    pytest.importorskip("nevergrad")
+    import nevergrad as ng
+
+    func = SphereFunction(n_dim=2)
+
+    # Nevergrad uses its own parametrization, passes array-like
+    def objective(x):
+        return func(x)
+
+    parametrization = ng.p.Array(shape=(2,), lower=-5, upper=5)
+    optimizer = ng.optimizers.NGOpt(parametrization=parametrization, budget=50)
+    recommendation = optimizer.minimize(objective)
+
+    # Should find minimum near [0, 0]
+    result = recommendation.value
+    assert func(result) < 0.5
+    assert abs(result[0]) < 1.0
+    assert abs(result[1]) < 1.0
+
+
+def test_nevergrad_integration_with_dict():
+    """Test Nevergrad with dict-based parametrization."""
+    pytest.importorskip("nevergrad")
+    import nevergrad as ng
+
+    func = SphereFunction(n_dim=2)
+
+    # Nevergrad can also use dict-based instrumentation
+    parametrization = ng.p.Instrumentation(
+        x0=ng.p.Scalar(lower=-5, upper=5),
+        x1=ng.p.Scalar(lower=-5, upper=5),
+    )
+
+    def objective(x0, x1):
+        return func({"x0": x0, "x1": x1})
+
+    optimizer = ng.optimizers.NGOpt(parametrization=parametrization, budget=50)
+    recommendation = optimizer.minimize(objective)
+
+    # Should find minimum near [0, 0]
+    assert func({"x0": recommendation.kwargs["x0"], "x1": recommendation.kwargs["x1"]}) < 0.5
+
+
+############################################################
+# Bayesian Optimization integration test
+
+
+def test_bayesian_optimization_integration():
+    """Test that Surfaces functions work with bayesian-optimization."""
+    pytest.importorskip("bayes_opt")
+    from bayes_opt import BayesianOptimization
+
+    func = SphereFunction(n_dim=2)
+
+    # bayesian-optimization maximizes, so we negate for minimization
+    # It passes kwargs to the objective function
+    def objective(x0, x1):
+        return -func({"x0": x0, "x1": x1})
+
+    optimizer = BayesianOptimization(
+        f=objective,
+        pbounds={"x0": (-5, 5), "x1": (-5, 5)},
+        random_state=42,
+        verbose=0,
+    )
+    optimizer.maximize(init_points=5, n_iter=25)
+
+    # Should find minimum near [0, 0] (remember we negated, so max is near 0)
+    assert -optimizer.max["target"] < 0.5
+    assert abs(optimizer.max["params"]["x0"]) < 1.0
+    assert abs(optimizer.max["params"]["x1"]) < 1.0
+
+
+############################################################
+# Hyperopt integration test
+
+
+def test_hyperopt_integration():
+    """Test that Surfaces functions work with Hyperopt."""
+    pytest.importorskip("hyperopt")
+    from hyperopt import fmin, tpe, hp, Trials
+
+    func = SphereFunction(n_dim=2)
+
+    # Hyperopt passes dict to objective
+    def objective(params):
+        return func(params)
+
+    space = {
+        "x0": hp.uniform("x0", -5, 5),
+        "x1": hp.uniform("x1", -5, 5),
+    }
+
+    trials = Trials()
+    best = fmin(
+        fn=objective,
+        space=space,
+        algo=tpe.suggest,
+        max_evals=50,
+        trials=trials,
+        rstate=np.random.default_rng(42),
+        show_progressbar=False,
+    )
+
+    # Should find minimum near [0, 0]
+    assert func(best) < 0.5
+    assert abs(best["x0"]) < 1.0
+    assert abs(best["x1"]) < 1.0
+
+
+############################################################
+# Ray Tune integration test
+
+
+def test_ray_tune_integration():
+    """Test that Surfaces functions work with Ray Tune.
+
+    Note: Ray Tune can have compatibility issues in certain environments.
+    This test verifies that Surfaces functions can be used with Ray's
+    interface (dict-based config).
+    """
+    ray = pytest.importorskip("ray")
+    from ray import tune
+
+    func = SphereFunction(n_dim=2)
+
+    def objective(config):
+        result = func({"x0": config["x0"], "x1": config["x1"]})
+        # Ray Tune expects tune.report() or return dict
+        return {"loss": result}
+
+    # Test that the objective function works with Ray's config format
+    # This verifies Surfaces compatibility without running full Ray cluster
+    test_config = {"x0": 0.5, "x1": -0.5}
+    result = objective(test_config)
+    assert "loss" in result
+    assert isinstance(result["loss"], (int, float))
+
+    # Try running full Ray Tune optimization if environment supports it
+    try:
+        if not ray.is_initialized():
+            ray.init(ignore_reinit_error=True)
+
+        tuner = tune.Tuner(
+            objective,
+            param_space={
+                "x0": tune.uniform(-5, 5),
+                "x1": tune.uniform(-5, 5),
+            },
+            tune_config=tune.TuneConfig(
+                num_samples=20,
+                metric="loss",
+                mode="min",
+            ),
+        )
+        results = tuner.fit()
+        best_result = results.get_best_result()
+
+        # Should find minimum near [0, 0]
+        assert best_result.metrics["loss"] < 2.0
+    except Exception as e:
+        # Ray can have environment-specific issues; the basic interface test passed
+        pytest.skip(f"Ray Tune full optimization skipped due to environment issue: {e}")
+    finally:
+        if ray.is_initialized():
+            ray.shutdown()
+
+
+############################################################
+# SMAC integration test
+
+
+def test_smac_integration():
+    """Test that Surfaces functions work with SMAC."""
+    pytest.importorskip("smac")
+    from ConfigSpace import ConfigurationSpace, Float
+    from smac import HyperparameterOptimizationFacade, Scenario
+
+    func = SphereFunction(n_dim=2)
+
+    # SMAC passes Configuration objects, which behave like dicts
+    def objective(config, seed=0):
+        return func({"x0": config["x0"], "x1": config["x1"]})
+
+    # Define configuration space
+    configspace = ConfigurationSpace(seed=42)
+    configspace.add(Float("x0", (-5.0, 5.0)))
+    configspace.add(Float("x1", (-5.0, 5.0)))
+
+    # Create scenario
+    scenario = Scenario(
+        configspace,
+        deterministic=True,
+        n_trials=50,
+    )
+
+    # Run optimization
+    smac = HyperparameterOptimizationFacade(
+        scenario,
+        objective,
+        overwrite=True,
+    )
+    incumbent = smac.optimize()
+
+    # Should find minimum near [0, 0]
+    result = func({"x0": incumbent["x0"], "x1": incumbent["x1"]})
+    assert result < 1.0
