@@ -56,7 +56,9 @@ class MachineLearningFunction(BaseTestFunction):
         use_surrogate: bool = False,
         **kwargs,
     ):
-        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors)
+        super().__init__(
+            objective, sleep, memory, collect_data, callbacks, catch_errors
+        )
         self.use_surrogate = use_surrogate
         self._surrogate = None
 
@@ -77,6 +79,24 @@ class MachineLearningFunction(BaseTestFunction):
             )
             self.use_surrogate = False
 
+    def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        """Get parameters for surrogate prediction.
+
+        Override in subclasses to add fixed parameters (like dataset, cv)
+        that are not in the search space but needed by the surrogate.
+
+        Parameters
+        ----------
+        params : dict
+            Search parameters from the optimizer.
+
+        Returns
+        -------
+        dict
+            Full parameters for surrogate prediction.
+        """
+        return params
+
     def _evaluate(self, params: Dict[str, Any]) -> float:
         """Evaluate with timing and objective transformation.
 
@@ -86,7 +106,9 @@ class MachineLearningFunction(BaseTestFunction):
         time.sleep(self.sleep)
 
         if self.use_surrogate and self._surrogate is not None:
-            raw_value = self._surrogate.predict(params)
+            # Use _get_surrogate_params to include fixed params (dataset, cv)
+            surrogate_params = self._get_surrogate_params(params)
+            raw_value = self._surrogate.predict(surrogate_params)
         else:
             raw_value = self.pure_objective_function(params)
 
