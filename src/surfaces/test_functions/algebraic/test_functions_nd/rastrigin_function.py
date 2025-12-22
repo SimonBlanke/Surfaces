@@ -76,8 +76,9 @@ class RastriginFunction(AlgebraicFunction):
         objective="minimize",
         sleep=0,
         memory=False,
+        collect_data=True,
     ):
-        super().__init__(objective, sleep, memory)
+        super().__init__(objective, sleep, memory, collect_data)
 
         self.n_dim = n_dim
         self.A = A

@@ -20,6 +20,23 @@ class BaseTestFunction:
     memory : bool, default=False
         If True, caches evaluated positions to avoid redundant computations.
         The cache key is the position as a tuple of sorted parameter values.
+    collect_data : bool, default=True
+        If True, collects evaluation data including search_data, best_score,
+        best_params, n_evaluations, and total_time. Set to False to disable
+        tracking for performance-critical applications.
+
+    Attributes
+    ----------
+    n_evaluations : int
+        Number of function evaluations performed.
+    search_data : list of dict
+        History of all evaluations as list of dicts containing parameters and score.
+    best_score : float or None
+        Best score found (respects objective direction).
+    best_params : dict or None
+        Parameters that achieved the best score.
+    total_time : float
+        Cumulative time spent in function evaluations (seconds).
 
     Examples
     --------
@@ -27,6 +44,9 @@ class BaseTestFunction:
     >>> func({"x0": 1.0, "x1": 2.0})      # dict input
     >>> func(np.array([1.0, 2.0]))        # array input
     >>> func([1.0, 2.0])                  # list input
+    >>> func.n_evaluations                 # 3
+    >>> func.best_score                    # best value seen
+    >>> func.search_data                   # [{"x0": 1.0, "x1": 2.0, "score": 5.0}, ...]
     """
 
     pure_objective_function: callable
@@ -88,13 +108,21 @@ class BaseTestFunction:
         return wrapper
 
     @_create_objective_function_
-    def __init__(self, objective="minimize", sleep=0, memory=False):
+    def __init__(self, objective="minimize", sleep=0, memory=False, collect_data=True):
         if objective not in ("minimize", "maximize"):
             raise ValueError(f"objective must be 'minimize' or 'maximize', got '{objective}'")
         self.objective = objective
         self.sleep = sleep
         self.memory = memory
+        self.collect_data = collect_data
         self._memory_cache: Dict[Tuple, float] = {}
+
+        # Data collection attributes
+        self.n_evaluations: int = 0
+        self.search_data: list = []
+        self.best_score: Optional[float] = None
+        self.best_params: Optional[Dict[str, Any]] = None
+        self.total_time: float = 0.0
 
     def _create_objective_function(self):
         raise NotImplementedError("'_create_objective_function' must be implemented")
@@ -132,12 +160,23 @@ class BaseTestFunction:
         if self.memory:
             cache_key = self._params_to_cache_key(params)
             if cache_key in self._memory_cache:
-                return self._memory_cache[cache_key]
-            result = self._evaluate(params)
-            self._memory_cache[cache_key] = result
-            return result
+                result = self._memory_cache[cache_key]
+                if self.collect_data:
+                    self._record_evaluation(params, result, from_cache=True)
+                return result
 
-        return self._evaluate(params)
+        start_time = time.time()
+        result = self._evaluate(params)
+        elapsed_time = time.time() - start_time
+
+        if self.memory:
+            cache_key = self._params_to_cache_key(params)
+            self._memory_cache[cache_key] = result
+
+        if self.collect_data:
+            self._record_evaluation(params, result, elapsed_time=elapsed_time)
+
+        return result
 
     def _normalize_input(
         self, params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None, **kwargs
@@ -165,3 +204,52 @@ class BaseTestFunction:
         if self.objective == "maximize":
             return -raw_value
         return raw_value
+
+    def _record_evaluation(
+        self,
+        params: Dict[str, Any],
+        score: float,
+        elapsed_time: float = 0.0,
+        from_cache: bool = False,
+    ) -> None:
+        """Record an evaluation in the search data."""
+        self.n_evaluations += 1
+
+        # Record in search_data
+        record = {**params, "score": score}
+        self.search_data.append(record)
+
+        # Update timing (only for non-cached evaluations)
+        if not from_cache:
+            self.total_time += elapsed_time
+
+        # Update best score/params
+        is_better = (
+            self.best_score is None
+            or (self.objective == "minimize" and score < self.best_score)
+            or (self.objective == "maximize" and score > self.best_score)
+        )
+        if is_better:
+            self.best_score = score
+            self.best_params = params.copy()
+
+    def reset_data(self) -> None:
+        """Reset all collected evaluation data.
+
+        Clears n_evaluations, search_data, best_score, best_params, and total_time.
+        Does not clear the memory cache (use reset_memory() for that).
+        """
+        self.n_evaluations = 0
+        self.search_data = []
+        self.best_score = None
+        self.best_params = None
+        self.total_time = 0.0
+
+    def reset_memory(self) -> None:
+        """Clear the memory cache."""
+        self._memory_cache = {}
+
+    def reset(self) -> None:
+        """Reset all state including collected data and memory cache."""
+        self.reset_data()
+        self.reset_memory()

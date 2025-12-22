@@ -59,8 +59,8 @@ class SchafferFunctionN2(AlgebraicFunction):
     default_bounds = (-50.0, 50.0)
     n_dim = 2
 
-    def __init__(self, objective="minimize", sleep=0, memory=False):
-        super().__init__(objective, sleep, memory)
+    def __init__(self, objective="minimize", sleep=0, memory=False, collect_data=True):
+        super().__init__(objective, sleep, memory, collect_data)
         self.n_dim = 2
 
     def _create_objective_function(self):

@@ -76,6 +76,7 @@ class BBOBFunction(AlgebraicFunction):
         objective: str = "minimize",
         sleep: float = 0,
         memory: bool = False,
+        collect_data: bool = True,
     ):
         self.n_dim = n_dim
         self.instance = instance
@@ -88,7 +89,7 @@ class BBOBFunction(AlgebraicFunction):
         self._R = None
         self._lambda_alpha = None
 
-        super().__init__(objective, sleep, memory)
+        super().__init__(objective, sleep, memory, collect_data)
 
     def _compute_seed(self) -> int:
         """Compute random seed from function ID, dimension, and instance."""
