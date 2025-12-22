@@ -1,0 +1,31 @@
+{
+  "function_name": "k_neighbors_regressor",
+  "param_names": [
+    "n_neighbors",
+    "algorithm",
+    "dataset",
+    "cv"
+  ],
+  "param_encodings": {
+    "algorithm": {
+      "auto": 0,
+      "ball_tree": 1,
+      "brute": 2,
+      "kd_tree": 3
+    },
+    "dataset": {
+      "california": 0,
+      "diabetes": 1
+    }
+  },
+  "n_samples": 960,
+  "n_invalid_samples": 0,
+  "has_validity_model": false,
+  "y_range": [
+    -0.23785799741744995,
+    0.46820351481437683
+  ],
+  "training_mse": 0.00036367159918881953,
+  "training_r2": 0.9928676160334278,
+  "training_time": 0.41527509689331055
+}

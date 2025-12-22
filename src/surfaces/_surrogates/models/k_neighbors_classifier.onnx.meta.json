@@ -1,10 +1,10 @@
 {
   "function_name": "k_neighbors_classifier",
   "param_names": [
+    "n_neighbors",
     "algorithm",
     "cv",
-    "dataset",
-    "n_neighbors"
+    "dataset"
   ],
   "param_encodings": {
     "algorithm": {
@@ -14,18 +14,19 @@
       "brute": 3
     },
     "dataset": {
-      "digits_data": 0,
-      "wine_data": 1,
-      "iris_data": 2
+      "digits": 0,
+      "iris": 1,
+      "wine": 2
     }
   },
-  "n_samples": 868,
-  "n_invalid_samples": 132,
-  "has_validity_model": true,
+  "n_samples": 1224,
+  "n_invalid_samples": 0,
+  "has_validity_model": false,
   "y_range": [
-    0.39886364340782166,
-    0.9802631735801697
+    0.398870050907135,
+    0.9800000190734863
   ],
-  "training_time": 0.5762979984283447,
-  "collection_time": 41.40630507469177
+  "training_mse": 0.0006986326770856977,
+  "training_r2": 0.962233629077673,
+  "training_time": 0.9568452835083008
 }
