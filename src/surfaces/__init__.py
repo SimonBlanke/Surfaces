@@ -6,3 +6,6 @@ import importlib.metadata
 
 __version__ = importlib.metadata.version("surfaces")
 __license__ = "MIT"
+
+# Expose presets at package level
+from . import presets
