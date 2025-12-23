@@ -64,9 +64,14 @@ xgboost = [
     "surfaces[ml]",
     "xgboost>=1.7.0",
 ]
+# Pre-trained ONNX surrogate models
+surrogates = [
+    "surfaces-onnx-files>=0.1.0",
+    "onnxruntime>=1.10.0",
+]
 # All optional features
 full = [
-    "surfaces[viz,ml,cec,timeseries,images,xgboost]",
+    "surfaces[viz,ml,cec,timeseries,images,xgboost,surrogates]",
 ]
 # Development
 dev = [
