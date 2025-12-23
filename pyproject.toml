@@ -45,9 +45,14 @@ viz = [
 ml = [
     "scikit-learn",
 ]
+# Image classification with CNNs (requires tensorflow)
+images = [
+    "surfaces[ml]",
+    "tensorflow>=2.10.0",
+]
 # All optional features
 full = [
-    "surfaces[viz,ml]",
+    "surfaces[viz,ml,images]",
 ]
 # Development
 dev = [
