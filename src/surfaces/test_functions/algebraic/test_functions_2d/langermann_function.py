@@ -54,6 +54,9 @@ class LangermannFunction(AlgebraicFunction):
     default_bounds = (-15.0, 15.0)
     n_dim = 2
 
+    latex_formula = r"f(x, y) = \sum_{i=1}^{m} c_i \exp\left(-\frac{1}{\pi}\sum_{j=1}^{2}(x_j - A_{ji})^2\right) \cos\left(\pi\sum_{j=1}^{2}(x_j - A_{ji})^2\right)"
+    pgfmath_formula = None  # Complex summation not expressible in pgfmath
+
     c = np.array([1, 2, 5, 2, 3])
     m = 5
     A = np.array([[3, 5, 2, 1, 7], [5, 2, 1, 4, 9]])

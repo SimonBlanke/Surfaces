@@ -74,6 +74,9 @@ class AckleyFunction(AlgebraicFunction):
     default_bounds = (-5.0, 5.0)
     n_dim = 2
 
+    latex_formula = r"f(x, y) = -20\exp\left[-0.2\sqrt{0.5(x^2+y^2)}\right] - \exp\left[0.5(\cos 2\pi x + \cos 2\pi y)\right] + e + 20"
+    pgfmath_formula = "-20*exp(-0.2*sqrt(0.5*(#1^2 + #2^2))) - exp(0.5*(cos(deg(2*pi*#1)) + cos(deg(2*pi*#2)))) + exp(1) + 20"
+
     def __init__(
         self,
         A=20,

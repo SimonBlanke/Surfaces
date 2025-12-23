@@ -55,6 +55,9 @@ class GoldsteinPriceFunction(AlgebraicFunction):
     default_bounds = (-2.0, 2.0)
     n_dim = 2
 
+    latex_formula = r"f(x, y) = \left[1 + (x + y + 1)^2(19 - 14x + 3x^2 - 14y + 6xy + 3y^2)\right]\left[30 + (2x - 3y)^2(18 - 32x + 12x^2 + 48y - 36xy + 27y^2)\right]"
+    pgfmath_formula = "(1 + (#1 + #2 + 1)^2*(19 - 14*#1 + 3*#1^2 - 14*#2 + 6*#1*#2 + 3*#2^2))*(30 + (2*#1 - 3*#2)^2*(18 - 32*#1 + 12*#1^2 + 48*#2 - 36*#1*#2 + 27*#2^2))"
+
     def __init__(self, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None):
         super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 2

@@ -68,6 +68,9 @@ class GramacyAndLeeFunction(AlgebraicFunction):
     default_bounds = (0.5, 2.5)
     n_dim = 1
 
+    latex_formula = r"f(x) = \frac{\sin(10\pi x)}{2x} + (x - 1)^4"
+    pgfmath_formula = "sin(deg(10*pi*#1))/(2*#1) + (#1 - 1)^4"
+
     def __init__(self, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None):
         super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 1

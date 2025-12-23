@@ -60,6 +60,9 @@ class MatyasFunction(AlgebraicFunction):
     default_bounds = (-10.0, 10.0)
     n_dim = 2
 
+    latex_formula = r"f(x, y) = 0.26(x^2 + y^2) - 0.48xy"
+    pgfmath_formula = "0.26*(#1^2 + #2^2) - 0.48*#1*#2"
+
     def __init__(self, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None):
         super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 2

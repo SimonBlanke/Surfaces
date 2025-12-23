@@ -72,6 +72,9 @@ class HölderTableFunction(AlgebraicFunction):
     default_bounds = (-10.0, 10.0)
     n_dim = 2
 
+    latex_formula = r"f(x, y) = -\left|\sin(x)\cos(y)\exp\left(\left|1 - \frac{\sqrt{x^2 + y^2}}{\pi}\right|\right)\right|"
+    pgfmath_formula = "-abs(sin(deg(#1))*cos(deg(#2))*exp(abs(1 - sqrt(#1^2 + #2^2)/pi)))"
+
     def __init__(self, A=10, angle=1, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None):
         super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 2

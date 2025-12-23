@@ -75,6 +75,9 @@ class CrossInTrayFunction(AlgebraicFunction):
     default_bounds = (-10.0, 10.0)
     n_dim = 2
 
+    latex_formula = r"f(x, y) = -0.0001\left[\left|\sin(x)\sin(y)\exp\left(\left|100 - \frac{\sqrt{x^2+y^2}}{\pi}\right|\right)\right| + 1\right]^{0.1}"
+    pgfmath_formula = "-0.0001*(abs(sin(deg(#1))*sin(deg(#2))*exp(abs(100 - sqrt(#1^2 + #2^2)/pi))) + 1)^0.1"
+
     def __init__(
         self,
         A=-0.0001,

@@ -59,6 +59,9 @@ class EggholderFunction(AlgebraicFunction):
     default_bounds = (-1000.0, 1000.0)
     n_dim = 2
 
+    latex_formula = r"f(x, y) = -(y + 47)\sin\sqrt{\left|\frac{x}{2} + (y + 47)\right|} - x\sin\sqrt{|x - (y + 47)|}"
+    pgfmath_formula = "-(#2 + 47)*sin(deg(sqrt(abs(#1/2 + (#2 + 47))))) - #1*sin(deg(sqrt(abs(#1 - (#2 + 47)))))"
+
     def __init__(self, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None):
         super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 2
