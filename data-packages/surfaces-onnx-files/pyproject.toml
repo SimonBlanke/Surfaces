@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "surfaces-onnx-files"
-version = "0.1.0"
+version = "0.0.1"
 description = "Pre-trained ONNX surrogate models for the surfaces library"
 readme = "README.md"
 license = {text = "MIT"}

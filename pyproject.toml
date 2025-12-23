@@ -47,7 +47,7 @@ ml = [
 ]
 # CEC benchmark data files
 cec = [
-    "surfaces-cec-data>=0.1.0",
+    "surfaces-cec-data>=0.0.1",
 ]
 # Time-series functions with sktime
 timeseries = [
@@ -66,7 +66,7 @@ xgboost = [
 ]
 # Pre-trained ONNX surrogate models
 surrogates = [
-    "surfaces-onnx-files>=0.1.0",
+    "surfaces-onnx-files>=0.0.1",
     "onnxruntime>=1.10.0",
 ]
 # All optional features
