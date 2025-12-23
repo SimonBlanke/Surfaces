@@ -59,15 +59,13 @@ from ._errors import (
     PlotCompatibilityError,
     VisualizationError,
 )
-from ._plots import (
-    auto_plot,
-    plot_contour,
-    plot_convergence,
-    plot_fitness_distribution,
-    plot_latex,
-    plot_multi_slice,
-    plot_surface,
-)
+from ._auto import auto_plot
+from ._contour import plot_contour
+from ._convergence import plot_convergence
+from ._distribution import plot_fitness_distribution
+from ._latex import plot_latex
+from ._slices import plot_multi_slice
+from ._surface import plot_surface
 
 __all__ = [
     # Discovery functions
