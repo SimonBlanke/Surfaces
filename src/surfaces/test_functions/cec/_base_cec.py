@@ -104,7 +104,8 @@ class CECFunction(AlgebraicFunction):
     def _load_data(self) -> Dict[str, np.ndarray]:
         """Load rotation matrices and shift vectors for this dimension.
 
-        Data files are cached at class level to avoid repeated disk access.
+        Data files are fetched from GitHub releases on first use and cached
+        locally. Subsequent calls use the cached files.
 
         Returns
         -------
@@ -113,19 +114,15 @@ class CECFunction(AlgebraicFunction):
 
         Raises
         ------
-        FileNotFoundError
-            If the data file for this dimension doesn't exist.
+        ImportError
+            If pooch is not installed.
         """
         cache_key = (self.data_prefix, self.n_dim)
         if cache_key not in self._data_cache:
-            data_file = self._data_dir / f"{self.data_prefix}_data_dim{self.n_dim}.npz"
-            if not data_file.exists():
-                raise FileNotFoundError(
-                    f"CEC data file not found: {data_file}\n"
-                    f"Download the official CEC data files from:\n"
-                    f"https://github.com/P-N-Suganthan/{self.data_prefix.upper()}\n"
-                    f"Then convert them using the provided conversion script."
-                )
+            from ..._data import fetch_file
+
+            filename = f"{self.data_prefix}_data_dim{self.n_dim}.npz"
+            data_file = fetch_file(self.data_prefix, filename)
             self._data_cache[cache_key] = dict(np.load(data_file))
         return self._data_cache[cache_key]
 

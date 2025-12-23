@@ -45,9 +45,9 @@ viz = [
 ml = [
     "scikit-learn",
 ]
-# CEC benchmark data fetching
+# CEC benchmark data files
 cec = [
-    "pooch>=1.5.0",
+    "surfaces-cec-data>=0.1.0",
 ]
 # Time-series functions with sktime
 timeseries = [
