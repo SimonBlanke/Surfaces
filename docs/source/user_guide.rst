@@ -116,6 +116,13 @@ Guide Sections
       Use Surfaces with scipy.optimize
       for seamless optimization.
 
+   .. grid-item-card:: Optimizer Frameworks
+      :link: user_guide/optimizer_compatibility
+      :link-type: doc
+
+      Integrate with Optuna, SMAC,
+      Ray Tune, and more.
+
    .. grid-item-card:: Visualization
       :link: user_guide/visualization
       :link-type: doc
@@ -132,4 +139,5 @@ Guide Sections
    user_guide/mathematical
    user_guide/machine_learning
    user_guide/scipy_integration
+   user_guide/optimizer_compatibility
    user_guide/visualization
