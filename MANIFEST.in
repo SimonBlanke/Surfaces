@@ -1,1 +1,3 @@
 include src/surfaces/search_data.db
+# Exclude dashboard database from package (development artifact)
+exclude src/surfaces/_surrogates/_dashboard/surrogates.db
