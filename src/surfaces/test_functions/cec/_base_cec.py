@@ -4,6 +4,8 @@
 
 """Base class for all CEC competition benchmark functions."""
 
+from __future__ import annotations
+
 from abc import abstractmethod
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
@@ -11,6 +13,7 @@ from typing import Any, Dict, Optional, Tuple
 import numpy as np
 
 from ..algebraic._base_algebraic_function import AlgebraicFunction
+from ._data_utils import get_data_file
 
 
 class CECFunction(AlgebraicFunction):
@@ -104,8 +107,8 @@ class CECFunction(AlgebraicFunction):
     def _load_data(self) -> Dict[str, np.ndarray]:
         """Load rotation matrices and shift vectors for this dimension.
 
-        Data files are fetched from GitHub releases on first use and cached
-        locally. Subsequent calls use the cached files.
+        Data files are loaded from the surfaces-cec-data package or local
+        development directory. Results are cached in memory.
 
         Returns
         -------
@@ -115,14 +118,14 @@ class CECFunction(AlgebraicFunction):
         Raises
         ------
         ImportError
-            If pooch is not installed.
+            If surfaces-cec-data is not installed.
+        FileNotFoundError
+            If the data file is not found.
         """
         cache_key = (self.data_prefix, self.n_dim)
         if cache_key not in self._data_cache:
-            from ..._data import fetch_file
-
             filename = f"{self.data_prefix}_data_dim{self.n_dim}.npz"
-            data_file = fetch_file(self.data_prefix, filename)
+            data_file = get_data_file(self.data_prefix, filename)
             self._data_cache[cache_key] = dict(np.load(data_file))
         return self._data_cache[cache_key]
 
