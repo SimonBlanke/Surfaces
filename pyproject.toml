@@ -81,6 +81,16 @@ surrogate-train = [
     "onnxruntime>=1.16.0",
     "skl2onnx>=1.16.0",
 ]
+# Surrogate dashboard (developer tool)
+dashboard = [
+    "surfaces[ml,surrogate-train]",
+    "streamlit>=1.28.0",
+    "plotly>=5.0.0",
+    "pandas>=1.3.0",
+]
+
+[project.scripts]
+surfaces-dashboard = "surfaces._surrogates._dashboard:run_dashboard"
 
 [project.urls]
 "Homepage" = "https://github.com/SimonBlanke/Surfaces"
@@ -125,6 +135,8 @@ ignore = [
 "src/surfaces/test_functions/cec/*" = ["F841", "E741"]
 # Engineering functions use standard notation (l for length)
 "src/surfaces/test_functions/engineering/*" = ["E741", "F841"]
+# Dashboard uses Streamlit patterns
+"src/surfaces/_surrogates/_dashboard/*" = ["F841"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["surfaces"]
