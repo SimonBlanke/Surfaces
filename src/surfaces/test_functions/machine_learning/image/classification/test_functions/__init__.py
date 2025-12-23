@@ -14,6 +14,14 @@ try:
 except ImportError:
     _HAS_TENSORFLOW = False
 
+# XGBoost classifier (requires xgboost)
+try:
+    from .xgboost_image_classifier import XGBoostImageClassifierFunction
+
+    _HAS_XGBOOST = True
+except ImportError:
+    _HAS_XGBOOST = False
+
 __all__ = [
     "SVMImageClassifierFunction",
     "RandomForestImageClassifierFunction",
@@ -26,3 +34,6 @@ if _HAS_TENSORFLOW:
             "DeepCNNClassifierFunction",
         ]
     )
+
+if _HAS_XGBOOST:
+    __all__.append("XGBoostImageClassifierFunction")
