@@ -97,6 +97,12 @@ PLOT_REGISTRY: Dict[str, PlotRequirements] = {
         description="Histogram of objective values from random sampling",
         dimensions=(1, None),
     ),
+    "latex": PlotRequirements(
+        name="latex",
+        description="Publication-quality LaTeX/PDF with pgfplots 3D surface and formula",
+        dimensions=2,
+        function_types=("algebraic",),  # Only algebraic functions have latex_formula
+    ),
 }
 
 

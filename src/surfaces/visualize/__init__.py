@@ -36,6 +36,7 @@ Plot Types
 - multi_slice: 1D slices through each dimension (any N-D)
 - convergence: Best-so-far vs evaluations (requires history)
 - fitness_distribution: Histogram of sampled values (any N-D)
+- latex: Publication-quality LaTeX/PDF with formula (2D algebraic only)
 
 Discovery Functions
 -------------------
@@ -63,6 +64,7 @@ from ._plots import (
     plot_contour,
     plot_convergence,
     plot_fitness_distribution,
+    plot_latex,
     plot_multi_slice,
     plot_surface,
 )
@@ -79,6 +81,7 @@ __all__ = [
     "plot_multi_slice",
     "plot_convergence",
     "plot_fitness_distribution",
+    "plot_latex",
     "auto_plot",
     # Errors
     "VisualizationError",
