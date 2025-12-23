@@ -36,7 +36,7 @@ if _HAS_SKLEARN:
         SVMRegressorFunction,
     )
 
-    # Time-series functions
+    # Time-series functions (sklearn-based)
     from .timeseries import (
         # Forecasting
         GradientBoostingForecasterFunction,
@@ -100,6 +100,26 @@ if _HAS_SKLEARN:
         RandomForestImageClassifierFunction,
     ]
 
+    # sktime-based time-series functions (require sktime)
+    try:
+        from .timeseries import ExpSmoothingForecasterFunction, TSForestClassifierFunction
+
+        __all__.extend(
+            [
+                "ExpSmoothingForecasterFunction",
+                "TSForestClassifierFunction",
+            ]
+        )
+        machine_learning_functions.extend(
+            [
+                ExpSmoothingForecasterFunction,
+                TSForestClassifierFunction,
+            ]
+        )
+        _HAS_SKTIME = True
+    except ImportError:
+        _HAS_SKTIME = False
+
     # CNN image classifiers (require tensorflow)
     try:
         from .image import SimpleCNNClassifierFunction, DeepCNNClassifierFunction
@@ -119,6 +139,16 @@ if _HAS_SKLEARN:
         _HAS_TENSORFLOW = True
     except ImportError:
         _HAS_TENSORFLOW = False
+
+    # XGBoost image classifier (requires xgboost)
+    try:
+        from .image import XGBoostImageClassifierFunction
+
+        __all__.append("XGBoostImageClassifierFunction")
+        machine_learning_functions.append(XGBoostImageClassifierFunction)
+        _HAS_XGBOOST = True
+    except ImportError:
+        _HAS_XGBOOST = False
 
 else:
     __all__ = []
