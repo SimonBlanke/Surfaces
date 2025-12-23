@@ -15,14 +15,12 @@ from pathlib import Path
 from typing import Optional
 
 from .database import init_db, upsert_surrogate
-
-# Paths
-MODELS_DIR = Path(__file__).parent.parent / "models"
+from .._onnx_utils import get_metadata_path, get_surrogate_model_path
 
 
 def compute_file_hash(file_path: Path) -> str:
     """Compute SHA256 hash of a file."""
-    if not file_path.exists():
+    if file_path is None or not file_path.exists():
         return ""
     sha256 = hashlib.sha256()
     with open(file_path, "rb") as f:
@@ -46,18 +44,16 @@ def get_function_type(function_name: str) -> str:
     return "unknown"
 
 
-def sync_all(models_dir: Optional[Path] = None, db_path: Optional[Path] = None) -> dict:
+def sync_all(db_path: Optional[Path] = None) -> dict:
     """Sync all ML functions from registry to database.
 
     This function:
     1. Gets all registered ML functions from the registry
-    2. Checks if each has a .onnx and .meta.json file
+    2. Checks if each has a .onnx and .meta.json file (in data package or local)
     3. Upserts the data into SQLite
 
     Parameters
     ----------
-    models_dir : Path, optional
-        Directory containing .onnx and .meta.json files.
     db_path : Path, optional
         Path to SQLite database.
 
@@ -66,8 +62,6 @@ def sync_all(models_dir: Optional[Path] = None, db_path: Optional[Path] = None) 
     dict
         Sync statistics.
     """
-    models_dir = models_dir or MODELS_DIR
-
     # Initialize database
     init_db(db_path)
 
@@ -83,10 +77,10 @@ def sync_all(models_dir: Optional[Path] = None, db_path: Optional[Path] = None) 
     }
 
     for function_name in functions:
-        onnx_path = models_dir / f"{function_name}.onnx"
-        meta_path = models_dir / f"{function_name}.onnx.meta.json"
+        onnx_path = get_surrogate_model_path(function_name)
+        meta_path = get_metadata_path(function_name)
 
-        has_surrogate = onnx_path.exists() and meta_path.exists()
+        has_surrogate = onnx_path is not None and meta_path is not None
 
         if has_surrogate:
             stats["with_surrogate"] += 1
@@ -114,7 +108,6 @@ def sync_all(models_dir: Optional[Path] = None, db_path: Optional[Path] = None) 
 
 def sync_single(
     function_name: str,
-    models_dir: Optional[Path] = None,
     db_path: Optional[Path] = None,
 ) -> bool:
     """Sync a single function to the database.
@@ -123,8 +116,6 @@ def sync_single(
     ----------
     function_name : str
         Name of the function to sync.
-    models_dir : Path, optional
-        Directory containing model files.
     db_path : Path, optional
         Path to SQLite database.
 
@@ -133,12 +124,10 @@ def sync_single(
     bool
         True if surrogate exists, False otherwise.
     """
-    models_dir = models_dir or MODELS_DIR
+    onnx_path = get_surrogate_model_path(function_name)
+    meta_path = get_metadata_path(function_name)
 
-    onnx_path = models_dir / f"{function_name}.onnx"
-    meta_path = models_dir / f"{function_name}.onnx.meta.json"
-
-    has_surrogate = onnx_path.exists() and meta_path.exists()
+    has_surrogate = onnx_path is not None and meta_path is not None
 
     if has_surrogate:
         metadata = load_meta_json(meta_path)
@@ -163,7 +152,6 @@ def sync_single(
 
 def check_sync_needed(
     function_name: str,
-    models_dir: Optional[Path] = None,
     db_path: Optional[Path] = None,
 ) -> bool:
     """Check if a function needs to be re-synced.
@@ -174,8 +162,6 @@ def check_sync_needed(
     ----------
     function_name : str
         Name of the function to check.
-    models_dir : Path, optional
-        Directory containing model files.
     db_path : Path, optional
         Path to SQLite database.
 
@@ -186,11 +172,10 @@ def check_sync_needed(
     """
     from .database import get_surrogate
 
-    models_dir = models_dir or MODELS_DIR
-    onnx_path = models_dir / f"{function_name}.onnx"
+    onnx_path = get_surrogate_model_path(function_name)
 
     # Get current hash
-    current_hash = compute_file_hash(onnx_path) if onnx_path.exists() else None
+    current_hash = compute_file_hash(onnx_path) if onnx_path is not None else None
 
     # Get stored hash
     surrogate = get_surrogate(function_name, db_path)

@@ -212,12 +212,9 @@ def get_surrogate_path(function_name: str) -> Optional[Path]:
     Path or None
         Path to the ONNX file if it exists, None otherwise.
     """
-    models_dir = Path(__file__).parent / "models"
-    model_path = models_dir / f"{function_name}.onnx"
+    from ._onnx_utils import get_surrogate_model_path
 
-    if model_path.exists():
-        return model_path
-    return None
+    return get_surrogate_model_path(function_name)
 
 
 def load_surrogate(function_name: str) -> Optional[SurrogateLoader]:
