@@ -20,6 +20,7 @@ def _check_sklearn():
 
 
 if _HAS_SKLEARN:
+    # Tabular functions
     from .tabular import (
         # Classification
         DecisionTreeClassifierFunction,
@@ -35,35 +36,90 @@ if _HAS_SKLEARN:
         SVMRegressorFunction,
     )
 
-    __all__ = [
+    # Time-series functions
+    from .timeseries import (
+        # Forecasting
+        GradientBoostingForecasterFunction,
+        RandomForestForecasterFunction,
         # Classification
+        RandomForestTSClassifierFunction,
+        KNNTSClassifierFunction,
+    )
+
+    # Image functions (sklearn-based)
+    from .image import (
+        SVMImageClassifierFunction,
+        RandomForestImageClassifierFunction,
+    )
+
+    __all__ = [
+        # Tabular - Classification
         "DecisionTreeClassifierFunction",
         "GradientBoostingClassifierFunction",
         "KNeighborsClassifierFunction",
         "RandomForestClassifierFunction",
         "SVMClassifierFunction",
-        # Regression
+        # Tabular - Regression
         "DecisionTreeRegressorFunction",
         "GradientBoostingRegressorFunction",
         "KNeighborsRegressorFunction",
         "RandomForestRegressorFunction",
         "SVMRegressorFunction",
+        # Time-series - Forecasting
+        "GradientBoostingForecasterFunction",
+        "RandomForestForecasterFunction",
+        # Time-series - Classification
+        "RandomForestTSClassifierFunction",
+        "KNNTSClassifierFunction",
+        # Image - Classification (sklearn)
+        "SVMImageClassifierFunction",
+        "RandomForestImageClassifierFunction",
     ]
 
     machine_learning_functions = [
-        # Classification
+        # Tabular - Classification
         DecisionTreeClassifierFunction,
         GradientBoostingClassifierFunction,
         KNeighborsClassifierFunction,
         RandomForestClassifierFunction,
         SVMClassifierFunction,
-        # Regression
+        # Tabular - Regression
         DecisionTreeRegressorFunction,
         GradientBoostingRegressorFunction,
         KNeighborsRegressorFunction,
         RandomForestRegressorFunction,
         SVMRegressorFunction,
+        # Time-series - Forecasting
+        GradientBoostingForecasterFunction,
+        RandomForestForecasterFunction,
+        # Time-series - Classification
+        RandomForestTSClassifierFunction,
+        KNNTSClassifierFunction,
+        # Image - Classification (sklearn)
+        SVMImageClassifierFunction,
+        RandomForestImageClassifierFunction,
     ]
+
+    # CNN image classifiers (require tensorflow)
+    try:
+        from .image import SimpleCNNClassifierFunction, DeepCNNClassifierFunction
+
+        __all__.extend(
+            [
+                "SimpleCNNClassifierFunction",
+                "DeepCNNClassifierFunction",
+            ]
+        )
+        machine_learning_functions.extend(
+            [
+                SimpleCNNClassifierFunction,
+                DeepCNNClassifierFunction,
+            ]
+        )
+        _HAS_TENSORFLOW = True
+    except ImportError:
+        _HAS_TENSORFLOW = False
+
 else:
     __all__ = []
     machine_learning_functions = []
