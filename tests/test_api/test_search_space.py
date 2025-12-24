@@ -86,7 +86,10 @@ def test_search_space_nd_custom_bounds(test_function):
 @pytest.mark.parametrize(*machine_learning_functions_d)
 def test_ml_search_space(test_function):
     """Test that ML functions have valid search_space."""
-    test_function_ = test_function()
+    try:
+        test_function_ = test_function()
+    except ImportError as e:
+        pytest.skip(f"Optional dependency not installed: {e}")
 
     search_space = test_function_.search_space
     assert isinstance(search_space, dict)

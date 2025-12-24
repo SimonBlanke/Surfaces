@@ -28,7 +28,10 @@ def test_(test_function):
 
 @pytest.mark.parametrize(*machine_learning_functions_d)
 def test_all_(test_function):
-    test_function_ = test_function()
+    try:
+        test_function_ = test_function()
+    except ImportError as e:
+        pytest.skip(f"Optional dependency not installed: {e}")
 
     search_space = test_function_.search_space
     # Test function is directly callable via __call__

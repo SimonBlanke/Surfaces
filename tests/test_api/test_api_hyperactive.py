@@ -13,7 +13,12 @@ def test_all_functions(test_function):
     try:
         test_function_ = test_function()
     except TypeError:
-        test_function_ = test_function(n_dim=3)
+        try:
+            test_function_ = test_function(n_dim=3)
+        except ImportError as e:
+            pytest.skip(f"Optional dependency not installed: {e}")
+    except ImportError as e:
+        pytest.skip(f"Optional dependency not installed: {e}")
 
     search_space = test_function_.search_space
 
