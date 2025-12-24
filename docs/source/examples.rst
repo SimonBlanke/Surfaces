@@ -4,7 +4,12 @@
 Examples
 ========
 
-Code examples demonstrating various use cases for Surfaces.
+.. include:: _generated/diagrams/examples_overview.rst
+
+----
+
+Available Examples
+==================
 
 .. toctree::
     :maxdepth: 1

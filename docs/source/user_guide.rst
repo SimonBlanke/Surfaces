@@ -4,8 +4,9 @@
 User Guide
 ==========
 
-Master Surfaces' test functions. This guide covers core concepts,
-function categories, and integration patterns.
+.. include:: _generated/diagrams/user_guide_overview.rst
+
+----
 
 .. tip::
 
