@@ -53,11 +53,12 @@ class MachineLearningFunction(BaseTestFunction):
         collect_data: bool = True,
         callbacks=None,
         catch_errors=None,
+        noise=None,
         use_surrogate: bool = False,
         **kwargs,
     ):
         super().__init__(
-            objective, sleep, memory, collect_data, callbacks, catch_errors
+            objective, sleep, memory, collect_data, callbacks, catch_errors, noise
         )
         self.use_surrogate = use_surrogate
         self._surrogate = None

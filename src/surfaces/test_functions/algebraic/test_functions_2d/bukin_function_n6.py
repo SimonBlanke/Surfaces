@@ -65,8 +65,8 @@ class BukinFunctionN6(AlgebraicFunction):
     latex_formula = r"f(x, y) = 100\sqrt{|y - 0.01x^2|} + 0.01|x + 10|"
     pgfmath_formula = "100*sqrt(abs(#2 - 0.01*#1^2)) + 0.01*abs(#1 + 10)"
 
-    def __init__(self, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None):
-        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors)
+    def __init__(self, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None, noise=None):
+        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
         self.n_dim = 2
 
     def _create_objective_function(self):

@@ -65,8 +65,8 @@ class GriewankFunction(AlgebraicFunction):
     latex_formula = r"f(\vec{x}) = \sum_{i=1}^{n} \frac{x_i^2}{4000} - \prod_{i=1}^{n} \cos\left(\frac{x_i}{\sqrt{i}}\right) + 1"
     pgfmath_formula = "#1^2/4000 + #2^2/4000 - cos(deg(#1))*cos(deg(#2/sqrt(2))) + 1"  # 2D specialization
 
-    def __init__(self, n_dim, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None):
-        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors)
+    def __init__(self, n_dim, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None, noise=None):
+        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
         self.n_dim = n_dim
         self.x_global = np.zeros(n_dim)
 

@@ -66,8 +66,19 @@ class BoothFunction(AlgebraicFunction):
     latex_formula = r"f(x, y) = (x + 2y - 7)^2 + (2x + y - 5)^2"
     pgfmath_formula = "(#1 + 2*#2 - 7)^2 + (2*#1 + #2 - 5)^2"
 
-    def __init__(self, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None):
-        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors)
+    def __init__(
+        self,
+        objective="minimize",
+        sleep=0,
+        memory=False,
+        collect_data=True,
+        callbacks=None,
+        catch_errors=None,
+        noise=None,
+    ):
+        super().__init__(
+            objective, sleep, memory, collect_data, callbacks, catch_errors, noise
+        )
         self.n_dim = 2
 
     def _create_objective_function(self):

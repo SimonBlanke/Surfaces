@@ -62,8 +62,8 @@ class McCormickFunction(AlgebraicFunction):
     latex_formula = r"f(x, y) = \sin(x + y) + (x - y)^2 - 1.5x + 2.5y + 1"
     pgfmath_formula = "sin(deg(#1 + #2)) + (#1 - #2)^2 - 1.5*#1 + 2.5*#2 + 1"
 
-    def __init__(self, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None):
-        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors)
+    def __init__(self, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None, noise=None):
+        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
         self.n_dim = 2
 
     def _create_objective_function(self):

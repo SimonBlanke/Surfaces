@@ -72,6 +72,7 @@ class TSForestClassifierFunction(BaseTSClassification):
         collect_data: bool = True,
         callbacks=None,
         catch_errors=None,
+        noise=None,
         use_surrogate: bool = False,
     ):
         _check_sktime()
@@ -95,7 +96,8 @@ class TSForestClassifierFunction(BaseTSClassification):
             collect_data=collect_data,
             callbacks=callbacks,
             catch_errors=catch_errors,
-            use_surrogate=use_surrogate,
+            noise=noise,
+        use_surrogate=use_surrogate,
         )
 
     @property

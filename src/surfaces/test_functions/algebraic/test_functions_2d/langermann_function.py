@@ -61,8 +61,8 @@ class LangermannFunction(AlgebraicFunction):
     m = 5
     A = np.array([[3, 5, 2, 1, 7], [5, 2, 1, 4, 9]])
 
-    def __init__(self, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None):
-        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors)
+    def __init__(self, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None, noise=None):
+        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
         self.n_dim = 2
 
     def _create_objective_function(self):

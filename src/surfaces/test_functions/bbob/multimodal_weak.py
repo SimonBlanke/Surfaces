@@ -85,8 +85,8 @@ class Gallagher101(BBOBFunction):
         "separable": False,
     }
 
-    def __init__(self, n_dim=10, instance=1, objective="minimize", sleep=0):
-        super().__init__(n_dim, instance, objective, sleep)
+    def __init__(self, n_dim=10, instance=1, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None, noise=None):
+        super().__init__(n_dim, instance, objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
         self._setup_peaks(101)
 
     def _setup_peaks(self, n_peaks: int):
@@ -149,8 +149,8 @@ class Gallagher21(BBOBFunction):
         "separable": False,
     }
 
-    def __init__(self, n_dim=10, instance=1, objective="minimize", sleep=0):
-        super().__init__(n_dim, instance, objective, sleep)
+    def __init__(self, n_dim=10, instance=1, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None, noise=None):
+        super().__init__(n_dim, instance, objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
         self._setup_peaks(21)
 
     def _setup_peaks(self, n_peaks: int):

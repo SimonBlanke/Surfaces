@@ -72,8 +72,8 @@ class SphereFunction(AlgebraicFunction):
     latex_formula = r"f(\vec{x}) = \sum_{i=1}^{n} x_i^2"
     pgfmath_formula = "#1^2 + #2^2"  # 2D specialization
 
-    def __init__(self, n_dim, A=1, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None):
-        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors)
+    def __init__(self, n_dim, A=1, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None, noise=None):
+        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
         self.n_dim = n_dim
         self.A = A
         self.x_global = np.zeros(n_dim)

@@ -77,8 +77,8 @@ class BealeFunction(AlgebraicFunction):
     latex_formula = r"f(x, y) = (1.5 - x + xy)^2 + (2.25 - x + xy^2)^2 + (2.625 - x + xy^3)^2"
     pgfmath_formula = "(1.5 - #1 + #1*#2)^2 + (2.25 - #1 + #1*#2^2)^2 + (2.625 - #1 + #1*#2^3)^2"
 
-    def __init__(self, A=1.5, B=2.25, C=2.652, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None):
-        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors)
+    def __init__(self, A=1.5, B=2.25, C=2.652, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None, noise=None):
+        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
         self.n_dim = 2
 
         self.A = A

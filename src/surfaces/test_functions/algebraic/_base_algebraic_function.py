@@ -53,8 +53,9 @@ class AlgebraicFunction(BaseTestFunction):
         collect_data: bool = True,
         callbacks=None,
         catch_errors=None,
+        noise=None,
     ):
-        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors)
+        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
 
     def _create_n_dim_search_space(
         self,

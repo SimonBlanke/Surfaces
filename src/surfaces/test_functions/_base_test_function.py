@@ -3,9 +3,12 @@
 # License: MIT License
 
 import time
-from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Type, Union
 
 import numpy as np
+
+if TYPE_CHECKING:
+    from surfaces.noise import BaseNoise
 
 
 class BaseTestFunction:
@@ -34,6 +37,11 @@ class BaseTestFunction:
         corresponding value is returned instead of propagating the error.
         Use ... (Ellipsis) as a catch-all key for any unmatched exceptions.
         Exceptions not matching any key will still propagate normally.
+    noise : BaseNoise, optional
+        Noise layer to apply to function evaluations. Adds stochastic
+        disturbances for testing algorithm robustness. See surfaces.noise
+        module for available noise types (GaussianNoise, UniformNoise,
+        MultiplicativeNoise).
 
     Attributes
     ----------
@@ -129,6 +137,26 @@ class BaseTestFunction:
     ...     n_dim=2,
     ...     catch_errors={...: float('inf')}
     ... )
+
+    Noise Example
+    -------------
+    Add noise to simulate measurement uncertainty:
+
+    >>> from surfaces.noise import GaussianNoise
+    >>> noise = GaussianNoise(sigma=0.1, seed=42)
+    >>> func = SphereFunction(n_dim=2, noise=noise)
+    >>> result = func([1.0, 2.0])  # Returns noisy evaluation
+    >>> true_result = func.true_value([1.0, 2.0])  # Without noise
+
+    Decaying noise over optimization:
+
+    >>> noise = GaussianNoise(
+    ...     sigma=0.5,
+    ...     sigma_final=0.01,
+    ...     schedule="linear",
+    ...     total_evaluations=1000
+    ... )
+    >>> func = SphereFunction(n_dim=2, noise=noise)
     """
 
     pure_objective_function: callable
@@ -201,6 +229,7 @@ class BaseTestFunction:
         collect_data=True,
         callbacks=None,
         catch_errors=None,
+        noise: Optional["BaseNoise"] = None,
     ):
         if objective not in ("minimize", "maximize"):
             raise ValueError(f"objective must be 'minimize' or 'maximize', got '{objective}'")
@@ -209,6 +238,7 @@ class BaseTestFunction:
         self.memory = memory
         self.collect_data = collect_data
         self.catch_errors: Optional[Dict[Type[Exception], float]] = catch_errors
+        self._noise: Optional["BaseNoise"] = noise
         self._memory_cache: Dict[Tuple, float] = {}
 
         # Normalize callbacks to list
@@ -299,11 +329,13 @@ class BaseTestFunction:
         return tuple(params[k] for k in sorted(params.keys()))
 
     def _evaluate(self, params: Dict[str, Any]) -> float:
-        """Evaluate with timing and objective transformation.
+        """Evaluate with timing, noise, and objective transformation.
 
         If catch_errors is provided, exceptions matching the specified types
         return the corresponding value instead of propagating. Use ... (Ellipsis)
         as a catch-all key for any unmatched exceptions.
+
+        Noise is applied after error handling but before the objective transform.
         """
         time.sleep(self.sleep)
 
@@ -316,6 +348,10 @@ class BaseTestFunction:
                     if exc_type is ... or isinstance(e, exc_type):
                         return return_value
             raise
+
+        # Apply noise layer if configured
+        if self._noise is not None:
+            raw_value = self._noise.apply(raw_value, params)
 
         if self.objective == "maximize":
             return -raw_value
@@ -373,6 +409,79 @@ class BaseTestFunction:
         """Reset all state including collected data and memory cache."""
         self.reset_data()
         self.reset_memory()
+
+    # =========================================================================
+    # Noise Management
+    # =========================================================================
+
+    def true_value(
+        self, params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None, **kwargs
+    ) -> float:
+        """Evaluate the function without noise.
+
+        Returns the true (deterministic) function value, bypassing any
+        configured noise layer. Useful for analysis and comparison.
+
+        This method does not update search_data, n_evaluations, or callbacks.
+        It also ignores memory caching.
+
+        Parameters
+        ----------
+        params : dict, array, list, or tuple
+            Parameter values to evaluate.
+        **kwargs : dict
+            Parameters as keyword arguments.
+
+        Returns
+        -------
+        float
+            The true function value without noise.
+
+        Examples
+        --------
+        >>> from surfaces.noise import GaussianNoise
+        >>> noise = GaussianNoise(sigma=0.1, seed=42)
+        >>> func = SphereFunction(n_dim=2, noise=noise)
+        >>> noisy = func([1.0, 2.0])
+        >>> true = func.true_value([1.0, 2.0])
+        >>> print(f"Noise added: {noisy - true:.4f}")
+        """
+        params = self._normalize_input(params, **kwargs)
+        raw_value = self.pure_objective_function(params)
+        if self.objective == "maximize":
+            return -raw_value
+        return raw_value
+
+    def reset_noise(self, seed: Optional[int] = None) -> None:
+        """Reset the noise layer state.
+
+        Resets the noise layer's evaluation counter and random state.
+        Has no effect if no noise layer is configured.
+
+        Parameters
+        ----------
+        seed : int, optional
+            New seed for the noise random state. If None, uses the
+            original seed.
+        """
+        if self._noise is not None:
+            self._noise.reset(seed)
+
+    @property
+    def noise(self) -> Optional["BaseNoise"]:
+        """The configured noise layer, or None if no noise is configured."""
+        return self._noise
+
+    @property
+    def last_noise(self) -> Optional[float]:
+        """The noise value from the most recent evaluation.
+
+        Returns None if no noise layer is configured or if no
+        evaluation has been performed yet.
+        """
+        if self._noise is not None:
+            return self._noise.last_noise
+        return None
 
     # =========================================================================
     # Callback Management
