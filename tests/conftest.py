@@ -225,6 +225,26 @@ except ImportError:
     machine_learning_functions = []
     HAS_ML = False
 
+# Visualization dependencies
+try:
+    import plotly.graph_objects as go
+    import matplotlib.pyplot as plt
+
+    HAS_VIZ = True
+except ImportError:
+    HAS_VIZ = False
+    go = None
+    plt = None
+
+# Streamlit testing
+try:
+    from streamlit.testing.v1 import AppTest
+
+    HAS_STREAMLIT = True
+except ImportError:
+    HAS_STREAMLIT = False
+    AppTest = None
+
 # BBOB as list
 BBOB_FUNCTION_LIST = list(BBOB_FUNCTIONS.values())
 
@@ -269,6 +289,16 @@ requires_cec2017 = pytest.mark.skipif(
 requires_cec = pytest.mark.skipif(
     not (HAS_CEC2013 or HAS_CEC2014 or HAS_CEC2017),
     reason="Requires CEC data: pip install surfaces[cec]"
+)
+
+requires_viz = pytest.mark.skipif(
+    not HAS_VIZ,
+    reason="Requires visualization deps: pip install surfaces[viz]"
+)
+
+requires_streamlit = pytest.mark.skipif(
+    not HAS_STREAMLIT,
+    reason="Requires streamlit: pip install surfaces[dashboard]"
 )
 
 
@@ -443,6 +473,8 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "algebraic: Algebraic/mathematical functions")
     config.addinivalue_line("markers", "engineering: Engineering design functions")
     config.addinivalue_line("markers", "requires_data: Requires external data files")
+    config.addinivalue_line("markers", "viz: Visualization tests (require plotly/matplotlib)")
+    config.addinivalue_line("markers", "dashboard: Streamlit dashboard tests")
 
 
 def pytest_collection_modifyitems(config, items):
@@ -477,3 +509,12 @@ def pytest_collection_modifyitems(config, items):
 
         if "smoke" in test_path:
             item.add_marker(pytest.mark.smoke)
+
+        if "visualization" in test_path:
+            item.add_marker(pytest.mark.viz)
+
+        if "dashboard" in test_path:
+            item.add_marker(pytest.mark.dashboard)
+
+        if "test_optimization" in test_path:
+            item.add_marker(pytest.mark.slow)

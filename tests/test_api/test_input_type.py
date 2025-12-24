@@ -26,6 +26,8 @@ def test_(test_function):
     assert callable(test_function_)
 
 
+@pytest.mark.slow
+@pytest.mark.ml
 @pytest.mark.parametrize(*machine_learning_functions_d)
 def test_all_(test_function):
     try:

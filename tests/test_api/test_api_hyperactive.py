@@ -1,6 +1,13 @@
+"""API tests for all test functions.
+
+Marked as slow because it tests all functions including ML.
+"""
+
 import pytest
 
 from surfaces.test_functions import test_functions
+
+pytestmark = pytest.mark.slow  # Tests all functions including slow ML ones
 
 test_functions_d = (
     "test_function",

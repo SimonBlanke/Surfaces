@@ -83,6 +83,8 @@ def test_search_space_nd_custom_bounds(test_function):
     opt.search(test_function_, n_iter=n_iter)
 
 
+@pytest.mark.slow
+@pytest.mark.ml
 @pytest.mark.parametrize(*machine_learning_functions_d)
 def test_ml_search_space(test_function):
     """Test that ML functions have valid search_space."""

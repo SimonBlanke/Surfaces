@@ -1,6 +1,17 @@
+"""Integration tests for optimizer libraries.
+
+These tests verify Surfaces functions work with various optimization frameworks.
+Marked as 'slow' since they run actual optimization loops.
+
+Run with: pytest -m slow tests/test_optimization.py
+Skip with: pytest -m "not slow"
+"""
+
 import numpy as np
 import pytest
 from gradient_free_optimizers import RandomSearchOptimizer
+
+pytestmark = pytest.mark.slow  # Mark all tests in this module as slow
 
 from surfaces.test_functions.algebraic import (
     AckleyFunction,
