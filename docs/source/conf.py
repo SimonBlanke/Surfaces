@@ -287,6 +287,7 @@ html_sidebars = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 html_css_files = ["css/custom.css"]
+html_js_files = ["js/sidebar-toggle.js"]
 
 html_show_sourcelink = False
 

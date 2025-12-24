@@ -1075,3 +1075,101 @@ html[data-theme="dark"] .segmented-tab-btn.active {
 html[data-theme="dark"] .theme-aware-diagram img.only-dark {
     background-color: transparent !important;
 }
+
+/* ============================================
+   Left Sidebar Navigation - Improved UX
+   ============================================ */
+
+/* Hide all expand/collapse arrow icons */
+.bd-sidebar-primary .toctree-toggle,
+.bd-sidebar-primary button.toctree-toggle,
+.bd-sidebar-primary .nav-link .icon-tabler,
+.bd-sidebar-primary .toc-item-toggle,
+.bd-sidebar-primary i.fa-chevron-down,
+.bd-sidebar-primary i.fa-chevron-right,
+.bd-sidebar-primary .toggle-chevron,
+.bd-sidebar-primary label.toctree-toggle {
+    display: none !important;
+}
+
+/* Make entire nav item row clickable by ensuring link fills container */
+.bd-sidebar-primary .nav-item {
+    position: relative;
+}
+
+.bd-sidebar-primary .nav-link {
+    display: block;
+    width: 100%;
+    cursor: pointer;
+}
+
+/* Levels 1 and 2 are expanded by JavaScript on page load */
+
+/* Visual indicator for expandable items - pointer cursor on link */
+.bd-sidebar-primary li.has-children > a {
+    cursor: pointer;
+}
+
+/* Improve click target size */
+.bd-sidebar-primary .nav-link {
+    padding: 0.375rem 0.75rem;
+    margin: 1px 0;
+    border-radius: 4px;
+    transition: background-color 0.15s ease;
+}
+
+/* Hover state for better feedback */
+.bd-sidebar-primary .nav-link:hover {
+    background-color: var(--pst-color-background);
+}
+
+/* Active item styling - subtle left border accent, no background */
+.bd-sidebar-primary .nav-link.active,
+.bd-sidebar-primary .current > .nav-link,
+.bd-sidebar-primary .current > a {
+    color: var(--surfaces-primary);
+    border-left: 2px solid var(--surfaces-primary);
+    padding-left: calc(0.75rem - 2px);
+}
+
+html[data-theme="dark"] .bd-sidebar-primary .nav-link.active,
+html[data-theme="dark"] .bd-sidebar-primary .current > .nav-link,
+html[data-theme="dark"] .bd-sidebar-primary .current > a {
+    color: var(--surfaces-secondary);
+    border-left-color: var(--surfaces-secondary);
+}
+
+/* Remove default list styling artifacts */
+.bd-sidebar-primary ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+/* Indent nested levels */
+.bd-sidebar-primary .toctree-l2 {
+    padding-left: 0.75rem;
+}
+
+.bd-sidebar-primary .toctree-l3 {
+    padding-left: 1.5rem;
+}
+
+.bd-sidebar-primary .toctree-l4 {
+    padding-left: 2.25rem;
+}
+
+/* Consistent font size/weight across all levels - only color varies */
+.bd-sidebar-primary .toctree-l1 > a,
+.bd-sidebar-primary .toctree-l2 > a,
+.bd-sidebar-primary .toctree-l3 > a,
+.bd-sidebar-primary .toctree-l4 > a {
+    font-weight: 400;
+    font-size: 0.85rem;
+}
+
+/* Subtle color difference for deeper levels */
+.bd-sidebar-primary .toctree-l3 > a,
+.bd-sidebar-primary .toctree-l4 > a {
+    color: var(--pst-color-text-muted);
+}
