@@ -99,7 +99,7 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.autosectionlabel",
-    "numpydoc",
+    "sphinx.ext.napoleon",  # replaces numpydoc - supports custom sections
     "sphinx.ext.intersphinx",
     "sphinx.ext.linkcode",  # link to GitHub source code via linkcode_resolve()
     "myst_parser",
@@ -107,6 +107,7 @@ extensions = [
     "sphinx_design",
     "sphinx_issues",
     "sphinx.ext.doctest",
+    "sphinxcontrib.mermaid",
 ]
 
 # Recommended by sphinx_design when using the MyST Parser
@@ -151,15 +152,34 @@ toc_object_entries_show_parents = "hide"
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = "sphinx"
 
-# see http://stackoverflow.com/q/12206334/562769
-numpydoc_show_class_members = True
-# this is needed for some reason...
-# see https://github.com/numpy/numpydoc/issues/69
-numpydoc_class_members_toctree = False
+# Napoleon settings (replaces numpydoc)
+# https://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html
+napoleon_google_docstring = False
+napoleon_numpy_docstring = True
+napoleon_include_init_with_doc = False
+napoleon_include_private_with_doc = False
+napoleon_include_special_with_doc = True
+napoleon_use_admonition_for_examples = False
+napoleon_use_admonition_for_notes = False
+napoleon_use_admonition_for_references = False
+napoleon_use_ivar = False
+napoleon_use_param = True
+napoleon_use_rtype = True
+napoleon_preprocess_types = False
+napoleon_type_aliases = None
+napoleon_attr_annotations = True
 
-# https://numpydoc.readthedocs.io/en/latest/validation.html#built-in-validation-checks
-# Let's turn off the check for building but keep it in pre-commit hooks
-numpydoc_validation_checks = set()
+# Custom sections for engineering and other specialized functions
+# These sections appear in docstrings but aren't standard numpydoc sections
+napoleon_custom_sections = [
+    "Problem Description",
+    "Design Variables",
+    "Objective Function",
+    "Constraints",
+    "Search Domain",
+    "Global Optimum",
+    "Landscape Properties",
+]
 
 # generate autosummary even if no references
 autosummary_generate = True
@@ -401,7 +421,7 @@ if str(_generators_path.parent) not in sys.path:
     sys.path.insert(0, str(_generators_path.parent))
 
 try:
-    from docs._generators import get_all_test_functions, count_by_category, get_total_count
+    from docs._generators import count_by_category, get_all_test_functions, get_total_count
 
     _categories = get_all_test_functions()
     _counts = count_by_category(_categories)
