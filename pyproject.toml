@@ -173,3 +173,16 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
 addopts = "-p no:warnings"
+markers = [
+    "smoke: Quick sanity checks (<1s each)",
+    "slow: Tests that take >5s",
+    "ml: Machine learning functions (require sklearn)",
+    "cec: CEC competition functions (all years)",
+    "cec2013: CEC 2013 benchmark functions",
+    "cec2014: CEC 2014 benchmark functions",
+    "cec2017: CEC 2017 benchmark functions",
+    "bbob: BBOB benchmark functions",
+    "algebraic: Algebraic/mathematical functions",
+    "engineering: Engineering design functions",
+    "requires_data: Requires external data files",
+]
