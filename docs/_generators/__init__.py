@@ -122,6 +122,7 @@ def get_all_test_functions() -> Dict[str, List[Type]]:
             multimodal_weak,
             separable,
         )
+        from surfaces.test_functions.bbob._base_bbob import BBOBFunction
 
         bbob_funcs = []
         for module in [
@@ -131,11 +132,18 @@ def get_all_test_functions() -> Dict[str, List[Type]]:
             multimodal_adequate,
             multimodal_weak,
         ]:
-            if hasattr(module, "__all__"):
-                for name in module.__all__:
-                    cls = getattr(module, name, None)
-                    if cls is not None and inspect.isclass(cls):
-                        bbob_funcs.append(cls)
+            # Find classes that are subclasses of BBOBFunction
+            for name in dir(module):
+                if name.startswith("_"):
+                    continue
+                cls = getattr(module, name, None)
+                if (
+                    cls is not None
+                    and inspect.isclass(cls)
+                    and issubclass(cls, BBOBFunction)
+                    and cls is not BBOBFunction
+                ):
+                    bbob_funcs.append(cls)
         categories["bbob"] = bbob_funcs
     except ImportError:
         categories["bbob"] = []

@@ -23,7 +23,6 @@ Usage
     python -m docs._generators.generate_catalogs
 """
 
-from pathlib import Path
 from typing import List, Type
 
 from . import extract_metadata, format_value, get_all_test_functions

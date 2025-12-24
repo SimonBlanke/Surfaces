@@ -30,7 +30,7 @@ PROJECT_ROOT = GENERATORS_DIR.parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from docs._generators.config import GENERATED_DIR, ensure_directories
+from docs._generators.config import GENERATED_DIR, ensure_directories  # noqa: E402
 
 
 def clean_generated():

@@ -186,19 +186,21 @@ def generate_surface_plot(
 
     meta = extract_metadata(func_class)
 
-    fig = go.Figure(data=[
-        go.Surface(
-            x=X,
-            y=Y,
-            z=Z,
-            colorscale=colorscale,
-            showscale=True,
-            colorbar=dict(
-                thickness=15,
-                len=0.7,
-            ),
-        )
-    ])
+    fig = go.Figure(
+        data=[
+            go.Surface(
+                x=X,
+                y=Y,
+                z=Z,
+                colorscale=colorscale,
+                showscale=True,
+                colorbar=dict(
+                    thickness=15,
+                    len=0.7,
+                ),
+            )
+        ]
+    )
 
     fig.update_layout(
         title=dict(
@@ -260,36 +262,40 @@ def generate_contour_plot(
     x = X[0, :]
     y = Y[:, 0]
 
-    fig = go.Figure(data=[
-        go.Contour(
-            x=x,
-            y=y,
-            z=Z,
-            colorscale=colorscale,
-            contours=dict(
-                showlabels=True,
-                labelfont=dict(size=10, color="white"),
-            ),
-            colorbar=dict(
-                thickness=15,
-                len=0.9,
-            ),
-        )
-    ])
+    fig = go.Figure(
+        data=[
+            go.Contour(
+                x=x,
+                y=y,
+                z=Z,
+                colorscale=colorscale,
+                contours=dict(
+                    showlabels=True,
+                    labelfont=dict(size=10, color="white"),
+                ),
+                colorbar=dict(
+                    thickness=15,
+                    len=0.9,
+                ),
+            )
+        ]
+    )
 
     # Mark global minimum if known
     x_global = meta["x_global"]
     if x_global is not None:
         try:
             if hasattr(x_global, "__len__") and len(x_global) >= 2:
-                fig.add_trace(go.Scatter(
-                    x=[float(x_global[0])],
-                    y=[float(x_global[1])],
-                    mode="markers",
-                    marker=dict(size=12, color="red", symbol="star"),
-                    name="Global minimum",
-                    showlegend=True,
-                ))
+                fig.add_trace(
+                    go.Scatter(
+                        x=[float(x_global[0])],
+                        y=[float(x_global[1])],
+                        mode="markers",
+                        marker=dict(size=12, color="red", symbol="star"),
+                        name="Global minimum",
+                        showlegend=True,
+                    )
+                )
         except (TypeError, ValueError):
             pass
 
@@ -340,15 +346,17 @@ def generate_thumbnail(
 
     meta = extract_metadata(func_class)
 
-    fig = go.Figure(data=[
-        go.Surface(
-            x=X,
-            y=Y,
-            z=Z,
-            colorscale=DEFAULT_COLORSCALE,
-            showscale=False,
-        )
-    ])
+    fig = go.Figure(
+        data=[
+            go.Surface(
+                x=X,
+                y=Y,
+                z=Z,
+                colorscale=DEFAULT_COLORSCALE,
+                showscale=False,
+            )
+        ]
+    )
 
     fig.update_layout(
         scene=dict(
@@ -414,15 +422,17 @@ def generate_gallery_rst(functions_2d: List[Type]) -> Path:
         if not (PLOTS_DIR / f"{internal_name}_thumb.png").exists():
             continue
 
-        lines.extend([
-            "   .. grid-item-card::",
-            f"      :img-top: {thumb_path}",
-            f"      :link: {meta['module']}.{meta['name']}",
-            "      :link-type: ref",
-            "",
-            f"      **{meta['display_name']}**",
-            "",
-        ])
+        lines.extend(
+            [
+                "   .. grid-item-card::",
+                f"      :img-top: {thumb_path}",
+                f"      :link: {meta['module']}.{meta['name']}",
+                "      :link-type: ref",
+                "",
+                f"      **{meta['display_name']}**",
+                "",
+            ]
+        )
 
     output_path = PLOTS_DIR / "gallery.rst"
     output_path.write_text("\n".join(lines))
@@ -457,26 +467,30 @@ def generate_function_detail_rst(func_class: Type) -> Optional[Path]:
     ]
 
     if surface_exists:
-        lines.extend([
-            "Surface Plot",
-            "------------",
-            "",
-            f".. image:: /_generated/plots/{internal_name}_surface.png",
-            "   :alt: Surface plot",
-            "   :align: center",
-            "",
-        ])
+        lines.extend(
+            [
+                "Surface Plot",
+                "------------",
+                "",
+                f".. image:: /_generated/plots/{internal_name}_surface.png",
+                "   :alt: Surface plot",
+                "   :align: center",
+                "",
+            ]
+        )
 
     if contour_exists:
-        lines.extend([
-            "Contour Plot",
-            "------------",
-            "",
-            f".. image:: /_generated/plots/{internal_name}_contour.png",
-            "   :alt: Contour plot",
-            "   :align: center",
-            "",
-        ])
+        lines.extend(
+            [
+                "Contour Plot",
+                "------------",
+                "",
+                f".. image:: /_generated/plots/{internal_name}_contour.png",
+                "   :alt: Contour plot",
+                "   :align: center",
+                "",
+            ]
+        )
 
     output_path = PLOTS_DIR / f"{internal_name}_detail.rst"
     output_path.write_text("\n".join(lines))
@@ -557,7 +571,7 @@ def main(force: bool = False):
     gallery_path = generate_gallery_rst(functions_2d)
     print(f"  Generated: {gallery_path}")
 
-    print(f"\nPlot generation complete:")
+    print("\nPlot generation complete:")
     print(f"  Generated: {generated_count} functions")
     print(f"  Skipped (cached): {skipped_count} functions")
 
@@ -567,7 +581,8 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Generate plot assets")
     parser.add_argument(
-        "--force", "-f",
+        "--force",
+        "-f",
         action="store_true",
         help="Force regeneration of all plots",
     )
