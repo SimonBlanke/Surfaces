@@ -48,7 +48,7 @@ reinstall: uninstall install
 # =============================================================================
 
 py-test:
-	python -m pytest -x -p no:warnings tests/
+	PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -x -p no:warnings tests/
 
 test-examples:
 	cd tests && python _test_examples.py
@@ -57,7 +57,7 @@ test: py-test test-examples
 
 # Test with minimal dependencies (no sklearn, no viz, no GFO)
 test-minimal:
-	python -m pytest -x -p no:warnings \
+	PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -x -p no:warnings \
 		tests/test_1d_functions.py \
 		tests/test_2d_functions.py \
 		tests/test_nd_functions.py \
@@ -68,13 +68,13 @@ test-minimal:
 
 # Integration tests with optimization libraries (requires GFO, optuna, scipy)
 test-integrations:
-	python -m pytest -x -p no:warnings \
+	PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -x -p no:warnings \
 		tests/test_optimization.py \
 		tests/test_api/test_search_space.py
 
 # Test with coverage
 test-cov:
-	python -m pytest --cov=surfaces --cov-report=term-missing --cov-report=xml -p no:warnings tests/
+	PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest --cov=surfaces --cov-report=term-missing --cov-report=xml -p no:warnings tests/
 
 # =============================================================================
 # Code Quality
@@ -108,6 +108,40 @@ pre-commit-all:
 
 pre-commit-update:
 	pre-commit autoupdate
+
+# =============================================================================
+# Documentation
+# =============================================================================
+
+.PHONY: docs docs-generate docs-build docs-clean docs-serve docs-quick
+
+# Generate documentation assets (catalogs, plots, diagrams)
+docs-generate:
+	python -m docs._generators.generate_all
+
+# Build HTML documentation with Sphinx
+docs-build:
+	cd docs && sphinx-build -b html source build/html
+
+# Full documentation build (generate + build)
+docs: docs-generate docs-build
+
+# Clean generated documentation
+docs-clean:
+	rm -rf docs/source/_generated/*
+	rm -rf docs/build/*
+
+# Serve documentation locally
+docs-serve: docs
+	python -m http.server 8000 -d docs/build/html
+
+# Quick rebuild (skip asset generation)
+docs-quick:
+	cd docs && sphinx-build -b html source build/html
+
+# Check for broken links
+docs-linkcheck:
+	cd docs && sphinx-build -b linkcheck source build/linkcheck
 
 # =============================================================================
 # Cleanup
@@ -152,6 +186,15 @@ help:
 	@echo "  pre-commit-install    Install pre-commit hooks"
 	@echo "  pre-commit-all        Run pre-commit on all files"
 	@echo "  pre-commit-update     Update pre-commit hooks"
+	@echo ""
+	@echo "Documentation:"
+	@echo "  docs                  Build full documentation (generate + build)"
+	@echo "  docs-generate         Generate documentation assets only"
+	@echo "  docs-build            Build HTML documentation only"
+	@echo "  docs-clean            Remove generated documentation"
+	@echo "  docs-serve            Build and serve documentation locally"
+	@echo "  docs-quick            Quick rebuild (skip generation)"
+	@echo "  docs-linkcheck        Check for broken links"
 	@echo ""
 	@echo "Other:"
 	@echo "  build                 Build package"
