@@ -2,9 +2,14 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
+
 import numpy as np
 
 from .._base_algebraic_function import AlgebraicFunction
+
+if TYPE_CHECKING:
+    from surfaces.noise import BaseNoise
 
 
 class HölderTableFunction(AlgebraicFunction):
@@ -93,8 +98,8 @@ class HölderTableFunction(AlgebraicFunction):
         self.A = A
         self.angle = angle
 
-    def _create_objective_function(self):
-        def hölder_table_function(params):
+    def _create_objective_function(self) -> None:
+        def hölder_table_function(params: Dict[str, Any]) -> float:
             x = params["x0"]
             y = params["x1"]
 
@@ -105,7 +110,13 @@ class HölderTableFunction(AlgebraicFunction):
 
         self.pure_objective_function = hölder_table_function
 
-    def _search_space(self, min=-10, max=10, value_types="array", size=10000):
+    def _search_space(
+        self,
+        min: float = -10,
+        max: float = 10,
+        value_types: str = "array",
+        size: int = 10000,
+    ) -> Dict[str, Any]:
         return super()._create_n_dim_search_space(
             min=min, max=max, size=size, value_types=value_types
         )

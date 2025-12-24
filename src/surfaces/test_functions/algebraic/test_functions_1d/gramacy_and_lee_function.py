@@ -2,10 +2,14 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
 
 import numpy as np
 
 from .._base_algebraic_function import AlgebraicFunction
+
+if TYPE_CHECKING:
+    from surfaces.noise import BaseNoise
 
 
 class GramacyAndLeeFunction(AlgebraicFunction):
@@ -73,26 +77,32 @@ class GramacyAndLeeFunction(AlgebraicFunction):
 
     def __init__(
         self,
-        objective="minimize",
-        sleep=0,
-        memory=False,
-        collect_data=True,
-        callbacks=None,
-        catch_errors=None,
-        noise=None,
-    ):
+        objective: str = "minimize",
+        sleep: float = 0,
+        memory: bool = False,
+        collect_data: bool = True,
+        callbacks: Optional[Union[Callable, List[Callable]]] = None,
+        catch_errors: Optional[Dict[type, float]] = None,
+        noise: Optional["BaseNoise"] = None,
+    ) -> None:
         super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
         self.n_dim = 1
 
-    def _create_objective_function(self):
-        def gramacy_and_lee_function(params):
+    def _create_objective_function(self) -> None:
+        def gramacy_and_lee_function(params: Dict[str, Any]) -> float:
             x = params["x0"]
 
             return (np.sin(10 * np.pi * x) / (2 * x)) + (x - 1) ** 4
 
         self.pure_objective_function = gramacy_and_lee_function
 
-    def _search_space(self, min=0.5, max=2.5, value_types="array", size=10000):
+    def _search_space(
+        self,
+        min: float = 0.5,
+        max: float = 2.5,
+        value_types: str = "array",
+        size: int = 10000,
+    ) -> Dict[str, Any]:
         return super()._create_n_dim_search_space(
             min=min, max=max, size=size, value_types=value_types
         )

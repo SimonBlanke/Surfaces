@@ -2,9 +2,14 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
+
 import numpy as np
 
 from .._base_algebraic_function import AlgebraicFunction
+
+if TYPE_CHECKING:
+    from surfaces.noise import BaseNoise
 
 
 class RastriginFunction(AlgebraicFunction):
@@ -75,17 +80,17 @@ class RastriginFunction(AlgebraicFunction):
 
     def __init__(
         self,
-        n_dim,
-        A=10,
-        angle=2 * np.pi,
-        objective="minimize",
-        sleep=0,
-        memory=False,
-        collect_data=True,
-        callbacks=None,
-        catch_errors=None,
-        noise=None,
-    ):
+        n_dim: int,
+        A: float = 10,
+        angle: float = 2 * np.pi,
+        objective: str = "minimize",
+        sleep: float = 0,
+        memory: bool = False,
+        collect_data: bool = True,
+        callbacks: Optional[Union[Callable, List[Callable]]] = None,
+        catch_errors: Optional[Dict[type, float]] = None,
+        noise: Optional["BaseNoise"] = None,
+    ) -> None:
         super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
 
         self.n_dim = n_dim
@@ -93,9 +98,9 @@ class RastriginFunction(AlgebraicFunction):
         self.angle = angle
         self.x_global = np.zeros(n_dim)
 
-    def _create_objective_function(self):
-        def rastrigin_function(params):
-            loss = 0
+    def _create_objective_function(self) -> None:
+        def rastrigin_function(params: Dict[str, Any]) -> float:
+            loss = 0.0
             for dim in range(self.n_dim):
                 dim_str = "x" + str(dim)
                 x = params[dim_str]
@@ -106,5 +111,11 @@ class RastriginFunction(AlgebraicFunction):
 
         self.pure_objective_function = rastrigin_function
 
-    def _search_space(self, min=-5, max=5, size=10000, value_types="array"):
+    def _search_space(
+        self,
+        min: float = -5,
+        max: float = 5,
+        size: int = 10000,
+        value_types: str = "array",
+    ) -> Dict[str, Any]:
         return super()._create_n_dim_search_space(min, max, size=size, value_types=value_types)

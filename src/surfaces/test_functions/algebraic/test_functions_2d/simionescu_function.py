@@ -2,9 +2,14 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
+
 import numpy as np
 
 from .._base_algebraic_function import AlgebraicFunction
+
+if TYPE_CHECKING:
+    from surfaces.noise import BaseNoise
 
 
 class SimionescuFunction(AlgebraicFunction):
@@ -108,8 +113,8 @@ class SimionescuFunction(AlgebraicFunction):
         self.r_S = r_S
         self.n = n
 
-    def _create_objective_function(self):
-        def simionescu_function(params):
+    def _create_objective_function(self) -> None:
+        def simionescu_function(params: Dict[str, Any]) -> float:
             x = np.asarray(params["x0"]).reshape(-1)
             y = np.asarray(params["x1"]).reshape(-1)
 
@@ -129,7 +134,13 @@ class SimionescuFunction(AlgebraicFunction):
 
         self.pure_objective_function = simionescu_function
 
-    def _search_space(self, min=-1.25, max=1.25, value_types="array", size=10000):
+    def _search_space(
+        self,
+        min: float = -1.25,
+        max: float = 1.25,
+        value_types: str = "array",
+        size: int = 10000,
+    ) -> Dict[str, Any]:
         return super()._create_n_dim_search_space(
             min=min, max=max, size=size, value_types=value_types
         )

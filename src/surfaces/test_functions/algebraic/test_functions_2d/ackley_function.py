@@ -2,9 +2,14 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
+
 import numpy as np
 
 from .._base_algebraic_function import AlgebraicFunction
+
+if TYPE_CHECKING:
+    from surfaces.noise import BaseNoise
 
 
 class AckleyFunction(AlgebraicFunction):
@@ -79,16 +84,16 @@ class AckleyFunction(AlgebraicFunction):
 
     def __init__(
         self,
-        A=20,
-        angle=2 * np.pi,
-        objective="minimize",
-        sleep=0,
-        memory=False,
-        collect_data=True,
-        callbacks=None,
-        catch_errors=None,
-        noise=None,
-    ):
+        A: float = 20,
+        angle: float = 2 * np.pi,
+        objective: str = "minimize",
+        sleep: float = 0,
+        memory: bool = False,
+        collect_data: bool = True,
+        callbacks: Optional[Union[Callable, List[Callable]]] = None,
+        catch_errors: Optional[Dict[type, float]] = None,
+        noise: Optional["BaseNoise"] = None,
+    ) -> None:
         super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
 
         self.n_dim = 2
@@ -96,8 +101,8 @@ class AckleyFunction(AlgebraicFunction):
         self.A = A
         self.angle = angle
 
-    def _create_objective_function(self):
-        def ackley_function(params):
+    def _create_objective_function(self) -> None:
+        def ackley_function(params: Dict[str, Any]) -> float:
             x = params["x0"]
             y = params["x1"]
 
@@ -110,7 +115,13 @@ class AckleyFunction(AlgebraicFunction):
 
         self.pure_objective_function = ackley_function
 
-    def _search_space(self, min=-5, max=5, value_types="array", size=10000):
+    def _search_space(
+        self,
+        min: float = -5,
+        max: float = 5,
+        value_types: str = "array",
+        size: int = 10000,
+    ) -> Dict[str, Any]:
         return super()._create_n_dim_search_space(
             min=min, max=max, size=size, value_types=value_types
         )

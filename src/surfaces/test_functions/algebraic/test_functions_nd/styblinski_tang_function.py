@@ -2,9 +2,14 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
+
 import numpy as np
 
 from .._base_algebraic_function import AlgebraicFunction
+
+if TYPE_CHECKING:
+    from surfaces.noise import BaseNoise
 
 
 class StyblinskiTangFunction(AlgebraicFunction):
@@ -62,23 +67,23 @@ class StyblinskiTangFunction(AlgebraicFunction):
 
     def __init__(
         self,
-        n_dim,
-        objective="minimize",
-        sleep=0,
-        memory=False,
-        collect_data=True,
-        callbacks=None,
-        catch_errors=None,
-        noise=None,
-    ):
+        n_dim: int,
+        objective: str = "minimize",
+        sleep: float = 0,
+        memory: bool = False,
+        collect_data: bool = True,
+        callbacks: Optional[Union[Callable, List[Callable]]] = None,
+        catch_errors: Optional[Dict[type, float]] = None,
+        noise: Optional["BaseNoise"] = None,
+    ) -> None:
         super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
         self.n_dim = n_dim
         self.x_global = np.full(n_dim, -2.903534)
         self.f_global = -39.16617 * n_dim
 
-    def _create_objective_function(self):
-        def styblinski_tang_function(params):
-            loss = 0
+    def _create_objective_function(self) -> None:
+        def styblinski_tang_function(params: Dict[str, Any]) -> float:
+            loss = 0.0
             for dim in range(self.n_dim):
                 dim_str = "x" + str(dim)
                 x = params[dim_str]
@@ -89,5 +94,11 @@ class StyblinskiTangFunction(AlgebraicFunction):
 
         self.pure_objective_function = styblinski_tang_function
 
-    def _search_space(self, min=-5, max=5, size=10000, value_types="array"):
+    def _search_space(
+        self,
+        min: float = -5,
+        max: float = 5,
+        size: int = 10000,
+        value_types: str = "array",
+    ) -> Dict[str, Any]:
         return super()._create_n_dim_search_space(min, max, size=size, value_types=value_types)

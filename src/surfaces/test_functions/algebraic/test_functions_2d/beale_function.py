@@ -2,9 +2,14 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
+
 import numpy as np
 
 from .._base_algebraic_function import AlgebraicFunction
+
+if TYPE_CHECKING:
+    from surfaces.noise import BaseNoise
 
 
 class BealeFunction(AlgebraicFunction):
@@ -79,17 +84,17 @@ class BealeFunction(AlgebraicFunction):
 
     def __init__(
         self,
-        A=1.5,
-        B=2.25,
-        C=2.652,
-        objective="minimize",
-        sleep=0,
-        memory=False,
-        collect_data=True,
-        callbacks=None,
-        catch_errors=None,
-        noise=None,
-    ):
+        A: float = 1.5,
+        B: float = 2.25,
+        C: float = 2.652,
+        objective: str = "minimize",
+        sleep: float = 0,
+        memory: bool = False,
+        collect_data: bool = True,
+        callbacks: Optional[Union[Callable, List[Callable]]] = None,
+        catch_errors: Optional[Dict[type, float]] = None,
+        noise: Optional["BaseNoise"] = None,
+    ) -> None:
         super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
         self.n_dim = 2
 
@@ -97,8 +102,8 @@ class BealeFunction(AlgebraicFunction):
         self.B = B
         self.C = C
 
-    def _create_objective_function(self):
-        def beale_function(params):
+    def _create_objective_function(self) -> None:
+        def beale_function(params: Dict[str, Any]) -> float:
             x = params["x0"]
             y = params["x1"]
 
@@ -110,7 +115,13 @@ class BealeFunction(AlgebraicFunction):
 
         self.pure_objective_function = beale_function
 
-    def _search_space(self, min=-4.5, max=4.5, value_types="array", size=10000):
+    def _search_space(
+        self,
+        min: float = -4.5,
+        max: float = 4.5,
+        value_types: str = "array",
+        size: int = 10000,
+    ) -> Dict[str, Any]:
         return super()._create_n_dim_search_space(
             min=min, max=max, size=size, value_types=value_types
         )
