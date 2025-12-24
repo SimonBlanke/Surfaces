@@ -185,4 +185,6 @@ markers = [
     "algebraic: Algebraic/mathematical functions",
     "engineering: Engineering design functions",
     "requires_data: Requires external data files",
+    "viz: Visualization tests (require plotly/matplotlib)",
+    "dashboard: Streamlit dashboard tests",
 ]
