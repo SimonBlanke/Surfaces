@@ -5,6 +5,9 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+surfaces = ["py.typed"]
+
 [project]
 name = "surfaces"
 version = "0.5.1"
