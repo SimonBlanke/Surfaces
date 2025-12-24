@@ -4,9 +4,12 @@
 Engineering Functions
 =====================
 
-Real-world constrained engineering design optimization problems.
+.. include:: ../../_generated/diagrams/engineering_overview.rst
 
-These functions represent actual engineering design scenarios with physical constraints. They are useful for testing constrained optimization algorithms.
+----
+
+Available Functions
+===================
 
 .. autosummary::
    :toctree: _autosummary

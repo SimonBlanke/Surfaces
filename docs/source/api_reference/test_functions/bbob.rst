@@ -4,13 +4,7 @@
 BBOB Functions
 ==============
 
-The 24 noiseless benchmark functions from the BBOB (Black-Box Optimization Benchmarking) test suite, part of the COCO platform.
-
-Functions are organized into five categories based on their properties.
-
-.. contents:: On this page
-   :local:
-   :depth: 2
+.. include:: ../../_generated/diagrams/bbob_overview.rst
 
 ----
 

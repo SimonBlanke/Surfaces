@@ -4,11 +4,7 @@
 Machine Learning Functions
 ==========================
 
-Hyperparameter optimization landscapes for machine learning models.
-
-.. contents:: On this page
-   :local:
-   :depth: 2
+.. include:: ../../_generated/diagrams/ml_overview.rst
 
 ----
 

@@ -4,13 +4,7 @@
 Noise
 =====
 
-Noise layers for adding stochastic disturbances to test functions.
-
-These classes can be passed to any test function to simulate noisy evaluations. Useful for testing algorithm robustness to measurement uncertainty.
-
-.. contents:: On this page
-   :local:
-   :depth: 2
+.. include:: ../_generated/diagrams/noise_overview.rst
 
 ----
 

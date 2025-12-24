@@ -4,11 +4,7 @@
 Visualization
 =============
 
-Functions for visualizing test function landscapes and optimization progress.
-
-.. contents:: On this page
-   :local:
-   :depth: 2
+.. include:: ../_generated/diagrams/visualization_overview.rst
 
 ----
 

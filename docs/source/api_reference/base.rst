@@ -4,11 +4,7 @@
 Base Classes
 ============
 
-Base classes that all test functions inherit from. Understanding the hierarchy helps when creating custom test functions.
-
-.. contents:: On this page
-   :local:
-   :depth: 2
+.. include:: ../_generated/diagrams/base_classes_overview.rst
 
 ----
 

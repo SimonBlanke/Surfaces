@@ -4,11 +4,7 @@
 CEC Functions
 =============
 
-Benchmark functions from the IEEE Congress on Evolutionary Computation (CEC) competition suites.
-
-.. contents:: On this page
-   :local:
-   :depth: 2
+.. include:: ../../_generated/diagrams/cec_overview.rst
 
 ----
 

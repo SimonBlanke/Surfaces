@@ -4,11 +4,7 @@
 Algebraic Functions
 ===================
 
-Classic mathematical optimization test functions from the literature.
-
-.. contents:: On this page
-   :local:
-   :depth: 2
+.. include:: ../../_generated/diagrams/algebraic_overview.rst
 
 ----
 

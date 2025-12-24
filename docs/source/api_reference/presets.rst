@@ -4,13 +4,7 @@
 Presets
 =======
 
-Pre-defined function collections for standardized optimizer testing.
-
-Presets provide curated sets of test function classes organized by use case. Using standardized presets enables comparable results across different papers and projects.
-
-.. contents:: On this page
-   :local:
-   :depth: 2
+.. include:: ../_generated/diagrams/presets_overview.rst
 
 ----
 
@@ -59,32 +53,3 @@ Utility Functions
 .. autofunction:: surfaces.presets.get
 
 .. autofunction:: surfaces.presets.list_presets
-
-----
-
-Preset Contents
-===============
-
-.. autodata:: surfaces.presets.quick
-   :annotation:
-
-.. autodata:: surfaces.presets.standard
-   :annotation:
-
-.. autodata:: surfaces.presets.algebraic_2d
-   :annotation:
-
-.. autodata:: surfaces.presets.algebraic_nd
-   :annotation:
-
-.. autodata:: surfaces.presets.bbob
-   :annotation:
-
-.. autodata:: surfaces.presets.cec2014
-   :annotation:
-
-.. autodata:: surfaces.presets.cec2017
-   :annotation:
-
-.. autodata:: surfaces.presets.engineering
-   :annotation:

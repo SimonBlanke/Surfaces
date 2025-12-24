@@ -4,7 +4,9 @@
 Test Functions
 ==============
 
-All available test functions in Surfaces, organized by category.
+.. include:: ../../_generated/diagrams/test_functions_overview.rst
+
+----
 
 .. toctree::
    :maxdepth: 2
