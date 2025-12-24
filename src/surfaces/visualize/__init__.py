@@ -47,22 +47,22 @@ Discovery Functions
 - auto_plot(func): Automatically select best visualization
 """
 
+from ._auto import auto_plot
 from ._compatibility import (
     available_plots,
     check_compatibility,
     list_all_plots,
     plot_info,
 )
+from ._contour import plot_contour
+from ._convergence import plot_convergence
+from ._distribution import plot_fitness_distribution
 from ._errors import (
     MissingDataError,
     MissingDependencyError,
     PlotCompatibilityError,
     VisualizationError,
 )
-from ._auto import auto_plot
-from ._contour import plot_contour
-from ._convergence import plot_convergence
-from ._distribution import plot_fitness_distribution
 from ._latex import plot_latex
 from ._slices import plot_multi_slice
 from ._surface import plot_surface

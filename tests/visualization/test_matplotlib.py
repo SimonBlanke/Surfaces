@@ -8,25 +8,26 @@ These tests verify plot structure and data without displaying.
 Matplotlib figures can be inspected programmatically.
 """
 
-import pytest
 import numpy as np
+import pytest
 
 from tests.conftest import (
     HAS_VIZ,
-    requires_viz,
     algebraic_functions_2d,
     func_id,
     instantiate_function,
+    requires_viz,
 )
 
 if HAS_VIZ:
     import matplotlib
+
     matplotlib.use("Agg")  # Non-interactive backend for testing
     import matplotlib.pyplot as plt
+
     from surfaces._visualize import (
         _matplotlib_heatmap,
         _matplotlib_surface,
-        _create_grid,
     )
 
 
@@ -42,6 +43,7 @@ class TestMatplotlibHeatmap:
 
     def test_heatmap_returns_figure(self):
         """Heatmap function returns a matplotlib figure."""
+
         def simple_func(params):
             return params["x"] ** 2 + params["y"] ** 2
 
@@ -57,6 +59,7 @@ class TestMatplotlibHeatmap:
 
     def test_heatmap_has_axes(self):
         """Heatmap figure has exactly one axes."""
+
         def simple_func(params):
             return params["x"] ** 2 + params["y"] ** 2
 
@@ -72,6 +75,7 @@ class TestMatplotlibHeatmap:
 
     def test_heatmap_axis_labels(self):
         """Heatmap has correct axis labels from search space keys."""
+
         def simple_func(params):
             return params["alpha"] ** 2 + params["beta"] ** 2
 
@@ -89,6 +93,7 @@ class TestMatplotlibHeatmap:
 
     def test_heatmap_title(self):
         """Heatmap has correct title."""
+
         def simple_func(params):
             return params["x"] ** 2
 
@@ -106,6 +111,7 @@ class TestMatplotlibHeatmap:
 
     def test_heatmap_figsize(self):
         """Heatmap respects figsize parameter."""
+
         def simple_func(params):
             return params["x"] ** 2
 
@@ -124,6 +130,7 @@ class TestMatplotlibHeatmap:
 
     def test_heatmap_rejects_wrong_dimensions(self):
         """Heatmap raises error for non-2D search space."""
+
         def simple_func(params):
             return sum(params.values())
 
@@ -138,6 +145,7 @@ class TestMatplotlibHeatmap:
 
     def test_heatmap_image_data(self):
         """Heatmap image data has correct shape."""
+
         def simple_func(params):
             return params["x"] ** 2 + params["y"] ** 2
 
@@ -192,6 +200,7 @@ class TestMatplotlibSurface:
 
     def test_surface_returns_figure(self):
         """Surface function returns a matplotlib figure."""
+
         def simple_func(params):
             return params["x"] ** 2 + params["y"] ** 2
 
@@ -207,7 +216,6 @@ class TestMatplotlibSurface:
 
     def test_surface_has_3d_axes(self):
         """Surface figure has 3D axes."""
-        from mpl_toolkits.mplot3d import Axes3D
 
         def simple_func(params):
             return params["x"] ** 2 + params["y"] ** 2
@@ -225,6 +233,7 @@ class TestMatplotlibSurface:
 
     def test_surface_axis_labels(self):
         """Surface has correct axis labels."""
+
         def simple_func(params):
             return params["alpha"] ** 2 + params["beta"] ** 2
 
@@ -243,6 +252,7 @@ class TestMatplotlibSurface:
 
     def test_surface_title(self):
         """Surface has correct title."""
+
         def simple_func(params):
             return params["x"] ** 2
 
@@ -260,6 +270,7 @@ class TestMatplotlibSurface:
 
     def test_surface_figsize(self):
         """Surface respects figsize parameter."""
+
         def simple_func(params):
             return params["x"] ** 2
 
@@ -277,6 +288,7 @@ class TestMatplotlibSurface:
 
     def test_surface_rejects_wrong_dimensions(self):
         """Surface raises error for non-2D search space."""
+
         def simple_func(params):
             return sum(params.values())
 
@@ -318,6 +330,7 @@ class TestResourceCleanup:
 
     def test_no_figure_leak(self):
         """Creating figures doesn't leak memory when closed."""
+
         def simple_func(params):
             return params["x"] ** 2 + params["y"] ** 2
 

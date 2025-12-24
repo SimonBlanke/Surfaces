@@ -10,13 +10,13 @@ without running the Streamlit UI.
 
 import pytest
 
-from tests.conftest import requires_streamlit, HAS_STREAMLIT
+from tests.conftest import HAS_STREAMLIT, requires_streamlit
 
 if HAS_STREAMLIT:
     from surfaces._surrogates._dashboard._pages.overview import (
+        R2_THRESHOLD,
         get_status,
         get_status_color,
-        R2_THRESHOLD,
     )
 
 

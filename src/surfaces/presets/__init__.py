@@ -75,34 +75,33 @@ Use `instantiate()` to handle this automatically.
 """
 
 from .suites import (
-    quick,
-    standard,
     algebraic_2d,
     algebraic_nd,
     bbob,
     cec2014,
     cec2017,
     engineering,
+    quick,
+    standard,
 )
-
 from .utilities import (
-    instantiate,
     get,
+    instantiate,
     list_presets,
 )
 
 __all__ = [
     # Presets
-    'quick',
-    'standard',
-    'algebraic_2d',
-    'algebraic_nd',
-    'bbob',
-    'cec2014',
-    'cec2017',
-    'engineering',
+    "quick",
+    "standard",
+    "algebraic_2d",
+    "algebraic_nd",
+    "bbob",
+    "cec2014",
+    "cec2017",
+    "engineering",
     # Utilities
-    'instantiate',
-    'get',
-    'list_presets',
+    "instantiate",
+    "get",
+    "list_presets",
 ]

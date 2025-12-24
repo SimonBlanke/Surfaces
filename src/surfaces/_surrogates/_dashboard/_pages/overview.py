@@ -91,9 +91,13 @@ def render():
         "Function Name": lambda x: x["function_name"],
         "R2 Score": lambda x: x["latest_r2"] or 0,
         "Samples": lambda x: x["n_samples"] or 0,
-        "Status": lambda x: ["Good", "Needs Attention", "Not Validated", "Missing"].index(x["status"]),
+        "Status": lambda x: ["Good", "Needs Attention", "Not Validated", "Missing"].index(
+            x["status"]
+        ),
     }
-    filtered = sorted(filtered, key=sort_key_map[sort_by], reverse=(sort_by == "R2 Score" or sort_by == "Samples"))
+    filtered = sorted(
+        filtered, key=sort_key_map[sort_by], reverse=(sort_by == "R2 Score" or sort_by == "Samples")
+    )
 
     # Summary metrics
     st.divider()
@@ -117,15 +121,17 @@ def render():
     # Build dataframe for display
     df_data = []
     for row in filtered:
-        df_data.append({
-            "Function": row["function_name"],
-            "Type": row["function_type"],
-            "Has Surrogate": "Yes" if row["has_surrogate"] else "No",
-            "Samples": str(row["n_samples"]) if row["n_samples"] else "-",
-            "Training R2": f"{row['training_r2']:.4f}" if row["training_r2"] else "-",
-            "Validation R2": f"{row['latest_r2']:.4f}" if row["latest_r2"] else "-",
-            "Status": row["status"],
-        })
+        df_data.append(
+            {
+                "Function": row["function_name"],
+                "Type": row["function_type"],
+                "Has Surrogate": "Yes" if row["has_surrogate"] else "No",
+                "Samples": str(row["n_samples"]) if row["n_samples"] else "-",
+                "Training R2": f"{row['training_r2']:.4f}" if row["training_r2"] else "-",
+                "Validation R2": f"{row['latest_r2']:.4f}" if row["latest_r2"] else "-",
+                "Status": row["status"],
+            }
+        )
 
     df = pd.DataFrame(df_data)
 
@@ -136,10 +142,7 @@ def render():
 
     # Display table
     if len(df) > 0:
-        styled_df = df.style.applymap(
-            highlight_status,
-            subset=["Status"]
-        )
+        styled_df = df.style.applymap(highlight_status, subset=["Status"])
         st.dataframe(
             styled_df,
             use_container_width=True,

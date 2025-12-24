@@ -113,6 +113,7 @@ def train_missing(
     list of dict
         Results for each training attempt.
     """
+
     def log(msg: str):
         if progress_callback:
             progress_callback(msg)
@@ -157,6 +158,7 @@ def train_low_accuracy(
     list of dict
         Results for each training attempt.
     """
+
     def log(msg: str):
         if progress_callback:
             progress_callback(msg)
@@ -202,6 +204,7 @@ def train_all(
     list of dict
         Results for each training attempt.
     """
+
     def log(msg: str):
         if progress_callback:
             progress_callback(msg)

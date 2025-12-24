@@ -79,17 +79,14 @@ def create_search_space_grid(
         Dictionary mapping dimension names to arrays of values.
     """
     if bounds is not None:
-        return {
-            name: np.linspace(b[0], b[1], resolution) for name, b in bounds.items()
-        }
+        return {name: np.linspace(b[0], b[1], resolution) for name, b in bounds.items()}
 
     # Use function's default bounds
     default_bounds = getattr(func, "default_bounds", (-5.0, 5.0))
     n_dim = _get_function_dimensions(func)
 
     return {
-        f"x{i}": np.linspace(default_bounds[0], default_bounds[1], resolution)
-        for i in range(n_dim)
+        f"x{i}": np.linspace(default_bounds[0], default_bounds[1], resolution) for i in range(n_dim)
     }
 
 

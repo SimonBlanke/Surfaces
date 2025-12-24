@@ -144,7 +144,16 @@ class TensionCompressionSpringFunction(EngineeringFunction):
         noise=None,
         penalty_coefficient: float = 1e6,
     ):
-        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise, penalty_coefficient)
+        super().__init__(
+            objective,
+            sleep,
+            memory,
+            collect_data,
+            callbacks,
+            catch_errors,
+            noise,
+            penalty_coefficient,
+        )
 
     def raw_objective(self, params: Dict[str, Any]) -> float:
         """Calculate spring weight (proportional to wire volume)."""

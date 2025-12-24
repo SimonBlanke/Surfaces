@@ -176,9 +176,8 @@ def plot_latex(
     if f_global is not None and x_global is not None:
         # Handle multiple global minima
         if hasattr(x_global, "ndim") and x_global.ndim == 2:
-            x_str = (
-                r"\pm "
-                + ", ".join(f"{abs(x_global[0, i]):.4g}" for i in range(x_global.shape[1]))
+            x_str = r"\pm " + ", ".join(
+                f"{abs(x_global[0, i]):.4g}" for i in range(x_global.shape[1])
             )
             global_minimum_text = f"Global minimum: $f({x_str}) = {f_global}$"
         else:

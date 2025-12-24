@@ -5,13 +5,12 @@
 """Regression datasets for ML test functions."""
 
 from sklearn.datasets import (
-    load_diabetes,
     fetch_california_housing,
+    load_diabetes,
     make_friedman1,
     make_friedman2,
     make_regression,
 )
-import numpy as np
 
 # Pre-load small datasets for fast access
 diabetes_dataset = load_diabetes()

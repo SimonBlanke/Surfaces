@@ -14,33 +14,22 @@ of computationally expensive ML test functions. This module tests:
 - ONNX utilities: File discovery and path resolution
 """
 
-import pytest
-import numpy as np
-
 # Check for optional dependencies
-try:
-    import onnxruntime
+import importlib.util
 
-    HAS_ONNXRUNTIME = True
-except ImportError:
-    HAS_ONNXRUNTIME = False
+import numpy as np
+import pytest
 
-try:
-    from sklearn.neighbors import KNeighborsClassifier
-
-    HAS_SKLEARN = True
-except ImportError:
-    HAS_SKLEARN = False
+HAS_ONNXRUNTIME = importlib.util.find_spec("onnxruntime") is not None
+HAS_SKLEARN = importlib.util.find_spec("sklearn") is not None
 
 
 requires_onnxruntime = pytest.mark.skipif(
-    not HAS_ONNXRUNTIME,
-    reason="Requires onnxruntime: pip install onnxruntime"
+    not HAS_ONNXRUNTIME, reason="Requires onnxruntime: pip install onnxruntime"
 )
 
 requires_sklearn = pytest.mark.skipif(
-    not HAS_SKLEARN,
-    reason="Requires scikit-learn: pip install surfaces[ml]"
+    not HAS_SKLEARN, reason="Requires scikit-learn: pip install surfaces[ml]"
 )
 
 
@@ -48,24 +37,27 @@ requires_sklearn = pytest.mark.skipif(
 # ONNX Utilities Tests
 # =============================================================================
 
+
 class TestOnnxUtils:
     """Test ONNX file discovery utilities."""
 
     def test_import_onnx_utils(self):
         """ONNX utils module can be imported."""
         from surfaces._surrogates._onnx_utils import (
+            get_metadata_path,
             get_onnx_file,
             get_surrogate_model_path,
-            get_metadata_path,
         )
+
         assert callable(get_onnx_file)
         assert callable(get_surrogate_model_path)
         assert callable(get_metadata_path)
 
     def test_get_surrogate_path_returns_path_or_none(self):
         """get_surrogate_model_path returns Path or None."""
-        from surfaces._surrogates._onnx_utils import get_surrogate_model_path
         from pathlib import Path
+
+        from surfaces._surrogates._onnx_utils import get_surrogate_model_path
 
         result = get_surrogate_model_path("k_neighbors_classifier")
         assert result is None or isinstance(result, Path)
@@ -82,6 +74,7 @@ class TestOnnxUtils:
 # ML Registry Tests
 # =============================================================================
 
+
 @requires_sklearn
 class TestMLRegistry:
     """Test ML function registration system."""
@@ -89,10 +82,10 @@ class TestMLRegistry:
     def test_import_registry(self):
         """Registry module can be imported."""
         from surfaces._surrogates._ml_registry import (
-            get_registered_functions,
             get_function_config,
-            ML_SURROGATE_REGISTRY,
+            get_registered_functions,
         )
+
         assert callable(get_registered_functions)
         assert callable(get_function_config)
 
@@ -153,6 +146,7 @@ class TestMLRegistry:
 # SurrogateLoader Tests
 # =============================================================================
 
+
 class TestSurrogateLoader:
     """Test SurrogateLoader class."""
 
@@ -188,6 +182,7 @@ class TestSurrogateLoader:
 # Surrogate Availability Tests
 # =============================================================================
 
+
 @requires_sklearn
 class TestSurrogateAvailability:
     """Test which functions have surrogates available."""
@@ -210,8 +205,8 @@ class TestSurrogateAvailability:
     @requires_onnxruntime
     def test_use_surrogate_true_loads_model(self):
         """use_surrogate=True attempts to load surrogate."""
-        from surfaces.test_functions import KNeighborsClassifierFunction
         from surfaces._surrogates import get_surrogate_path
+        from surfaces.test_functions import KNeighborsClassifierFunction
 
         # Check if surrogate exists
         path = get_surrogate_path("k_neighbors_classifier")
@@ -227,6 +222,7 @@ class TestSurrogateAvailability:
 # SurrogateValidator Tests
 # =============================================================================
 
+
 @requires_sklearn
 class TestSurrogateValidator:
     """Test SurrogateValidator class."""
@@ -239,9 +235,8 @@ class TestSurrogateValidator:
 
     def test_validator_requires_surrogate_false(self):
         """Validator raises if use_surrogate=True."""
-        from surfaces._surrogates import SurrogateValidator
+        from surfaces._surrogates import SurrogateValidator, get_surrogate_path
         from surfaces.test_functions import KNeighborsClassifierFunction
-        from surfaces._surrogates import get_surrogate_path
 
         # Check if surrogate exists
         path = get_surrogate_path("k_neighbors_classifier")
@@ -280,6 +275,7 @@ class TestSurrogateValidator:
 # Surrogate Prediction Tests
 # =============================================================================
 
+
 @requires_sklearn
 @requires_onnxruntime
 class TestSurrogatePrediction:
@@ -287,8 +283,8 @@ class TestSurrogatePrediction:
 
     def test_surrogate_returns_float(self):
         """Surrogate prediction returns float."""
-        from surfaces.test_functions import KNeighborsClassifierFunction
         from surfaces._surrogates import get_surrogate_path
+        from surfaces.test_functions import KNeighborsClassifierFunction
 
         # Check if surrogate exists
         path = get_surrogate_path("k_neighbors_classifier")
@@ -310,8 +306,9 @@ class TestSurrogatePrediction:
     def test_surrogate_faster_than_real(self):
         """Surrogate evaluation is faster than real function."""
         import time
-        from surfaces.test_functions import KNeighborsClassifierFunction
+
         from surfaces._surrogates import get_surrogate_path
+        from surfaces.test_functions import KNeighborsClassifierFunction
 
         # Check if surrogate exists
         path = get_surrogate_path("k_neighbors_classifier")
@@ -341,14 +338,14 @@ class TestSurrogatePrediction:
         surr_time = (time.time() - start) / 10
 
         # Surrogate should be at least 10x faster
-        assert surr_time < real_time, (
-            f"Surrogate ({surr_time:.4f}s) not faster than real ({real_time:.4f}s)"
-        )
+        assert (
+            surr_time < real_time
+        ), f"Surrogate ({surr_time:.4f}s) not faster than real ({real_time:.4f}s)"
 
     def test_surrogate_results_reasonable(self):
         """Surrogate results are within reasonable range."""
-        from surfaces.test_functions import KNeighborsClassifierFunction
         from surfaces._surrogates import get_surrogate_path
+        from surfaces.test_functions import KNeighborsClassifierFunction
 
         path = get_surrogate_path("k_neighbors_classifier")
         if path is None:
@@ -372,6 +369,7 @@ class TestSurrogatePrediction:
 # =============================================================================
 # Integration Tests
 # =============================================================================
+
 
 @requires_sklearn
 @requires_onnxruntime
@@ -450,6 +448,7 @@ class TestSurrogateIntegration:
 # Trainer API Tests (without actual training)
 # =============================================================================
 
+
 @requires_sklearn
 class TestTrainerAPI:
     """Test surrogate trainer API (import and basic usage)."""
@@ -457,11 +456,11 @@ class TestTrainerAPI:
     def test_import_trainer(self):
         """Trainer classes can be imported."""
         from surfaces._surrogates import (
-            SurrogateTrainer,
             MLSurrogateTrainer,
-            train_ml_surrogate,
-            train_all_ml_surrogates,
+            SurrogateTrainer,
             list_ml_surrogates,
+            train_all_ml_surrogates,
+            train_ml_surrogate,
         )
 
         assert SurrogateTrainer is not None

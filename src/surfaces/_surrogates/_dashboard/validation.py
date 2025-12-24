@@ -261,6 +261,7 @@ def validate_all(
     list of dict
         Results for each validation attempt.
     """
+
     def log(msg: str):
         if progress_callback:
             progress_callback(msg)

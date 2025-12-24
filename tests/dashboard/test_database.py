@@ -8,28 +8,29 @@ These tests verify database CRUD operations without running the UI.
 Uses a temporary database to avoid affecting production data.
 """
 
-import pytest
 import tempfile
 from pathlib import Path
 
-from tests.conftest import requires_streamlit, HAS_STREAMLIT
+import pytest
+
+from tests.conftest import HAS_STREAMLIT, requires_streamlit
 
 if HAS_STREAMLIT:
     from surfaces._surrogates._dashboard.database import (
-        init_db,
-        get_connection,
-        upsert_surrogate,
-        get_surrogate,
         get_all_surrogates,
-        insert_validation_run,
-        get_validation_runs,
-        get_latest_validation,
-        insert_training_job,
-        update_training_job,
-        get_training_jobs,
-        get_overview_data,
-        get_functions_needing_training,
+        get_connection,
         get_dashboard_stats,
+        get_functions_needing_training,
+        get_latest_validation,
+        get_overview_data,
+        get_surrogate,
+        get_training_jobs,
+        get_validation_runs,
+        init_db,
+        insert_training_job,
+        insert_validation_run,
+        update_training_job,
+        upsert_surrogate,
     )
 
 
@@ -57,9 +58,7 @@ class TestDatabaseInit:
         """Database initialization creates all required tables."""
         with get_connection(temp_db) as conn:
             # Check tables exist
-            tables = conn.execute(
-                "SELECT name FROM sqlite_master WHERE type='table'"
-            ).fetchall()
+            tables = conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()
             table_names = [t[0] for t in tables]
 
             assert "surrogates" in table_names
@@ -341,19 +340,13 @@ class TestDashboardQueries:
 
         # Function with good surrogate
         upsert_surrogate("Good", "classification", True, db_path=temp_db)
-        insert_validation_run(
-            "Good", "random", 100, {"r2": 0.98}, {}, db_path=temp_db
-        )
+        insert_validation_run("Good", "random", 100, {"r2": 0.98}, {}, db_path=temp_db)
 
         # Function with low accuracy
         upsert_surrogate("LowAccuracy", "classification", True, db_path=temp_db)
-        insert_validation_run(
-            "LowAccuracy", "random", 100, {"r2": 0.80}, {}, db_path=temp_db
-        )
+        insert_validation_run("LowAccuracy", "random", 100, {"r2": 0.80}, {}, db_path=temp_db)
 
-        needs_training = get_functions_needing_training(
-            r2_threshold=0.95, db_path=temp_db
-        )
+        needs_training = get_functions_needing_training(r2_threshold=0.95, db_path=temp_db)
 
         assert "Missing" in needs_training
         assert "LowAccuracy" in needs_training

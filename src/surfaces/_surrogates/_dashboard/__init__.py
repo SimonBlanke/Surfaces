@@ -44,7 +44,9 @@ def run_dashboard():
         print("Install it with: pip install surfaces[dashboard]")
         sys.exit(1)
 
-    subprocess.run([sys.executable, "-m", "streamlit", "run", str(app_path), "--server.headless", "true"])
+    subprocess.run(
+        [sys.executable, "-m", "streamlit", "run", str(app_path), "--server.headless", "true"]
+    )
 
 
 __all__ = ["run_dashboard"]

@@ -10,8 +10,7 @@ import numbers
 import numpy as np
 import pytest
 
-from surfaces.test_functions import SphereFunction, RastriginFunction
-from surfaces.test_functions import KNeighborsClassifierFunction
+from surfaces.test_functions import KNeighborsClassifierFunction, RastriginFunction, SphereFunction
 
 
 def is_numeric(value):

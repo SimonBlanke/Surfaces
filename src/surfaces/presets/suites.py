@@ -9,8 +9,6 @@
 # =============================================================================
 from ..test_functions.algebraic import (
     # 1D
-    GramacyAndLeeFunction,
-    # 2D
     AckleyFunction,
     BealeFunction,
     BoothFunction,
@@ -20,21 +18,50 @@ from ..test_functions.algebraic import (
     EasomFunction,
     EggholderFunction,
     GoldsteinPriceFunction,
+    # ND
+    GriewankFunction,
     HimmelblausFunction,
     HölderTableFunction,
     LangermannFunction,
     LeviFunctionN13,
     MatyasFunction,
     McCormickFunction,
-    SchafferFunctionN2,
-    SimionescuFunction,
-    ThreeHumpCamelFunction,
-    # ND
-    GriewankFunction,
     RastriginFunction,
     RosenbrockFunction,
+    SchafferFunctionN2,
+    SimionescuFunction,
     SphereFunction,
     StyblinskiTangFunction,
+    ThreeHumpCamelFunction,
+)
+from ..test_functions.bbob import (
+    # Low/Moderate Conditioning (f6-f9)
+    AttractiveSector,
+    BentCigar,
+    BuecheRastrigin,
+    DifferentPowers,
+    Discus,
+    # High Conditioning & Unimodal (f10-f14)
+    EllipsoidalRotated,
+    EllipsoidalSeparable,
+    Gallagher21,
+    Gallagher101,
+    GriewankRosenbrock,
+    Katsuura,
+    LinearSlope,
+    LunacekBiRastrigin,
+    # Multimodal with Adequate Global Structure (f15-f19)
+    RastriginRotated,
+    RastriginSeparable,
+    RosenbrockOriginal,
+    RosenbrockRotated,
+    SchaffersF7,
+    SchaffersF7Ill,
+    # Multimodal with Weak Global Structure (f20-f24)
+    Schwefel,
+    SharpRidge,
+    StepEllipsoidal,
+    Weierstrass,
 )
 
 # =============================================================================
@@ -43,64 +70,12 @@ from ..test_functions.algebraic import (
 from ..test_functions.bbob import (
     # Separable (f1-f5)
     Sphere as BBOB_Sphere,
-    EllipsoidalSeparable,
-    RastriginSeparable,
-    BuecheRastrigin,
-    LinearSlope,
-    # Low/Moderate Conditioning (f6-f9)
-    AttractiveSector,
-    StepEllipsoidal,
-    RosenbrockOriginal,
-    RosenbrockRotated,
-    # High Conditioning & Unimodal (f10-f14)
-    EllipsoidalRotated,
-    Discus,
-    BentCigar,
-    SharpRidge,
-    DifferentPowers,
-    # Multimodal with Adequate Global Structure (f15-f19)
-    RastriginRotated,
-    Weierstrass,
-    SchaffersF7,
-    SchaffersF7Ill,
-    GriewankRosenbrock,
-    # Multimodal with Weak Global Structure (f20-f24)
-    Schwefel,
-    Gallagher101,
-    Gallagher21,
-    Katsuura,
-    LunacekBiRastrigin,
 )
 
 # =============================================================================
 # CEC Functions (always available - numpy only)
 # =============================================================================
 from ..test_functions.cec.cec2014 import (
-    # Unimodal
-    RotatedHighConditionedElliptic,
-    RotatedBentCigar,
-    RotatedDiscus,
-    # Multimodal
-    ShiftedRotatedRosenbrock as CEC2014_ShiftedRotatedRosenbrock,
-    ShiftedRotatedAckley,
-    ShiftedRotatedWeierstrass,
-    ShiftedRotatedGriewank,
-    ShiftedRastrigin,
-    ShiftedRotatedRastrigin as CEC2014_ShiftedRotatedRastrigin,
-    ShiftedSchwefel,
-    ShiftedRotatedSchwefel as CEC2014_ShiftedRotatedSchwefel,
-    ShiftedRotatedKatsuura,
-    ShiftedRotatedHappyCat,
-    ShiftedRotatedHGBat,
-    ShiftedRotatedExpandedGriewankRosenbrock,
-    ShiftedRotatedExpandedScafferF6,
-    # Hybrid
-    HybridFunction1,
-    HybridFunction2,
-    HybridFunction3,
-    HybridFunction4,
-    HybridFunction5,
-    HybridFunction6,
     # Composition
     CompositionFunction1,
     CompositionFunction2,
@@ -110,18 +85,54 @@ from ..test_functions.cec.cec2014 import (
     CompositionFunction6,
     CompositionFunction7,
     CompositionFunction8,
+    # Hybrid
+    HybridFunction1,
+    HybridFunction2,
+    HybridFunction3,
+    HybridFunction4,
+    HybridFunction5,
+    HybridFunction6,
+    RotatedBentCigar,
+    RotatedDiscus,
+    # Unimodal
+    RotatedHighConditionedElliptic,
+    ShiftedRastrigin,
+    ShiftedRotatedAckley,
+    ShiftedRotatedExpandedGriewankRosenbrock,
+    ShiftedRotatedExpandedScafferF6,
+    ShiftedRotatedGriewank,
+    ShiftedRotatedHappyCat,
+    ShiftedRotatedHGBat,
+    ShiftedRotatedKatsuura,
+    ShiftedRotatedWeierstrass,
+    ShiftedSchwefel,
 )
-
+from ..test_functions.cec.cec2014 import (
+    ShiftedRotatedRastrigin as CEC2014_ShiftedRotatedRastrigin,
+)
+from ..test_functions.cec.cec2014 import (
+    # Multimodal
+    ShiftedRotatedRosenbrock as CEC2014_ShiftedRotatedRosenbrock,
+)
+from ..test_functions.cec.cec2014 import (
+    ShiftedRotatedSchwefel as CEC2014_ShiftedRotatedSchwefel,
+)
 from ..test_functions.cec.cec2017 import (
     ShiftedRotatedBentCigar,
-    ShiftedRotatedSumDiffPow,
-    ShiftedRotatedZakharov,
-    ShiftedRotatedRosenbrock as CEC2017_ShiftedRotatedRosenbrock,
-    ShiftedRotatedRastrigin as CEC2017_ShiftedRotatedRastrigin,
-    ShiftedRotatedSchafferF7,
+    ShiftedRotatedLevy,
     ShiftedRotatedLunacekBiRastrigin,
     ShiftedRotatedNonContRastrigin,
-    ShiftedRotatedLevy,
+    ShiftedRotatedSchafferF7,
+    ShiftedRotatedSumDiffPow,
+    ShiftedRotatedZakharov,
+)
+from ..test_functions.cec.cec2017 import (
+    ShiftedRotatedRastrigin as CEC2017_ShiftedRotatedRastrigin,
+)
+from ..test_functions.cec.cec2017 import (
+    ShiftedRotatedRosenbrock as CEC2017_ShiftedRotatedRosenbrock,
+)
+from ..test_functions.cec.cec2017 import (
     ShiftedRotatedSchwefel as CEC2017_ShiftedRotatedSchwefel,
 )
 
@@ -129,24 +140,23 @@ from ..test_functions.cec.cec2017 import (
 # Engineering Functions (always available - numpy only)
 # =============================================================================
 from ..test_functions.engineering import (
-    ThreeBarTrussFunction,
-    WeldedBeamFunction,
+    CantileverBeamFunction,
     PressureVesselFunction,
     TensionCompressionSpringFunction,
-    CantileverBeamFunction,
+    ThreeBarTrussFunction,
+    WeldedBeamFunction,
 )
-
 
 # =============================================================================
 # PRESET DEFINITIONS
 # =============================================================================
 
 quick = [
-    SphereFunction,       # Simplest convex function, baseline
-    AckleyFunction,       # Multimodal with global structure
-    RosenbrockFunction,   # Valley/banana shape, tests gradient following
-    RastriginFunction,    # Highly multimodal, periodic local optima
-    GriewankFunction,     # Mixed local/global structure
+    SphereFunction,  # Simplest convex function, baseline
+    AckleyFunction,  # Multimodal with global structure
+    RosenbrockFunction,  # Valley/banana shape, tests gradient following
+    RastriginFunction,  # Highly multimodal, periodic local optima
+    GriewankFunction,  # Mixed local/global structure
 ]
 """Fast sanity check (5 functions).
 

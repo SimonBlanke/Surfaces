@@ -9,25 +9,25 @@ Plotly figures are dictionaries under the hood, so we can inspect
 the data structure directly.
 """
 
-import pytest
 import numpy as np
+import pytest
 
 from tests.conftest import (
     HAS_VIZ,
-    requires_viz,
     algebraic_functions_2d,
     func_id,
     instantiate_function,
+    requires_viz,
 )
 
 if HAS_VIZ:
     from surfaces._visualize import (
-        _plotly_surface,
-        _plotly_heatmap,
-        _plotly_contour,
-        _plotly_surface_nd,
-        _plot_parameter_slice,
         _create_grid,
+        _plot_parameter_slice,
+        _plotly_contour,
+        _plotly_heatmap,
+        _plotly_surface,
+        _plotly_surface_nd,
     )
 
 
@@ -43,6 +43,7 @@ class TestGridCreation:
 
     def test_grid_shape(self):
         """Grid has correct shape based on search space resolution."""
+
         def simple_func(params):
             return params["x"] ** 2 + params["y"] ** 2
 
@@ -59,6 +60,7 @@ class TestGridCreation:
 
     def test_grid_values(self):
         """Grid computes correct function values."""
+
         def sphere_func(params):
             return params["x"] ** 2 + params["y"] ** 2
 
@@ -104,6 +106,7 @@ class TestPlotlySurface:
 
     def test_surface_data_structure(self):
         """Surface plot has correct data structure."""
+
         def simple_func(params):
             return params["x"] ** 2 + params["y"] ** 2
 
@@ -124,6 +127,7 @@ class TestPlotlySurface:
 
     def test_surface_z_data_shape(self):
         """Surface z-data has correct dimensions."""
+
         def simple_func(params):
             return params["x"] ** 2 + params["y"] ** 2
 
@@ -140,6 +144,7 @@ class TestPlotlySurface:
 
     def test_surface_layout(self):
         """Surface plot has correct layout settings."""
+
         def simple_func(params):
             return params["x"] ** 2
 
@@ -152,9 +157,7 @@ class TestPlotlySurface:
         width = 800
         height = 600
 
-        fig = _plotly_surface(
-            simple_func, search_space, title=title, width=width, height=height
-        )
+        fig = _plotly_surface(simple_func, search_space, title=title, width=width, height=height)
         layout = fig.to_dict()["layout"]
 
         assert layout["title"]["text"] == title
@@ -163,6 +166,7 @@ class TestPlotlySurface:
 
     def test_surface_axis_labels(self):
         """Surface plot has correct axis labels from search space keys."""
+
         def simple_func(params):
             return params["alpha"] + params["beta"]
 
@@ -180,6 +184,7 @@ class TestPlotlySurface:
 
     def test_surface_with_contour(self):
         """Surface plot can include contour projections."""
+
         def simple_func(params):
             return params["x"] ** 2
 
@@ -196,6 +201,7 @@ class TestPlotlySurface:
 
     def test_surface_rejects_1d_space(self):
         """Surface plot raises error for 1D search space."""
+
         def simple_func(params):
             return params["x"] ** 2
 
@@ -255,6 +261,7 @@ class TestPlotlyHeatmap:
 
     def test_heatmap_data_structure(self):
         """Heatmap has correct data structure."""
+
         def simple_func(params):
             return params["x"] ** 2 + params["y"] ** 2
 
@@ -272,6 +279,7 @@ class TestPlotlyHeatmap:
 
     def test_heatmap_dimensions(self):
         """Heatmap z-data has correct dimensions."""
+
         def simple_func(params):
             return params["x"] ** 2 + params["y"] ** 2
 
@@ -288,6 +296,7 @@ class TestPlotlyHeatmap:
 
     def test_heatmap_layout(self):
         """Heatmap has correct layout settings."""
+
         def simple_func(params):
             return params["x"] ** 2
 
@@ -304,6 +313,7 @@ class TestPlotlyHeatmap:
 
     def test_heatmap_rejects_wrong_dimensions(self):
         """Heatmap raises error for non-2D search space."""
+
         def simple_func(params):
             return sum(params.values())
 
@@ -345,6 +355,7 @@ class TestPlotlyContour:
 
     def test_contour_data_structure(self):
         """Contour plot has correct data structure."""
+
         def simple_func(params):
             return params["x"] ** 2 + params["y"] ** 2
 
@@ -361,6 +372,7 @@ class TestPlotlyContour:
 
     def test_contour_levels(self):
         """Contour plot respects contour_levels parameter."""
+
         def simple_func(params):
             return params["x"] ** 2 + params["y"] ** 2
 
@@ -389,8 +401,9 @@ class TestPlotlySurfaceND:
 
     def test_nd_surface_with_extra_dims(self):
         """N-D surface handles dimensions > 2 by fixing extras."""
+
         def nd_func(params):
-            return sum(v ** 2 for v in params.values())
+            return sum(v**2 for v in params.values())
 
         search_space = {
             "x": np.linspace(-5, 5, 10),
@@ -406,6 +419,7 @@ class TestPlotlySurfaceND:
 
     def test_nd_surface_rejects_1d(self):
         """N-D surface raises error for 1D search space."""
+
         def simple_func(params):
             return params["x"] ** 2
 
@@ -448,6 +462,7 @@ class TestParameterSlice:
 
     def test_slice_data_structure(self):
         """Slice plot has correct data structure."""
+
         def simple_func(params):
             return params["x"] ** 2 + params["y"] ** 2
 
@@ -470,6 +485,7 @@ class TestParameterSlice:
 
     def test_slice_invalid_param(self):
         """Slice raises error for invalid parameter name."""
+
         def simple_func(params):
             return params["x"] ** 2
 
@@ -485,6 +501,7 @@ class TestParameterSlice:
 
     def test_slice_values_correct(self):
         """Slice plot computes correct function values along parameter."""
+
         def simple_func(params):
             return params["x"] ** 2
 
@@ -502,6 +519,6 @@ class TestParameterSlice:
         )
 
         y_data = np.array(fig.data[0].y)
-        expected = x_values ** 2
+        expected = x_values**2
 
         np.testing.assert_array_almost_equal(y_data, expected)

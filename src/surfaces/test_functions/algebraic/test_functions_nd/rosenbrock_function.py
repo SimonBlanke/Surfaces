@@ -74,7 +74,9 @@ class RosenbrockFunction(AlgebraicFunction):
 
     default_bounds = (-5.0, 5.0)
 
-    latex_formula = r"f(\vec{x}) = \sum_{i=1}^{n-1} \left[100(x_{i+1} - x_i^2)^2 + (1 - x_i)^2\right]"
+    latex_formula = (
+        r"f(\vec{x}) = \sum_{i=1}^{n-1} \left[100(x_{i+1} - x_i^2)^2 + (1 - x_i)^2\right]"
+    )
     pgfmath_formula = "100*(#2 - #1^2)^2 + (1 - #1)^2"  # 2D specialization
 
     def __init__(

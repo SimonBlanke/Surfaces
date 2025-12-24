@@ -10,9 +10,8 @@ have dedicated tests and which are only covered by generic parametrized tests.
 Run with: python -m tests.test_coverage_report
 """
 
-import sys
 from pathlib import Path
-from typing import Dict, List, Set, Tuple
+from typing import Dict, List, Set
 
 
 def get_all_function_classes() -> Dict[str, List[type]]:
@@ -27,6 +26,7 @@ def get_all_function_classes() -> Dict[str, List[type]]:
             algebraic_functions_2d,
             algebraic_functions_nd,
         )
+
         result["Algebraic (All)"] = algebraic_functions
         result["Algebraic (1D)"] = algebraic_functions_1d
         result["Algebraic (2D)"] = algebraic_functions_2d
@@ -37,6 +37,7 @@ def get_all_function_classes() -> Dict[str, List[type]]:
     # Engineering functions
     try:
         from surfaces.test_functions.engineering import engineering_functions
+
         result["Engineering"] = engineering_functions
     except ImportError:
         pass
@@ -44,6 +45,7 @@ def get_all_function_classes() -> Dict[str, List[type]]:
     # BBOB functions
     try:
         from surfaces.test_functions.bbob import BBOB_FUNCTIONS
+
         result["BBOB"] = list(BBOB_FUNCTIONS.values())
     except ImportError:
         pass
@@ -51,6 +53,7 @@ def get_all_function_classes() -> Dict[str, List[type]]:
     # CEC 2013 functions
     try:
         from tests.conftest import CEC2013_FUNCTIONS
+
         if CEC2013_FUNCTIONS:
             result["CEC 2013"] = CEC2013_FUNCTIONS
     except ImportError:
@@ -59,6 +62,7 @@ def get_all_function_classes() -> Dict[str, List[type]]:
     # CEC 2014 functions
     try:
         from tests.conftest import CEC2014_FUNCTIONS
+
         if CEC2014_FUNCTIONS:
             result["CEC 2014"] = CEC2014_FUNCTIONS
     except ImportError:
@@ -67,6 +71,7 @@ def get_all_function_classes() -> Dict[str, List[type]]:
     # CEC 2017 functions
     try:
         from tests.conftest import CEC2017_FUNCTIONS
+
         if CEC2017_FUNCTIONS:
             result["CEC 2017"] = CEC2017_FUNCTIONS
     except ImportError:
@@ -75,6 +80,7 @@ def get_all_function_classes() -> Dict[str, List[type]]:
     # ML functions
     try:
         from surfaces.test_functions.machine_learning import machine_learning_functions
+
         if machine_learning_functions:
             result["Machine Learning"] = machine_learning_functions
     except ImportError:
@@ -137,16 +143,20 @@ def generate_report() -> str:
             if is_mentioned:
                 category_mentioned += 1
 
-        lines.append(f"\n  Coverage: {category_mentioned}/{category_total} "
-                    f"({100*category_mentioned/category_total:.1f}%)")
+        lines.append(
+            f"\n  Coverage: {category_mentioned}/{category_total} "
+            f"({100*category_mentioned/category_total:.1f}%)"
+        )
 
         total_functions += category_total
         total_mentioned += category_mentioned
 
     lines.append("")
     lines.append("=" * 70)
-    lines.append(f"TOTAL: {total_mentioned}/{total_functions} functions mentioned in tests "
-                f"({100*total_mentioned/total_functions:.1f}%)")
+    lines.append(
+        f"TOTAL: {total_mentioned}/{total_functions} functions mentioned in tests "
+        f"({100*total_mentioned/total_functions:.1f}%)"
+    )
     lines.append("=" * 70)
 
     lines.append("")
@@ -200,8 +210,6 @@ if __name__ == "__main__":
 # Pytest Tests for Coverage Validation
 # =============================================================================
 
-import pytest
-
 
 class TestCoverageValidation:
     """Validate that key function categories have test coverage."""
@@ -233,16 +241,16 @@ class TestCoverageValidation:
         from tests import conftest
 
         # Check required exports exist
-        assert hasattr(conftest, 'algebraic_functions')
-        assert hasattr(conftest, 'engineering_functions')
-        assert hasattr(conftest, 'BBOB_FUNCTION_LIST')
-        assert hasattr(conftest, 'CEC2014_FUNCTIONS')
-        assert hasattr(conftest, 'machine_learning_functions')
+        assert hasattr(conftest, "algebraic_functions")
+        assert hasattr(conftest, "engineering_functions")
+        assert hasattr(conftest, "BBOB_FUNCTION_LIST")
+        assert hasattr(conftest, "CEC2014_FUNCTIONS")
+        assert hasattr(conftest, "machine_learning_functions")
 
     def test_instantiate_helper_works(self):
         """instantiate_function helper should work for all types."""
+        from surfaces.test_functions import BealeFunction, SphereFunction
         from tests.conftest import instantiate_function
-        from surfaces.test_functions import SphereFunction, BealeFunction
 
         # ND function with n_dim
         func1 = instantiate_function(SphereFunction, n_dim=5)

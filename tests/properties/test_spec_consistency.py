@@ -9,23 +9,21 @@ properly defined and consistent across the class hierarchy.
 """
 
 import pytest
-import numpy as np
 
 from tests.conftest import (
-    algebraic_functions,
-    engineering_functions,
     BBOB_FUNCTION_LIST,
     CEC2014_FUNCTIONS,
     CEC2014_UNIMODAL,
-    instantiate_function,
-    func_id,
     HAS_CEC2014,
+    algebraic_functions,
+    func_id,
+    instantiate_function,
 )
-
 
 # =============================================================================
 # Spec Existence and Structure
 # =============================================================================
+
 
 class TestSpecStructure:
     """Test that specs have correct structure."""
@@ -66,6 +64,7 @@ class TestSpecStructure:
 # Spec Value Consistency
 # =============================================================================
 
+
 class TestSpecValues:
     """Test that spec values are consistent."""
 
@@ -104,6 +103,7 @@ class TestSpecValues:
 # CEC 2014 Spec Consistency
 # =============================================================================
 
+
 @pytest.mark.cec
 @pytest.mark.cec2014
 class TestCEC2014Specs:
@@ -134,6 +134,7 @@ class TestCEC2014Specs:
 # =============================================================================
 # BBOB Spec Consistency
 # =============================================================================
+
 
 @pytest.mark.bbob
 class TestBBOBSpecs:

@@ -11,12 +11,10 @@ This module provides:
 """
 
 import pytest
-import numpy as np
 
 # =============================================================================
 # Function Discovery and Categorization
 # =============================================================================
-
 # Algebraic functions (always available)
 from surfaces.test_functions.algebraic import (
     algebraic_functions,
@@ -25,43 +23,97 @@ from surfaces.test_functions.algebraic import (
     algebraic_functions_nd,
 )
 
-# Engineering functions (always available)
-from surfaces.test_functions.engineering import engineering_functions
-
 # BBOB functions (always available)
 from surfaces.test_functions.bbob import BBOB_FUNCTIONS
+
+# Engineering functions (always available)
+from surfaces.test_functions.engineering import engineering_functions
 
 # CEC functions (require data packages)
 try:
     from surfaces.test_functions.cec.cec2013 import (
-        Sphere as CEC2013_Sphere,
-        RotatedHighConditionedElliptic as CEC2013_RotatedHighConditionedElliptic,
-        RotatedBentCigar as CEC2013_RotatedBentCigar,
-        RotatedDiscus as CEC2013_RotatedDiscus,
-        DifferentPowers as CEC2013_DifferentPowers,
-        RotatedRosenbrock as CEC2013_RotatedRosenbrock,
-        RotatedSchafferF7 as CEC2013_RotatedSchafferF7,
-        RotatedAckley as CEC2013_RotatedAckley,
-        RotatedWeierstrass as CEC2013_RotatedWeierstrass,
-        RotatedGriewank as CEC2013_RotatedGriewank,
-        Rastrigin as CEC2013_Rastrigin,
-        RotatedRastrigin as CEC2013_RotatedRastrigin,
-        StepRastrigin as CEC2013_StepRastrigin,
-        Schwefel as CEC2013_Schwefel,
-        RotatedSchwefel as CEC2013_RotatedSchwefel,
-        RotatedKatsuura as CEC2013_RotatedKatsuura,
-        LunacekBiRastrigin as CEC2013_LunacekBiRastrigin,
-        RotatedLunacekBiRastrigin as CEC2013_RotatedLunacekBiRastrigin,
-        RotatedExpandedGriewankRosenbrock as CEC2013_RotatedExpandedGriewankRosenbrock,
-        RotatedExpandedScafferF6 as CEC2013_RotatedExpandedScafferF6,
         CompositionFunction1 as CEC2013_CompositionFunction1,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
         CompositionFunction2 as CEC2013_CompositionFunction2,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
         CompositionFunction3 as CEC2013_CompositionFunction3,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
         CompositionFunction4 as CEC2013_CompositionFunction4,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
         CompositionFunction5 as CEC2013_CompositionFunction5,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
         CompositionFunction6 as CEC2013_CompositionFunction6,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
         CompositionFunction7 as CEC2013_CompositionFunction7,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
         CompositionFunction8 as CEC2013_CompositionFunction8,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
+        DifferentPowers as CEC2013_DifferentPowers,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
+        LunacekBiRastrigin as CEC2013_LunacekBiRastrigin,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
+        Rastrigin as CEC2013_Rastrigin,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
+        RotatedAckley as CEC2013_RotatedAckley,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
+        RotatedBentCigar as CEC2013_RotatedBentCigar,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
+        RotatedDiscus as CEC2013_RotatedDiscus,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
+        RotatedExpandedGriewankRosenbrock as CEC2013_RotatedExpandedGriewankRosenbrock,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
+        RotatedExpandedScafferF6 as CEC2013_RotatedExpandedScafferF6,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
+        RotatedGriewank as CEC2013_RotatedGriewank,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
+        RotatedHighConditionedElliptic as CEC2013_RotatedHighConditionedElliptic,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
+        RotatedKatsuura as CEC2013_RotatedKatsuura,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
+        RotatedLunacekBiRastrigin as CEC2013_RotatedLunacekBiRastrigin,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
+        RotatedRastrigin as CEC2013_RotatedRastrigin,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
+        RotatedRosenbrock as CEC2013_RotatedRosenbrock,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
+        RotatedSchafferF7 as CEC2013_RotatedSchafferF7,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
+        RotatedSchwefel as CEC2013_RotatedSchwefel,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
+        RotatedWeierstrass as CEC2013_RotatedWeierstrass,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
+        Schwefel as CEC2013_Schwefel,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
+        Sphere as CEC2013_Sphere,
+    )
+    from surfaces.test_functions.cec.cec2013 import (
+        StepRastrigin as CEC2013_StepRastrigin,
     )
 
     CEC2013_FUNCTIONS = [
@@ -104,28 +156,6 @@ except ImportError:
 
 try:
     from surfaces.test_functions.cec.cec2014 import (
-        RotatedHighConditionedElliptic,
-        RotatedBentCigar,
-        RotatedDiscus,
-        ShiftedRotatedRosenbrock,
-        ShiftedRotatedAckley,
-        ShiftedRotatedWeierstrass,
-        ShiftedRotatedGriewank,
-        ShiftedRastrigin,
-        ShiftedRotatedRastrigin,
-        ShiftedSchwefel,
-        ShiftedRotatedSchwefel,
-        ShiftedRotatedKatsuura,
-        ShiftedRotatedHappyCat,
-        ShiftedRotatedHGBat,
-        ShiftedRotatedExpandedGriewankRosenbrock,
-        ShiftedRotatedExpandedScafferF6,
-        HybridFunction1,
-        HybridFunction2,
-        HybridFunction3,
-        HybridFunction4,
-        HybridFunction5,
-        HybridFunction6,
         CompositionFunction1,
         CompositionFunction2,
         CompositionFunction3,
@@ -134,6 +164,28 @@ try:
         CompositionFunction6,
         CompositionFunction7,
         CompositionFunction8,
+        HybridFunction1,
+        HybridFunction2,
+        HybridFunction3,
+        HybridFunction4,
+        HybridFunction5,
+        HybridFunction6,
+        RotatedBentCigar,
+        RotatedDiscus,
+        RotatedHighConditionedElliptic,
+        ShiftedRastrigin,
+        ShiftedRotatedAckley,
+        ShiftedRotatedExpandedGriewankRosenbrock,
+        ShiftedRotatedExpandedScafferF6,
+        ShiftedRotatedGriewank,
+        ShiftedRotatedHappyCat,
+        ShiftedRotatedHGBat,
+        ShiftedRotatedKatsuura,
+        ShiftedRotatedRastrigin,
+        ShiftedRotatedRosenbrock,
+        ShiftedRotatedSchwefel,
+        ShiftedRotatedWeierstrass,
+        ShiftedSchwefel,
     )
 
     CEC2014_FUNCTIONS = [
@@ -188,14 +240,22 @@ except ImportError:
 try:
     from surfaces.test_functions.cec.cec2017 import (
         ShiftedRotatedBentCigar,
-        ShiftedRotatedSumDiffPow,
-        ShiftedRotatedZakharov,
-        ShiftedRotatedRosenbrock as CEC2017_ShiftedRotatedRosenbrock,
-        ShiftedRotatedRastrigin as CEC2017_ShiftedRotatedRastrigin,
-        ShiftedRotatedSchafferF7 as CEC2017_ShiftedRotatedSchafferF7,
+        ShiftedRotatedLevy,
         ShiftedRotatedLunacekBiRastrigin,
         ShiftedRotatedNonContRastrigin,
-        ShiftedRotatedLevy,
+        ShiftedRotatedSumDiffPow,
+        ShiftedRotatedZakharov,
+    )
+    from surfaces.test_functions.cec.cec2017 import (
+        ShiftedRotatedRastrigin as CEC2017_ShiftedRotatedRastrigin,
+    )
+    from surfaces.test_functions.cec.cec2017 import (
+        ShiftedRotatedRosenbrock as CEC2017_ShiftedRotatedRosenbrock,
+    )
+    from surfaces.test_functions.cec.cec2017 import (
+        ShiftedRotatedSchafferF7 as CEC2017_ShiftedRotatedSchafferF7,
+    )
+    from surfaces.test_functions.cec.cec2017 import (
         ShiftedRotatedSchwefel as CEC2017_ShiftedRotatedSchwefel,
     )
 
@@ -227,8 +287,8 @@ except ImportError:
 
 # Visualization dependencies
 try:
-    import plotly.graph_objects as go
     import matplotlib.pyplot as plt
+    import plotly.graph_objects as go
 
     HAS_VIZ = True
 except ImportError:
@@ -257,8 +317,9 @@ ALL_ML = machine_learning_functions if HAS_ML else []
 
 # Functions with known global optima
 FUNCTIONS_WITH_GLOBAL_OPTIMA = [
-    f for f in (ALL_ALGEBRAIC + ALL_ENGINEERING + ALL_BBOB + ALL_CEC)
-    if hasattr(f, 'f_global') or hasattr(f, 'x_global')
+    f
+    for f in (ALL_ALGEBRAIC + ALL_ENGINEERING + ALL_BBOB + ALL_CEC)
+    if hasattr(f, "f_global") or hasattr(f, "x_global")
 ]
 
 
@@ -267,44 +328,39 @@ FUNCTIONS_WITH_GLOBAL_OPTIMA = [
 # =============================================================================
 
 requires_sklearn = pytest.mark.skipif(
-    not HAS_ML,
-    reason="Requires scikit-learn: pip install surfaces[ml]"
+    not HAS_ML, reason="Requires scikit-learn: pip install surfaces[ml]"
 )
 
 requires_cec2013 = pytest.mark.skipif(
-    not HAS_CEC2013,
-    reason="Requires CEC 2013 data: pip install surfaces[cec]"
+    not HAS_CEC2013, reason="Requires CEC 2013 data: pip install surfaces[cec]"
 )
 
 requires_cec2014 = pytest.mark.skipif(
-    not HAS_CEC2014,
-    reason="Requires CEC 2014 data: pip install surfaces[cec]"
+    not HAS_CEC2014, reason="Requires CEC 2014 data: pip install surfaces[cec]"
 )
 
 requires_cec2017 = pytest.mark.skipif(
-    not HAS_CEC2017,
-    reason="Requires CEC 2017 data: pip install surfaces[cec]"
+    not HAS_CEC2017, reason="Requires CEC 2017 data: pip install surfaces[cec]"
 )
 
 requires_cec = pytest.mark.skipif(
     not (HAS_CEC2013 or HAS_CEC2014 or HAS_CEC2017),
-    reason="Requires CEC data: pip install surfaces[cec]"
+    reason="Requires CEC data: pip install surfaces[cec]",
 )
 
 requires_viz = pytest.mark.skipif(
-    not HAS_VIZ,
-    reason="Requires visualization deps: pip install surfaces[viz]"
+    not HAS_VIZ, reason="Requires visualization deps: pip install surfaces[viz]"
 )
 
 requires_streamlit = pytest.mark.skipif(
-    not HAS_STREAMLIT,
-    reason="Requires streamlit: pip install surfaces[dashboard]"
+    not HAS_STREAMLIT, reason="Requires streamlit: pip install surfaces[dashboard]"
 )
 
 
 # =============================================================================
 # Helper Functions
 # =============================================================================
+
 
 def instantiate_function(func_class, n_dim=None):
     """Instantiate a test function with appropriate parameters.
@@ -396,6 +452,7 @@ def func_id(func_class):
 # Fixtures
 # =============================================================================
 
+
 @pytest.fixture(params=algebraic_functions, ids=func_id)
 def algebraic_function(request):
     """Parametrized fixture for all algebraic functions."""
@@ -441,6 +498,7 @@ def quick_ml_params():
     from surfaces.test_functions.machine_learning.tabular.classification.datasets import (
         iris_data,
     )
+
     return {"cv": 2, "dataset": iris_data}
 
 
@@ -453,12 +511,14 @@ def quick_regression_params():
     from surfaces.test_functions.machine_learning.tabular.regression.datasets import (
         diabetes_data,
     )
+
     return {"cv": 2, "dataset": diabetes_data}
 
 
 # =============================================================================
 # Pytest Hooks
 # =============================================================================
+
 
 def pytest_configure(config):
     """Register custom markers."""

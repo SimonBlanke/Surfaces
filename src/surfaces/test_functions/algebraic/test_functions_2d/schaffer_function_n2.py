@@ -62,7 +62,16 @@ class SchafferFunctionN2(AlgebraicFunction):
     latex_formula = r"f(x, y) = 0.5 + \frac{\sin^2(x^2 - y^2) - 0.5}{[1 + 0.001(x^2 + y^2)]^2}"
     pgfmath_formula = "0.5 + (sin(deg(#1^2 - #2^2))^2 - 0.5)/((1 + 0.001*(#1^2 + #2^2))^2)"
 
-    def __init__(self, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None, noise=None):
+    def __init__(
+        self,
+        objective="minimize",
+        sleep=0,
+        memory=False,
+        collect_data=True,
+        callbacks=None,
+        catch_errors=None,
+        noise=None,
+    ):
         super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
         self.n_dim = 2
 

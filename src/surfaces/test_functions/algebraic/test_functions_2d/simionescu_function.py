@@ -81,7 +81,9 @@ class SimionescuFunction(AlgebraicFunction):
     default_bounds = (-1.25, 1.25)
     n_dim = 2
 
-    latex_formula = r"f(x, y) = 0.1xy \quad \text{s.t.} \quad x^2 + y^2 \le [r_T + r_S\cos(n\arctan(x/y))]^2"
+    latex_formula = (
+        r"f(x, y) = 0.1xy \quad \text{s.t.} \quad x^2 + y^2 \le [r_T + r_S\cos(n\arctan(x/y))]^2"
+    )
     pgfmath_formula = "0.1*#1*#2"  # Constraint not expressible; use for unconstrained region only
 
     def __init__(

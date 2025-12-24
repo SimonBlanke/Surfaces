@@ -7,25 +7,25 @@
 import inspect
 
 from .suites import (
-    quick,
-    standard,
     algebraic_2d,
     algebraic_nd,
     bbob,
     cec2014,
     cec2017,
     engineering,
+    quick,
+    standard,
 )
 
 _PRESETS = {
-    'quick': quick,
-    'standard': standard,
-    'algebraic_2d': algebraic_2d,
-    'algebraic_nd': algebraic_nd,
-    'bbob': bbob,
-    'cec2014': cec2014,
-    'cec2017': cec2017,
-    'engineering': engineering,
+    "quick": quick,
+    "standard": standard,
+    "algebraic_2d": algebraic_2d,
+    "algebraic_nd": algebraic_nd,
+    "bbob": bbob,
+    "cec2014": cec2014,
+    "cec2017": cec2017,
+    "engineering": engineering,
 }
 
 
@@ -64,8 +64,8 @@ def instantiate(preset: list, n_dim: int = 10) -> list:
         params = sig.parameters
 
         # Check if n_dim is a required parameter (no default value)
-        if 'n_dim' in params:
-            param = params['n_dim']
+        if "n_dim" in params:
+            param = params["n_dim"]
             if param.default is inspect.Parameter.empty:
                 instances.append(FuncClass(n_dim=n_dim))
             else:
@@ -103,7 +103,7 @@ def get(name: str) -> list:
     ...     func = FuncClass(n_dim=5)
     """
     if name not in _PRESETS:
-        available = ', '.join(sorted(_PRESETS.keys()))
+        available = ", ".join(sorted(_PRESETS.keys()))
         raise ValueError(f"Unknown preset '{name}'. Available: {available}")
     return _PRESETS[name]
 

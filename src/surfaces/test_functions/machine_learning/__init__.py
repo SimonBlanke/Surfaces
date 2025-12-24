@@ -21,18 +21,23 @@ def _check_sklearn():
 
 if _HAS_SKLEARN:
     # Tabular functions
+    # Image functions (sklearn-based)
+    from .image import (
+        RandomForestImageClassifierFunction,
+        SVMImageClassifierFunction,
+    )
     from .tabular import (
         # Classification
         DecisionTreeClassifierFunction,
-        GradientBoostingClassifierFunction,
-        KNeighborsClassifierFunction,
-        RandomForestClassifierFunction,
-        SVMClassifierFunction,
         # Regression
         DecisionTreeRegressorFunction,
+        GradientBoostingClassifierFunction,
         GradientBoostingRegressorFunction,
+        KNeighborsClassifierFunction,
         KNeighborsRegressorFunction,
+        RandomForestClassifierFunction,
         RandomForestRegressorFunction,
+        SVMClassifierFunction,
         SVMRegressorFunction,
     )
 
@@ -40,16 +45,10 @@ if _HAS_SKLEARN:
     from .timeseries import (
         # Forecasting
         GradientBoostingForecasterFunction,
+        KNNTSClassifierFunction,
         RandomForestForecasterFunction,
         # Classification
         RandomForestTSClassifierFunction,
-        KNNTSClassifierFunction,
-    )
-
-    # Image functions (sklearn-based)
-    from .image import (
-        SVMImageClassifierFunction,
-        RandomForestImageClassifierFunction,
     )
 
     __all__ = [
@@ -122,7 +121,7 @@ if _HAS_SKLEARN:
 
     # CNN image classifiers (require tensorflow)
     try:
-        from .image import SimpleCNNClassifierFunction, DeepCNNClassifierFunction
+        from .image import DeepCNNClassifierFunction, SimpleCNNClassifierFunction
 
         __all__.extend(
             [

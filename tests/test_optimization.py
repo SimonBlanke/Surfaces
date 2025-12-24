@@ -11,8 +11,6 @@ import numpy as np
 import pytest
 from gradient_free_optimizers import RandomSearchOptimizer
 
-pytestmark = pytest.mark.slow  # Mark all tests in this module as slow
-
 from surfaces.test_functions.algebraic import (
     AckleyFunction,
     BealeFunction,
@@ -29,6 +27,8 @@ from surfaces.test_functions.algebraic import (
     SphereFunction,
     StyblinskiTangFunction,
 )
+
+pytestmark = pytest.mark.slow  # Mark all tests in this module as slow
 
 sphere_function = SphereFunction(2)
 rastrigin_function = RastriginFunction(2)
@@ -322,7 +322,7 @@ def test_bayesian_optimization_integration():
 def test_hyperopt_integration():
     """Test that Surfaces functions work with Hyperopt."""
     pytest.importorskip("hyperopt")
-    from hyperopt import fmin, tpe, hp, Trials
+    from hyperopt import Trials, fmin, hp, tpe
 
     func = SphereFunction(n_dim=2)
 

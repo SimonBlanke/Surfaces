@@ -95,13 +95,17 @@ def ecg_data():
         # Class 2: Different morphology
         class2 = np.array(
             [
-                0.5 * np.sin(t) + np.exp(-((t - 2 * np.pi) ** 2) / 1.0) + 0.1 * np.random.randn(n_timepoints)
+                0.5 * np.sin(t)
+                + np.exp(-((t - 2 * np.pi) ** 2) / 1.0)
+                + 0.1 * np.random.randn(n_timepoints)
                 for _ in range(n_samples_per_class)
             ]
         )
 
         X = np.vstack([class0, class1, class2])
-        y = np.array([0] * n_samples_per_class + [1] * n_samples_per_class + [2] * n_samples_per_class)
+        y = np.array(
+            [0] * n_samples_per_class + [1] * n_samples_per_class + [2] * n_samples_per_class
+        )
 
         # Shuffle
         indices = np.random.permutation(len(y))

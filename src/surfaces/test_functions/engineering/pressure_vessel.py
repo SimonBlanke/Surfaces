@@ -153,7 +153,16 @@ class PressureVesselFunction(EngineeringFunction):
         penalty_coefficient: float = 1e6,
     ):
         self.min_volume = min_volume
-        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise, penalty_coefficient)
+        super().__init__(
+            objective,
+            sleep,
+            memory,
+            collect_data,
+            callbacks,
+            catch_errors,
+            noise,
+            penalty_coefficient,
+        )
 
     def raw_objective(self, params: Dict[str, Any]) -> float:
         """Calculate total manufacturing cost."""

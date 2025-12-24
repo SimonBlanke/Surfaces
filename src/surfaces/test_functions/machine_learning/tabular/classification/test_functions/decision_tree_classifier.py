@@ -4,9 +4,8 @@
 
 """Decision Tree Classifier test function with surrogate support."""
 
-import numpy as np
-from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import cross_val_score
+from sklearn.tree import DecisionTreeClassifier
 
 from .._base_classification import BaseClassification
 from ..datasets import DATASETS
@@ -67,7 +66,7 @@ class DecisionTreeClassifierFunction(BaseClassification):
             callbacks=callbacks,
             catch_errors=catch_errors,
             noise=noise,
-        use_surrogate=use_surrogate,
+            use_surrogate=use_surrogate,
         )
 
     @property

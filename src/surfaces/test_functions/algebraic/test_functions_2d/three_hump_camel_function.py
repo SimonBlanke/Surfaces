@@ -64,7 +64,16 @@ class ThreeHumpCamelFunction(AlgebraicFunction):
     latex_formula = r"f(x, y) = 2x^2 - 1.05x^4 + \frac{x^6}{6} + xy + y^2"
     pgfmath_formula = "2*#1^2 - 1.05*#1^4 + #1^6/6 + #1*#2 + #2^2"
 
-    def __init__(self, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None, noise=None):
+    def __init__(
+        self,
+        objective="minimize",
+        sleep=0,
+        memory=False,
+        collect_data=True,
+        callbacks=None,
+        catch_errors=None,
+        noise=None,
+    ):
         super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
         self.n_dim = 2
 

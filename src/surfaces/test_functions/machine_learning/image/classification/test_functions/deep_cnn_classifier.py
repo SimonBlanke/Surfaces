@@ -99,7 +99,7 @@ class DeepCNNClassifierFunction(BaseImageClassification):
             callbacks=callbacks,
             catch_errors=catch_errors,
             noise=noise,
-        use_surrogate=use_surrogate,
+            use_surrogate=use_surrogate,
         )
 
     @property
@@ -155,11 +155,7 @@ class DeepCNNClassifierFunction(BaseImageClassification):
             current_filters = params["filters"]
             for i in range(params["num_conv_layers"] - 1):
                 current_filters = min(current_filters * 2, 256)
-                model.add(
-                    layers.Conv2D(
-                        current_filters, (3, 3), activation="relu", padding="same"
-                    )
-                )
+                model.add(layers.Conv2D(current_filters, (3, 3), activation="relu", padding="same"))
                 model.add(layers.BatchNormalization())
                 if (i + 1) % 2 == 0:  # Pool every 2 layers
                     model.add(layers.MaxPooling2D((2, 2)))

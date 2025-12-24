@@ -91,7 +91,7 @@ class SVMImageClassifierFunction(BaseImageClassification):
             callbacks=callbacks,
             catch_errors=catch_errors,
             noise=noise,
-        use_surrogate=use_surrogate,
+            use_surrogate=use_surrogate,
         )
 
     @property

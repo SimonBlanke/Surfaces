@@ -4,7 +4,6 @@
 
 """Time Series Forest Classifier test function using sktime."""
 
-
 from .._base_ts_classification import BaseTSClassification
 from ..datasets import DATASETS
 
@@ -97,7 +96,7 @@ class TSForestClassifierFunction(BaseTSClassification):
             callbacks=callbacks,
             catch_errors=catch_errors,
             noise=noise,
-        use_surrogate=use_surrogate,
+            use_surrogate=use_surrogate,
         )
 
     @property

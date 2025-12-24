@@ -122,7 +122,9 @@ def render():
         )
 
     with col2:
-        train_single = st.button("Train", use_container_width=True, type="primary", key="training_train_btn")
+        train_single = st.button(
+            "Train", use_container_width=True, type="primary", key="training_train_btn"
+        )
 
     if train_single and selected_function:
         st.divider()
@@ -162,14 +164,18 @@ def render():
     if jobs:
         df_data = []
         for job in jobs:
-            df_data.append({
-                "Function": job["function_name"],
-                "Started": job["started_at"][:19] if job["started_at"] else "-",
-                "Completed": job["completed_at"][:19] if job["completed_at"] else "-",
-                "Status": job["status"],
-                "Triggered By": job["triggered_by"],
-                "Error": job["error_message"][:50] + "..." if job["error_message"] and len(job["error_message"]) > 50 else (job["error_message"] or "-"),
-            })
+            df_data.append(
+                {
+                    "Function": job["function_name"],
+                    "Started": job["started_at"][:19] if job["started_at"] else "-",
+                    "Completed": job["completed_at"][:19] if job["completed_at"] else "-",
+                    "Status": job["status"],
+                    "Triggered By": job["triggered_by"],
+                    "Error": job["error_message"][:50] + "..."
+                    if job["error_message"] and len(job["error_message"]) > 50
+                    else (job["error_message"] or "-"),
+                }
+            )
 
         df = pd.DataFrame(df_data)
 

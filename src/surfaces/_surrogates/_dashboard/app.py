@@ -23,7 +23,8 @@ st.set_page_config(
 )
 
 # Custom CSS for status colors
-st.markdown("""
+st.markdown(
+    """
 <style>
     .status-good { color: #28a745; font-weight: bold; }
     .status-warning { color: #ffc107; font-weight: bold; }
@@ -38,7 +39,9 @@ st.markdown("""
         gap: 24px;
     }
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 
 def main():
@@ -88,27 +91,33 @@ def main():
         st.caption("[GitHub](https://github.com/SimonBlanke/Surfaces)")
 
     # Main content - tabs for different pages
-    tab1, tab2, tab3, tab4 = st.tabs([
-        "Overview",
-        "Training",
-        "Validation",
-        "Details",
-    ])
+    tab1, tab2, tab3, tab4 = st.tabs(
+        [
+            "Overview",
+            "Training",
+            "Validation",
+            "Details",
+        ]
+    )
 
     with tab1:
         from surfaces._surrogates._dashboard._pages import overview
+
         overview.render()
 
     with tab2:
         from surfaces._surrogates._dashboard._pages import training
+
         training.render()
 
     with tab3:
         from surfaces._surrogates._dashboard._pages import validation
+
         validation.render()
 
     with tab4:
         from surfaces._surrogates._dashboard._pages import details
+
         details.render()
 
 

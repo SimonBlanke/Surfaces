@@ -87,9 +87,7 @@ def render():
                 st.text("\n".join(logs[-20:]))
 
         with st.spinner("Validating all surrogates..."):
-            results = validate_all(
-                validation_type, n_samples, random_seed, progress_callback
-            )
+            results = validate_all(validation_type, n_samples, random_seed, progress_callback)
 
         success_count = sum(1 for r in results if r["success"])
         fail_count = len(results) - success_count
@@ -118,7 +116,9 @@ def render():
         )
 
     with col2:
-        validate_single = st.button("Validate", use_container_width=True, type="primary", key="validation_validate_btn")
+        validate_single = st.button(
+            "Validate", use_container_width=True, type="primary", key="validation_validate_btn"
+        )
 
     if validate_single and selected_function:
         st.divider()
@@ -167,10 +167,12 @@ def render():
                 y_surr = data["y_surrogate"]
 
                 # Create scatter plot data
-                scatter_df = pd.DataFrame({
-                    "Actual": y_real,
-                    "Predicted": y_surr,
-                })
+                scatter_df = pd.DataFrame(
+                    {
+                        "Actual": y_real,
+                        "Predicted": y_surr,
+                    }
+                )
 
                 # Plot
                 try:
@@ -188,8 +190,10 @@ def render():
                     max_val = max(y_real.max(), y_surr.max())
                     fig.add_shape(
                         type="line",
-                        x0=min_val, y0=min_val,
-                        x1=max_val, y1=max_val,
+                        x0=min_val,
+                        y0=min_val,
+                        x1=max_val,
+                        y1=max_val,
                         line=dict(color="red", dash="dash"),
                     )
 
@@ -238,15 +242,17 @@ def render():
     if runs:
         df_data = []
         for run in runs:
-            df_data.append({
-                "Function": run["function_name"],
-                "Type": run["validation_type"],
-                "Samples": str(run["n_samples"]) if run["n_samples"] else "-",
-                "R2": f"{run['r2_score']:.4f}" if run["r2_score"] else "-",
-                "MAE": f"{run['mae']:.4f}" if run["mae"] else "-",
-                "Speedup": f"{run['speedup_factor']:.0f}x" if run["speedup_factor"] else "-",
-                "Date": run["validated_at"][:19] if run["validated_at"] else "-",
-            })
+            df_data.append(
+                {
+                    "Function": run["function_name"],
+                    "Type": run["validation_type"],
+                    "Samples": str(run["n_samples"]) if run["n_samples"] else "-",
+                    "R2": f"{run['r2_score']:.4f}" if run["r2_score"] else "-",
+                    "MAE": f"{run['mae']:.4f}" if run["mae"] else "-",
+                    "Speedup": f"{run['speedup_factor']:.0f}x" if run["speedup_factor"] else "-",
+                    "Date": run["validated_at"][:19] if run["validated_at"] else "-",
+                }
+            )
 
         df = pd.DataFrame(df_data)
 

@@ -14,8 +14,8 @@ import json
 from pathlib import Path
 from typing import Optional
 
-from .database import init_db, upsert_surrogate
 from .._onnx_utils import get_metadata_path, get_surrogate_model_path
+from .database import init_db, upsert_surrogate
 
 
 def compute_file_hash(file_path: Path) -> str:

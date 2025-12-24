@@ -130,7 +130,6 @@ def _get_function_dimensions(func: "BaseTestFunction") -> int:
 
 def _get_function_type(func: "BaseTestFunction") -> str:
     """Determine the type category of a test function."""
-    class_name = type(func).__name__
     module_name = type(func).__module__
 
     if "algebraic" in module_name:
@@ -147,9 +146,7 @@ def _get_function_type(func: "BaseTestFunction") -> str:
         return "unknown"
 
 
-def available_plots(
-    func: "BaseTestFunction", has_history: bool = False
-) -> List[Dict[str, Any]]:
+def available_plots(func: "BaseTestFunction", has_history: bool = False) -> List[Dict[str, Any]]:
     """Get list of plots compatible with the given function.
 
     Args:

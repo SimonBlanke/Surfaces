@@ -4,7 +4,6 @@
 
 """Exponential Smoothing Forecaster test function using sktime."""
 
-
 from .._base_forecasting import BaseForecasting
 from ..datasets import DATASETS
 
@@ -94,7 +93,7 @@ class ExpSmoothingForecasterFunction(BaseForecasting):
             callbacks=callbacks,
             catch_errors=catch_errors,
             noise=noise,
-        use_surrogate=use_surrogate,
+            use_surrogate=use_surrogate,
         )
 
     @property

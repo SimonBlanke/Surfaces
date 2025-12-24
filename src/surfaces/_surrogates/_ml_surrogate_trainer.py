@@ -35,7 +35,6 @@ from typing import Dict, List, Optional, Tuple
 import numpy as np
 
 from ._ml_registry import (
-    ML_SURROGATE_REGISTRY,
     get_function_config,
     get_registered_functions,
 )
@@ -91,7 +90,9 @@ class MLSurrogateTrainer:
         if self.verbose:
             print(msg)
 
-    def collect_data(self, max_samples_per_combo: Optional[int] = None) -> Tuple[np.ndarray, np.ndarray]:
+    def collect_data(
+        self, max_samples_per_combo: Optional[int] = None
+    ) -> Tuple[np.ndarray, np.ndarray]:
         """Collect training data across all (HP, fixed_param) combinations.
 
         Parameters
@@ -142,11 +143,13 @@ class MLSurrogateTrainer:
                 try:
                     score = func.pure_objective_function(hp_dict)
                     if not np.isnan(score):
-                        records.append({
-                            **hp_dict,
-                            **fixed_dict,
-                            "_score": score,
-                        })
+                        records.append(
+                            {
+                                **hp_dict,
+                                **fixed_dict,
+                                "_score": score,
+                            }
+                        )
                 except Exception:
                     pass  # Skip invalid combinations
 
@@ -216,17 +219,22 @@ class MLSurrogateTrainer:
         self._log("Training surrogate model...")
         start_time = time.time()
 
-        pipeline = Pipeline([
-            ("scaler", StandardScaler()),
-            ("mlp", MLPRegressor(
-                hidden_layer_sizes=hidden_layers,
-                max_iter=max_iter,
-                early_stopping=True,
-                validation_fraction=0.1,
-                random_state=42,
-                verbose=False,
-            )),
-        ])
+        pipeline = Pipeline(
+            [
+                ("scaler", StandardScaler()),
+                (
+                    "mlp",
+                    MLPRegressor(
+                        hidden_layer_sizes=hidden_layers,
+                        max_iter=max_iter,
+                        early_stopping=True,
+                        validation_fraction=0.1,
+                        random_state=42,
+                        verbose=False,
+                    ),
+                ),
+            ]
+        )
 
         pipeline.fit(self.X, self.y)
         self.model = pipeline
@@ -298,6 +306,7 @@ class MLSurrogateTrainer:
 # ============================================================================
 # Developer API
 # ============================================================================
+
 
 def train_ml_surrogate(
     function_name: str,

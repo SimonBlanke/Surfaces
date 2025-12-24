@@ -4,9 +4,8 @@
 
 """Support Vector Machine Regressor test function with surrogate support."""
 
-import numpy as np
-from sklearn.svm import SVR
 from sklearn.model_selection import cross_val_score
+from sklearn.svm import SVR
 
 from .._base_regression import BaseRegression
 from ..datasets import DATASETS
@@ -67,7 +66,7 @@ class SVMRegressorFunction(BaseRegression):
             callbacks=callbacks,
             catch_errors=catch_errors,
             noise=noise,
-        use_surrogate=use_surrogate,
+            use_surrogate=use_surrogate,
         )
 
     @property

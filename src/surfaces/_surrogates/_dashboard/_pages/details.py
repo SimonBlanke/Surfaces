@@ -6,7 +6,6 @@
 Details page - Deep dive into a single function.
 """
 
-
 import pandas as pd
 import streamlit as st
 
@@ -57,12 +56,14 @@ def render():
         st.warning(f"No surrogate model for {selected}")
 
     # Tabs for different info
-    tab1, tab2, tab3, tab4 = st.tabs([
-        "Metadata",
-        "Parameters",
-        "Training History",
-        "Validation History",
-    ])
+    tab1, tab2, tab3, tab4 = st.tabs(
+        [
+            "Metadata",
+            "Parameters",
+            "Training History",
+            "Validation History",
+        ]
+    )
 
     with tab1:
         render_metadata(surrogate)
@@ -95,9 +96,21 @@ def render_metadata(surrogate: dict):
         if surrogate["has_surrogate"]:
             st.write(f"- Training Samples: {surrogate['n_samples'] or 'N/A'}")
             st.write(f"- Invalid Samples: {surrogate['n_invalid_samples'] or 0}")
-            st.write(f"- Training R2: {surrogate['training_r2']:.4f}" if surrogate['training_r2'] else "- Training R2: N/A")
-            st.write(f"- Training MSE: {surrogate['training_mse']:.6f}" if surrogate['training_mse'] else "- Training MSE: N/A")
-            st.write(f"- Training Time: {surrogate['training_time_sec']:.1f}s" if surrogate['training_time_sec'] else "- Training Time: N/A")
+            st.write(
+                f"- Training R2: {surrogate['training_r2']:.4f}"
+                if surrogate["training_r2"]
+                else "- Training R2: N/A"
+            )
+            st.write(
+                f"- Training MSE: {surrogate['training_mse']:.6f}"
+                if surrogate["training_mse"]
+                else "- Training MSE: N/A"
+            )
+            st.write(
+                f"- Training Time: {surrogate['training_time_sec']:.1f}s"
+                if surrogate["training_time_sec"]
+                else "- Training Time: N/A"
+            )
         else:
             st.write("No training data available.")
 
@@ -115,8 +128,12 @@ def render_metadata(surrogate: dict):
 
     with col2:
         st.write("**Tracking Info**")
-        st.write(f"- Last Synced: {surrogate['last_synced_at'][:19] if surrogate['last_synced_at'] else 'Never'}")
-        st.write(f"- Created: {surrogate['created_at'][:19] if surrogate['created_at'] else 'Unknown'}")
+        st.write(
+            f"- Last Synced: {surrogate['last_synced_at'][:19] if surrogate['last_synced_at'] else 'Never'}"
+        )
+        st.write(
+            f"- Created: {surrogate['created_at'][:19] if surrogate['created_at'] else 'Unknown'}"
+        )
         if surrogate["onnx_file_hash"]:
             st.write(f"- File Hash: `{surrogate['onnx_file_hash'][:16]}...`")
 
@@ -148,11 +165,13 @@ def render_parameters(surrogate: dict):
             param_type = "numeric"
             values_str = "-"
 
-        param_data.append({
-            "Parameter": name,
-            "Type": param_type,
-            "Values": values_str,
-        })
+        param_data.append(
+            {
+                "Parameter": name,
+                "Type": param_type,
+                "Values": values_str,
+            }
+        )
 
     df = pd.DataFrame(param_data)
     st.dataframe(df, use_container_width=True, hide_index=True)
@@ -180,6 +199,7 @@ def render_training_history(function_name: str):
             # Simple duration calculation
             try:
                 from datetime import datetime
+
                 start = datetime.fromisoformat(job["started_at"])
                 end = datetime.fromisoformat(job["completed_at"])
                 dur_sec = (end - start).total_seconds()
@@ -187,13 +207,17 @@ def render_training_history(function_name: str):
             except Exception:
                 pass
 
-        df_data.append({
-            "Started": job["started_at"][:19] if job["started_at"] else "-",
-            "Duration": duration,
-            "Status": job["status"],
-            "Triggered By": job["triggered_by"],
-            "Error": job["error_message"][:30] + "..." if job["error_message"] and len(job["error_message"]) > 30 else (job["error_message"] or "-"),
-        })
+        df_data.append(
+            {
+                "Started": job["started_at"][:19] if job["started_at"] else "-",
+                "Duration": duration,
+                "Status": job["status"],
+                "Triggered By": job["triggered_by"],
+                "Error": job["error_message"][:30] + "..."
+                if job["error_message"] and len(job["error_message"]) > 30
+                else (job["error_message"] or "-"),
+            }
+        )
 
     df = pd.DataFrame(df_data)
 
@@ -228,10 +252,12 @@ def render_validation_history(function_name: str):
         chart_data = []
         for run in reversed(runs):  # Oldest first for chart
             if run["r2_score"] is not None:
-                chart_data.append({
-                    "Date": run["validated_at"][:10] if run["validated_at"] else "",
-                    "R2": run["r2_score"],
-                })
+                chart_data.append(
+                    {
+                        "Date": run["validated_at"][:10] if run["validated_at"] else "",
+                        "R2": run["r2_score"],
+                    }
+                )
 
         if chart_data:
             chart_df = pd.DataFrame(chart_data)
@@ -242,16 +268,18 @@ def render_validation_history(function_name: str):
 
     df_data = []
     for run in runs:
-        df_data.append({
-            "Date": run["validated_at"][:19] if run["validated_at"] else "-",
-            "Type": run["validation_type"],
-            "Samples": str(run["n_samples"]) if run["n_samples"] else "-",
-            "R2": f"{run['r2_score']:.4f}" if run["r2_score"] else "-",
-            "MAE": f"{run['mae']:.4f}" if run["mae"] else "-",
-            "RMSE": f"{run['rmse']:.4f}" if run["rmse"] else "-",
-            "Max Error": f"{run['max_error']:.4f}" if run["max_error"] else "-",
-            "Speedup": f"{run['speedup_factor']:.0f}x" if run["speedup_factor"] else "-",
-        })
+        df_data.append(
+            {
+                "Date": run["validated_at"][:19] if run["validated_at"] else "-",
+                "Type": run["validation_type"],
+                "Samples": str(run["n_samples"]) if run["n_samples"] else "-",
+                "R2": f"{run['r2_score']:.4f}" if run["r2_score"] else "-",
+                "MAE": f"{run['mae']:.4f}" if run["mae"] else "-",
+                "RMSE": f"{run['rmse']:.4f}" if run["rmse"] else "-",
+                "Max Error": f"{run['max_error']:.4f}" if run["max_error"] else "-",
+                "Speedup": f"{run['speedup_factor']:.0f}x" if run["speedup_factor"] else "-",
+            }
+        )
 
     df = pd.DataFrame(df_data)
 

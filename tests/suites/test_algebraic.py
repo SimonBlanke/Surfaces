@@ -11,32 +11,30 @@ closed-form analytical expressions. They're organized by dimension:
 - ND: N-dimensional scalable functions
 """
 
-import pytest
 import numpy as np
+import pytest
 
 from surfaces.test_functions.algebraic import (
+    # 2D
+    BealeFunction,
+    BoothFunction,
+    # 1D
+    GramacyAndLeeFunction,
+    HimmelblausFunction,
+    RastriginFunction,
+    RosenbrockFunction,
+    SphereFunction,
     algebraic_functions,
     algebraic_functions_1d,
     algebraic_functions_2d,
     algebraic_functions_nd,
-    # 1D
-    GramacyAndLeeFunction,
-    # 2D
-    AckleyFunction,
-    BealeFunction,
-    BoothFunction,
-    RosenbrockFunction,
-    SphereFunction,
-    RastriginFunction,
-    HimmelblausFunction,
 )
-
-from tests.conftest import instantiate_function, get_sample_params, func_id
-
+from tests.conftest import func_id, get_sample_params, instantiate_function
 
 # =============================================================================
 # 1D Function Tests
 # =============================================================================
+
 
 @pytest.mark.algebraic
 class Test1DFunctions:
@@ -66,6 +64,7 @@ class Test1DFunctions:
 # =============================================================================
 # 2D Function Tests
 # =============================================================================
+
 
 @pytest.mark.algebraic
 class Test2DFunctions:
@@ -97,6 +96,7 @@ class Test2DFunctions:
 # ND Function Tests
 # =============================================================================
 
+
 @pytest.mark.algebraic
 class TestNDFunctions:
     """Tests for N-dimensional algebraic functions."""
@@ -125,6 +125,7 @@ class TestNDFunctions:
 # =============================================================================
 # Known Function Behavior Tests
 # =============================================================================
+
 
 @pytest.mark.algebraic
 class TestKnownBehavior:
@@ -189,6 +190,7 @@ class TestKnownBehavior:
 # Input Format Consistency Tests
 # =============================================================================
 
+
 @pytest.mark.algebraic
 class TestInputConsistency:
     """Test that different input formats give consistent results."""
@@ -219,6 +221,7 @@ class TestInputConsistency:
 # =============================================================================
 # Objective Direction Tests
 # =============================================================================
+
 
 @pytest.mark.algebraic
 class TestObjectiveDirection:

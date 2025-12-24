@@ -101,6 +101,7 @@ CREATE INDEX IF NOT EXISTS idx_training_status ON training_jobs(status);
 # Connection Management
 # =============================================================================
 
+
 def init_db(db_path: Optional[Path] = None) -> None:
     """Initialize the database with schema."""
     path = db_path or DB_PATH
@@ -129,6 +130,7 @@ def dict_from_row(row: sqlite3.Row) -> Dict[str, Any]:
 # =============================================================================
 # Surrogate CRUD
 # =============================================================================
+
 
 def upsert_surrogate(
     function_name: str,
@@ -224,9 +226,7 @@ def get_surrogate(function_name: str, db_path: Optional[Path] = None) -> Optiona
 def get_all_surrogates(db_path: Optional[Path] = None) -> List[Dict]:
     """Get all surrogate records."""
     with get_connection(db_path) as conn:
-        rows = conn.execute(
-            "SELECT * FROM surrogates ORDER BY function_name"
-        ).fetchall()
+        rows = conn.execute("SELECT * FROM surrogates ORDER BY function_name").fetchall()
         results = []
         for row in rows:
             result = dict_from_row(row)
@@ -239,6 +239,7 @@ def get_all_surrogates(db_path: Optional[Path] = None) -> List[Dict]:
 # =============================================================================
 # Validation Runs CRUD
 # =============================================================================
+
 
 def insert_validation_run(
     function_name: str,
@@ -326,6 +327,7 @@ def get_latest_validation(
 # Training Jobs CRUD
 # =============================================================================
 
+
 def insert_training_job(
     function_name: str,
     triggered_by: str = "manual",
@@ -399,6 +401,7 @@ def get_training_jobs(
 # Dashboard Queries
 # =============================================================================
 
+
 def get_overview_data(db_path: Optional[Path] = None) -> List[Dict]:
     """Get overview data for all functions with latest validation metrics.
 
@@ -467,9 +470,7 @@ def get_dashboard_stats(db_path: Optional[Path] = None) -> Dict[str, Any]:
         with_surrogate = conn.execute(
             "SELECT COUNT(*) FROM surrogates WHERE has_surrogate = 1"
         ).fetchone()[0]
-        total_validations = conn.execute(
-            "SELECT COUNT(*) FROM validation_runs"
-        ).fetchone()[0]
+        total_validations = conn.execute("SELECT COUNT(*) FROM validation_runs").fetchone()[0]
         total_trainings = conn.execute(
             "SELECT COUNT(*) FROM training_jobs WHERE status = 'completed'"
         ).fetchone()[0]

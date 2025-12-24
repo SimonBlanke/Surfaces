@@ -17,47 +17,53 @@ Reference:
     benchmarking 2009: Noiseless functions definitions. INRIA.
 """
 
-import pytest
 import numpy as np
+import pytest
 
 from surfaces.test_functions.bbob import (
     BBOB_FUNCTIONS,
-    # Separable (f1-f5)
-    Sphere,
-    EllipsoidalSeparable,
-    RastriginSeparable,
-    BuecheRastrigin,
-    LinearSlope,
     # Low/Moderate Conditioning (f6-f9)
     AttractiveSector,
-    StepEllipsoidal,
-    RosenbrockOriginal,
-    RosenbrockRotated,
+    BentCigar,
+    BuecheRastrigin,
+    DifferentPowers,
+    Discus,
     # High Conditioning & Unimodal (f10-f14)
     EllipsoidalRotated,
-    Discus,
-    BentCigar,
-    SharpRidge,
-    DifferentPowers,
+    EllipsoidalSeparable,
+    Gallagher21,
+    Gallagher101,
+    GriewankRosenbrock,
+    Katsuura,
+    LinearSlope,
+    LunacekBiRastrigin,
     # Multimodal with Adequate Global Structure (f15-f19)
     RastriginRotated,
-    Weierstrass,
+    RastriginSeparable,
+    RosenbrockOriginal,
+    RosenbrockRotated,
     SchaffersF7,
     SchaffersF7Ill,
-    GriewankRosenbrock,
     # Multimodal with Weak Global Structure (f20-f24)
     Schwefel,
-    Gallagher101,
-    Gallagher21,
-    Katsuura,
-    LunacekBiRastrigin,
+    SharpRidge,
+    # Separable (f1-f5)
+    Sphere,
+    StepEllipsoidal,
+    Weierstrass,
 )
 
 # Organize functions by category
 SEPARABLE = [Sphere, EllipsoidalSeparable, RastriginSeparable, BuecheRastrigin, LinearSlope]
 LOW_CONDITIONING = [AttractiveSector, StepEllipsoidal, RosenbrockOriginal, RosenbrockRotated]
 HIGH_CONDITIONING = [EllipsoidalRotated, Discus, BentCigar, SharpRidge, DifferentPowers]
-MULTIMODAL_ADEQUATE = [RastriginRotated, Weierstrass, SchaffersF7, SchaffersF7Ill, GriewankRosenbrock]
+MULTIMODAL_ADEQUATE = [
+    RastriginRotated,
+    Weierstrass,
+    SchaffersF7,
+    SchaffersF7Ill,
+    GriewankRosenbrock,
+]
 MULTIMODAL_WEAK = [Schwefel, Gallagher101, Gallagher21, Katsuura, LunacekBiRastrigin]
 
 ALL_BBOB = list(BBOB_FUNCTIONS.values())
@@ -71,6 +77,7 @@ def func_id(func_class):
 # =============================================================================
 # Global Optimum Tests
 # =============================================================================
+
 
 @pytest.mark.bbob
 class TestBBOBGlobalOptimum:
@@ -102,6 +109,7 @@ class TestBBOBGlobalOptimum:
 # =============================================================================
 # Function Properties Tests
 # =============================================================================
+
 
 @pytest.mark.bbob
 class TestBBOBFunctionProperties:
@@ -140,6 +148,7 @@ class TestBBOBFunctionProperties:
 # =============================================================================
 # Category-Specific Tests
 # =============================================================================
+
 
 @pytest.mark.bbob
 class TestSeparableFunctions:
@@ -190,6 +199,7 @@ class TestMultimodalFunctions:
 # Dimension Handling Tests
 # =============================================================================
 
+
 @pytest.mark.bbob
 class TestBBOBDimensions:
     """Test dimension handling for BBOB functions."""
@@ -222,6 +232,7 @@ class TestBBOBDimensions:
 # =============================================================================
 # Input Format Tests
 # =============================================================================
+
 
 @pytest.mark.bbob
 class TestBBOBInputFormats:
@@ -257,6 +268,7 @@ class TestBBOBInputFormats:
 # Search Space Tests
 # =============================================================================
 
+
 @pytest.mark.bbob
 class TestBBOBSearchSpace:
     """Test search space properties for BBOB functions."""
@@ -280,6 +292,7 @@ class TestBBOBSearchSpace:
 # Objective Direction Tests
 # =============================================================================
 
+
 @pytest.mark.bbob
 class TestBBOBObjective:
     """Test objective parameter behavior."""
@@ -300,6 +313,7 @@ class TestBBOBObjective:
 # =============================================================================
 # Instance Reproducibility Tests
 # =============================================================================
+
 
 @pytest.mark.bbob
 class TestBBOBInstances:

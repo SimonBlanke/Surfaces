@@ -5,12 +5,9 @@ These tests verify the tracking of evaluation history, best results,
 and timing information.
 """
 
-import time
-
 import numpy as np
-import pytest
 
-from surfaces.test_functions import SphereFunction, RastriginFunction
+from surfaces.test_functions import SphereFunction
 
 
 class TestSearchDataCollection:

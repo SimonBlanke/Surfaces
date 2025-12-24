@@ -1,11 +1,10 @@
 # Tests for the noise module
 
-import math
 
 import numpy as np
 import pytest
 
-from surfaces.noise import BaseNoise, GaussianNoise, MultiplicativeNoise, UniformNoise
+from surfaces.noise import GaussianNoise, MultiplicativeNoise, UniformNoise
 from surfaces.test_functions import SphereFunction
 
 

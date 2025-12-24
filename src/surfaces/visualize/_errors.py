@@ -115,9 +115,7 @@ DIMENSION_ALTERNATIVES = {
 }
 
 
-def get_alternative_suggestions(
-    plot_name: str, func: "BaseTestFunction"
-) -> List[str]:
+def get_alternative_suggestions(plot_name: str, func: "BaseTestFunction") -> List[str]:
     """Get alternative plot suggestions based on function characteristics.
 
     Args:
@@ -131,7 +129,6 @@ def get_alternative_suggestions(
 
     suggestions = []
     func_dims = _get_function_dimensions(func)
-    func_name = getattr(func, "name", type(func).__name__)
 
     if plot_name in DIMENSION_ALTERNATIVES:
         alternatives = DIMENSION_ALTERNATIVES[plot_name]
@@ -144,9 +141,7 @@ def get_alternative_suggestions(
                 suggestions.append(f"plot_{alt}(func) - works with {func_dims}D functions")
 
             # Add slice suggestion for 2D visualization
-            suggestions.append(
-                f"plot_{plot_name}(func, dims=['x0', 'x1']) - fix other dimensions"
-            )
+            suggestions.append(f"plot_{plot_name}(func, dims=['x0', 'x1']) - fix other dimensions")
 
     if not suggestions:
         suggestions.append("auto_plot(func) - automatically select best visualization")

@@ -11,18 +11,17 @@ optimization benchmarks. They're organized by:
 - Time-series: Forecasting and classification on time-series data
 """
 
-import pytest
 import numpy as np
+import pytest
 
 from tests.conftest import (
-    machine_learning_functions,
-    instantiate_function,
-    get_sample_params,
-    func_id,
     HAS_ML,
+    func_id,
+    get_sample_params,
+    instantiate_function,
+    machine_learning_functions,
     requires_sklearn,
 )
-
 
 # Skip all tests in this module if sklearn not installed
 pytestmark = requires_sklearn
@@ -31,6 +30,7 @@ pytestmark = requires_sklearn
 # =============================================================================
 # Basic Instantiation
 # =============================================================================
+
 
 @pytest.mark.ml
 class TestMLInstantiation:
@@ -59,6 +59,7 @@ class TestMLInstantiation:
 # Search Space Properties
 # =============================================================================
 
+
 @pytest.mark.ml
 class TestMLSearchSpace:
     """Test ML function search space properties."""
@@ -83,6 +84,7 @@ class TestMLSearchSpace:
 # =============================================================================
 # Classification Functions
 # =============================================================================
+
 
 @pytest.mark.ml
 class TestClassificationFunctions:
@@ -131,6 +133,7 @@ class TestClassificationFunctions:
 # Regression Functions
 # =============================================================================
 
+
 @pytest.mark.ml
 class TestRegressionFunctions:
     """Test regression ML functions."""
@@ -164,6 +167,7 @@ class TestRegressionFunctions:
 # Objective Direction
 # =============================================================================
 
+
 @pytest.mark.ml
 class TestMLObjectiveDirection:
     """Test objective direction for ML functions."""
@@ -195,6 +199,7 @@ class TestMLObjectiveDirection:
 # =============================================================================
 # Data Collection
 # =============================================================================
+
 
 @pytest.mark.ml
 class TestMLDataCollection:
@@ -230,6 +235,7 @@ class TestMLDataCollection:
 # =============================================================================
 # Memory Caching
 # =============================================================================
+
 
 @pytest.mark.ml
 class TestMLMemory:
@@ -275,6 +281,7 @@ class TestMLMemory:
 # =============================================================================
 # Callbacks
 # =============================================================================
+
 
 @pytest.mark.ml
 class TestMLCallbacks:

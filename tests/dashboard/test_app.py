@@ -8,15 +8,17 @@ These tests run the dashboard in headless mode without a browser.
 Streamlit's AppTest allows testing UI components programmatically.
 """
 
-import pytest
 import tempfile
 from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
-from tests.conftest import requires_streamlit, HAS_STREAMLIT
+import pytest
+
+from tests.conftest import HAS_STREAMLIT, requires_streamlit
 
 if HAS_STREAMLIT:
     from streamlit.testing.v1 import AppTest
+
     from surfaces._surrogates._dashboard.database import init_db
 
 
@@ -42,9 +44,7 @@ class TestAppLoading:
 
     def test_app_runs_without_error(self, mock_db):
         """App initializes and runs without exceptions."""
-        with patch(
-            "surfaces._surrogates._dashboard.database.DB_PATH", mock_db
-        ), patch(
+        with patch("surfaces._surrogates._dashboard.database.DB_PATH", mock_db), patch(
             "surfaces._surrogates._dashboard.app.init_db"
         ), patch(
             "surfaces._surrogates._dashboard.app.sync_all",
@@ -60,9 +60,7 @@ class TestAppLoading:
 
     def test_app_has_title(self, mock_db):
         """App displays the dashboard title."""
-        with patch(
-            "surfaces._surrogates._dashboard.database.DB_PATH", mock_db
-        ), patch(
+        with patch("surfaces._surrogates._dashboard.database.DB_PATH", mock_db), patch(
             "surfaces._surrogates._dashboard.app.init_db"
         ), patch(
             "surfaces._surrogates._dashboard.app.sync_all",
@@ -90,9 +88,7 @@ class TestSidebar:
 
     def test_sidebar_has_metrics(self, mock_db):
         """Sidebar displays quick stats metrics."""
-        with patch(
-            "surfaces._surrogates._dashboard.database.DB_PATH", mock_db
-        ), patch(
+        with patch("surfaces._surrogates._dashboard.database.DB_PATH", mock_db), patch(
             "surfaces._surrogates._dashboard.app.init_db"
         ), patch(
             "surfaces._surrogates._dashboard.app.sync_all",
@@ -118,9 +114,7 @@ class TestSidebar:
 
     def test_sidebar_has_sync_button(self, mock_db):
         """Sidebar has a sync database button."""
-        with patch(
-            "surfaces._surrogates._dashboard.database.DB_PATH", mock_db
-        ), patch(
+        with patch("surfaces._surrogates._dashboard.database.DB_PATH", mock_db), patch(
             "surfaces._surrogates._dashboard.app.init_db"
         ), patch(
             "surfaces._surrogates._dashboard.app.sync_all",
@@ -149,9 +143,7 @@ class TestTabNavigation:
 
     def test_app_has_tabs(self, mock_db):
         """App displays the four main tabs."""
-        with patch(
-            "surfaces._surrogates._dashboard.database.DB_PATH", mock_db
-        ), patch(
+        with patch("surfaces._surrogates._dashboard.database.DB_PATH", mock_db), patch(
             "surfaces._surrogates._dashboard.app.init_db"
         ), patch(
             "surfaces._surrogates._dashboard.app.sync_all",
@@ -181,8 +173,8 @@ class TestIntegration:
     def test_full_workflow(self, mock_db):
         """Test complete workflow: load, display stats, interact."""
         from surfaces._surrogates._dashboard.database import (
-            upsert_surrogate,
             insert_validation_run,
+            upsert_surrogate,
         )
 
         # Populate test data
@@ -202,9 +194,7 @@ class TestIntegration:
             db_path=mock_db,
         )
 
-        with patch(
-            "surfaces._surrogates._dashboard.database.DB_PATH", mock_db
-        ), patch(
+        with patch("surfaces._surrogates._dashboard.database.DB_PATH", mock_db), patch(
             "surfaces._surrogates._dashboard.app.init_db"
         ), patch(
             "surfaces._surrogates._dashboard.app.sync_all",

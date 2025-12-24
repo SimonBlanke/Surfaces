@@ -59,10 +59,21 @@ class LeviFunctionN13(AlgebraicFunction):
     default_bounds = (-10.0, 10.0)
     n_dim = 2
 
-    latex_formula = r"f(x, y) = \sin^2(3\pi x) + (x - 1)^2(1 + \sin^2(3\pi y)) + (y - 1)^2(1 + \sin^2(2\pi y))"
+    latex_formula = (
+        r"f(x, y) = \sin^2(3\pi x) + (x - 1)^2(1 + \sin^2(3\pi y)) + (y - 1)^2(1 + \sin^2(2\pi y))"
+    )
     pgfmath_formula = "sin(deg(3*pi*#1))^2 + (#1 - 1)^2*(1 + sin(deg(3*pi*#2))^2) + (#2 - 1)^2*(1 + sin(deg(2*pi*#2))^2)"
 
-    def __init__(self, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None, noise=None):
+    def __init__(
+        self,
+        objective="minimize",
+        sleep=0,
+        memory=False,
+        collect_data=True,
+        callbacks=None,
+        catch_errors=None,
+        noise=None,
+    ):
         super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
         self.n_dim = 2
 

@@ -17,6 +17,13 @@ Developer API for ML surrogates:
 - list_ml_surrogates: List registered functions and status
 """
 
+from ._ml_surrogate_trainer import (
+    MLSurrogateTrainer,
+    list_ml_surrogates,
+    train_all_ml_surrogates,
+    train_missing_ml_surrogates,
+    train_ml_surrogate,
+)
 from ._surrogate_loader import (
     SurrogateLoader,
     get_surrogate_path,
@@ -28,13 +35,6 @@ from ._surrogate_trainer import (
 )
 from ._surrogate_validator import (
     SurrogateValidator,
-)
-from ._ml_surrogate_trainer import (
-    MLSurrogateTrainer,
-    train_ml_surrogate,
-    train_all_ml_surrogates,
-    train_missing_ml_surrogates,
-    list_ml_surrogates,
 )
 
 __all__ = [

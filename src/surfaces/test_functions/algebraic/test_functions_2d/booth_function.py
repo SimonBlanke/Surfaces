@@ -76,9 +76,7 @@ class BoothFunction(AlgebraicFunction):
         catch_errors=None,
         noise=None,
     ):
-        super().__init__(
-            objective, sleep, memory, collect_data, callbacks, catch_errors, noise
-        )
+        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
         self.n_dim = 2
 
     def _create_objective_function(self):

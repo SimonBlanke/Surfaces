@@ -106,8 +106,7 @@ def plot_multi_slice(
 
     func_name = getattr(func, "name", type(func).__name__)
     fig.update_layout(
-        title=title
-        or f"{func_name} - Dimension Slices (center: {list(center.values())})",
+        title=title or f"{func_name} - Dimension Slices (center: {list(center.values())})",
         width=width,
         height=height,
         showlegend=False,

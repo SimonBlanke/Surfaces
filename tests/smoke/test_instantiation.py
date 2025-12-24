@@ -9,33 +9,32 @@ and called without errors. They're designed to catch import
 issues and basic API breakages quickly.
 """
 
-import pytest
 import numpy as np
+import pytest
 
 from tests.conftest import (
-    algebraic_functions,
-    algebraic_functions_1d,
-    algebraic_functions_2d,
-    algebraic_functions_nd,
-    engineering_functions,
     BBOB_FUNCTION_LIST,
     CEC2013_FUNCTIONS,
     CEC2014_FUNCTIONS,
     CEC2017_FUNCTIONS,
-    machine_learning_functions,
-    instantiate_function,
-    get_sample_params,
-    func_id,
-    HAS_ML,
     HAS_CEC2013,
     HAS_CEC2014,
     HAS_CEC2017,
+    HAS_ML,
+    algebraic_functions_1d,
+    algebraic_functions_2d,
+    algebraic_functions_nd,
+    engineering_functions,
+    func_id,
+    get_sample_params,
+    instantiate_function,
+    machine_learning_functions,
 )
-
 
 # =============================================================================
 # Algebraic Functions
 # =============================================================================
+
 
 @pytest.mark.smoke
 @pytest.mark.algebraic
@@ -72,6 +71,7 @@ class TestAlgebraicInstantiation:
 # Engineering Functions
 # =============================================================================
 
+
 @pytest.mark.smoke
 @pytest.mark.engineering
 class TestEngineeringInstantiation:
@@ -89,14 +89,15 @@ class TestEngineeringInstantiation:
     def test_engineering_has_constraints(self, func_class):
         """Engineering functions have constraint methods."""
         func = instantiate_function(func_class)
-        assert hasattr(func, 'constraints')
-        assert hasattr(func, 'is_feasible')
-        assert hasattr(func, 'raw_objective')
+        assert hasattr(func, "constraints")
+        assert hasattr(func, "is_feasible")
+        assert hasattr(func, "raw_objective")
 
 
 # =============================================================================
 # BBOB Functions
 # =============================================================================
+
 
 @pytest.mark.smoke
 @pytest.mark.bbob
@@ -123,6 +124,7 @@ class TestBBOBInstantiation:
 # =============================================================================
 # CEC Functions
 # =============================================================================
+
 
 @pytest.mark.smoke
 @pytest.mark.cec
@@ -178,6 +180,7 @@ class TestCEC2017Instantiation:
 # =============================================================================
 # Machine Learning Functions
 # =============================================================================
+
 
 @pytest.mark.smoke
 @pytest.mark.ml

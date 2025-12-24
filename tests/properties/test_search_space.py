@@ -9,24 +9,23 @@ with correct structure and bounds.
 """
 
 import pytest
-import numpy as np
 
 from tests.conftest import (
-    algebraic_functions,
-    engineering_functions,
     BBOB_FUNCTION_LIST,
     CEC2014_FUNCTIONS,
-    machine_learning_functions,
-    instantiate_function,
-    func_id,
-    HAS_ML,
     HAS_CEC2014,
+    HAS_ML,
+    algebraic_functions,
+    engineering_functions,
+    func_id,
+    instantiate_function,
+    machine_learning_functions,
 )
-
 
 # =============================================================================
 # Search Space Structure
 # =============================================================================
+
 
 class TestSearchSpaceStructure:
     """Test that search spaces have correct structure."""
@@ -66,6 +65,7 @@ class TestSearchSpaceStructure:
 # Default Bounds
 # =============================================================================
 
+
 class TestDefaultBounds:
     """Test that default bounds are properly defined."""
 
@@ -96,6 +96,7 @@ class TestDefaultBounds:
 # Dimension Handling
 # =============================================================================
 
+
 class TestDimensionHandling:
     """Test dimension-related properties."""
 
@@ -120,6 +121,7 @@ class TestDimensionHandling:
 # =============================================================================
 # ML Function Search Spaces
 # =============================================================================
+
 
 @pytest.mark.ml
 class TestMLSearchSpaces:

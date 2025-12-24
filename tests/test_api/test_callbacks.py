@@ -6,7 +6,7 @@
 
 import pytest
 
-from surfaces.test_functions import SphereFunction, RastriginFunction
+from surfaces.test_functions import RastriginFunction, SphereFunction
 from surfaces.test_functions.engineering import CantileverBeamFunction
 
 
@@ -138,9 +138,7 @@ class TestCallbackWithDataCollection:
     def test_callback_with_collect_data_true(self):
         """Callbacks work alongside data collection."""
         records = []
-        func = SphereFunction(
-            n_dim=2, collect_data=True, callbacks=lambda r: records.append(r)
-        )
+        func = SphereFunction(n_dim=2, collect_data=True, callbacks=lambda r: records.append(r))
 
         func([1.0, 2.0])
 
@@ -151,9 +149,7 @@ class TestCallbackWithDataCollection:
     def test_callback_with_collect_data_false(self):
         """Callbacks work even when data collection is disabled."""
         records = []
-        func = SphereFunction(
-            n_dim=2, collect_data=False, callbacks=lambda r: records.append(r)
-        )
+        func = SphereFunction(n_dim=2, collect_data=False, callbacks=lambda r: records.append(r))
 
         func([1.0, 2.0])
 
@@ -164,9 +160,7 @@ class TestCallbackWithDataCollection:
     def test_callback_with_memory(self):
         """Callbacks are invoked for cached results too."""
         records = []
-        func = SphereFunction(
-            n_dim=2, memory=True, callbacks=lambda r: records.append(r)
-        )
+        func = SphereFunction(n_dim=2, memory=True, callbacks=lambda r: records.append(r))
 
         func([1.0, 2.0])
         func([1.0, 2.0])  # Same position - cached
@@ -215,9 +209,7 @@ class TestCallbackEdgeCases:
     def test_callback_with_maximize(self):
         """Callbacks work correctly with maximize objective."""
         records = []
-        func = SphereFunction(
-            n_dim=2, objective="maximize", callbacks=lambda r: records.append(r)
-        )
+        func = SphereFunction(n_dim=2, objective="maximize", callbacks=lambda r: records.append(r))
 
         result = func([1.0, 2.0])
 

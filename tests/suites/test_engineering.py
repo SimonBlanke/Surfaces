@@ -9,24 +9,23 @@ physical meaning, commonly used to evaluate constrained optimization
 algorithms. Each function provides constraint handling via penalty methods.
 """
 
-import pytest
 import numpy as np
+import pytest
 
 from surfaces.test_functions.engineering import (
-    engineering_functions,
-    ThreeBarTrussFunction,
-    WeldedBeamFunction,
+    CantileverBeamFunction,
     PressureVesselFunction,
     TensionCompressionSpringFunction,
-    CantileverBeamFunction,
+    ThreeBarTrussFunction,
+    WeldedBeamFunction,
+    engineering_functions,
 )
-
-from tests.conftest import instantiate_function, get_sample_params, func_id
-
+from tests.conftest import func_id, get_sample_params, instantiate_function
 
 # =============================================================================
 # Basic Instantiation and Evaluation
 # =============================================================================
+
 
 @pytest.mark.engineering
 class TestEngineeringInstantiation:
@@ -60,6 +59,7 @@ class TestEngineeringInstantiation:
 # Constraint Methods
 # =============================================================================
 
+
 @pytest.mark.engineering
 class TestConstraintMethods:
     """Test constraint-related methods."""
@@ -68,28 +68,28 @@ class TestConstraintMethods:
     def test_has_constraints_method(self, func_class):
         """Engineering functions have constraints method."""
         func = instantiate_function(func_class)
-        assert hasattr(func, 'constraints')
+        assert hasattr(func, "constraints")
         assert callable(func.constraints)
 
     @pytest.mark.parametrize("func_class", engineering_functions, ids=func_id)
     def test_has_is_feasible_method(self, func_class):
         """Engineering functions have is_feasible method."""
         func = instantiate_function(func_class)
-        assert hasattr(func, 'is_feasible')
+        assert hasattr(func, "is_feasible")
         assert callable(func.is_feasible)
 
     @pytest.mark.parametrize("func_class", engineering_functions, ids=func_id)
     def test_has_raw_objective_method(self, func_class):
         """Engineering functions have raw_objective method."""
         func = instantiate_function(func_class)
-        assert hasattr(func, 'raw_objective')
+        assert hasattr(func, "raw_objective")
         assert callable(func.raw_objective)
 
     @pytest.mark.parametrize("func_class", engineering_functions, ids=func_id)
     def test_has_penalty_method(self, func_class):
         """Engineering functions have penalty method."""
         func = instantiate_function(func_class)
-        assert hasattr(func, 'penalty')
+        assert hasattr(func, "penalty")
         assert callable(func.penalty)
 
     @pytest.mark.parametrize("func_class", engineering_functions, ids=func_id)
@@ -99,7 +99,7 @@ class TestConstraintMethods:
         params = get_sample_params(func)
         constraints = func.constraints(params)
         # Constraints can be list or ndarray
-        assert hasattr(constraints, '__len__')
+        assert hasattr(constraints, "__len__")
         assert len(constraints) > 0
 
     @pytest.mark.parametrize("func_class", engineering_functions, ids=func_id)
@@ -114,6 +114,7 @@ class TestConstraintMethods:
 # =============================================================================
 # Penalty Behavior
 # =============================================================================
+
 
 @pytest.mark.engineering
 class TestPenaltyBehavior:
@@ -154,6 +155,7 @@ class TestPenaltyBehavior:
 # =============================================================================
 # Specific Function Tests
 # =============================================================================
+
 
 @pytest.mark.engineering
 class TestThreeBarTruss:
@@ -244,6 +246,7 @@ class TestCantileverBeam:
 # Input Format Tests
 # =============================================================================
 
+
 @pytest.mark.engineering
 class TestEngineeringInputFormats:
     """Test input format handling."""
@@ -269,7 +272,7 @@ class TestEngineeringInputFormats:
         penalty = func.penalty(params)
 
         # Constraints can be list or ndarray
-        assert hasattr(constraints, '__len__')
+        assert hasattr(constraints, "__len__")
         assert isinstance(is_feasible, (bool, np.bool_))
         assert isinstance(raw, (int, float))
         assert isinstance(penalty, (int, float))

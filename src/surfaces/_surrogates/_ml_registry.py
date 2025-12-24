@@ -51,16 +51,14 @@ def get_function_config(name: str) -> Dict[str, Any]:
     """Get configuration for a registered function."""
     _ensure_registered()
     if name not in ML_SURROGATE_REGISTRY:
-        raise ValueError(
-            f"Unknown function '{name}'. "
-            f"Available: {get_registered_functions()}"
-        )
+        raise ValueError(f"Unknown function '{name}'. " f"Available: {get_registered_functions()}")
     return ML_SURROGATE_REGISTRY[name]
 
 
 # ============================================================================
 # Register ML functions (lazy to avoid circular imports)
 # ============================================================================
+
 
 def _ensure_registered():
     """Register all ML functions lazily on first access."""
@@ -70,15 +68,15 @@ def _ensure_registered():
     from surfaces.test_functions import (
         # Classification
         DecisionTreeClassifierFunction,
-        GradientBoostingClassifierFunction,
-        KNeighborsClassifierFunction,
-        RandomForestClassifierFunction,
-        SVMClassifierFunction,
         # Regression
         DecisionTreeRegressorFunction,
+        GradientBoostingClassifierFunction,
         GradientBoostingRegressorFunction,
+        KNeighborsClassifierFunction,
         KNeighborsRegressorFunction,
+        RandomForestClassifierFunction,
         RandomForestRegressorFunction,
+        SVMClassifierFunction,
         SVMRegressorFunction,
     )
 

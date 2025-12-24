@@ -5,11 +5,11 @@
 """Classification datasets for ML test functions."""
 
 from sklearn.datasets import (
+    fetch_covtype,
+    load_breast_cancer,
     load_digits,
     load_iris,
     load_wine,
-    load_breast_cancer,
-    fetch_covtype,
 )
 
 # Pre-load small datasets for fast access

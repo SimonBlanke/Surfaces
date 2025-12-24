@@ -75,7 +75,19 @@ class EasomFunction(AlgebraicFunction):
     latex_formula = r"f(x, y) = -\cos(x)\cos(y)\exp\left[-(x - \pi)^2 - (y - \pi)^2\right]"
     pgfmath_formula = "-cos(deg(#1))*cos(deg(#2))*exp(-((#1 - pi)^2 + (#2 - pi)^2))"
 
-    def __init__(self, A=-1, B=1, angle=1, objective="minimize", sleep=0, memory=False, collect_data=True, callbacks=None, catch_errors=None, noise=None):
+    def __init__(
+        self,
+        A=-1,
+        B=1,
+        angle=1,
+        objective="minimize",
+        sleep=0,
+        memory=False,
+        collect_data=True,
+        callbacks=None,
+        catch_errors=None,
+        noise=None,
+    ):
         super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
         self.n_dim = 2
 
