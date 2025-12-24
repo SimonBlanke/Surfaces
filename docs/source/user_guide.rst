@@ -109,6 +109,13 @@ Guide Sections
       Test functions based on
       machine learning models.
 
+   .. grid-item-card:: Engineering Functions
+      :link: user_guide/engineering
+      :link-type: doc
+
+      Real-world constrained
+      engineering design problems.
+
    .. grid-item-card:: scipy Integration
       :link: user_guide/scipy_integration
       :link-type: doc
@@ -130,6 +137,13 @@ Guide Sections
       Plot function surfaces
       and contours.
 
+   .. grid-item-card:: Function Gallery
+      :link: function_gallery
+      :link-type: ref
+
+      Visual gallery of all
+      2D test functions.
+
 
 .. toctree::
    :maxdepth: 2
@@ -138,6 +152,8 @@ Guide Sections
    user_guide/introduction
    user_guide/mathematical
    user_guide/machine_learning
+   user_guide/engineering
    user_guide/scipy_integration
    user_guide/optimizer_compatibility
    user_guide/visualization
+   /_generated/plots/gallery

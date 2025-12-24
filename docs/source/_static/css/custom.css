@@ -1,44 +1,44 @@
 /* Custom CSS for Surfaces documentation */
-/* Dark Pastel Red / Dusty Rose theme */
+/* Deep Navy Indigo theme */
 
 /* ============================================
-   PyData Theme Color Overrides (dark pastel red)
+   PyData Theme Color Overrides (deep navy indigo)
    ============================================ */
 html[data-theme="light"] {
-    --pst-color-primary: #8B5A5A;
-    --pst-color-primary-bg: #f8f0f0;
-    --pst-color-secondary: #A67979;
-    --pst-color-accent: #C49393;
-    --pst-color-info: #A67979;
-    --pst-color-link: #8B5A5A;
-    --pst-color-link-hover: #6B4444;
-    --pst-color-target: rgba(139, 90, 90, 0.2);
+    --pst-color-primary: #1A1854;
+    --pst-color-primary-bg: #f0f0f5;
+    --pst-color-secondary: #3D3A7A;
+    --pst-color-accent: #5C5A9A;
+    --pst-color-info: #3D3A7A;
+    --pst-color-link: #1A1854;
+    --pst-color-link-hover: #0F0E32;
+    --pst-color-target: rgba(26, 24, 84, 0.2);
 }
 
 html[data-theme="dark"] {
-    --pst-color-primary: #C49393;
-    --pst-color-primary-bg: #3a2a2a;
-    --pst-color-secondary: #D4A8A8;
-    --pst-color-accent: #E4BCBC;
-    --pst-color-info: #C49393;
-    --pst-color-link: #D4A8A8;
-    --pst-color-link-hover: #E4BCBC;
-    --pst-color-target: rgba(196, 147, 147, 0.2);
-    --separator-color: #4d3d3d;
+    --pst-color-primary: #7A78B8;
+    --pst-color-primary-bg: #1a1a2e;
+    --pst-color-secondary: #9A98C8;
+    --pst-color-accent: #B8B6D8;
+    --pst-color-info: #7A78B8;
+    --pst-color-link: #9A98C8;
+    --pst-color-link-hover: #B8B6D8;
+    --pst-color-target: rgba(122, 120, 184, 0.2);
+    --separator-color: #2d2d4a;
 }
 
 /* ============================================
    CSS Variables for consistent theming
    ============================================ */
 :root {
-    /* Dark pastel red / dusty rose colors */
-    --surfaces-primary: #8B5A5A;
-    --surfaces-secondary: #A67979;
-    --surfaces-accent: #C49393;
-    --surfaces-dark: #6B4444;
+    /* Deep navy indigo colors */
+    --surfaces-primary: #1A1854;
+    --surfaces-secondary: #3D3A7A;
+    --surfaces-accent: #5C5A9A;
+    --surfaces-dark: #0F0E32;
     --surfaces-light: #f8f9fa;
-    --surfaces-gradient: linear-gradient(135deg, #5D3D3D 0%, #8B5A5A 100%);
-    --surfaces-gradient-dark: linear-gradient(135deg, #4D2D2D 0%, #7B4A4A 100%);
+    --surfaces-gradient: linear-gradient(135deg, #0F0E32 0%, #1A1854 100%);
+    --surfaces-gradient-dark: linear-gradient(135deg, #080820 0%, #141244 100%);
     --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --card-shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     /* Neutral separator color */
@@ -664,7 +664,7 @@ hr {
 /* Page titles (h1 from ===) - subtle background highlight */
 /* Exclude home page by targeting pages with h1 that aren't in the hero */
 article h1:not(.hero-title) {
-    background-color: rgba(139, 90, 90, 0.2);
+    background-color: rgba(26, 24, 84, 0.2);
     padding: 0.5rem 0.75rem;
     border-radius: 4px;
     width: fit-content;
@@ -711,7 +711,7 @@ h2::after {
 .sd-btn-primary:hover {
     background: var(--surfaces-gradient-dark) !important;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(139, 90, 90, 0.4);
+    box-shadow: 0 4px 12px rgba(26, 24, 84, 0.4);
 }
 
 /* ============================================
@@ -790,7 +790,7 @@ h2::after {
 }
 
 .sd-tab-label:hover {
-    background-color: rgba(139, 90, 90, 0.1);
+    background-color: rgba(26, 24, 84, 0.1);
 }
 
 input[name^="sd-tab-set"]:checked + label {

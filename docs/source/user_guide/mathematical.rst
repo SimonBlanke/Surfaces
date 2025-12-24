@@ -1,32 +1,33 @@
 .. _user_guide_mathematical:
 
-======================
-Mathematical Functions
-======================
+====================
+Algebraic Functions
+====================
 
 Surfaces provides classic mathematical optimization test functions from
-the literature. These functions have well-known properties and global optima.
+the literature. These functions have well-known properties, analytical
+formulas, and global optima.
 
 Overview
 ========
 
-Mathematical functions are organized by dimensionality:
+Algebraic functions are organized by dimensionality:
 
 .. list-table::
-   :widths: 20 20 60
+   :widths: 20 15 65
    :header-rows: 1
 
    * - Category
      - Count
      - Description
    * - 1D Functions
-     - 1
+     - |n_1d|
      - Single-variable functions
    * - 2D Functions
-     - 18
+     - |n_2d|
      - Fixed two-dimensional functions
    * - N-D Functions
-     - 5
+     - |n_nd|
      - Scalable to any dimension
 
 1D Functions
@@ -34,10 +35,11 @@ Mathematical functions are organized by dimensionality:
 
 These functions operate on a single variable.
 
-Gramacy & Lee Function
-----------------------
+.. include:: /_generated/catalogs/algebraic_1d.rst
+   :start-after: Single-variable
 
-A simple 1D function with multiple local minima:
+Example Usage
+-------------
 
 .. code-block:: python
 
@@ -54,10 +56,17 @@ A simple 1D function with multiple local minima:
 2D Functions
 ============
 
-Fixed two-dimensional functions for visualization and testing.
+Fixed two-dimensional functions, ideal for visualization and testing.
 
-Ackley Function
----------------
+.. tip::
+
+   See the :ref:`function_gallery` for visual thumbnails of all 2D functions.
+
+.. include:: /_generated/catalogs/algebraic_2d.rst
+   :start-after: Two-dimensional
+
+Example: Ackley Function
+------------------------
 
 A widely used multimodal function with a nearly flat outer region
 and a large hole at the center:
@@ -77,8 +86,8 @@ and a large hole at the center:
 - Many local minima
 - Difficult for gradient-based methods
 
-Rosenbrock Function (2D)
-------------------------
+Example: Rosenbrock Function (2D)
+---------------------------------
 
 The classic "banana function" with a narrow curved valley:
 
@@ -97,59 +106,19 @@ The classic "banana function" with a narrow curved valley:
 - Narrow curved valley
 - Easy to find the valley, hard to converge to minimum
 
-Beale Function
---------------
-
-.. code-block:: python
-
-    from surfaces.test_functions import BealeFunction
-
-    func = BealeFunction()
-    # Global minimum at (3, 0.5) with f(3, 0.5) = 0
-
-Himmelblau's Function
----------------------
-
-Has four identical local minima:
-
-.. code-block:: python
-
-    from surfaces.test_functions import HimmelblausFunction
-
-    func = HimmelblausFunction()
-    # Four global minima at approximately:
-    # (3.0, 2.0), (-2.805, 3.131), (-3.779, -3.283), (3.584, -1.848)
-
-Other 2D Functions
-------------------
-
-The following 2D functions are also available:
-
-- ``BoothFunction`` - Global minimum at (1, 3)
-- ``BukinFunctionN6`` - Global minimum at (-10, 1)
-- ``CrossInTrayFunction`` - Four global minima
-- ``DropWaveFunction`` - Global minimum at (0, 0)
-- ``EasomFunction`` - Sharp global minimum at (pi, pi)
-- ``EggholderFunction`` - Complex multimodal
-- ``GoldsteinPriceFunction`` - Global minimum at (0, -1)
-- ``HölderTableFunction`` - Four global minima
-- ``LangermannFunction`` - Multiple local minima
-- ``LeviFunctionN13`` - Global minimum at (1, 1)
-- ``MatyasFunction`` - Global minimum at (0, 0)
-- ``McCormickFunction`` - Global minimum at (-0.547, -1.547)
-- ``SchafferFunctionN2`` - Global minimum at (0, 0)
-- ``SimionescuFunction`` - Constrained optimization test
-- ``ThreeHumpCamelFunction`` - Global minimum at (0, 0)
-
 .. _nd_functions:
 
 N-Dimensional Functions
 =======================
 
-These functions scale to any number of dimensions.
+These functions scale to any number of dimensions. Specify the
+dimensionality when creating the function.
 
-Sphere Function
----------------
+.. include:: /_generated/catalogs/algebraic_nd.rst
+   :start-after: Scalable
+
+Example: Sphere Function
+------------------------
 
 The simplest test function; a convex paraboloid:
 
@@ -170,8 +139,8 @@ The simplest test function; a convex paraboloid:
 - Convex, unimodal
 - Good for sanity checking optimizers
 
-Rastrigin Function
-------------------
+Example: Rastrigin Function
+---------------------------
 
 Highly multimodal with regularly distributed local minima:
 
@@ -191,43 +160,6 @@ Highly multimodal with regularly distributed local minima:
 - Highly multimodal (many local minima)
 - Tests global search capability
 
-Rosenbrock Function (N-D)
--------------------------
-
-Generalizes to any dimension:
-
-.. code-block:: python
-
-    from surfaces.test_functions import RosenbrockFunction
-
-    func = RosenbrockFunction(n_dim=10)
-
-    # Global minimum at (1, 1, ..., 1)
-    params = {f"x{i}": 1.0 for i in range(10)}
-    result = func(params)  # 0.0
-
-Griewank Function
------------------
-
-Multimodal with component interactions:
-
-.. code-block:: python
-
-    from surfaces.test_functions import GriewankFunction
-
-    func = GriewankFunction(n_dim=5)
-    # Global minimum at origin
-
-Styblinski-Tang Function
-------------------------
-
-.. code-block:: python
-
-    from surfaces.test_functions import StyblinskiTangFunction
-
-    func = StyblinskiTangFunction(n_dim=5)
-    # Global minimum at (-2.903534, ..., -2.903534)
-
 Importing Functions
 ===================
 
@@ -242,11 +174,11 @@ All functions can be imported from the main module:
         RosenbrockFunction,
     )
 
-    # Import all mathematical functions
-    from surfaces.test_functions.mathematical import mathematical_functions
+    # Import all algebraic functions
+    from surfaces.test_functions.algebraic import algebraic_functions
 
     # List available functions
-    for func_class in mathematical_functions:
+    for func_class in algebraic_functions:
         print(func_class.__name__)
 
 Function Reference

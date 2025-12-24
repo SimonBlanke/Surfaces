@@ -9,22 +9,27 @@ Base classes that all test functions inherit from.
 BaseTestFunction
 ================
 
+The root class for all test functions in Surfaces.
+
 .. autoclass:: surfaces.test_functions._base_test_function.BaseTestFunction
    :members:
    :undoc-members:
    :show-inheritance:
-   :inherited-members:
 
-MathematicalFunction
-====================
+AlgebraicFunction
+=================
 
-.. autoclass:: surfaces.test_functions.mathematical._base_mathematical_function.MathematicalFunction
+Base class for algebraic (mathematical) test functions.
+
+.. autoclass:: surfaces.test_functions.algebraic._base_algebraic_function.AlgebraicFunction
    :members:
    :show-inheritance:
 
-MachineLearningFunction
-=======================
+EngineeringFunction
+===================
 
-.. autoclass:: surfaces.test_functions.machine_learning._base_machine_learning.MachineLearningFunction
+Base class for engineering design optimization problems.
+
+.. autoclass:: surfaces.test_functions.engineering._base_engineering_function.EngineeringFunction
    :members:
    :show-inheritance:

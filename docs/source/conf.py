@@ -392,65 +392,60 @@ else:
 
 
 # -- Count test functions dynamically ------------------------------------------
-def count_from_all_list(module_path: str) -> int:
-    """Count items in __all__ list of a Python module file."""
-    import ast
+# Use the generators module for consistent counting across docs
 
-    file_path = Path(__file__).parent.parent.parent / "src" / module_path
-    if not file_path.exists():
-        return 0
+# Add generators to path
+_generators_path = Path(__file__).parent.parent / "_generators"
+if str(_generators_path.parent) not in sys.path:
+    sys.path.insert(0, str(_generators_path.parent))
 
-    try:
-        tree = ast.parse(file_path.read_text())
-        for node in ast.walk(tree):
-            if isinstance(node, ast.Assign):
-                for target in node.targets:
-                    if isinstance(target, ast.Name) and target.id == "__all__":
-                        if isinstance(node.value, ast.List):
-                            return len(node.value.elts)
-    except Exception:
-        pass
-    return 0
+try:
+    from docs._generators import get_all_test_functions, count_by_category, get_total_count
 
+    _categories = get_all_test_functions()
+    _counts = count_by_category(_categories)
 
-def count_from_list_variable(module_path: str, var_name: str) -> int:
-    """Count items in a list variable of a Python module file."""
-    import ast
+    # Algebraic counts
+    _n_math_1d = _counts.get("algebraic_1d", 0)
+    _n_math_2d = _counts.get("algebraic_2d", 0)
+    _n_math_nd = _counts.get("algebraic_nd", 0)
+    _n_algebraic = _n_math_1d + _n_math_2d + _n_math_nd
 
-    file_path = Path(__file__).parent.parent.parent / "src" / module_path
-    if not file_path.exists():
-        return 0
+    # ML counts
+    _n_ml_classification = _counts.get("ml_tabular_classification", 0)
+    _n_ml_regression = _counts.get("ml_tabular_regression", 0)
+    _n_ml_image = _counts.get("ml_image_classification", 0)
+    _n_ml_ts_clf = _counts.get("ml_timeseries_classification", 0)
+    _n_ml_ts_forecast = _counts.get("ml_timeseries_forecasting", 0)
+    _n_ml = _n_ml_classification + _n_ml_regression + _n_ml_image + _n_ml_ts_clf + _n_ml_ts_forecast
 
-    try:
-        tree = ast.parse(file_path.read_text())
-        for node in ast.walk(tree):
-            if isinstance(node, ast.Assign):
-                for target in node.targets:
-                    if isinstance(target, ast.Name) and target.id == var_name:
-                        if isinstance(node.value, ast.List):
-                            return len(node.value.elts)
-    except Exception:
-        pass
-    return 0
+    # Other counts
+    _n_engineering = _counts.get("engineering", 0)
+    _n_bbob = _counts.get("bbob", 0)
+    _n_cec = _counts.get("cec", 0)
 
+    # Total
+    _n_total = get_total_count(_categories)
 
-# Count mathematical functions by category
-_n_math_1d = count_from_list_variable(
-    "surfaces/test_functions/mathematical/__init__.py", "mathematical_functions_1d"
-)
-_n_math_2d = count_from_list_variable(
-    "surfaces/test_functions/mathematical/__init__.py", "mathematical_functions_2d"
-)
-_n_math_nd = count_from_list_variable(
-    "surfaces/test_functions/mathematical/__init__.py", "mathematical_functions_nd"
-)
-_n_ml = count_from_list_variable(
-    "surfaces/test_functions/machine_learning/__init__.py", "machine_learning_functions"
-)
+except ImportError:
+    # Fallback if generators not available (e.g., during initial setup)
+    _n_math_1d = 1
+    _n_math_2d = 18
+    _n_math_nd = 5
+    _n_algebraic = 24
+    _n_ml_classification = 5
+    _n_ml_regression = 5
+    _n_ml_image = 5
+    _n_ml_ts_clf = 3
+    _n_ml_ts_forecast = 3
+    _n_ml = 21
+    _n_engineering = 5
+    _n_bbob = 0
+    _n_cec = 42
+    _n_total = 92
 
-# Total counts
-_n_mathematical = _n_math_1d + _n_math_2d + _n_math_nd
-_n_total = _n_mathematical + _n_ml
+# Backward compatibility aliases
+_n_mathematical = _n_algebraic
 
 rst_epilog = f"""
 .. |version| replace:: {PYPROJECT_METADATA["version"]}
@@ -458,10 +453,19 @@ rst_epilog = f"""
 .. |python_versions_list| replace:: {_py_versions_inline}
 .. |python_version_range| replace:: {_py_version_range}
 .. |current_year| replace:: {current_year}
+
 .. |n_total_functions| replace:: {_n_total}
+.. |n_algebraic| replace:: {_n_algebraic}
 .. |n_mathematical| replace:: {_n_mathematical}
-.. |n_ml| replace:: {_n_ml}
 .. |n_1d| replace:: {_n_math_1d}
 .. |n_2d| replace:: {_n_math_2d}
 .. |n_nd| replace:: {_n_math_nd}
+.. |n_ml| replace:: {_n_ml}
+.. |n_ml_classification| replace:: {_n_ml_classification}
+.. |n_ml_regression| replace:: {_n_ml_regression}
+.. |n_ml_image| replace:: {_n_ml_image}
+.. |n_ml_timeseries| replace:: {_n_ml_ts_clf + _n_ml_ts_forecast}
+.. |n_engineering| replace:: {_n_engineering}
+.. |n_cec| replace:: {_n_cec}
+.. |n_bbob| replace:: {_n_bbob}
 """

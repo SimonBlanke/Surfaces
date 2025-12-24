@@ -66,13 +66,13 @@ What makes Surfaces ideal for optimization benchmarking.
    .. grid-item-card::
       :class-card: feature-card
 
-      **24+ Test Functions**
+      **|n_total_functions|+ Test Functions**
       ^^^
-      Classic mathematical optimization functions from the
-      literature: Ackley, Rosenbrock, Rastrigin, and more.
+      Classic optimization functions from the literature,
+      ML-based functions, and engineering benchmarks.
 
       +++
-      :doc:`1D, 2D, and N-dimensional functions <user_guide/mathematical>`
+      :doc:`Explore all function categories <user_guide/introduction>`
 
    .. grid-item-card::
       :class-card: feature-card
@@ -134,39 +134,55 @@ What makes Surfaces ideal for optimization benchmarking.
 Function Categories
 ===================
 
-Surfaces provides functions in two main categories, each with a consistent interface.
+Surfaces provides functions in three main categories, each with a consistent interface.
 
-.. grid:: 1 1 2 2
+.. grid:: 1 1 3 3
    :gutter: 4
 
    .. grid-item-card::
       :class-card: category-card category-card-math
 
-      Mathematical Functions
+      Algebraic Functions (|n_algebraic|)
       ^^^
       Classic test functions from the optimization literature with
-      known global optima and characteristics.
+      known global optima and analytical formulas.
 
-      - **1D Functions**: Gramacy & Lee
-      - **2D Functions**: Ackley, Rosenbrock, Beale, Himmelblau, etc.
-      - **N-D Functions**: Sphere, Rastrigin, Griewank
+      - **1D**: |n_1d| functions
+      - **2D**: |n_2d| functions
+      - **N-D**: |n_nd| scalable functions
 
       +++
-      :doc:`Explore mathematical functions <user_guide/mathematical>`
+      :doc:`Explore algebraic functions <user_guide/mathematical>`
 
    .. grid-item-card::
       :class-card: category-card category-card-ml
 
-      Machine Learning Functions
+      Machine Learning Functions (|n_ml|)
       ^^^
       Test functions based on real ML model training tasks,
       providing realistic hyperparameter optimization landscapes.
 
-      - **Classification**: K-Neighbors Classifier
-      - **Regression**: K-Neighbors, Gradient Boosting
+      - **Classification**: Tabular, Image, Time Series
+      - **Regression**: Tabular models
+      - **Forecasting**: Time series
 
       +++
       :doc:`Explore ML functions <user_guide/machine_learning>`
+
+   .. grid-item-card::
+      :class-card: category-card category-card-eng
+
+      Engineering Functions (|n_engineering|)
+      ^^^
+      Real-world constrained engineering design optimization
+      problems with physical meaning.
+
+      - Welded Beam, Pressure Vessel
+      - Tension-Compression Spring
+      - Cantilever Beam, Three-Bar Truss
+
+      +++
+      :doc:`Explore engineering functions <user_guide/engineering>`
 
 ----
 

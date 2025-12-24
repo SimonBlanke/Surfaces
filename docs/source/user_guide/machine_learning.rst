@@ -17,21 +17,24 @@ known global optima, these functions represent realistic optimization
 challenges.
 
 .. list-table::
-   :widths: 30 30 40
+   :widths: 30 15 55
    :header-rows: 1
 
-   * - Function
-     - Task
-     - Model
-   * - KNeighborsClassifierFunction
-     - Classification
-     - K-Nearest Neighbors
-   * - KNeighborsRegressorFunction
-     - Regression
-     - K-Nearest Neighbors
-   * - GradientBoostingRegressorFunction
-     - Regression
-     - Gradient Boosting
+   * - Category
+     - Count
+     - Description
+   * - Tabular Classification
+     - |n_ml_classification|
+     - Classification models on tabular data
+   * - Tabular Regression
+     - |n_ml_regression|
+     - Regression models on tabular data
+   * - Image Classification
+     - |n_ml_image|
+     - Image classification models
+   * - Time Series
+     - |n_ml_timeseries|
+     - Time series classification and forecasting
 
 Why ML-Based Functions?
 =======================
@@ -47,13 +50,17 @@ the characteristics of real hyperparameter optimization:
 Surfaces' ML functions provide these realistic properties in a
 standardized, reproducible way.
 
-Classification Functions
-========================
+Tabular Classification
+======================
 
-KNeighborsClassifierFunction
-----------------------------
+Functions for optimizing classification model hyperparameters on
+tabular datasets.
 
-Optimizes K-Nearest Neighbors classification hyperparameters:
+.. include:: /_generated/catalogs/ml_tabular_classification.rst
+   :start-after: Hyperparameter optimization landscapes for tabular classification
+
+Example: K-Neighbors Classifier
+-------------------------------
 
 .. code-block:: python
 
@@ -75,42 +82,19 @@ Optimizes K-Nearest Neighbors classification hyperparameters:
 
 - ``n_neighbors``: Number of neighbors (integer)
 - ``weights``: Weight function ('uniform' or 'distance')
-- ``p``: Power parameter for Minkowski distance (1 = Manhattan, 2 = Euclidean)
+- ``p``: Power parameter for Minkowski distance
 
-**Returns**: Classification accuracy (higher is better when using score mode)
+Tabular Regression
+==================
 
-Regression Functions
-====================
+Functions for optimizing regression model hyperparameters on
+tabular datasets.
 
-KNeighborsRegressorFunction
----------------------------
+.. include:: /_generated/catalogs/ml_tabular_regression.rst
+   :start-after: Hyperparameter optimization landscapes for tabular regression
 
-Optimizes K-Nearest Neighbors regression hyperparameters:
-
-.. code-block:: python
-
-    from surfaces.test_functions import KNeighborsRegressorFunction
-
-    func = KNeighborsRegressorFunction()
-
-    score = func({
-        "n_neighbors": 7,
-        "weights": "uniform",
-        "p": 1
-    })
-
-**Hyperparameters**:
-
-- ``n_neighbors``: Number of neighbors
-- ``weights``: Weight function
-- ``p``: Minkowski distance power
-
-**Returns**: R² score or negative MSE depending on mode
-
-GradientBoostingRegressorFunction
----------------------------------
-
-Optimizes Gradient Boosting regression hyperparameters:
+Example: Gradient Boosting Regressor
+------------------------------------
 
 .. code-block:: python
 
@@ -130,7 +114,30 @@ Optimizes Gradient Boosting regression hyperparameters:
 - ``max_depth``: Maximum tree depth
 - ``learning_rate``: Shrinkage parameter
 
-**Returns**: R² score or negative MSE depending on mode
+Image Classification
+====================
+
+Functions for optimizing image classification model hyperparameters.
+
+.. include:: /_generated/catalogs/ml_image_classification.rst
+   :start-after: Hyperparameter optimization landscapes for image classification
+
+Time Series Functions
+=====================
+
+Functions for optimizing time series models.
+
+Classification
+--------------
+
+.. include:: /_generated/catalogs/ml_timeseries_classification.rst
+   :start-after: Hyperparameter optimization landscapes for time series classification
+
+Forecasting
+-----------
+
+.. include:: /_generated/catalogs/ml_timeseries_forecasting.rst
+   :start-after: Hyperparameter optimization landscapes for time series forecasting
 
 Using ML Functions
 ==================
@@ -138,15 +145,15 @@ Using ML Functions
 Loss vs Score Mode
 ------------------
 
-ML functions naturally return scores (higher is better). The metric
+ML functions naturally return scores (higher is better). The objective
 parameter controls the sign:
 
 .. code-block:: python
 
-    func = KNeighborsClassifierFunction(metric="score")
+    func = KNeighborsClassifierFunction(objective="maximize")
     score = func(params)  # Returns accuracy (0-1)
 
-    func = KNeighborsClassifierFunction(metric="loss")
+    func = KNeighborsClassifierFunction(objective="minimize")
     loss = func(params)  # Returns negative accuracy
 
 Getting the Search Space
@@ -174,9 +181,6 @@ parameter types:
 
 .. code-block:: python
 
-    # This works for continuous-only functions
-    # func.to_scipy()
-
     # For ML functions, use libraries like:
     # - Hyperactive
     # - Optuna
@@ -190,6 +194,7 @@ slower than mathematical functions:
 
 - **KNeighbors**: Fast (milliseconds per evaluation)
 - **GradientBoosting**: Slower (seconds per evaluation)
+- **CNN/Deep models**: Much slower (requires GPU for practical use)
 
 For benchmarking optimization algorithms, consider:
 
