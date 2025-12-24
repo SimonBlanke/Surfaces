@@ -8,18 +8,18 @@ import numpy as np
 from .._base_algebraic_function import AlgebraicFunction
 
 
-class QuadraticExponentialFunction(AlgebraicFunction):
-    """Quadratic-Exponential one-dimensional test function.
+class DampedSineFunction(AlgebraicFunction):
+    """Damped Sine one-dimensional test function.
 
-    A one-dimensional test function combining a quadratic polynomial
-    with an exponential decay term. The function has a smooth,
-    single-valley landscape.
+    A one-dimensional test function combining sine and linear terms
+    with Gaussian damping. The exponential decay creates a localized
+    oscillatory region near the origin.
 
     The function is defined as:
 
     .. math::
 
-        f(x) = -(16x^2 - 24x + 5) e^{-x}
+        f(x) = -(x + \\sin(x)) e^{-x^2}
 
     Parameters
     ----------
@@ -33,46 +33,46 @@ class QuadraticExponentialFunction(AlgebraicFunction):
     n_dim : int
         Number of dimensions (always 1).
     default_bounds : tuple
-        Default parameter bounds (1.9, 3.9).
+        Default parameter bounds (-10, 10).
 
     References
     ----------
     .. [1] AMPGO (Adaptive Memory Programming for Global Optimization)
-       benchmark suite, Problem04.
+       benchmark suite, Problem06.
        http://infinity77.net/global_optimization/test_functions_1d.html
 
     .. [2] Gavana, A. (2013). "Global Optimization Benchmarks and AMPGO".
 
     Examples
     --------
-    >>> from surfaces.test_functions import QuadraticExponentialFunction
-    >>> func = QuadraticExponentialFunction()
-    >>> func({"x0": 2.868})  # Near global minimum
-    -3.850...
+    >>> from surfaces.test_functions import DampedSineFunction
+    >>> func = DampedSineFunction()
+    >>> func({"x0": 0.6796})  # Near global minimum
+    -0.824...
     >>> search_space = func.search_space
     >>> len(search_space)
     1
     """
 
-    name = "Quadratic Exponential Function"
-    _name_ = "quadratic_exponential_function"
-    __name__ = "QuadraticExponentialFunction"
+    name = "Damped Sine Function"
+    _name_ = "damped_sine_function"
+    __name__ = "DampedSineFunction"
 
     _spec = {
         "convex": False,
-        "unimodal": True,
+        "unimodal": False,
         "separable": True,
         "scalable": False,
     }
 
-    f_global = -3.8504507087979953
-    x_global = np.array([2.8680325095605212])
+    f_global = -0.8242393984760573
+    x_global = np.array([0.6795787635255166])
 
-    default_bounds = (1.9, 3.9)
+    default_bounds = (-10.0, 10.0)
     n_dim = 1
 
-    latex_formula = r"f(x) = -(16x^2 - 24x + 5) e^{-x}"
-    pgfmath_formula = "-(16*#1^2 - 24*#1 + 5) * exp(-#1)"
+    latex_formula = r"f(x) = -(x + \sin(x)) e^{-x^2}"
+    pgfmath_formula = "-(#1 + sin(deg(#1))) * exp(-#1^2)"
 
     def __init__(
         self,
@@ -88,14 +88,14 @@ class QuadraticExponentialFunction(AlgebraicFunction):
         self.n_dim = 1
 
     def _create_objective_function(self):
-        def quadratic_exponential_function(params):
+        def damped_sine_function(params):
             x = params["x0"]
 
-            return -(16 * x**2 - 24 * x + 5) * np.exp(-x)
+            return -(x + np.sin(x)) * np.exp(-(x**2))
 
-        self.pure_objective_function = quadratic_exponential_function
+        self.pure_objective_function = damped_sine_function
 
-    def _search_space(self, min=1.9, max=3.9, value_types="array", size=10000):
+    def _search_space(self, min=-10.0, max=10.0, value_types="array", size=10000):
         return super()._create_n_dim_search_space(
             min=min, max=max, size=size, value_types=value_types
         )

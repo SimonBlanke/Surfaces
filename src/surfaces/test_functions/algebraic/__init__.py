@@ -5,7 +5,11 @@
 """Algebraic test functions with closed-form analytical expressions."""
 
 from ._base_algebraic_function import AlgebraicFunction, MathematicalFunction
+from .test_functions_1d.damped_sine_function import DampedSineFunction
+from .test_functions_1d.forrester_function import ForresterFunction
 from .test_functions_1d.gramacy_and_lee_function import GramacyAndLeeFunction
+from .test_functions_1d.quadratic_exponential_function import QuadraticExponentialFunction
+from .test_functions_1d.sine_product_function import SineProductFunction
 from .test_functions_2d.ackley_function import AckleyFunction
 from .test_functions_2d.beale_function import BealeFunction
 from .test_functions_2d.booth_function import BoothFunction
@@ -36,9 +40,11 @@ __all__ = [
     "BoothFunction",
     "BukinFunctionN6",
     "CrossInTrayFunction",
+    "DampedSineFunction",
     "DropWaveFunction",
     "EasomFunction",
     "EggholderFunction",
+    "ForresterFunction",
     "GoldsteinPriceFunction",
     "GramacyAndLeeFunction",
     "GriewankFunction",
@@ -48,10 +54,12 @@ __all__ = [
     "LeviFunctionN13",
     "MatyasFunction",
     "McCormickFunction",
+    "QuadraticExponentialFunction",
     "RastriginFunction",
     "RosenbrockFunction",
     "SchafferFunctionN2",
     "SimionescuFunction",
+    "SineProductFunction",
     "SphereFunction",
     "StyblinskiTangFunction",
     "ThreeHumpCamelFunction",
@@ -63,9 +71,11 @@ algebraic_functions = [
     BoothFunction,
     BukinFunctionN6,
     CrossInTrayFunction,
+    DampedSineFunction,
     DropWaveFunction,
     EasomFunction,
     EggholderFunction,
+    ForresterFunction,
     GoldsteinPriceFunction,
     GramacyAndLeeFunction,
     GriewankFunction,
@@ -75,10 +85,12 @@ algebraic_functions = [
     LeviFunctionN13,
     MatyasFunction,
     McCormickFunction,
+    QuadraticExponentialFunction,
     RastriginFunction,
     RosenbrockFunction,
     SchafferFunctionN2,
     SimionescuFunction,
+    SineProductFunction,
     SphereFunction,
     StyblinskiTangFunction,
     ThreeHumpCamelFunction,
@@ -88,7 +100,11 @@ algebraic_functions = [
 mathematical_functions = algebraic_functions
 
 algebraic_functions_1d = [
+    DampedSineFunction,
+    ForresterFunction,
     GramacyAndLeeFunction,
+    QuadraticExponentialFunction,
+    SineProductFunction,
 ]
 mathematical_functions_1d = algebraic_functions_1d
 

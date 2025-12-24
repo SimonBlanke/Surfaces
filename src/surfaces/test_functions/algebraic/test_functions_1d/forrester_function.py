@@ -66,8 +66,8 @@ class ForresterFunction(AlgebraicFunction):
         "scalable": False,
     }
 
-    f_global = -6.020740095378691
-    x_global = np.array([0.7572489953693498])
+    f_global = -6.020740055766075
+    x_global = np.array([0.7572487144081974])
 
     default_bounds = (0.0, 1.0)
     n_dim = 1
