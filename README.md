@@ -1,5 +1,10 @@
 # Surfaces
 
+[![PyPI version](https://img.shields.io/pypi/v/surfaces.svg)](https://pypi.org/project/surfaces/)
+[![Python versions](https://img.shields.io/pypi/pyversions/surfaces.svg)](https://pypi.org/project/surfaces/)
+[![License](https://img.shields.io/pypi/l/surfaces.svg)](https://github.com/SimonBlanke/Surfaces/blob/main/LICENSE)
+[![Downloads](https://static.pepy.tech/badge/surfaces/month)](https://pepy.tech/project/surfaces)
+
 A collection of objective functions for optimization algorithm benchmarking.
 
 ## Overview
