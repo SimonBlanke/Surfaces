@@ -107,7 +107,6 @@ extensions = [
     "sphinx_design",
     "sphinx_issues",
     "sphinx.ext.doctest",
-    "sphinxcontrib.mermaid",
 ]
 
 # Recommended by sphinx_design when using the MyST Parser

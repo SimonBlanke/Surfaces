@@ -6,7 +6,6 @@ sphinx-autobuild
 sphinx-copybutton
 sphinx-design
 sphinx-issues
-sphinxcontrib-mermaid
 myst-parser
 numpydoc
 
