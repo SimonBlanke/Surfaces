@@ -3,10 +3,13 @@
 # License: MIT License
 
 import time
-from typing import Any, Dict
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
 
 from ..._surrogates import load_surrogate
 from .._base_test_function import BaseTestFunction
+
+if TYPE_CHECKING:
+    from surfaces.noise import BaseNoise
 
 
 class MachineLearningFunction(BaseTestFunction):
@@ -51,12 +54,12 @@ class MachineLearningFunction(BaseTestFunction):
         sleep: float = 0,
         memory: bool = False,
         collect_data: bool = True,
-        callbacks=None,
-        catch_errors=None,
-        noise=None,
+        callbacks: Optional[Union[Callable, List[Callable]]] = None,
+        catch_errors: Optional[Dict[type, float]] = None,
+        noise: Optional["BaseNoise"] = None,
         use_surrogate: bool = False,
-        **kwargs,
-    ):
+        **kwargs: Any,
+    ) -> None:
         super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
         self.use_surrogate = use_surrogate
         self._surrogate = None

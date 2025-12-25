@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 # Author: Simon Blanke
 # Email: simon.blanke@yahoo.com
 # License: MIT License
@@ -100,14 +102,14 @@ class TSForestClassifierFunction(BaseTSClassification):
         )
 
     @property
-    def search_space(self):
+    def search_space(self) -> Dict[str, Any]:
         """Search space containing hyperparameters."""
         return {
             "n_estimators": self.n_estimators_default,
             "min_interval": self.min_interval_default,
         }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         """Create objective function with fixed dataset and cv."""
         from sklearn.model_selection import cross_val_score
         from sktime.classification.interval_based import TimeSeriesForestClassifier
@@ -120,7 +122,7 @@ class TSForestClassifierFunction(BaseTSClassification):
         # Reshape to add channel dimension
         X = X_raw.reshape(X_raw.shape[0], 1, X_raw.shape[1])
 
-        def ts_forest_classifier(params):
+        def ts_forest_classifier(params: Dict[str, Any]) -> float:
             model = TimeSeriesForestClassifier(
                 n_estimators=params["n_estimators"],
                 min_interval=params["min_interval"],
@@ -133,7 +135,7 @@ class TSForestClassifierFunction(BaseTSClassification):
 
         self.pure_objective_function = ts_forest_classifier
 
-    def _get_surrogate_params(self, params):
+    def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Add fixed parameters for surrogate prediction."""
         return {
             **params,

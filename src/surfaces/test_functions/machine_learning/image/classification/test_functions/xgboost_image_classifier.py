@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 # Author: Simon Blanke
 # Email: simon.blanke@yahoo.com
 # License: MIT License
@@ -107,7 +109,7 @@ class XGBoostImageClassifierFunction(BaseImageClassification):
         )
 
     @property
-    def search_space(self):
+    def search_space(self) -> Dict[str, Any]:
         """Search space containing hyperparameters."""
         return {
             "n_estimators": self.n_estimators_default,
@@ -115,7 +117,7 @@ class XGBoostImageClassifierFunction(BaseImageClassification):
             "learning_rate": self.learning_rate_default,
         }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         """Create objective function with fixed dataset and cv."""
         from sklearn.decomposition import PCA
         from sklearn.model_selection import cross_val_score
@@ -133,7 +135,7 @@ class XGBoostImageClassifierFunction(BaseImageClassification):
         cv = self.cv
         n_classes = len(np.unique(y))
 
-        def xgboost_image_classifier(params):
+        def xgboost_image_classifier(params: Dict[str, Any]) -> float:
             model = XGBClassifier(
                 n_estimators=params["n_estimators"],
                 max_depth=params["max_depth"],
@@ -149,7 +151,7 @@ class XGBoostImageClassifierFunction(BaseImageClassification):
 
         self.pure_objective_function = xgboost_image_classifier
 
-    def _get_surrogate_params(self, params):
+    def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Add fixed parameters for surrogate prediction."""
         return {
             **params,

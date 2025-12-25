@@ -38,7 +38,7 @@ class Schwefel(BBOBFunction):
         x[1::2] = -np.abs(x[1::2])
         return 0.5 * 4.2096874633 * x
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         Lambda = self.lambda_alpha(10)
 
         def schwefel(params: Dict[str, Any]) -> float:
@@ -126,7 +126,7 @@ class Gallagher101(BBOBFunction):
             C = np.diag(diag / np.power(self._alpha[k], 0.25))
             self._C.append(self.R.T @ C @ self.R)
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def gallagher(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
 
@@ -203,7 +203,7 @@ class Gallagher21(BBOBFunction):
             C = np.diag(diag / np.power(self._alpha[k], 0.25))
             self._C.append(self.R.T @ C @ self.R)
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def gallagher(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
 
@@ -240,7 +240,7 @@ class Katsuura(BBOBFunction):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         Lambda = self.lambda_alpha(100)
 
         def katsuura(params: Dict[str, Any]) -> float:
@@ -286,7 +286,7 @@ class LunacekBiRastrigin(BBOBFunction):
         """Generate x_opt with special structure."""
         return 0.5 * 2.5 * np.where(self._rng.rand(self.n_dim) > 0.5, 1, -1)
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         mu0 = 2.5
         D = self.n_dim
         s = 1 - 1 / (2 * np.sqrt(D + 20) - 8.2)

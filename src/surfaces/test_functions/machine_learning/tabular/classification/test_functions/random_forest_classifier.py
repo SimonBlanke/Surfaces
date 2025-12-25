@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 # Author: Simon Blanke
 # Email: simon.blanke@yahoo.com
 # License: MIT License
@@ -71,18 +73,18 @@ class RandomForestClassifierFunction(BaseClassification):
         )
 
     @property
-    def search_space(self):
+    def search_space(self) -> Dict[str, Any]:
         return {
             "n_estimators": self.n_estimators_default,
             "max_depth": self.max_depth_default,
             "min_samples_split": self.min_samples_split_default,
         }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         X, y = self._dataset_loader()
         cv = self.cv
 
-        def objective(params):
+        def objective(params: Dict[str, Any]) -> float:
             clf = RandomForestClassifier(
                 n_estimators=params["n_estimators"],
                 max_depth=params["max_depth"],
@@ -94,5 +96,5 @@ class RandomForestClassifierFunction(BaseClassification):
 
         self.pure_objective_function = objective
 
-    def _get_surrogate_params(self, params):
+    def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         return {**params, "dataset": self.dataset, "cv": self.cv}

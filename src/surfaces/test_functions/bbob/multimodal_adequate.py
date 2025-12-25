@@ -30,7 +30,7 @@ class RastriginRotated(BBOBFunction):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         Lambda = self.lambda_alpha(10)
 
         def rastrigin(params: Dict[str, Any]) -> float:
@@ -63,7 +63,7 @@ class Weierstrass(BBOBFunction):
         "differentiable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         Lambda = self.lambda_alpha(100)
         k_max = 12
         a = 0.5
@@ -108,7 +108,7 @@ class SchaffersF7(BBOBFunction):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         Lambda = self.lambda_alpha(10)
 
         def schaffers_f7(params: Dict[str, Any]) -> float:
@@ -143,7 +143,7 @@ class SchaffersF7Ill(BBOBFunction):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         Lambda = self.lambda_alpha(1000)
 
         def schaffers_f7_ill(params: Dict[str, Any]) -> float:
@@ -178,7 +178,7 @@ class GriewankRosenbrock(BBOBFunction):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         c = max(1, np.sqrt(self.n_dim) / 8)
 
         def griewank_rosenbrock(params: Dict[str, Any]) -> float:

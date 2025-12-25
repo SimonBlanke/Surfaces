@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 # Author: Simon Blanke
 # Email: simon.blanke@yahoo.com
 # License: MIT License
@@ -124,20 +126,20 @@ class RandomForestTSClassifierFunction(BaseTSClassification):
         )
 
     @property
-    def search_space(self):
+    def search_space(self) -> Dict[str, Any]:
         """Search space containing hyperparameters."""
         return {
             "n_estimators": self.n_estimators_default,
             "max_depth": self.max_depth_default,
         }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         """Create objective function with fixed dataset and cv."""
         X_raw, y = self._dataset_loader()
         X = extract_ts_features(X_raw)
         cv = self.cv
 
-        def random_forest_ts_classifier(params):
+        def random_forest_ts_classifier(params: Dict[str, Any]) -> float:
             model = RandomForestClassifier(
                 n_estimators=params["n_estimators"],
                 max_depth=params["max_depth"],
@@ -149,7 +151,7 @@ class RandomForestTSClassifierFunction(BaseTSClassification):
 
         self.pure_objective_function = random_forest_ts_classifier
 
-    def _get_surrogate_params(self, params):
+    def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Add fixed parameters for surrogate prediction."""
         return {
             **params,

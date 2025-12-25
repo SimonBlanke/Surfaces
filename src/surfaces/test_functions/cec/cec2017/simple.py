@@ -28,7 +28,7 @@ class ShiftedRotatedBentCigar(CEC2017Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def bent_cigar(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
@@ -56,7 +56,7 @@ class ShiftedRotatedSumDiffPow(CEC2017Function):
         "deprecated": True,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def sum_diff_pow(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
@@ -84,7 +84,7 @@ class ShiftedRotatedZakharov(CEC2017Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def zakharov(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
@@ -112,7 +112,7 @@ class ShiftedRotatedRosenbrock(CEC2017Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def rosenbrock(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
@@ -143,7 +143,7 @@ class ShiftedRotatedRastrigin(CEC2017Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def rastrigin(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
@@ -173,7 +173,7 @@ class ShiftedRotatedSchafferF7(CEC2017Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def schaffers_f7(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
@@ -205,7 +205,7 @@ class ShiftedRotatedLunacekBiRastrigin(CEC2017Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def lunacek_bi_rastrigin(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             shift = self._get_shift_vector()
@@ -252,7 +252,7 @@ class ShiftedRotatedNonContRastrigin(CEC2017Function):
         "continuous": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def non_cont_rastrigin(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             shift = self._get_shift_vector()
@@ -290,7 +290,7 @@ class ShiftedRotatedLevy(CEC2017Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def levy(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
@@ -321,7 +321,7 @@ class ShiftedRotatedSchwefel(CEC2017Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def schwefel(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift_rotate(x)

@@ -17,11 +17,14 @@ References:
     Technical Report 2009/20, Research Center PPE.
 """
 
-from typing import Any, Dict, Optional
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
 
 import numpy as np
 
 from ..algebraic._base_algebraic_function import AlgebraicFunction
+
+if TYPE_CHECKING:
+    from surfaces.noise import BaseNoise
 
 
 class BBOBFunction(AlgebraicFunction):
@@ -77,10 +80,10 @@ class BBOBFunction(AlgebraicFunction):
         sleep: float = 0,
         memory: bool = False,
         collect_data: bool = True,
-        callbacks=None,
-        catch_errors=None,
-        noise=None,
-    ):
+        callbacks: Optional[Union[Callable, List[Callable]]] = None,
+        catch_errors: Optional[Dict[type, float]] = None,
+        noise: Optional["BaseNoise"] = None,
+    ) -> None:
         self.n_dim = n_dim
         self.instance = instance
         self._rng = np.random.RandomState(self._compute_seed())

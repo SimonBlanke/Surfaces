@@ -31,7 +31,7 @@ class EllipsoidalRotated(BBOBFunction):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         i = np.arange(self.n_dim)
         coeffs = np.power(1e6, i / (self.n_dim - 1)) if self.n_dim > 1 else np.ones(1)
 
@@ -63,7 +63,7 @@ class Discus(BBOBFunction):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def discus(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self.t_osz(self.R @ (x - self.x_opt))
@@ -92,7 +92,7 @@ class BentCigar(BBOBFunction):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def bent_cigar(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self.R @ self.t_asy(self.R @ (x - self.x_opt), 0.5)
@@ -120,7 +120,7 @@ class SharpRidge(BBOBFunction):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         Lambda = self.lambda_alpha(10)
 
         def sharp_ridge(params: Dict[str, Any]) -> float:
@@ -150,7 +150,7 @@ class DifferentPowers(BBOBFunction):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         i = np.arange(self.n_dim)
         exponents = 2 + 4 * i / (self.n_dim - 1) if self.n_dim > 1 else 2 * np.ones(1)
 

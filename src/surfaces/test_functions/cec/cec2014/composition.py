@@ -225,7 +225,7 @@ class CompositionFunction1(_CompositionBase):
         "func_id": 23,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         functions = [
             _rosenbrock,
             _high_conditioned_elliptic,
@@ -277,7 +277,7 @@ class CompositionFunction2(_CompositionBase):
         "func_id": 24,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         functions = [_schwefel, _rastrigin, _high_conditioned_elliptic]
 
         def composition(params: Dict[str, Any]) -> float:
@@ -323,7 +323,7 @@ class CompositionFunction3(_CompositionBase):
         "func_id": 25,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         functions = [_schwefel, _rastrigin, _ackley]
 
         def composition(params: Dict[str, Any]) -> float:
@@ -371,7 +371,7 @@ class CompositionFunction4(_CompositionBase):
         "func_id": 26,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         functions = [
             _schwefel,
             _happycat,
@@ -425,7 +425,7 @@ class CompositionFunction5(_CompositionBase):
         "func_id": 27,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         functions = [
             _hgbat,
             _rastrigin,
@@ -479,7 +479,7 @@ class CompositionFunction6(_CompositionBase):
         "func_id": 28,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         functions = [
             _expanded_griewank_rosenbrock,
             _happycat,
@@ -526,9 +526,9 @@ class CompositionFunction7(_CompositionBase):
         "func_id": 29,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         # Hybrid function components
-        def hybrid1(z):
+        def hybrid1(z: np.ndarray) -> float:
             # Similar to F17: Elliptic + Bent Cigar + Rastrigin
             D = len(z)
             g1, g2, g3 = D // 3, D // 3, D - 2 * (D // 3)
@@ -538,13 +538,13 @@ class CompositionFunction7(_CompositionBase):
                 + _rastrigin(z[g1 + g2 :])
             )
 
-        def hybrid2(z):
+        def hybrid2(z: np.ndarray) -> float:
             # Similar to F18: Griewank + Weierstrass + Rosenbrock
             D = len(z)
             g1, g2, g3 = D // 3, D // 3, D - 2 * (D // 3)
             return _griewank(z[:g1]) + _weierstrass(z[g1 : g1 + g2]) + _rosenbrock(z[g1 + g2 :])
 
-        def hybrid3(z):
+        def hybrid3(z: np.ndarray) -> float:
             # Similar to F19
             D = len(z)
             g1 = D // 4
@@ -598,8 +598,8 @@ class CompositionFunction8(_CompositionBase):
         "func_id": 30,
     }
 
-    def _create_objective_function(self):
-        def hybrid4(z):
+    def _create_objective_function(self) -> None:
+        def hybrid4(z: np.ndarray) -> float:
             # Similar to F20
             D = len(z)
             g1 = D // 4
@@ -613,7 +613,7 @@ class CompositionFunction8(_CompositionBase):
                 + _rastrigin(z[g1 + g2 + g3 :])
             )
 
-        def hybrid5(z):
+        def hybrid5(z: np.ndarray) -> float:
             # Similar to F21
             D = len(z)
             g = D // 5
@@ -625,7 +625,7 @@ class CompositionFunction8(_CompositionBase):
                 + _ackley(z[4 * g :])
             )
 
-        def hybrid6(z):
+        def hybrid6(z: np.ndarray) -> float:
             # Similar to F22
             D = len(z)
             g = D // 5

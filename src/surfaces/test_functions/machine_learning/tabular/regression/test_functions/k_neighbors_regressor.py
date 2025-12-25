@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 # Author: Simon Blanke
 # Email: simon.blanke@yahoo.com
 # License: MIT License
@@ -112,20 +114,20 @@ class KNeighborsRegressorFunction(BaseRegression):
         )
 
     @property
-    def search_space(self):
+    def search_space(self) -> Dict[str, Any]:
         """Search space containing only hyperparameters (not dataset/cv)."""
         return {
             "n_neighbors": self.n_neighbors_default,
             "algorithm": self.algorithm_default,
         }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         """Create objective function with fixed dataset and cv."""
         # Load dataset once
         X, y = self._dataset_loader()
         cv = self.cv
 
-        def k_neighbors_regressor(params):
+        def k_neighbors_regressor(params: Dict[str, Any]) -> float:
             knr = KNeighborsRegressor(
                 n_neighbors=params["n_neighbors"],
                 algorithm=params["algorithm"],
@@ -135,7 +137,7 @@ class KNeighborsRegressorFunction(BaseRegression):
 
         self.pure_objective_function = k_neighbors_regressor
 
-    def _get_surrogate_params(self, params):
+    def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Add fixed parameters (dataset, cv) to params for surrogate prediction."""
         return {
             **params,

@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 # Author: Simon Blanke
 # Email: simon.blanke@yahoo.com
 # License: MIT License
@@ -70,18 +72,18 @@ class SVMClassifierFunction(BaseClassification):
         )
 
     @property
-    def search_space(self):
+    def search_space(self) -> Dict[str, Any]:
         return {
             "C": self.C_default,
             "kernel": self.kernel_default,
             "gamma": self.gamma_default,
         }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         X, y = self._dataset_loader()
         cv = self.cv
 
-        def objective(params):
+        def objective(params: Dict[str, Any]) -> float:
             clf = SVC(
                 C=params["C"],
                 kernel=params["kernel"],
@@ -93,5 +95,5 @@ class SVMClassifierFunction(BaseClassification):
 
         self.pure_objective_function = objective
 
-    def _get_surrogate_params(self, params):
+    def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         return {**params, "dataset": self.dataset, "cv": self.cv}

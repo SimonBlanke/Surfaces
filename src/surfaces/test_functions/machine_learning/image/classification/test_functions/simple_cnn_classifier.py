@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 # Author: Simon Blanke
 # Email: simon.blanke@yahoo.com
 # License: MIT License
@@ -103,7 +105,7 @@ class SimpleCNNClassifierFunction(BaseImageClassification):
         )
 
     @property
-    def search_space(self):
+    def search_space(self) -> Dict[str, Any]:
         """Search space containing hyperparameters."""
         return {
             "filters": self.filters_default,
@@ -111,7 +113,7 @@ class SimpleCNNClassifierFunction(BaseImageClassification):
             "dense_units": self.dense_units_default,
         }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         """Create objective function with fixed dataset and epochs."""
         import tensorflow as tf
         from tensorflow import keras
@@ -181,7 +183,7 @@ class SimpleCNNClassifierFunction(BaseImageClassification):
 
         self.pure_objective_function = simple_cnn_classifier
 
-    def _get_surrogate_params(self, params):
+    def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Add fixed parameters for surrogate prediction."""
         return {
             **params,

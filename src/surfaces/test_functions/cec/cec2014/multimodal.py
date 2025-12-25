@@ -39,7 +39,7 @@ class ShiftedRotatedRosenbrock(CEC2014Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def rosenbrock(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
@@ -79,7 +79,7 @@ class ShiftedRotatedAckley(CEC2014Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def ackley(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
@@ -121,7 +121,7 @@ class ShiftedRotatedWeierstrass(CEC2014Function):
         "differentiable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         # Precompute constants
         a = 0.5
         b = 3
@@ -172,7 +172,7 @@ class ShiftedRotatedGriewank(CEC2014Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def griewank(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
@@ -210,7 +210,7 @@ class ShiftedRastrigin(CEC2014Function):
         "separable": True,  # No rotation
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def rastrigin(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift(x)  # Only shift, no rotation
@@ -246,7 +246,7 @@ class ShiftedRotatedRastrigin(CEC2014Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def rastrigin(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
@@ -284,7 +284,7 @@ class ShiftedSchwefel(CEC2014Function):
         "separable": True,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def schwefel(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift(x)  # Only shift
@@ -335,7 +335,7 @@ class ShiftedRotatedSchwefel(CEC2014Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def schwefel(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
@@ -387,7 +387,7 @@ class ShiftedRotatedKatsuura(CEC2014Function):
         "differentiable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def katsuura(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
@@ -431,7 +431,7 @@ class ShiftedRotatedHappyCat(CEC2014Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         alpha = 1.0 / 8.0
 
         def happycat(params: Dict[str, Any]) -> float:
@@ -473,7 +473,7 @@ class ShiftedRotatedHGBat(CEC2014Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def hgbat(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
@@ -513,7 +513,7 @@ class ShiftedRotatedExpandedGriewankRosenbrock(CEC2014Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def griewank_rosenbrock(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
@@ -558,7 +558,7 @@ class ShiftedRotatedExpandedScafferF6(CEC2014Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def schaffer_f6(x1: float, x2: float) -> float:
             t = x1**2 + x2**2
             return 0.5 + (np.sin(np.sqrt(t)) ** 2 - 0.5) / (1 + 0.001 * t) ** 2

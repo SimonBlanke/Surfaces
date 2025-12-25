@@ -4,11 +4,14 @@
 
 """Base class for engineering design optimization test functions."""
 
-from typing import Any, Dict, List, Tuple
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 
 from .._base_test_function import BaseTestFunction
+
+if TYPE_CHECKING:
+    from surfaces.noise import BaseNoise
 
 
 class EngineeringFunction(BaseTestFunction):
@@ -74,11 +77,11 @@ class EngineeringFunction(BaseTestFunction):
         sleep: float = 0,
         memory: bool = False,
         collect_data: bool = True,
-        callbacks=None,
-        catch_errors=None,
-        noise=None,
+        callbacks: Optional[Union[Callable, List[Callable]]] = None,
+        catch_errors: Optional[Dict[type, float]] = None,
+        noise: Optional["BaseNoise"] = None,
         penalty_coefficient: float = 1e6,
-    ):
+    ) -> None:
         self.penalty_coefficient = penalty_coefficient
         super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
 
@@ -186,10 +189,10 @@ class EngineeringFunction(BaseTestFunction):
         """
         raise NotImplementedError("Subclasses must implement raw_objective")
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         """Create objective function with penalty for constraint violations."""
 
-        def penalized_objective(params):
+        def penalized_objective(params: Dict[str, Any]) -> float:
             return self.raw_objective(params) + self.penalty(params)
 
         self.pure_objective_function = penalized_objective

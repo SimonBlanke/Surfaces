@@ -35,7 +35,7 @@ class Sphere(CEC2013Function):
         "separable": True,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def sphere(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift(x)
@@ -64,7 +64,7 @@ class RotatedHighConditionedElliptic(CEC2013Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def elliptic(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._oscillation(self._shift_rotate(x))
@@ -99,7 +99,7 @@ class RotatedBentCigar(CEC2013Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def bent_cigar(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._asymmetric(self._shift_rotate(x), 0.5)
@@ -130,7 +130,7 @@ class RotatedDiscus(CEC2013Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def discus(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._oscillation(self._shift_rotate(x))
@@ -159,7 +159,7 @@ class DifferentPowers(CEC2013Function):
         "separable": True,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def different_powers(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift(x)
@@ -198,7 +198,7 @@ class RotatedRosenbrock(CEC2013Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def rosenbrock(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
@@ -232,7 +232,7 @@ class RotatedSchafferF7(CEC2013Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def schaffer_f7(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._asymmetric(self._shift_rotate(x), 0.5)
@@ -273,7 +273,7 @@ class RotatedAckley(CEC2013Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def ackley(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._asymmetric(self._shift_rotate(x), 0.5)
@@ -311,7 +311,7 @@ class RotatedWeierstrass(CEC2013Function):
         "differentiable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         a = 0.5
         b = 3
         k_max = 20
@@ -355,7 +355,7 @@ class RotatedGriewank(CEC2013Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def griewank(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
@@ -389,7 +389,7 @@ class Rastrigin(CEC2013Function):
         "separable": True,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def rastrigin(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._oscillation(self._asymmetric(self._shift(x), 0.2))
@@ -422,7 +422,7 @@ class RotatedRastrigin(CEC2013Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def rastrigin(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._oscillation(self._asymmetric(self._shift_rotate(x), 0.2))
@@ -457,7 +457,7 @@ class StepRastrigin(CEC2013Function):
         "continuous": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def step_rastrigin(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._oscillation(self._asymmetric(self._shift_rotate(x), 0.2))
@@ -497,7 +497,7 @@ class Schwefel(CEC2013Function):
         "separable": True,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def schwefel(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift(x)
@@ -542,7 +542,7 @@ class RotatedSchwefel(CEC2013Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def schwefel(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
@@ -588,7 +588,7 @@ class RotatedKatsuura(CEC2013Function):
         "differentiable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def katsuura(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
@@ -628,7 +628,7 @@ class LunacekBiRastrigin(CEC2013Function):
         "separable": True,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def bi_rastrigin(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift(x)
@@ -670,7 +670,7 @@ class RotatedLunacekBiRastrigin(CEC2013Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def bi_rastrigin(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
@@ -714,7 +714,7 @@ class RotatedExpandedGriewankRosenbrock(CEC2013Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def griewank_rosenbrock(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
@@ -753,7 +753,7 @@ class RotatedExpandedScafferF6(CEC2013Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def schaffer_f6(x1: float, x2: float) -> float:
             t = x1**2 + x2**2
             return 0.5 + (np.sin(np.sqrt(t)) ** 2 - 0.5) / (1 + 0.001 * t) ** 2
@@ -835,21 +835,21 @@ class CompositionFunction1(_CompositionBase):
     lambdas = [1, 1e-6, 1e-26, 1e-6, 1e-6]
     biases = [0, 100, 200, 300, 400]
 
-    def _create_objective_function(self):
-        def rosenbrock(z):
+    def _create_objective_function(self) -> None:
+        def rosenbrock(z: np.ndarray) -> float:
             z = z * 2.048 / 100 + 1
             return sum(
                 100 * (z[i] ** 2 - z[i + 1]) ** 2 + (z[i] - 1) ** 2 for i in range(len(z) - 1)
             )
 
-        def elliptic(z):
+        def elliptic(z: np.ndarray) -> float:
             D = len(z)
             return sum((10**6) ** (i / (D - 1)) * z[i] ** 2 for i in range(D))
 
-        def bent_cigar(z):
+        def bent_cigar(z: np.ndarray) -> float:
             return z[0] ** 2 + 10**6 * np.sum(z[1:] ** 2)
 
-        def discus(z):
+        def discus(z: np.ndarray) -> float:
             return 10**6 * z[0] ** 2 + np.sum(z[1:] ** 2)
 
         functions = [rosenbrock, elliptic, bent_cigar, discus, elliptic]
@@ -888,8 +888,8 @@ class CompositionFunction2(_CompositionBase):
     lambdas = [10, 1, 1e-6]
     biases = [0, 100, 200]
 
-    def _create_objective_function(self):
-        def schwefel(z):
+    def _create_objective_function(self) -> None:
+        def schwefel(z: np.ndarray) -> float:
             z = z * 1000 / 100 + 4.209687462275036e2
             D = len(z)
             result = 0.0
@@ -903,12 +903,12 @@ class CompositionFunction2(_CompositionBase):
                     result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500)))
             return 418.9829 * D - result
 
-        def rastrigin(z):
+        def rastrigin(z: np.ndarray) -> float:
             z = z * 5.12 / 100
             D = len(z)
             return 10 * D + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
 
-        def elliptic(z):
+        def elliptic(z: np.ndarray) -> float:
             D = len(z)
             return sum((10**6) ** (i / (D - 1)) * z[i] ** 2 for i in range(D))
 
@@ -944,8 +944,8 @@ class CompositionFunction3(_CompositionBase):
     lambdas = [10, 1, 1e-6]
     biases = [0, 100, 200]
 
-    def _create_objective_function(self):
-        def schwefel(z):
+    def _create_objective_function(self) -> None:
+        def schwefel(z: np.ndarray) -> float:
             z = z * 1000 / 100 + 4.209687462275036e2
             D = len(z)
             result = 0.0
@@ -959,12 +959,12 @@ class CompositionFunction3(_CompositionBase):
                     result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500)))
             return 418.9829 * D - result
 
-        def rastrigin(z):
+        def rastrigin(z: np.ndarray) -> float:
             z = z * 5.12 / 100
             D = len(z)
             return 10 * D + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
 
-        def elliptic(z):
+        def elliptic(z: np.ndarray) -> float:
             D = len(z)
             return sum((10**6) ** (i / (D - 1)) * z[i] ** 2 for i in range(D))
 
@@ -1001,8 +1001,8 @@ class CompositionFunction4(_CompositionBase):
     lambdas = [10, 1, 1e-6]
     biases = [0, 100, 200]
 
-    def _create_objective_function(self):
-        def schwefel(z):
+    def _create_objective_function(self) -> None:
+        def schwefel(z: np.ndarray) -> float:
             z = z * 1000 / 100 + 4.209687462275036e2
             D = len(z)
             result = 0.0
@@ -1011,12 +1011,12 @@ class CompositionFunction4(_CompositionBase):
                     result += zi * np.sin(np.sqrt(abs(zi)))
             return 418.9829 * D - result
 
-        def rastrigin(z):
+        def rastrigin(z: np.ndarray) -> float:
             z = z * 5.12 / 100
             D = len(z)
             return 10 * D + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
 
-        def weierstrass(z):
+        def weierstrass(z: np.ndarray) -> float:
             a, b, k_max = 0.5, 3, 20
             D = len(z)
             z = z * 0.5 / 100
@@ -1060,8 +1060,8 @@ class CompositionFunction5(_CompositionBase):
     lambdas = [10, 1, 1]
     biases = [0, 100, 200]
 
-    def _create_objective_function(self):
-        def schwefel(z):
+    def _create_objective_function(self) -> None:
+        def schwefel(z: np.ndarray) -> float:
             z = z * 1000 / 100 + 4.209687462275036e2
             D = len(z)
             result = 0.0
@@ -1070,12 +1070,12 @@ class CompositionFunction5(_CompositionBase):
                     result += zi * np.sin(np.sqrt(abs(zi)))
             return 418.9829 * D - result
 
-        def rastrigin(z):
+        def rastrigin(z: np.ndarray) -> float:
             z = z * 5.12 / 100
             D = len(z)
             return 10 * D + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
 
-        def ackley(z):
+        def ackley(z: np.ndarray) -> float:
             D = len(z)
             sum1 = np.sum(z**2)
             sum2 = np.sum(np.cos(2 * np.pi * z))
@@ -1114,8 +1114,8 @@ class CompositionFunction6(_CompositionBase):
     lambdas = [10, 1, 1e-6, 1, 1]
     biases = [0, 100, 200, 300, 400]
 
-    def _create_objective_function(self):
-        def schwefel(z):
+    def _create_objective_function(self) -> None:
+        def schwefel(z: np.ndarray) -> float:
             z = z * 1000 / 100 + 4.209687462275036e2
             D = len(z)
             result = 0.0
@@ -1124,16 +1124,16 @@ class CompositionFunction6(_CompositionBase):
                     result += zi * np.sin(np.sqrt(abs(zi)))
             return 418.9829 * D - result
 
-        def rastrigin(z):
+        def rastrigin(z: np.ndarray) -> float:
             z = z * 5.12 / 100
             D = len(z)
             return 10 * D + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
 
-        def elliptic(z):
+        def elliptic(z: np.ndarray) -> float:
             D = len(z)
             return sum((10**6) ** (i / (D - 1)) * z[i] ** 2 for i in range(D))
 
-        def weierstrass(z):
+        def weierstrass(z: np.ndarray) -> float:
             a, b, k_max = 0.5, 3, 20
             D = len(z)
             z = z * 0.5 / 100
@@ -1144,7 +1144,7 @@ class CompositionFunction6(_CompositionBase):
             offset = D * sum(a**k * np.cos(2 * np.pi * b**k * 0.5) for k in range(k_max + 1))
             return result - offset
 
-        def griewank(z):
+        def griewank(z: np.ndarray) -> float:
             D = len(z)
             z = z * 600 / 100
             return np.sum(z**2) / 4000 - np.prod(np.cos(z / np.sqrt(np.arange(1, D + 1)))) + 1
@@ -1182,18 +1182,18 @@ class CompositionFunction7(_CompositionBase):
     lambdas = [10, 10, 2.5, 25, 1e-6]
     biases = [0, 100, 200, 300, 400]
 
-    def _create_objective_function(self):
-        def griewank(z):
+    def _create_objective_function(self) -> None:
+        def griewank(z: np.ndarray) -> float:
             D = len(z)
             z = z * 600 / 100
             return np.sum(z**2) / 4000 - np.prod(np.cos(z / np.sqrt(np.arange(1, D + 1)))) + 1
 
-        def rastrigin(z):
+        def rastrigin(z: np.ndarray) -> float:
             z = z * 5.12 / 100
             D = len(z)
             return 10 * D + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
 
-        def schwefel(z):
+        def schwefel(z: np.ndarray) -> float:
             z = z * 1000 / 100 + 4.209687462275036e2
             D = len(z)
             result = 0.0
@@ -1202,7 +1202,7 @@ class CompositionFunction7(_CompositionBase):
                     result += zi * np.sin(np.sqrt(abs(zi)))
             return 418.9829 * D - result
 
-        def weierstrass(z):
+        def weierstrass(z: np.ndarray) -> float:
             a, b, k_max = 0.5, 3, 20
             D = len(z)
             z = z * 0.5 / 100
@@ -1213,7 +1213,7 @@ class CompositionFunction7(_CompositionBase):
             offset = D * sum(a**k * np.cos(2 * np.pi * b**k * 0.5) for k in range(k_max + 1))
             return result - offset
 
-        def elliptic(z):
+        def elliptic(z: np.ndarray) -> float:
             D = len(z)
             return sum((10**6) ** (i / (D - 1)) * z[i] ** 2 for i in range(D))
 
@@ -1250,19 +1250,19 @@ class CompositionFunction8(_CompositionBase):
     lambdas = [10, 10, 2.5, 25, 1e-6]
     biases = [0, 100, 200, 300, 400]
 
-    def _create_objective_function(self):
-        def ackley(z):
+    def _create_objective_function(self) -> None:
+        def ackley(z: np.ndarray) -> float:
             D = len(z)
             sum1 = np.sum(z**2)
             sum2 = np.sum(np.cos(2 * np.pi * z))
             return -20 * np.exp(-0.2 * np.sqrt(sum1 / D)) - np.exp(sum2 / D) + 20 + np.e
 
-        def griewank(z):
+        def griewank(z: np.ndarray) -> float:
             D = len(z)
             z = z * 600 / 100
             return np.sum(z**2) / 4000 - np.prod(np.cos(z / np.sqrt(np.arange(1, D + 1)))) + 1
 
-        def schwefel(z):
+        def schwefel(z: np.ndarray) -> float:
             z = z * 1000 / 100 + 4.209687462275036e2
             D = len(z)
             result = 0.0
@@ -1271,12 +1271,12 @@ class CompositionFunction8(_CompositionBase):
                     result += zi * np.sin(np.sqrt(abs(zi)))
             return 418.9829 * D - result
 
-        def rastrigin(z):
+        def rastrigin(z: np.ndarray) -> float:
             z = z * 5.12 / 100
             D = len(z)
             return 10 * D + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
 
-        def elliptic(z):
+        def elliptic(z: np.ndarray) -> float:
             D = len(z)
             return sum((10**6) ** (i / (D - 1)) * z[i] ** 2 for i in range(D))
 

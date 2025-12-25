@@ -44,7 +44,7 @@ class RotatedHighConditionedElliptic(CEC2014Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def elliptic(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
@@ -88,7 +88,7 @@ class RotatedBentCigar(CEC2014Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def bent_cigar(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift_rotate(x)
@@ -130,7 +130,7 @@ class RotatedDiscus(CEC2014Function):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def discus(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = self._shift_rotate(x)

@@ -185,7 +185,7 @@ class HybridFunction1(_HybridBase):
         "func_id": 17,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         functions = [_high_conditioned_elliptic, _bent_cigar, _rastrigin]
 
         def hybrid(params: Dict[str, Any]) -> float:
@@ -222,7 +222,7 @@ class HybridFunction2(_HybridBase):
         "func_id": 18,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def weierstrass(z):
             a, b, k_max = 0.5, 3, 20
             D = len(z)
@@ -269,7 +269,7 @@ class HybridFunction3(_HybridBase):
         "func_id": 19,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def weierstrass(z):
             a, b, k_max = 0.5, 3, 20
             D = len(z)
@@ -316,7 +316,7 @@ class HybridFunction4(_HybridBase):
         "func_id": 20,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         functions = [_hgbat, _discus, _expanded_griewank_rosenbrock, _rastrigin]
 
         def hybrid(params: Dict[str, Any]) -> float:
@@ -353,7 +353,7 @@ class HybridFunction5(_HybridBase):
         "func_id": 21,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         functions = [
             _expanded_scaffer,
             _hgbat,
@@ -396,7 +396,7 @@ class HybridFunction6(_HybridBase):
         "func_id": 22,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         functions = [
             _katsuura,
             _happycat,

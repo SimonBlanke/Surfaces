@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 # Author: Simon Blanke
 # Email: simon.blanke@yahoo.com
 # License: MIT License
@@ -95,7 +97,7 @@ class SVMImageClassifierFunction(BaseImageClassification):
         )
 
     @property
-    def search_space(self):
+    def search_space(self) -> Dict[str, Any]:
         """Search space containing hyperparameters."""
         return {
             "C": self.C_default,
@@ -103,7 +105,7 @@ class SVMImageClassifierFunction(BaseImageClassification):
             "gamma": self.gamma_default,
         }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         """Create objective function with fixed dataset and cv."""
         X_raw, y = self._dataset_loader()
 
@@ -115,7 +117,7 @@ class SVMImageClassifierFunction(BaseImageClassification):
 
         cv = self.cv
 
-        def svm_image_classifier(params):
+        def svm_image_classifier(params: Dict[str, Any]) -> float:
             model = SVC(
                 C=params["C"],
                 kernel=params["kernel"],
@@ -127,7 +129,7 @@ class SVMImageClassifierFunction(BaseImageClassification):
 
         self.pure_objective_function = svm_image_classifier
 
-    def _get_surrogate_params(self, params):
+    def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Add fixed parameters for surrogate prediction."""
         return {
             **params,

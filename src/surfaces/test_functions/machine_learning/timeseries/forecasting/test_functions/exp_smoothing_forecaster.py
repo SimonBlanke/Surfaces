@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 # Author: Simon Blanke
 # Email: simon.blanke@yahoo.com
 # License: MIT License
@@ -97,7 +99,7 @@ class ExpSmoothingForecasterFunction(BaseForecasting):
         )
 
     @property
-    def search_space(self):
+    def search_space(self) -> Dict[str, Any]:
         """Search space containing hyperparameters."""
         return {
             "trend": self.trend_default,
@@ -105,7 +107,7 @@ class ExpSmoothingForecasterFunction(BaseForecasting):
             "sp": self.sp_default,
         }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         """Create objective function with fixed dataset."""
         import pandas as pd
         from sktime.forecasting.exp_smoothing import ExponentialSmoothing
@@ -122,7 +124,7 @@ class ExpSmoothingForecasterFunction(BaseForecasting):
         y_train = y[:train_size]
         y_test = y[train_size:]
 
-        def exp_smoothing_forecaster(params):
+        def exp_smoothing_forecaster(params: Dict[str, Any]) -> float:
             try:
                 forecaster = ExponentialSmoothing(
                     trend=params["trend"],
@@ -147,7 +149,7 @@ class ExpSmoothingForecasterFunction(BaseForecasting):
 
         self.pure_objective_function = exp_smoothing_forecaster
 
-    def _get_surrogate_params(self, params):
+    def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Add fixed parameters for surrogate prediction."""
         return {
             **params,

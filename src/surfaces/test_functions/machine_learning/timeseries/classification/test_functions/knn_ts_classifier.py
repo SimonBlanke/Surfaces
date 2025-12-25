@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 # Author: Simon Blanke
 # Email: simon.blanke@yahoo.com
 # License: MIT License
@@ -90,14 +92,14 @@ class KNNTSClassifierFunction(BaseTSClassification):
         )
 
     @property
-    def search_space(self):
+    def search_space(self) -> Dict[str, Any]:
         """Search space containing hyperparameters."""
         return {
             "n_neighbors": self.n_neighbors_default,
             "metric": self.metric_default,
         }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         """Create objective function with fixed dataset and cv."""
         X_raw, y = self._dataset_loader()
         # Normalize time-series for better distance computation
@@ -105,7 +107,7 @@ class KNNTSClassifierFunction(BaseTSClassification):
         X = scaler.fit_transform(X_raw)
         cv = self.cv
 
-        def knn_ts_classifier(params):
+        def knn_ts_classifier(params: Dict[str, Any]) -> float:
             model = KNeighborsClassifier(
                 n_neighbors=params["n_neighbors"],
                 metric=params["metric"],
@@ -116,7 +118,7 @@ class KNNTSClassifierFunction(BaseTSClassification):
 
         self.pure_objective_function = knn_ts_classifier
 
-    def _get_surrogate_params(self, params):
+    def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Add fixed parameters for surrogate prediction."""
         return {
             **params,

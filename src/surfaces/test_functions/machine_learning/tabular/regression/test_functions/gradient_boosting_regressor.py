@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 # Author: Simon Blanke
 # Email: simon.blanke@yahoo.com
 # License: MIT License
@@ -112,20 +114,20 @@ class GradientBoostingRegressorFunction(BaseRegression):
         )
 
     @property
-    def search_space(self):
+    def search_space(self) -> Dict[str, Any]:
         """Search space containing only hyperparameters (not dataset/cv)."""
         return {
             "n_estimators": self.n_estimators_default,
             "max_depth": self.max_depth_default,
         }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         """Create objective function with fixed dataset and cv."""
         # Load dataset once
         X, y = self._dataset_loader()
         cv = self.cv
 
-        def gradient_boosting_regressor(params):
+        def gradient_boosting_regressor(params: Dict[str, Any]) -> float:
             gbr = GradientBoostingRegressor(
                 n_estimators=params["n_estimators"],
                 max_depth=params["max_depth"],
@@ -135,7 +137,7 @@ class GradientBoostingRegressorFunction(BaseRegression):
 
         self.pure_objective_function = gradient_boosting_regressor
 
-    def _get_surrogate_params(self, params):
+    def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Add fixed parameters (dataset, cv) to params for surrogate prediction."""
         return {
             **params,

@@ -30,7 +30,7 @@ class AttractiveSector(BBOBFunction):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         Lambda = self.lambda_alpha(10)
 
         def attractive_sector(params: Dict[str, Any]) -> float:
@@ -65,7 +65,7 @@ class StepEllipsoidal(BBOBFunction):
         "continuous": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         Lambda = self.lambda_alpha(10)
 
         def step_ellipsoidal(params: Dict[str, Any]) -> float:
@@ -111,7 +111,7 @@ class RosenbrockOriginal(BBOBFunction):
         """Generate x_opt constrained to [-3, 3]."""
         return self._rng.uniform(-3, 3, self.n_dim)
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         c = max(1, np.sqrt(self.n_dim) / 8)
 
         def rosenbrock(params: Dict[str, Any]) -> float:
@@ -146,7 +146,7 @@ class RosenbrockRotated(BBOBFunction):
         "separable": False,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         c = max(1, np.sqrt(self.n_dim) / 8)
 
         def rosenbrock_rotated(params: Dict[str, Any]) -> float:

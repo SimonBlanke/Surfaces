@@ -32,7 +32,7 @@ class Sphere(BBOBFunction):
         "separable": True,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         def sphere(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
             z = x - self.x_opt
@@ -61,7 +61,7 @@ class EllipsoidalSeparable(BBOBFunction):
         "separable": True,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         i = np.arange(self.n_dim)
         coeffs = np.power(1e6, i / (self.n_dim - 1)) if self.n_dim > 1 else np.ones(1)
 
@@ -92,7 +92,7 @@ class RastriginSeparable(BBOBFunction):
         "separable": True,
     }
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         Lambda = self.lambda_alpha(10)
 
         def rastrigin(params: Dict[str, Any]) -> float:
@@ -130,7 +130,7 @@ class BuecheRastrigin(BBOBFunction):
         x[::2] = np.abs(x[::2])
         return x
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         Lambda = self.lambda_alpha(10)
 
         def bueche_rastrigin(params: Dict[str, Any]) -> float:
@@ -178,7 +178,7 @@ class LinearSlope(BBOBFunction):
         signs = np.where(self._rng.rand(self.n_dim) > 0.5, 1, -1)
         return 5 * signs
 
-    def _create_objective_function(self):
+    def _create_objective_function(self) -> None:
         i = np.arange(self.n_dim)
         s = (
             np.sign(self.x_opt) * np.power(10, i / (self.n_dim - 1))

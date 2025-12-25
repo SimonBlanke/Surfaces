@@ -36,7 +36,7 @@ from ._errors import (
 )
 
 
-def check_plotly():
+def check_plotly() -> None:
     """Check if plotly is available, raise helpful error if not."""
     if not HAS_PLOTLY:
         raise MissingDependencyError(["plotly"])

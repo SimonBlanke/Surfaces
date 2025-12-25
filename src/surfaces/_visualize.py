@@ -32,7 +32,7 @@ except ImportError:
     color_scale = None
 
 
-def _check_viz_deps():
+def _check_viz_deps() -> None:
     """Check if visualization dependencies are available."""
     if not _HAS_VIZ_DEPS:
         raise ImportError(
@@ -41,7 +41,7 @@ def _check_viz_deps():
         )
 
 
-def _create_grid(objective_function, search_space: Dict[str, np.ndarray]):
+def _create_grid(objective_function: Any, search_space: Dict[str, np.ndarray]) -> tuple:
     """Create a 2D grid for visualization from a search space and objective function.
 
     Args:
@@ -53,7 +53,7 @@ def _create_grid(objective_function, search_space: Dict[str, np.ndarray]):
     """
     _check_viz_deps()
 
-    def objective_function_np(*args):
+    def objective_function_np(*args: Any) -> float:
         para = {}
         for arg, key in zip(args, search_space.keys()):
             para[key] = arg
