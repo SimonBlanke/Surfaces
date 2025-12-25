@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "Surfaces"
+abstract: "Standardized test-functions for optimization algorithms and machine-learning"
+authors:
+  - family-names: "Blanke"
+    given-names: "Simon"
+    email: "simon.blanke@yahoo.com"
+repository-code: "https://github.com/SimonBlanke/Surfaces"
+url: "https://github.com/SimonBlanke/Surfaces"
+license: MIT
+keywords:
+  - optimization
+  - benchmark functions
+  - hyperparameter optimization
+  - test functions
+  - machine learning
+  - black-box optimization
+version: "0.5.1"
+date-released: "2024-05-01"
+
