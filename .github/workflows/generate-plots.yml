@@ -1,19 +1,7 @@
 name: Generate Function Plots
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - 'src/surfaces/test_functions/**'
-      - 'src/surfaces/visualize.py'
-      - '.github/workflows/generate-plots.yml'
-  pull_request:
-    branches: [ main ]
-    paths:
-      - 'src/surfaces/test_functions/**'
-      - 'src/surfaces/visualize.py'
-      - '.github/workflows/generate-plots.yml'
-  workflow_dispatch:
+  workflow_dispatch:  # Manual trigger only (auto-triggers disabled)
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
