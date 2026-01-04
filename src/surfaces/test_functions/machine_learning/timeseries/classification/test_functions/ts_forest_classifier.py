@@ -1,10 +1,6 @@
-from typing import Any, Dict
-
-# Author: Simon Blanke
-# Email: simon.blanke@yahoo.com
-# License: MIT License
-
 """Time Series Forest Classifier test function using sktime."""
+
+from typing import Any, Dict
 
 from .._base_ts_classification import BaseTSClassification
 from ..datasets import DATASETS

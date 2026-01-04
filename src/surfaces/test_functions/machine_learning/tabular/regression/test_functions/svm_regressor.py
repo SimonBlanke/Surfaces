@@ -1,10 +1,6 @@
-from typing import Any, Dict
-
-# Author: Simon Blanke
-# Email: simon.blanke@yahoo.com
-# License: MIT License
-
 """Support Vector Machine Regressor test function with surrogate support."""
+
+from typing import Any, Dict
 
 from sklearn.model_selection import cross_val_score
 from sklearn.svm import SVR

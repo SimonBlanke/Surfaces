@@ -1,10 +1,6 @@
-from typing import Any, Dict
-
-# Author: Simon Blanke
-# Email: simon.blanke@yahoo.com
-# License: MIT License
-
 """Decision Tree Classifier test function with surrogate support."""
+
+from typing import Any, Dict
 
 from sklearn.model_selection import cross_val_score
 from sklearn.tree import DecisionTreeClassifier
@@ -45,7 +41,10 @@ class DecisionTreeClassifierFunction(BaseClassification):
         "Tree depth and leaf constraints define the hyperparameter landscape."
     )
     display_bounds = {"max_depth": (2, 20), "min_samples_split": (2, 50)}
-    display_projection = {"dims": ("max_depth", "min_samples_split"), "fixed": {"min_samples_leaf": 1}}
+    display_projection = {
+        "dims": ("max_depth", "min_samples_split"),
+        "fixed": {"min_samples_leaf": 1},
+    }
     reference = None
     reference_url = "https://scikit-learn.org/stable/modules/tree.html"
 

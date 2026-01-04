@@ -138,7 +138,9 @@ class PressureVesselFunction(EngineeringFunction):
     variable_bounds = [(0.0625, 6.1875), (0.0625, 6.1875), (10.0, 200.0), (10.0, 200.0)]
 
     # Function sheet attributes
-    latex_formula = r"f(T_s, T_h, R, L) = 0.6224 T_s R L + 1.7781 T_h R^2 + 3.1661 T_s^2 L + 19.84 T_s^2 R"
+    latex_formula = (
+        r"f(T_s, T_h, R, L) = 0.6224 T_s R L + 1.7781 T_h R^2 + 3.1661 T_s^2 L + 19.84 T_s^2 R"
+    )
     tagline = (
         "A cylindrical tank design problem minimizing manufacturing cost. "
         "Shell/head thickness and vessel dimensions must satisfy stress and volume constraints."

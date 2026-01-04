@@ -1,10 +1,6 @@
-from typing import Any, Dict
-
-# Author: Simon Blanke
-# Email: simon.blanke@yahoo.com
-# License: MIT License
-
 """XGBoost Image Classifier test function."""
+
+from typing import Any, Dict
 
 import numpy as np
 

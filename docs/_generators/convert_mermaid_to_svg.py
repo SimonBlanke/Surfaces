@@ -16,9 +16,7 @@ def extract_mermaid_from_rst(content: str) -> str | None:
     if match:
         # Remove the 4-space indentation
         lines = match.group(1).split("\n")
-        dedented = "\n".join(
-            line[4:] if line.startswith("    ") else line for line in lines
-        )
+        dedented = "\n".join(line[4:] if line.startswith("    ") else line for line in lines)
         return dedented.strip()
     return None
 
@@ -134,9 +132,9 @@ def main():
 
             file_path.write_text(new_content)
             converted += 1
-            print(f"  Done")
+            print("  Done")
         else:
-            print(f"  Failed to generate SVG")
+            print("  Failed to generate SVG")
 
     print(f"\nConverted {converted} diagrams")
 

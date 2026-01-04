@@ -2,14 +2,14 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict
 
 import numpy as np
 
 from .._base_algebraic_function import AlgebraicFunction
 
 if TYPE_CHECKING:
-    from surfaces.noise import BaseNoise
+    pass
 
 
 class HölderTableFunction(AlgebraicFunction):

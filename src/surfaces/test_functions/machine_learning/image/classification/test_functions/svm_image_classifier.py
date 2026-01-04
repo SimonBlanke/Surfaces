@@ -1,10 +1,6 @@
-from typing import Any, Dict
-
-# Author: Simon Blanke
-# Email: simon.blanke@yahoo.com
-# License: MIT License
-
 """SVM Image Classifier test function."""
+
+from typing import Any, Dict
 
 from sklearn.decomposition import PCA
 from sklearn.model_selection import cross_val_score

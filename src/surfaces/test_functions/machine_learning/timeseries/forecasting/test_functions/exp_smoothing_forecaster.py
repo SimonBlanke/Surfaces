@@ -1,10 +1,6 @@
-from typing import Any, Dict
-
-# Author: Simon Blanke
-# Email: simon.blanke@yahoo.com
-# License: MIT License
-
 """Exponential Smoothing Forecaster test function using sktime."""
+
+from typing import Any, Dict
 
 from .._base_forecasting import BaseForecasting
 from ..datasets import DATASETS
