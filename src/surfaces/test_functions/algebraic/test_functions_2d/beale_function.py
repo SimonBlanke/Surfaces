@@ -24,7 +24,7 @@ class BealeFunction(AlgebraicFunction):
 
         f(x, y) = (A - x + xy)^2 + (B - x + xy^2)^2 + (C - x + xy^3)^2
 
-    where :math:`A = 1.5`, :math:`B = 2.25`, and :math:`C = 2.652` by default.
+    where :math:`A = 1.5`, :math:`B = 2.25`, and :math:`C = 2.625` by default.
 
     The global minimum is :math:`f(3, 0.5) = 0`.
 
@@ -34,7 +34,7 @@ class BealeFunction(AlgebraicFunction):
         First coefficient.
     B : float, default=2.25
         Second coefficient.
-    C : float, default=2.652
+    C : float, default=2.625
         Third coefficient.
     metric : str, default="score"
         Either "loss" (minimize) or "score" (maximize).
@@ -95,7 +95,7 @@ class BealeFunction(AlgebraicFunction):
         self,
         A: float = 1.5,
         B: float = 2.25,
-        C: float = 2.652,
+        C: float = 2.625,
         objective: str = "minimize",
         sleep: float = 0,
         memory: bool = False,
