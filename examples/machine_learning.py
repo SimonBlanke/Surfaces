@@ -1,6 +1,14 @@
-from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
+"""Example: Using machine learning test functions."""
 
-k_neighbors_classifier = KNeighborsClassifierFunction()
+from surfaces.test_functions import KNeighborsClassifierFunction
 
-objective_function = k_neighbors_classifier.objective_function
-search_space = k_neighbors_classifier.search_space()
+# Create an ML-based test function
+k_neighbors = KNeighborsClassifierFunction()
+
+# Get the hyperparameter search space
+search_space = k_neighbors.search_space
+print(f"Search space keys: {list(search_space.keys())}")
+
+# Evaluate with specific hyperparameters
+result = k_neighbors({"n_neighbors": 5, "algorithm": "auto"})
+print(f"KNN accuracy with n_neighbors=5: {result}")
