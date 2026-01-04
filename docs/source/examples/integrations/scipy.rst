@@ -17,14 +17,21 @@ Basic scipy Integration
 
 .. code-block:: python
 
+    import numpy as np
     from surfaces.test_functions import RosenbrockFunction
     from scipy.optimize import minimize
 
     # Create test function
     func = RosenbrockFunction(n_dim=5)
+    space = func.search_space
 
     # Convert to scipy format
-    objective, bounds, x0 = func.to_scipy()
+    def objective(x):
+        params = {f"x{i}": x[i] for i in range(len(x))}
+        return func(params)
+
+    bounds = [(v.min(), v.max()) for v in space.values()]
+    x0 = np.array([np.mean(v) for v in space.values()])
 
     # Optimize with L-BFGS-B
     result = minimize(objective, x0, bounds=bounds, method='L-BFGS-B')
@@ -40,17 +47,24 @@ Global Optimization
 
 .. code-block:: python
 
+    import numpy as np
     from surfaces.test_functions import RastriginFunction
     from scipy.optimize import differential_evolution
 
     func = RastriginFunction(n_dim=10)
-    objective, bounds, _ = func.to_scipy()
+    space = func.search_space
+
+    def objective(x):
+        params = {f"x{i}": x[i] for i in range(len(x))}
+        return func(params)
+
+    bounds = [(v.min(), v.max()) for v in space.values()]
 
     # Differential Evolution for multimodal functions
     result = differential_evolution(
         objective,
         bounds,
-        maxiter=1000,
+        maxiter=500,
         seed=42
     )
 
@@ -66,11 +80,19 @@ Comparing scipy Methods
 
     """Compare different scipy optimization methods."""
 
+    import numpy as np
     from surfaces.test_functions import RosenbrockFunction
     from scipy.optimize import minimize, differential_evolution
 
     func = RosenbrockFunction(n_dim=5)
-    objective, bounds, x0 = func.to_scipy()
+    space = func.search_space
+
+    def objective(x):
+        params = {f"x{i}": x[i] for i in range(len(x))}
+        return func(params)
+
+    bounds = [(v.min(), v.max()) for v in space.values()]
+    x0 = np.array([np.mean(v) for v in space.values()])
 
     methods = ['Nelder-Mead', 'Powell', 'L-BFGS-B']
 
@@ -80,5 +102,5 @@ Comparing scipy Methods
         print(f"  {method}: f={result.fun:.4f}, nfev={result.nfev}")
 
     print("\nGlobal method:")
-    result = differential_evolution(objective, bounds, seed=42)
+    result = differential_evolution(objective, bounds, seed=42, maxiter=200)
     print(f"  DE: f={result.fun:.6f}, nfev={result.nfev}")

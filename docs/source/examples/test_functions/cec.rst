@@ -17,6 +17,7 @@ CEC 2013 Functions
 
 .. code-block:: python
 
+    import numpy as np
     from surfaces.test_functions.cec.cec2013 import (
         RotatedRastrigin,
         RotatedBentCigar,
@@ -31,7 +32,9 @@ CEC 2013 Functions
     ]
 
     for func in functions:
-        result = func(func.search_space_sample())
+        space = func.search_space
+        sample = {k: np.random.choice(v) for k, v in space.items()}
+        result = func(sample)
         print(f"{func.__class__.__name__}: {result:.4f}")
 
 ----
@@ -65,6 +68,7 @@ Composition Functions
 
     """CEC composition functions combine multiple landscapes."""
 
+    import numpy as np
     from surfaces.test_functions.cec.cec2013 import (
         CompositionFunction1,
         CompositionFunction2,
@@ -78,6 +82,10 @@ Composition Functions
     ]
 
     for func in compositions:
-        results = [func(func.search_space_sample()) for _ in range(100)]
+        space = func.search_space
+        results = []
+        for _ in range(100):
+            sample = {k: np.random.choice(v) for k, v in space.items()}
+            results.append(func(sample))
         print(f"{func.__class__.__name__}:")
         print(f"  Min: {min(results):.2f}, Max: {max(results):.2f}")

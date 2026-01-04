@@ -23,7 +23,7 @@ Basic GFO Usage
     func = RastriginFunction(n_dim=5)
 
     # Search space works directly - no conversion needed
-    opt = RandomSearchOptimizer(func.search_space())
+    opt = RandomSearchOptimizer(func.search_space)
     opt.search(func, n_iter=100)
 
     print(f"Best score: {opt.best_score:.6f}")
@@ -56,7 +56,7 @@ Different Optimizers
     ]
 
     for name, OptClass in optimizers:
-        opt = OptClass(func.search_space())
+        opt = OptClass(func.search_space)
         opt.search(func, n_iter=100)
         print(f"{name:15s}: {opt.best_score:.6f}")
 
@@ -72,14 +72,14 @@ With Memory Tracking
 
     func = RosenbrockFunction(n_dim=5)
 
-    opt = BayesianOptimizer(func.search_space())
+    opt = BayesianOptimizer(func.search_space)
     opt.search(func, n_iter=100, memory=True)
 
     # Access search history
-    print(f"Total evaluations: {len(opt.search_data['scores'])}")
+    print(f"Total evaluations: {len(opt.search_data['score'])}")
     print(f"Best score: {opt.best_score:.6f}")
 
     # Convergence analysis
-    scores = opt.search_data['scores']
+    scores = opt.search_data['score']
     best_so_far = [min(scores[:i+1]) for i in range(len(scores))]
     print(f"Final best: {best_so_far[-1]:.6f}")

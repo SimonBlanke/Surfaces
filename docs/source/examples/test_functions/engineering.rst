@@ -47,6 +47,8 @@ Constraint Handling
 
 .. code-block:: python
 
+    from surfaces.test_functions import WeldedBeamFunction
+
     func = WeldedBeamFunction()
     params = {"h": 0.2, "l": 3.5, "t": 9.0, "b": 0.2}
 
@@ -57,41 +59,32 @@ Constraint Handling
         status = "OK" if g <= 0 else "VIOLATED"
         print(f"  g{i+1}: {g:.4f} [{status}]")
 
-    # Get violation amounts
-    violations = func.constraint_violations(params)
-    print(f"\nTotal violation: {sum(violations):.4f}")
-
 ----
 
-Optimizing Engineering Problems
-===============================
+Exploring the Design Space
+==========================
 
 .. code-block:: python
 
+    import random
     from surfaces.test_functions import WeldedBeamFunction
-    from scipy.optimize import differential_evolution
 
     func = WeldedBeamFunction()
+    space = func.search_space
 
-    # Get scipy format
-    objective, bounds, x0 = func.to_scipy()
+    print("Design space bounds:")
+    for name, values in space.items():
+        print(f"  {name}: [{min(values):.3f}, {max(values):.3f}]")
 
-    # Optimize
-    result = differential_evolution(
-        objective,
-        bounds,
-        seed=42,
-        maxiter=500
-    )
+    # Random search for feasible designs
+    print("\nSearching for feasible designs...")
+    feasible_count = 0
+    for _ in range(100):
+        sample = {k: random.choice(v) for k, v in space.items()}
+        if func.is_feasible(sample):
+            feasible_count += 1
+            cost = func.raw_objective(sample)
+            print(f"  Feasible design found, cost: {cost:.4f}")
+            break
 
-    # Convert back to parameters
-    params = {
-        "h": result.x[0],
-        "l": result.x[1],
-        "t": result.x[2],
-        "b": result.x[3]
-    }
-
-    print(f"Optimal cost: {func.raw_objective(params):.4f}")
-    print(f"Feasible: {func.is_feasible(params)}")
-    print(f"Parameters: {params}")
+    print(f"Feasible designs in 100 samples: {feasible_count}")

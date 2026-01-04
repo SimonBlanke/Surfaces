@@ -25,8 +25,7 @@ Basic ML Function
     # Evaluate with hyperparameters
     params = {
         "n_neighbors": 5,
-        "weights": "distance",
-        "p": 2
+        "algorithm": "auto"
     }
     score = func(params)
     print(f"Accuracy: {score:.4f}")
@@ -38,13 +37,15 @@ Search Space with Categoricals
 
 .. code-block:: python
 
+    from surfaces.test_functions import KNeighborsClassifierFunction
+
     func = KNeighborsClassifierFunction()
-    space = func.search_space()
+    space = func.search_space
 
     print("Search space:")
     for name, values in space.items():
         if hasattr(values, 'min'):
-            print(f"  {name}: [{values.min()}, {values.max()}] (numeric)")
+            print(f"  {name}: [{min(values)}, {max(values)}] (numeric)")
         else:
             print(f"  {name}: {values} (categorical)")
 
@@ -55,20 +56,22 @@ Multiple ML Functions
 
 .. code-block:: python
 
+    import random
     from surfaces.test_functions import (
         KNeighborsClassifierFunction,
-        KNeighborsRegressorFunction,
-        GradientBoostingRegressorFunction,
+        DecisionTreeClassifierFunction,
+        GradientBoostingClassifierFunction,
     )
 
     functions = [
         KNeighborsClassifierFunction(),
-        KNeighborsRegressorFunction(),
-        GradientBoostingRegressorFunction(),
+        DecisionTreeClassifierFunction(),
+        GradientBoostingClassifierFunction(),
     ]
 
     for func in functions:
-        sample = func.search_space_sample()
+        space = func.search_space
+        sample = {k: random.choice(v) for k, v in space.items()}
         result = func(sample)
         print(f"{func.__class__.__name__}: {result:.4f}")
 

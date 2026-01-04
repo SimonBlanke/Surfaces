@@ -32,6 +32,10 @@ Evaluating the Function
 
 .. code-block:: python
 
+    from surfaces.test_functions import SphereFunction
+
+    func = SphereFunction(n_dim=3)
+
     # Evaluate at a point using a dictionary
     params = {"x0": 1.0, "x1": 2.0, "x2": 3.0}
     result = func(params)
@@ -44,21 +48,21 @@ Evaluating the Function
 
 ----
 
-Loss vs Score
-=============
+Loss for Minimization
+=====================
 
 .. code-block:: python
+
+    from surfaces.test_functions import SphereFunction
+
+    func = SphereFunction(n_dim=3)
 
     # Default: returns loss (for minimization)
     loss = func({"x0": 1.0, "x1": 1.0, "x2": 1.0})
     print(f"Loss: {loss}")  # 3.0
 
-    # Explicit loss method
-    loss = func.loss({"x0": 1.0, "x1": 1.0, "x2": 1.0})
-    print(f"Loss: {loss}")  # 3.0
-
-    # Score method (for maximization)
-    score = func.score({"x0": 1.0, "x1": 1.0, "x2": 1.0})
+    # For maximization, simply negate the result
+    score = -func({"x0": 1.0, "x1": 1.0, "x2": 1.0})
     print(f"Score: {score}")  # -3.0
 
 ----

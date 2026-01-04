@@ -17,6 +17,7 @@ Basic Algebraic Functions
 
 .. code-block:: python
 
+    import numpy as np
     from surfaces.test_functions import (
         SphereFunction,
         RastriginFunction,
@@ -32,7 +33,8 @@ Basic Algebraic Functions
 
     # Evaluate at random points
     for func in [sphere, rastrigin, rosenbrock, ackley]:
-        sample = func.search_space_sample()
+        space = func.search_space
+        sample = {k: np.random.choice(v) for k, v in space.items()}
         result = func(sample)
         print(f"{func.__class__.__name__}: {result:.4f}")
 
@@ -50,9 +52,10 @@ Comparing Function Landscapes
 
     def random_search(func, n_iter=1000, seed=42):
         np.random.seed(seed)
+        space = func.search_space
         best = float('inf')
         for _ in range(n_iter):
-            sample = func.search_space_sample()
+            sample = {k: np.random.choice(v) for k, v in space.items()}
             result = func(sample)
             best = min(best, result)
         return best
@@ -73,15 +76,18 @@ Scaling with Dimension
 
     """Test how functions scale with dimensionality."""
 
+    import numpy as np
     from surfaces.test_functions import RastriginFunction
     import time
 
     for n_dim in [2, 5, 10, 20, 50]:
         func = RastriginFunction(n_dim=n_dim)
+        space = func.search_space
 
         start = time.time()
         for _ in range(1000):
-            func(func.search_space_sample())
+            sample = {k: np.random.choice(v) for k, v in space.items()}
+            func(sample)
         elapsed = time.time() - start
 
         print(f"n_dim={n_dim:2d}: {elapsed*1000:.1f}ms for 1000 evals")

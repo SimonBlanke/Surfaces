@@ -20,8 +20,10 @@ Basic Optuna Usage
     import optuna
     from surfaces.test_functions import RastriginFunction
 
+    optuna.logging.set_verbosity(optuna.logging.WARNING)
+
     func = RastriginFunction(n_dim=5)
-    space = func.search_space()
+    space = func.search_space
 
     def objective(trial):
         params = {
@@ -31,7 +33,7 @@ Basic Optuna Usage
         return func(params)
 
     study = optuna.create_study(direction='minimize')
-    study.optimize(objective, n_trials=100, show_progress_bar=True)
+    study.optimize(objective, n_trials=100)
 
     print(f"Best value: {study.best_value:.6f}")
     print(f"Best params: {study.best_params}")
@@ -46,18 +48,20 @@ With Categorical Parameters
     import optuna
     from surfaces.test_functions import KNeighborsClassifierFunction
 
+    optuna.logging.set_verbosity(optuna.logging.WARNING)
+
     func = KNeighborsClassifierFunction()
+    space = func.search_space
 
     def objective(trial):
         params = {
-            'n_neighbors': trial.suggest_int('n_neighbors', 1, 20),
-            'weights': trial.suggest_categorical('weights', ['uniform', 'distance']),
-            'p': trial.suggest_int('p', 1, 3),
+            'n_neighbors': trial.suggest_int('n_neighbors', 3, 50),
+            'algorithm': trial.suggest_categorical('algorithm', space['algorithm']),
         }
-        return -func(params)  # Negate for minimization
+        return -func(params)  # Negate for minimization (maximize accuracy)
 
     study = optuna.create_study(direction='minimize')
-    study.optimize(objective, n_trials=50)
+    study.optimize(objective, n_trials=30)
 
     print(f"Best accuracy: {-study.best_value:.4f}")
 
@@ -71,7 +75,7 @@ Benchmarking Multiple Functions
     """Benchmark Optuna on multiple Surfaces functions."""
 
     import optuna
-    from surfaces.test_functions import SphereFunction, RastriginFunction, AckleyFunction
+    from surfaces.test_functions import SphereFunction, RastriginFunction
 
     optuna.logging.set_verbosity(optuna.logging.WARNING)
 
@@ -81,7 +85,7 @@ Benchmarking Multiple Functions
     ]
 
     for name, func in functions:
-        space = func.search_space()
+        space = func.search_space
 
         def make_objective(f, s):
             def objective(trial):

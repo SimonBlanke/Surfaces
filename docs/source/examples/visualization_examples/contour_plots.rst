@@ -17,14 +17,17 @@ Basic Contour Plot
 
 .. code-block:: python
 
+    import os
     from surfaces.test_functions import RastriginFunction
-    from surfaces.visualization import plot_contour
+    from surfaces.visualize import plot_contour
 
     func = RastriginFunction(n_dim=2)
 
     # Create contour plot
     fig = plot_contour(func, title="Rastrigin Contour")
-    fig.show()
+
+    if not os.environ.get("SURFACES_TESTING"):
+        fig.show()
 
 ----
 
@@ -33,8 +36,9 @@ Customizing Contours
 
 .. code-block:: python
 
+    import os
     from surfaces.test_functions import RosenbrockFunction
-    from surfaces.visualization import plot_contour
+    from surfaces.visualize import plot_contour
 
     func = RosenbrockFunction(n_dim=2)
 
@@ -43,7 +47,9 @@ Customizing Contours
         title="Rosenbrock Function",
         resolution=200,  # Higher resolution
     )
-    fig.show()
+
+    if not os.environ.get("SURFACES_TESTING"):
+        fig.show()
 
 ----
 
@@ -52,14 +58,13 @@ Comparing Landscapes
 
 .. code-block:: python
 
-    """Compare landscapes of different functions."""
-
+    import os
     from surfaces.test_functions import (
         SphereFunction,
         RastriginFunction,
         HimmelblausFunction,
     )
-    from surfaces.visualization import plot_contour
+    from surfaces.visualize import plot_contour
 
     functions = [
         ("Sphere (unimodal)", SphereFunction(n_dim=2)),
@@ -69,9 +74,7 @@ Comparing Landscapes
 
     for title, func in functions:
         fig = plot_contour(func, title=title)
-        filename = title.split()[0].lower() + "_contour.html"
-        fig.write_html(filename)
-        print(f"Saved {filename}")
+        print(f"Created contour plot for {title}")
 
 ----
 
@@ -87,7 +90,7 @@ Matplotlib Backend
     from surfaces.test_functions import BealeFunction
 
     func = BealeFunction()
-    space = func.search_space()
+    space = func.search_space
 
     # Create grid
     x = np.linspace(space['x0'].min(), space['x0'].max(), 100)
@@ -107,5 +110,5 @@ Matplotlib Backend
     plt.xlabel('x0')
     plt.ylabel('x1')
     plt.title("Beale Function")
-    plt.savefig("beale_contour.pdf", dpi=300)
-    plt.show()
+    plt.close()  # Don't display in test mode
+    print("Matplotlib contour plot created!")

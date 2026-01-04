@@ -17,6 +17,7 @@ Basic BBOB Usage
 
 .. code-block:: python
 
+    import numpy as np
     from surfaces.test_functions.bbob import (
         Sphere,
         RosenbrockRotated,
@@ -33,7 +34,9 @@ Basic BBOB Usage
     ]
 
     for func in functions:
-        result = func(func.search_space_sample())
+        space = func.search_space
+        sample = {k: np.random.choice(v) for k, v in space.items()}
+        result = func(sample)
         print(f"{func.__class__.__name__}: {result:.4f}")
 
 ----
@@ -45,6 +48,7 @@ BBOB Function Groups
 
     """Evaluate functions from different BBOB groups."""
 
+    import numpy as np
     from surfaces.test_functions.bbob import (
         # Separable
         Sphere,
@@ -67,7 +71,9 @@ BBOB Function Groups
         print(f"\n{group_name}:")
         for func_class in func_classes:
             func = func_class(n_dim=5)
-            result = func(func.search_space_sample())
+            space = func.search_space
+            sample = {k: np.random.choice(v) for k, v in space.items()}
+            result = func(sample)
             print(f"  {func_class.__name__}: {result:.4f}")
 
 ----

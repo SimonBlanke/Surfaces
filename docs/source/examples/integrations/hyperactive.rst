@@ -17,65 +17,55 @@ Basic Hyperactive Usage
 
 .. code-block:: python
 
-    from hyperactive import Hyperactive
+    from hyperactive.opt.gfo import HillClimbing
     from surfaces.test_functions import RastriginFunction
 
     func = RastriginFunction(n_dim=5)
 
-    hyper = Hyperactive()
-    hyper.add_search(func, func.search_space(), n_iter=100)
-    hyper.run()
+    optimizer = HillClimbing(
+        search_space=func.search_space,
+        n_iter=100,
+        experiment=func,
+    )
+    best_params = optimizer.solve()
 
-    print(f"Best score: {hyper.best_score(func):.6f}")
-    print(f"Best params: {hyper.best_para(func)}")
-
-----
-
-Parallel Optimization
-=====================
-
-.. code-block:: python
-
-    from hyperactive import Hyperactive
-    from surfaces.test_functions import SphereFunction, RastriginFunction, RosenbrockFunction
-
-    sphere = SphereFunction(n_dim=10)
-    rastrigin = RastriginFunction(n_dim=10)
-    rosenbrock = RosenbrockFunction(n_dim=10)
-
-    hyper = Hyperactive()
-    hyper.add_search(sphere, sphere.search_space(), n_iter=100)
-    hyper.add_search(rastrigin, rastrigin.search_space(), n_iter=100)
-    hyper.add_search(rosenbrock, rosenbrock.search_space(), n_iter=100)
-
-    # Run all in parallel
-    hyper.run(max_workers=3)
-
-    for func in [sphere, rastrigin, rosenbrock]:
-        print(f"{func.__class__.__name__}: {hyper.best_score(func):.6f}")
+    print(f"Best params: {best_params}")
+    print(f"Best score: {func(best_params):.6f}")
 
 ----
 
-With Different Optimizers
-=========================
+Different Optimizers
+====================
 
 .. code-block:: python
 
-    from hyperactive import Hyperactive
-    from hyperactive.optimizers import BayesianOptimizer, ParticleSwarmOptimizer
+    from hyperactive.opt.gfo import (
+        HillClimbing,
+        RandomSearch,
+        SimulatedAnnealing,
+    )
     from surfaces.test_functions import RastriginFunction
 
-    func = RastriginFunction(n_dim=10)
+    func = RastriginFunction(n_dim=5)
 
-    hyper = Hyperactive()
+    optimizers = [
+        ('HillClimbing', HillClimbing),
+        ('RandomSearch', RandomSearch),
+        ('SimAnnealing', SimulatedAnnealing),
+    ]
 
-    # Compare different optimizers
-    hyper.add_search(
-        func,
-        func.search_space(),
-        optimizer=BayesianOptimizer(),
-        n_iter=100,
-    )
+    for name, OptClass in optimizers:
+        optimizer = OptClass(
+            search_space=func.search_space,
+            n_iter=100,
+            experiment=func,
+        )
+        best = optimizer.solve()
+        print(f"{name}: {func(best):.6f}")
 
-    hyper.run()
-    print(f"Bayesian: {hyper.best_score(func):.6f}")
+----
+
+.. note::
+
+    For the latest Hyperactive API, see the
+    `Hyperactive documentation <https://github.com/SimonBlanke/Hyperactive>`_.

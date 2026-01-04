@@ -21,8 +21,8 @@ Getting the Search Space
 
     func = RastriginFunction(n_dim=3)
 
-    # Get the default search space
-    space = func.search_space()
+    # Get the default search space (property, not method)
+    space = func.search_space
 
     print(f"Parameters: {list(space.keys())}")
     # Output: ['x0', 'x1', 'x2']
@@ -37,8 +37,14 @@ Sampling from Search Space
 
 .. code-block:: python
 
+    import numpy as np
+    from surfaces.test_functions import RastriginFunction
+
+    func = RastriginFunction(n_dim=3)
+    space = func.search_space
+
     # Get a random sample from the search space
-    sample = func.search_space_sample()
+    sample = {k: np.random.choice(v) for k, v in space.items()}
     print(f"Random sample: {sample}")
 
     # Evaluate at the sample
@@ -47,18 +53,19 @@ Sampling from Search Space
 
 ----
 
-Custom Search Space Resolution
-==============================
+Search Space Structure
+======================
 
 .. code-block:: python
 
-    # Default resolution
-    space_default = func.search_space()
-    print(f"Default points per dimension: {len(space_default['x0'])}")
+    from surfaces.test_functions import RastriginFunction
 
-    # Custom resolution
-    space_fine = func.search_space(resolution=1000)
-    print(f"Fine points per dimension: {len(space_fine['x0'])}")
+    func = RastriginFunction(n_dim=3)
+    space = func.search_space
+
+    # Each dimension contains an array of allowed values
+    print(f"Points per dimension: {len(space['x0'])}")
+    print(f"x0 range: [{space['x0'].min():.2f}, {space['x0'].max():.2f}]")
 
 ----
 
@@ -76,7 +83,7 @@ Complete Example
         func = RosenbrockFunction(n_dim=5)
 
         # Get search space
-        space = func.search_space()
+        space = func.search_space
 
         print("Search Space:")
         for name, values in space.items():
@@ -85,7 +92,7 @@ Complete Example
         # Random sampling
         print("\nRandom samples:")
         for i in range(5):
-            sample = func.search_space_sample()
+            sample = {k: np.random.choice(v) for k, v in space.items()}
             result = func(sample)
             print(f"  Sample {i+1}: f = {result:.4f}")
 
