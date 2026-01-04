@@ -4,6 +4,7 @@ import os
 
 # Suppress Ray logs
 os.environ["RAY_DEDUP_LOGS"] = "0"
+os.environ["RAY_AIR_NEW_OUTPUT"] = "0"
 
 from ray import train, tune
 
@@ -36,7 +37,7 @@ tuner = tune.Tuner(
         metric="loss",
         mode="min",
     ),
-    run_config=train.RunConfig(verbose=0),
+    run_config=train.RunConfig(),
 )
 
 results = tuner.fit()
