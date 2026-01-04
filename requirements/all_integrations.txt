@@ -1,0 +1,21 @@
+# Integration test dependencies
+# Install with: pip install -r requirements/all_integrations.txt
+
+# Core optimization libraries
+gradient-free-optimizers
+scipy
+
+# Hyperparameter optimization
+optuna
+hyperopt
+
+# Bayesian optimization
+scikit-optimize
+bayesian-optimization
+
+# Advanced frameworks
+nevergrad
+smac
+
+# Distributed optimization
+ray[tune]

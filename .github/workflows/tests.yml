@@ -167,16 +167,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e "."
           pip install pytest
-          pip install gradient-free-optimizers
-          pip install optuna
-          pip install scipy
+          pip install -r requirements/all_integrations.txt
 
-      - name: Run integration tests (GFO, Optuna, Scipy)
-        run: |
-          python -m pytest -x -p no:warnings \
-            tests/integration/test_gfo.py \
-            tests/integration/test_optuna.py \
-            tests/integration/test_scipy.py
+      - name: Run integration tests
+        run: python -m pytest -x -p no:warnings tests/integration/
 
   # ===========================================================================
   # Stage 5: Coverage (only on Ubuntu, Python 3.11)
