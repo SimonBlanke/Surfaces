@@ -60,13 +60,12 @@ Multiple ML Functions
     from surfaces.test_functions import (
         KNeighborsClassifierFunction,
         DecisionTreeClassifierFunction,
-        GradientBoostingClassifierFunction,
     )
 
+    # Fast ML functions for quick benchmarking
     functions = [
         KNeighborsClassifierFunction(),
         DecisionTreeClassifierFunction(),
-        GradientBoostingClassifierFunction(),
     ]
 
     for func in functions:
