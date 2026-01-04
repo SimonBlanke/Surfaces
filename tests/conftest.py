@@ -61,7 +61,7 @@ def func_id(func_class):
 
 @pytest.fixture
 def quick_ml_params():
-    """Provide minimal ML parameters for quick testing.
+    """Provide minimal ML parameters for quick classification testing.
 
     Uses small cv=2 to speed up cross-validation in tests.
     """
@@ -72,6 +72,22 @@ def quick_ml_params():
     return {
         "cv": 2,
         "dataset": iris_data,
+    }
+
+
+@pytest.fixture
+def quick_regression_params():
+    """Provide minimal ML parameters for quick regression testing.
+
+    Uses small cv=2 to speed up cross-validation in tests.
+    """
+    from surfaces.test_functions.machine_learning.tabular.regression.datasets import (
+        diabetes_data,
+    )
+
+    return {
+        "cv": 2,
+        "dataset": diabetes_data,
     }
 
 
