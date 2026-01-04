@@ -75,6 +75,15 @@ class GramacyAndLeeFunction(AlgebraicFunction):
     latex_formula = r"f(x) = \frac{\sin(10\pi x)}{2x} + (x - 1)^4"
     pgfmath_formula = "sin(deg(10*pi*#1))/(2*#1) + (#1 - 1)^4"
 
+    # Function sheet attributes
+    tagline = (
+        "A compact oscillatory function with rapid frequency changes. "
+        "Popular for testing Gaussian process surrogate models."
+    )
+    display_bounds = (0.5, 2.5)
+    reference = "Gramacy & Lee (2012)"
+    reference_url = "https://doi.org/10.1007/s11222-011-9275-5"
+
     def __init__(
         self,
         objective: str = "minimize",

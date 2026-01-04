@@ -69,6 +69,15 @@ class ThreeHumpCamelFunction(AlgebraicFunction):
     latex_formula = r"f(x, y) = 2x^2 - 1.05x^4 + \frac{x^6}{6} + xy + y^2"
     pgfmath_formula = "2*#1^2 - 1.05*#1^4 + #1^6/6 + #1*#2 + #2^2"
 
+    # Function sheet attributes
+    tagline = (
+        "Three humps with the global minimum at the center. "
+        "The polynomial creates an asymmetric camel-back shape."
+    )
+    display_bounds = (-2.0, 2.0)
+    reference = None
+    reference_url = "https://www.sfu.ca/~ssurjano/camel3.html"
+
     def __init__(
         self,
         objective: str = "minimize",

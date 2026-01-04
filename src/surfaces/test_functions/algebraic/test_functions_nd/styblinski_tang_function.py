@@ -65,6 +65,16 @@ class StyblinskiTangFunction(AlgebraicFunction):
     latex_formula = r"f(\vec{x}) = \frac{1}{2} \sum_{i=1}^{n} \left(x_i^4 - 16x_i^2 + 5x_i\right)"
     pgfmath_formula = "0.5*(#1^4 - 16*#1^2 + 5*#1 + #2^4 - 16*#2^2 + 5*#2)"  # 2D specialization
 
+    # Function sheet attributes
+    tagline = (
+        "A separable polynomial with two local minima per dimension. "
+        "The global minimum lies in an asymmetric valley."
+    )
+    display_bounds = (-5.0, 5.0)
+    display_projection = {"fixed_value": -2.903534}  # Fix all dims except x0, x1 to optimum
+    reference = "Styblinski & Tang (1990)"
+    reference_url = "https://www.sfu.ca/~ssurjano/stybtang.html"
+
     def __init__(
         self,
         n_dim: int,

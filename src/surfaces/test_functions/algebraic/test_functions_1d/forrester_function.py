@@ -79,6 +79,15 @@ class ForresterFunction(AlgebraicFunction):
     latex_formula = r"f(x) = (6x - 2)^2 \sin(12x - 4)"
     pgfmath_formula = "(6*#1 - 2)^2 * sin(deg(12*#1 - 4))"
 
+    # Function sheet attributes
+    tagline = (
+        "A classic surrogate modeling benchmark. One global minimum, "
+        "one local minimum, and a zero-gradient inflection point within a compact domain."
+    )
+    display_bounds = (0.0, 1.0)
+    reference = "Forrester et al. (2008)"
+    reference_url = "https://www.sfu.ca/~ssurjano/forretal08.html"
+
     def __init__(
         self,
         objective: str = "minimize",

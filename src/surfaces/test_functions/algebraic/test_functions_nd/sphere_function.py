@@ -77,6 +77,16 @@ class SphereFunction(AlgebraicFunction):
     latex_formula = r"f(\vec{x}) = \sum_{i=1}^{n} x_i^2"
     pgfmath_formula = "#1^2 + #2^2"  # 2D specialization
 
+    # Function sheet attributes
+    tagline = (
+        "The simplest bowl-shaped function. A smooth, symmetric parabolic surface "
+        "with a single minimum at the origin."
+    )
+    display_bounds = (-5.0, 5.0)
+    display_projection = {"fixed_value": 0.0}  # Fix all dims except x0, x1 to 0
+    reference = None
+    reference_url = "https://www.sfu.ca/~ssurjano/spheref.html"
+
     def __init__(
         self,
         n_dim: int,

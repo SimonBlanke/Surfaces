@@ -70,6 +70,15 @@ class BukinFunctionN6(AlgebraicFunction):
     latex_formula = r"f(x, y) = 100\sqrt{|y - 0.01x^2|} + 0.01|x + 10|"
     pgfmath_formula = "100*sqrt(abs(#2 - 0.01*#1^2)) + 0.01*abs(#1 + 10)"
 
+    # Function sheet attributes
+    tagline = (
+        "A narrow ridge along a parabola with the minimum in a steep drop-off. "
+        "Extremely challenging for gradient-based methods."
+    )
+    display_bounds = (-15.0, 5.0)
+    reference = None
+    reference_url = "https://www.sfu.ca/~ssurjano/bukin6.html"
+
     def __init__(
         self,
         objective: str = "minimize",

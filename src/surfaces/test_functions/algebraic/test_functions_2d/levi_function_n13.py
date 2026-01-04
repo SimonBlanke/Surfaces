@@ -69,6 +69,15 @@ class LeviFunctionN13(AlgebraicFunction):
     )
     pgfmath_formula = "sin(deg(3*pi*#1))^2 + (#1 - 1)^2*(1 + sin(deg(3*pi*#2))^2) + (#2 - 1)^2*(1 + sin(deg(2*pi*#2))^2)"
 
+    # Function sheet attributes
+    tagline = (
+        "Sinusoidal modulation creates a grid of local minima. "
+        "The minimum lies at a lattice point in this structured landscape."
+    )
+    display_bounds = (-10.0, 10.0)
+    reference = None
+    reference_url = "https://www.sfu.ca/~ssurjano/levy13.html"
+
     def __init__(
         self,
         objective: str = "minimize",

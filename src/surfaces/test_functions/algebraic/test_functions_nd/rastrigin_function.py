@@ -78,6 +78,16 @@ class RastriginFunction(AlgebraicFunction):
         "20 + #1^2 - 10*cos(deg(2*pi*#1)) + #2^2 - 10*cos(deg(2*pi*#2))"  # 2D specialization
     )
 
+    # Function sheet attributes
+    tagline = (
+        "A highly multimodal landscape with regularly spaced local minima. "
+        "The cosine modulation creates a challenging grid of traps."
+    )
+    display_bounds = (-5.12, 5.12)
+    display_projection = {"fixed_value": 0.0}  # Fix all dims except x0, x1 to 0
+    reference = "Rastrigin (1974)"
+    reference_url = "https://www.sfu.ca/~ssurjano/rastr.html"
+
     def __init__(
         self,
         n_dim: int,

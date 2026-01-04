@@ -78,6 +78,15 @@ class QuadraticExponentialFunction(AlgebraicFunction):
     latex_formula = r"f(x) = -(16x^2 - 24x + 5) e^{-x}"
     pgfmath_formula = "-(16*#1^2 - 24*#1 + 5) * exp(-#1)"
 
+    # Function sheet attributes
+    tagline = (
+        "A smooth single-valley landscape. The exponential decay moderates "
+        "the quadratic growth, creating a well-defined minimum."
+    )
+    display_bounds = (1.9, 3.9)
+    reference = "Gavana (2013)"
+    reference_url = "http://infinity77.net/global_optimization/test_functions_1d.html"
+
     def __init__(
         self,
         objective: str = "minimize",

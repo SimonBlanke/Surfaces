@@ -84,6 +84,16 @@ class RosenbrockFunction(AlgebraicFunction):
     )
     pgfmath_formula = "100*(#2 - #1^2)^2 + (1 - #1)^2"  # 2D specialization
 
+    # Function sheet attributes
+    tagline = (
+        "The classic banana-shaped valley. A narrow curved ridge leads to the minimum, "
+        "making convergence notoriously slow."
+    )
+    display_bounds = (-2.0, 2.0)
+    display_projection = {"fixed_value": 1.0}  # Fix all dims except x0, x1 to optimum
+    reference = "Rosenbrock (1960)"
+    reference_url = "https://doi.org/10.1093/comjnl/3.3.175"
+
     def __init__(
         self,
         n_dim: int,

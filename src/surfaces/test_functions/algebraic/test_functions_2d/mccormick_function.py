@@ -67,6 +67,15 @@ class McCormickFunction(AlgebraicFunction):
     latex_formula = r"f(x, y) = \sin(x + y) + (x - y)^2 - 1.5x + 2.5y + 1"
     pgfmath_formula = "sin(deg(#1 + #2)) + (#1 - #2)^2 - 1.5*#1 + 2.5*#2 + 1"
 
+    # Function sheet attributes
+    tagline = (
+        "A smooth landscape with a sinusoidal ridge. "
+        "The single minimum lies in a gently curving valley."
+    )
+    display_bounds = (-3.0, 4.0)
+    reference = None
+    reference_url = "https://www.sfu.ca/~ssurjano/mccorm.html"
+
     def __init__(
         self,
         objective: str = "minimize",

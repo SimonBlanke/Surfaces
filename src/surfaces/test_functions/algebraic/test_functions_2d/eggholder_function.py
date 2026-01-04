@@ -69,6 +69,15 @@ class EggholderFunction(AlgebraicFunction):
         "-(#2 + 47)*sin(deg(sqrt(abs(#1/2 + (#2 + 47))))) - #1*sin(deg(sqrt(abs(#1 - (#2 + 47)))))"
     )
 
+    # Function sheet attributes
+    tagline = (
+        "A rugged landscape with many deep valleys and sharp ridges. "
+        "One of the most challenging benchmark functions."
+    )
+    display_bounds = (-512.0, 512.0)
+    reference = None
+    reference_url = "https://www.sfu.ca/~ssurjano/egg.html"
+
     def __init__(
         self,
         objective: str = "minimize",

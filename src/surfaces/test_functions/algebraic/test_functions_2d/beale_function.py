@@ -82,6 +82,15 @@ class BealeFunction(AlgebraicFunction):
     latex_formula = r"f(x, y) = (1.5 - x + xy)^2 + (2.25 - x + xy^2)^2 + (2.625 - x + xy^3)^2"
     pgfmath_formula = "(1.5 - #1 + #1*#2)^2 + (2.25 - #1 + #1*#2^2)^2 + (2.625 - #1 + #1*#2^3)^2"
 
+    # Function sheet attributes
+    tagline = (
+        "Sharp peaks at domain corners with a flat valley leading to the minimum. "
+        "Tests navigation through curved valleys."
+    )
+    display_bounds = (-4.5, 4.5)
+    reference = "Beale (1958)"
+    reference_url = "https://www.sfu.ca/~ssurjano/beale.html"
+
     def __init__(
         self,
         A: float = 1.5,

@@ -78,6 +78,15 @@ class SineProductFunction(AlgebraicFunction):
     latex_formula = r"f(x) = -x \sin(x)"
     pgfmath_formula = "-#1 * sin(deg(#1))"
 
+    # Function sheet attributes
+    tagline = (
+        "Growing oscillations with increasing amplitude. The deepest valleys "
+        "appear at larger x values where the linear term dominates."
+    )
+    display_bounds = (0.0, 10.0)
+    reference = "Gavana (2013)"
+    reference_url = "http://infinity77.net/global_optimization/test_functions_1d.html"
+
     def __init__(
         self,
         objective: str = "minimize",

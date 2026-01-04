@@ -72,6 +72,16 @@ class GriewankFunction(AlgebraicFunction):
         "#1^2/4000 + #2^2/4000 - cos(deg(#1))*cos(deg(#2/sqrt(2))) + 1"  # 2D specialization
     )
 
+    # Function sheet attributes
+    tagline = (
+        "A product of cosines superimposed on a parabolic bowl. "
+        "Local minima become less pronounced at larger scales."
+    )
+    display_bounds = (-10.0, 10.0)
+    display_projection = {"fixed_value": 0.0}  # Fix all dims except x0, x1 to 0
+    reference = "Griewank (1981)"
+    reference_url = "https://www.sfu.ca/~ssurjano/griewank.html"
+
     def __init__(
         self,
         n_dim: int,

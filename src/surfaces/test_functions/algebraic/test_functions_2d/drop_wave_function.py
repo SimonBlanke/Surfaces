@@ -69,6 +69,15 @@ class DropWaveFunction(AlgebraicFunction):
     latex_formula = r"f(x, y) = -\frac{1 + \cos\left(12\sqrt{x^2 + y^2}\right)}{0.5(x^2 + y^2) + 2}"
     pgfmath_formula = "-(1 + cos(deg(12*sqrt(#1^2 + #2^2))))/(0.5*(#1^2 + #2^2) + 2)"
 
+    # Function sheet attributes
+    tagline = (
+        "Concentric circular waves radiating from the origin. "
+        "Many local minima in a ripple pattern challenge local search."
+    )
+    display_bounds = (-5.0, 5.0)
+    reference = None
+    reference_url = "https://www.sfu.ca/~ssurjano/drop.html"
+
     def __init__(
         self,
         objective: str = "minimize",

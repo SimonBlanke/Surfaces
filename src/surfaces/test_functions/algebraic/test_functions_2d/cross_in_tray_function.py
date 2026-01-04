@@ -85,6 +85,15 @@ class CrossInTrayFunction(AlgebraicFunction):
         "-0.0001*(abs(sin(deg(#1))*sin(deg(#2))*exp(abs(100 - sqrt(#1^2 + #2^2)/pi))) + 1)^0.1"
     )
 
+    # Function sheet attributes
+    tagline = (
+        "Four identical minima at symmetric positions. "
+        "A cross-shaped pattern of valleys meets at the origin."
+    )
+    display_bounds = (-10.0, 10.0)
+    reference = None
+    reference_url = "https://www.sfu.ca/~ssurjano/crossit.html"
+
     def __init__(
         self,
         A: float = -0.0001,

@@ -80,6 +80,15 @@ class HölderTableFunction(AlgebraicFunction):
     latex_formula = r"f(x, y) = -\left|\sin(x)\cos(y)\exp\left(\left|1 - \frac{\sqrt{x^2 + y^2}}{\pi}\right|\right)\right|"
     pgfmath_formula = "-abs(sin(deg(#1))*cos(deg(#2))*exp(abs(1 - sqrt(#1^2 + #2^2)/pi)))"
 
+    # Function sheet attributes
+    tagline = (
+        "Four deep wells at the corners with a table-like plateau in between. "
+        "Tests exploration of disconnected optimal regions."
+    )
+    display_bounds = (-10.0, 10.0)
+    reference = None
+    reference_url = "https://www.sfu.ca/~ssurjano/holder.html"
+
     def __init__(
         self,
         A=10,

@@ -71,6 +71,15 @@ class BoothFunction(AlgebraicFunction):
     latex_formula = r"f(x, y) = (x + 2y - 7)^2 + (2x + y - 5)^2"
     pgfmath_formula = "(#1 + 2*#2 - 7)^2 + (2*#1 + #2 - 5)^2"
 
+    # Function sheet attributes
+    tagline = (
+        "A simple polynomial with a single minimum in a curved valley. "
+        "Often used as a baseline test for optimization algorithms."
+    )
+    display_bounds = (-10.0, 10.0)
+    reference = None
+    reference_url = "https://www.sfu.ca/~ssurjano/booth.html"
+
     def __init__(
         self,
         objective: str = "minimize",

@@ -80,6 +80,15 @@ class EasomFunction(AlgebraicFunction):
     latex_formula = r"f(x, y) = -\cos(x)\cos(y)\exp\left[-(x - \pi)^2 - (y - \pi)^2\right]"
     pgfmath_formula = "-cos(deg(#1))*cos(deg(#2))*exp(-((#1 - pi)^2 + (#2 - pi)^2))"
 
+    # Function sheet attributes
+    tagline = (
+        "A single sharp peak in a vast flat landscape. "
+        "The tiny basin of attraction makes this notoriously difficult."
+    )
+    display_bounds = (0.0, 6.0)
+    reference = "Easom (1990)"
+    reference_url = "https://www.sfu.ca/~ssurjano/easom.html"
+
     def __init__(
         self,
         A=-1,

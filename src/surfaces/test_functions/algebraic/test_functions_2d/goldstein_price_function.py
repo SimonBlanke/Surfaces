@@ -63,6 +63,15 @@ class GoldsteinPriceFunction(AlgebraicFunction):
     latex_formula = r"f(x, y) = \left[1 + (x + y + 1)^2(19 - 14x + 3x^2 - 14y + 6xy + 3y^2)\right]\left[30 + (2x - 3y)^2(18 - 32x + 12x^2 + 48y - 36xy + 27y^2)\right]"
     pgfmath_formula = "(1 + (#1 + #2 + 1)^2*(19 - 14*#1 + 3*#1^2 - 14*#2 + 6*#1*#2 + 3*#2^2))*(30 + (2*#1 - 3*#2)^2*(18 - 32*#1 + 12*#1^2 + 48*#2 - 36*#1*#2 + 27*#2^2))"
 
+    # Function sheet attributes
+    tagline = (
+        "Multiple local minima with large value differences. "
+        "The polynomial structure creates a complex multi-scale landscape."
+    )
+    display_bounds = (-2.0, 2.0)
+    reference = "Goldstein & Price (1971)"
+    reference_url = "https://www.sfu.ca/~ssurjano/goldpr.html"
+
     def __init__(
         self,
         objective: str = "minimize",

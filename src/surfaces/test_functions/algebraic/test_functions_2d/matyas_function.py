@@ -68,6 +68,15 @@ class MatyasFunction(AlgebraicFunction):
     latex_formula = r"f(x, y) = 0.26(x^2 + y^2) - 0.48xy"
     pgfmath_formula = "0.26*(#1^2 + #2^2) - 0.48*#1*#2"
 
+    # Function sheet attributes
+    tagline = (
+        "A nearly flat, elongated bowl. "
+        "Simple and convex, used as an easy baseline for testing optimization."
+    )
+    display_bounds = (-10.0, 10.0)
+    reference = None
+    reference_url = "https://www.sfu.ca/~ssurjano/matya.html"
+
     def __init__(
         self,
         objective: str = "minimize",

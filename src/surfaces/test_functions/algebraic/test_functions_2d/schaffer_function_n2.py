@@ -67,6 +67,15 @@ class SchafferFunctionN2(AlgebraicFunction):
     latex_formula = r"f(x, y) = 0.5 + \frac{\sin^2(x^2 - y^2) - 0.5}{[1 + 0.001(x^2 + y^2)]^2}"
     pgfmath_formula = "0.5 + (sin(deg(#1^2 - #2^2))^2 - 0.5)/((1 + 0.001*(#1^2 + #2^2))^2)"
 
+    # Function sheet attributes
+    tagline = (
+        "Concentric rings of local minima around the origin. "
+        "The pattern slowly decays outward, testing long-range exploration."
+    )
+    display_bounds = (-10.0, 10.0)
+    reference = "Schaffer (1994)"
+    reference_url = "https://www.sfu.ca/~ssurjano/schaffer2.html"
+
     def __init__(
         self,
         objective: str = "minimize",

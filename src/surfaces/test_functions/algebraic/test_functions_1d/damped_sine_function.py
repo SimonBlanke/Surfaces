@@ -78,6 +78,15 @@ class DampedSineFunction(AlgebraicFunction):
     latex_formula = r"f(x) = -(x + \sin(x)) e^{-x^2}"
     pgfmath_formula = "-(#1 + sin(deg(#1))) * exp(-#1^2)"
 
+    # Function sheet attributes
+    tagline = (
+        "Oscillatory behavior with Gaussian damping. The exponential decay "
+        "localizes activity near the origin while outer regions flatten."
+    )
+    display_bounds = (-3.0, 3.0)
+    reference = "Gavana (2013)"
+    reference_url = "http://infinity77.net/global_optimization/test_functions_1d.html"
+
     def __init__(
         self,
         objective: str = "minimize",

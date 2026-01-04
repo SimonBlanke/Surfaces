@@ -91,6 +91,15 @@ class SimionescuFunction(AlgebraicFunction):
     )
     pgfmath_formula = "0.1*#1*#2"  # Constraint not expressible; use for unconstrained region only
 
+    # Function sheet attributes
+    tagline = (
+        "A linear surface constrained by a bumpy star-shaped boundary. "
+        "Tests handling of complex feasible regions."
+    )
+    display_bounds = (-1.25, 1.25)
+    reference = "Simionescu (2011)"
+    reference_url = "https://www.sfu.ca/~ssurjano/simionescu.html"
+
     def __init__(
         self,
         A=0.1,

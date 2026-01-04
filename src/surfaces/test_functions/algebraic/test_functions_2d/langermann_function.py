@@ -62,6 +62,15 @@ class LangermannFunction(AlgebraicFunction):
     latex_formula = r"f(x, y) = \sum_{i=1}^{m} c_i \exp\left(-\frac{1}{\pi}\sum_{j=1}^{2}(x_j - A_{ji})^2\right) \cos\left(\pi\sum_{j=1}^{2}(x_j - A_{ji})^2\right)"
     pgfmath_formula = None  # Complex summation not expressible in pgfmath
 
+    # Function sheet attributes
+    tagline = (
+        "Irregularly distributed local minima with varying depths. "
+        "A challenging landscape without clear structure."
+    )
+    display_bounds = (0.0, 10.0)
+    reference = None
+    reference_url = "https://www.sfu.ca/~ssurjano/langer.html"
+
     c = np.array([1, 2, 5, 2, 3])
     m = 5
     A = np.array([[3, 5, 2, 1, 7], [5, 2, 1, 4, 9]])

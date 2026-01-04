@@ -85,6 +85,15 @@ class HimmelblausFunction(AlgebraicFunction):
     latex_formula = r"f(x, y) = (x^2 + y - 11)^2 + (x + y^2 - 7)^2"
     pgfmath_formula = "(#1^2 + #2 - 11)^2 + (#1 + #2^2 - 7)^2"
 
+    # Function sheet attributes
+    tagline = (
+        "Four symmetric valleys leading to equally optimal solutions. "
+        "A classic test for multi-solution discovery algorithms."
+    )
+    display_bounds = (-6.0, 6.0)
+    reference = "Himmelblau (1972)"
+    reference_url = "https://doi.org/10.1002/aic.690180227"
+
     def __init__(
         self,
         A=-11,
