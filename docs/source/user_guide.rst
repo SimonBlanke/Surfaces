@@ -11,21 +11,16 @@ User Guide
 .. tip::
 
    New to Surfaces? Start with :ref:`user_guide_introduction` for the fundamentals,
-   then explore :ref:`user_guide_mathematical` to see available functions.
+   then explore the :doc:`Test Functions <user_guide/test_functions/index>` to see what's available.
 
 ----
 
 How Surfaces Works
-------------------
+==================
 
 Surfaces provides a unified interface for optimization test functions.
 Each function can be evaluated, returns loss or score values, and
 provides its search space definition.
-
-Core Concepts
--------------
-
-Every test function in Surfaces involves three components:
 
 .. grid:: 1 1 3 3
    :gutter: 4
@@ -34,39 +29,80 @@ Every test function in Surfaces involves three components:
       :class-card: sd-border-primary
 
       **Call the function**
-      ^^^
-      Evaluate the function at any point using dictionaries,
-      keyword arguments, or numpy arrays.
 
-      +++
-      :doc:`Learn more <user_guide/introduction>`
+      Evaluate at any point using dictionaries,
+      keyword arguments, or numpy arrays.
 
    .. grid-item-card:: Metric
       :class-card: sd-border-success
 
       **Loss or Score**
-      ^^^
-      Get results for minimization (loss) or maximization (score).
-      The same function supports both paradigms.
 
-      +++
-      :doc:`Learn more <user_guide/introduction>`
+      Results for minimization (loss) or
+      maximization (score). Same function, both modes.
 
    .. grid-item-card:: Search Space
       :class-card: sd-border-warning
 
       **Parameter bounds**
-      ^^^
-      Every function provides a default search space with
-      appropriate bounds for optimization.
 
-      +++
-      :doc:`Learn more <user_guide/introduction>`
+      Every function provides a default search space
+      with appropriate bounds.
+
+----
+
+Guide Sections
+==============
+
+.. grid:: 2 2 2 2
+   :gutter: 4
+
+   .. grid-item-card:: Introduction
+      :link: user_guide/introduction
+      :link-type: doc
+
+      Core concepts and the unified interface.
+      **Start here** if you're new to Surfaces.
+
+   .. grid-item-card:: Test Functions
+      :link: user_guide/test_functions/index
+      :link-type: doc
+
+      All function categories: Algebraic, BBOB, CEC,
+      Machine Learning, and Engineering.
+
+   .. grid-item-card:: Modifiers
+      :link: user_guide/modifiers/index
+      :link-type: doc
+
+      Modify test functions with noise and
+      other transformations.
+
+   .. grid-item-card:: Presets
+      :link: user_guide/presets
+      :link-type: doc
+
+      Pre-configured function collections
+      for common benchmarking scenarios.
+
+   .. grid-item-card:: Integrations
+      :link: user_guide/integrations/index
+      :link-type: doc
+
+      Use Surfaces with scipy, Optuna, SMAC,
+      Ray Tune, GFO, and Hyperactive.
+
+   .. grid-item-card:: Visualization
+      :link: user_guide/visualization
+      :link-type: doc
+
+      Plot function surfaces, contours,
+      and optimization trajectories.
 
 ----
 
 Quick Example
--------------
+=============
 
 .. code-block:: python
 
@@ -83,78 +119,14 @@ Quick Example
 
 ----
 
-Guide Sections
---------------
-
-.. grid:: 2 2 3 3
-   :gutter: 3
-
-   .. grid-item-card:: Introduction
-      :link: user_guide/introduction
-      :link-type: doc
-
-      Core concepts and interface.
-      **Start here** if you're new.
-
-   .. grid-item-card:: Mathematical Functions
-      :link: user_guide/mathematical
-      :link-type: doc
-
-      Classic test functions from the
-      optimization literature.
-
-   .. grid-item-card:: ML Functions
-      :link: user_guide/machine_learning
-      :link-type: doc
-
-      Test functions based on
-      machine learning models.
-
-   .. grid-item-card:: Engineering Functions
-      :link: user_guide/engineering
-      :link-type: doc
-
-      Real-world constrained
-      engineering design problems.
-
-   .. grid-item-card:: scipy Integration
-      :link: user_guide/scipy_integration
-      :link-type: doc
-
-      Use Surfaces with scipy.optimize
-      for seamless optimization.
-
-   .. grid-item-card:: Optimizer Frameworks
-      :link: user_guide/optimizer_compatibility
-      :link-type: doc
-
-      Integrate with Optuna, SMAC,
-      Ray Tune, and more.
-
-   .. grid-item-card:: Visualization
-      :link: user_guide/visualization
-      :link-type: doc
-
-      Plot function surfaces
-      and contours.
-
-   .. grid-item-card:: Function Gallery
-      :link: function_gallery
-      :link-type: ref
-
-      Visual gallery of all
-      2D test functions.
-
-
 .. toctree::
    :maxdepth: 2
    :hidden:
 
    user_guide/introduction
-   user_guide/mathematical
-   user_guide/machine_learning
-   user_guide/engineering
-   user_guide/scipy_integration
-   user_guide/optimizer_compatibility
+   user_guide/test_functions/index
+   user_guide/modifiers/index
+   user_guide/presets
+   user_guide/integrations/index
    user_guide/visualization
    /_generated/plots/gallery

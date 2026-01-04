@@ -9,23 +9,42 @@
       </div>
    </div>
 
-   <!-- Stats are auto-counted in conf.py -->
    <div class="stats-strip">
-      <a href="user_guide/mathematical.html" class="stat-item">
-         <div class="stat-value">24</div>
-         <div class="stat-label">Mathematical</div>
+      <a href="get_started/curated_test_functions.html" class="stat-item">
+         <div class="stat-front">
+            <div class="stat-value">Curated</div>
+            <div class="stat-label">Test Functions</div>
+         </div>
+         <div class="stat-hover">
+            <div class="stat-hover-text">Algebraic, ML, Engineering, CEC and BBOB benchmarks</div>
+         </div>
       </a>
-      <a href="user_guide/machine_learning.html" class="stat-item">
-         <div class="stat-value">3</div>
-         <div class="stat-label">ML Functions</div>
+      <a href="get_started/plug_and_play_integration.html" class="stat-item">
+         <div class="stat-front">
+            <div class="stat-value">Plug & Play</div>
+            <div class="stat-label">Integration</div>
+         </div>
+         <div class="stat-hover">
+            <div class="stat-hover-text">Works with scipy, Optuna, Ray Tune, SMAC and more</div>
+         </div>
       </a>
-      <a href="user_guide/mathematical.html#n-dimensional-functions" class="stat-item">
-         <div class="stat-value">N-D</div>
-         <div class="stat-label">Scalable</div>
+      <a href="get_started/machine_learning_accelerated.html" class="stat-item">
+         <div class="stat-front">
+            <div class="stat-value">ML-Model</div>
+            <div class="stat-label">Accelerated</div>
+         </div>
+         <div class="stat-hover">
+            <div class="stat-hover-text">ONNX surrogates for fast function evaluation</div>
+         </div>
       </a>
-      <a href="api_reference.html" class="stat-item">
-         <div class="stat-value">One</div>
-         <div class="stat-label">Unified API</div>
+      <a href="get_started/minimal_dependencies.html" class="stat-item">
+         <div class="stat-front">
+            <div class="stat-value">Minimal</div>
+            <div class="stat-label">Dependencies</div>
+         </div>
+         <div class="stat-hover">
+            <div class="stat-hover-text">Core library requires only numpy</div>
+         </div>
       </a>
    </div>
 
@@ -384,7 +403,7 @@ Contents
 ========
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :hidden:
 
    get_started

@@ -1,54 +1,54 @@
 /* Custom CSS for Surfaces documentation */
-/* Deep Navy Indigo theme */
+/* Pastel Sage Green theme */
 
 /* ============================================
-   PyData Theme Color Overrides (deep navy indigo)
+   PyData Theme Color Overrides (muted sage green)
    ============================================ */
 html[data-theme="light"] {
-    --pst-color-primary: #1A1854;
-    --pst-color-primary-bg: #f0f0f5;
-    --pst-color-secondary: #3D3A7A;
-    --pst-color-accent: #5C5A9A;
-    --pst-color-info: #3D3A7A;
-    --pst-color-link: #1A1854;
-    --pst-color-link-hover: #0F0E32;
-    --pst-color-target: rgba(26, 24, 84, 0.2);
+    --pst-color-primary: #5A8F6A;
+    --pst-color-primary-bg: #f2f5f3;
+    --pst-color-secondary: #78A688;
+    --pst-color-accent: #8FB89C;
+    --pst-color-info: #5A8F6A;
+    --pst-color-link: #5A8F6A;
+    --pst-color-link-hover: #4A7558;
+    --pst-color-target: rgba(90, 143, 106, 0.2);
 }
 
 html[data-theme="dark"] {
-    --pst-color-primary: #7A78B8;
-    --pst-color-primary-bg: #1a1a2e;
-    --pst-color-secondary: #9A98C8;
-    --pst-color-accent: #B8B6D8;
-    --pst-color-info: #7A78B8;
-    --pst-color-link: #9A98C8;
-    --pst-color-link-hover: #B8B6D8;
-    --pst-color-target: rgba(122, 120, 184, 0.2);
-    --separator-color: #2d2d4a;
+    --pst-color-primary: #88B896;
+    --pst-color-primary-bg: #1c2a1e;
+    --pst-color-secondary: #A2C8AC;
+    --pst-color-accent: #B8D4C0;
+    --pst-color-info: #88B896;
+    --pst-color-link: #A2C8AC;
+    --pst-color-link-hover: #B8D4C0;
+    --pst-color-target: rgba(136, 184, 150, 0.2);
+    --separator-color: #2f4233;
 }
 
 /* ============================================
    CSS Variables for consistent theming
    ============================================ */
 :root {
-    /* Deep navy indigo colors */
-    --surfaces-primary: #1A1854;
-    --surfaces-secondary: #3D3A7A;
-    --surfaces-accent: #5C5A9A;
-    --surfaces-dark: #0F0E32;
-    --surfaces-light: #f8f9fa;
-    --surfaces-gradient: linear-gradient(135deg, #0F0E32 0%, #1A1854 100%);
-    --surfaces-gradient-dark: linear-gradient(135deg, #080820 0%, #141244 100%);
+    /* Muted sage green colors */
+    --surfaces-primary: #5A8F6A;
+    --surfaces-secondary: #78A688;
+    --surfaces-accent: #8FB89C;
+    --surfaces-dark: #4A7558;
+    --surfaces-light: #f8faf9;
+    --surfaces-gradient: linear-gradient(135deg, #4A7558 0%, #5A8F6A 100%);
+    --surfaces-gradient-dark: linear-gradient(135deg, #3A5F46 0%, #4A7558 100%);
     --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --card-shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     /* Neutral separator color */
     --separator-color: #dee2e6;
 
     /* Function category colors */
-    --math-color: #5A7A8B;
-    --math-color-light: #79A6C4;
-    --ml-color: #5A8B6A;
-    --ml-color-light: #79C493;
+    --math-color: #5A8B7A;
+    --math-color-light: #79C4A6;
+    --ml-color: #5A8F6A;
+    --ml-color-light: #78A688;
 }
 
 /* ============================================
@@ -283,12 +283,58 @@ a.stat-item {
     color: inherit;
 }
 
+/* Front content (number + label) */
+.stat-front {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.stat-item:hover .stat-front {
+    opacity: 0;
+    transform: translateY(-8px);
+}
+
+/* Hover content (description) */
+.stat-hover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.stat-item:hover .stat-hover {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.stat-hover-text {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--surfaces-primary);
+    line-height: 1.4;
+    text-align: center;
+}
+
+html[data-theme="dark"] .stat-hover-text {
+    color: var(--surfaces-secondary);
+}
+
 .stat-value {
     font-size: 1.75rem;
     font-weight: 700;
     color: var(--surfaces-primary);
     line-height: 1.2;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.5rem;
 }
 
 html[data-theme="dark"] .stat-value {
@@ -318,6 +364,7 @@ html[data-theme="dark"] .stat-value {
     .stat-item {
         flex: 1 1 50%;
         padding: 1rem 0.75rem;
+        min-height: 75px;
     }
 
     .stat-item:not(:last-child)::after {
@@ -335,6 +382,10 @@ html[data-theme="dark"] .stat-value {
 
     .stat-value {
         font-size: 1.5rem;
+    }
+
+    .stat-hover-text {
+        font-size: 0.75rem;
     }
 }
 

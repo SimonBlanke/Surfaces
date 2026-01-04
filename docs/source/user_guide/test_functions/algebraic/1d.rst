@@ -1,0 +1,110 @@
+.. _user_guide_algebraic_1d:
+
+============
+1D Functions
+============
+
+One-dimensional test functions are useful for simple benchmarks,
+visualization of optimizer behavior, and educational purposes.
+
+----
+
+Available 1D Functions
+======================
+
+.. list-table::
+   :header-rows: 1
+   :widths: 30 30 40
+
+   * - Function
+     - Global Minimum
+     - Characteristics
+   * - ``GramacyAndLeeFunction``
+     - x* = 0.548
+     - Multiple local minima
+   * - ``ForresterFunction``
+     - x* = 0.757
+     - Smooth with one global minimum
+
+----
+
+Gramacy & Lee Function
+======================
+
+A common 1D test function with multiple local minima.
+
+.. code-block:: python
+
+    from surfaces.test_functions import GramacyAndLeeFunction
+
+    func = GramacyAndLeeFunction()
+
+    # Evaluate
+    result = func({"x0": 0.5})
+
+    # Search space
+    space = func.search_space()
+    print(f"Bounds: [{space['x0'].min()}, {space['x0'].max()}]")
+
+**Properties:**
+
+- Domain: [0.5, 2.5]
+- Global minimum: x* = 0.548, f(x*) = -0.869
+
+----
+
+Forrester Function
+==================
+
+A smooth 1D function often used for surrogate model testing.
+
+.. code-block:: python
+
+    from surfaces.test_functions import ForresterFunction
+
+    func = ForresterFunction()
+    result = func({"x0": 0.757})
+
+**Properties:**
+
+- Domain: [0, 1]
+- Global minimum: x* = 0.757
+
+----
+
+Use Cases
+=========
+
+1D functions are particularly useful for:
+
+- **Visualizing optimizer behavior**: Plot the function and optimization trajectory
+- **Testing convergence**: Simple enough to verify optimizer correctness
+- **Educational examples**: Easy to understand and explain
+
+.. code-block:: python
+
+    import numpy as np
+    import matplotlib.pyplot as plt
+    from surfaces.test_functions import GramacyAndLeeFunction
+
+    func = GramacyAndLeeFunction()
+    space = func.search_space()
+
+    # Plot the function
+    x = space["x0"]
+    y = [func({"x0": xi}) for xi in x]
+
+    plt.plot(x, y)
+    plt.xlabel("x")
+    plt.ylabel("f(x)")
+    plt.title("Gramacy & Lee Function")
+    plt.show()
+
+----
+
+Next Steps
+==========
+
+- :doc:`2d` - Two-dimensional functions with visualizable surfaces
+- :doc:`nd` - Scalable N-dimensional functions
+- :doc:`/api_reference/test_functions/algebraic` - Complete API reference

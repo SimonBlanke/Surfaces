@@ -18,20 +18,56 @@ optimization algorithm benchmarking. These functions have known properties
 - Educational purposes
 - Prototyping optimization pipelines
 
-Installation
-============
-
-Install from PyPI:
+Quick Install
+=============
 
 .. code-block:: bash
 
     pip install surfaces
 
+----
+
+Why Surfaces?
+=============
+
+.. grid:: 2 2 2 2
+   :gutter: 4
+
+   .. grid-item-card:: Curated Test Functions
+      :link: get_started/curated_test_functions
+      :link-type: doc
+
+      Not just a random collection. Surfaces provides carefully selected
+      test functions from established benchmarks like CEC and BBOB,
+      plus real-world ML and engineering problems.
+
+   .. grid-item-card:: Plug & Play Integration
+      :link: get_started/plug_and_play_integration
+      :link-type: doc
+
+      Works out of the box with scipy, Optuna, SMAC, Ray Tune,
+      Gradient-Free-Optimizers, and Hyperactive. No adapters needed.
+
+   .. grid-item-card:: Machine Learning Accelerated
+      :link: get_started/machine_learning_accelerated
+      :link-type: doc
+
+      Pre-trained surrogate models let you benchmark expensive
+      ML hyperparameter optimization problems instantly.
+
+   .. grid-item-card:: Minimal Dependencies
+      :link: get_started/minimal_dependencies
+      :link-type: doc
+
+      Core installation requires only numpy. Add optional features
+      like ML functions or visualization only when you need them.
+
+----
+
 Your First Test Function
 ========================
 
-Let's evaluate the classic Sphere function, one of the simplest test functions
-where the global minimum is at the origin:
+Let's evaluate the classic Sphere function:
 
 .. code-block:: python
 
@@ -48,120 +84,22 @@ where the global minimum is at the origin:
     optimal = func({"x0": 0.0, "x1": 0.0})
     print(f"f(0, 0) = {optimal}")  # Output: 0.0
 
-Understanding the Interface
-===========================
-
-All Surfaces test functions share a consistent interface:
-
-Evaluation Methods
-------------------
-
-There are multiple ways to evaluate a function:
-
-.. code-block:: python
-
-    from surfaces.test_functions import AckleyFunction
-
-    func = AckleyFunction()
-
-    # 1. Dictionary input (primary interface)
-    result = func({"x0": 1.0, "x1": 2.0})
-
-    # 2. Keyword arguments
-    result = func(x0=1.0, x1=2.0)
-
-    # 3. Positional arguments via evaluate()
-    result = func.evaluate(1.0, 2.0)
-
-    # 4. NumPy array via evaluate_array()
-    import numpy as np
-    result = func.evaluate_array(np.array([1.0, 2.0]))
-
-Loss vs Score
--------------
-
-Every function supports both minimization and maximization:
-
-.. code-block:: python
-
-    func = SphereFunction(n_dim=2)
-
-    # Default: returns loss (for minimization)
-    loss = func({"x0": 1.0, "x1": 1.0})  # 2.0
-
-    # Explicit loss (always positive, lower is better)
-    loss = func.loss({"x0": 1.0, "x1": 1.0})  # 2.0
-
-    # Explicit score (negative loss, higher is better)
-    score = func.score({"x0": 1.0, "x1": 1.0})  # -2.0
-
-Search Space
-------------
-
-Every function provides a default search space:
-
-.. code-block:: python
-
-    func = SphereFunction(n_dim=3)
-
-    # Get the default search space
-    space = func.search_space()
-    # {'x0': array([...]), 'x1': array([...]), 'x2': array([...])}
-
-    # The space contains discrete sample points within bounds
-    print(f"x0 range: [{space['x0'].min()}, {space['x0'].max()}]")
-
-Using with scipy
-================
-
-Surfaces integrates seamlessly with scipy.optimize:
-
-.. code-block:: python
-
-    from surfaces.test_functions import RosenbrockFunction
-    from scipy.optimize import minimize
-
-    # Create the function
-    func = RosenbrockFunction(n_dim=3)
-
-    # Convert to scipy format
-    objective, bounds, x0 = func.to_scipy()
-
-    # Run optimization
-    result = minimize(objective, x0, bounds=bounds, method='L-BFGS-B')
-
-    print(f"Found minimum at: {result.x}")
-    print(f"Minimum value: {result.fun}")
-
-Available Functions
-===================
-
-Surfaces provides three categories of test functions:
-
-Mathematical Functions
-----------------------
-
-Classic optimization test functions from the literature:
-
-- **1D Functions**: Gramacy & Lee
-- **2D Functions**: Ackley, Beale, Booth, Himmelblau, Rosenbrock (2D), etc.
-- **N-D Functions**: Sphere, Rastrigin, Rosenbrock, Griewank, Styblinski-Tang
-
-Machine Learning Functions
---------------------------
-
-Test functions based on real ML model training:
-
-- **Classification**: KNeighborsClassifierFunction
-- **Regression**: KNeighborsRegressorFunction, GradientBoostingRegressorFunction
+----
 
 Next Steps
 ==========
 
-Now that you understand the basics:
-
 - :doc:`installation` - Detailed installation options
-- :doc:`user_guide/mathematical` - Explore all mathematical functions
-- :doc:`user_guide/machine_learning` - Learn about ML-based functions
-- :doc:`examples` - See more code examples
+- :doc:`user_guide` - In-depth tutorials and explanations
+- :doc:`examples` - Code examples and use cases
 - :doc:`api_reference` - Complete API documentation
+
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+
+   get_started/curated_test_functions
+   get_started/plug_and_play_integration
+   get_started/machine_learning_accelerated
+   get_started/minimal_dependencies

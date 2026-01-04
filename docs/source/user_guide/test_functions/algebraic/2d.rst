@@ -1,0 +1,184 @@
+.. _user_guide_algebraic_2d:
+
+============
+2D Functions
+============
+
+Two-dimensional test functions can be visualized as 3D surfaces and
+contour plots. They are ideal for understanding optimizer behavior
+and creating publication-quality figures.
+
+----
+
+Available 2D Functions
+======================
+
+.. list-table::
+   :header-rows: 1
+   :widths: 25 25 50
+
+   * - Function
+     - Type
+     - Characteristics
+   * - ``AckleyFunction``
+     - Multimodal
+     - Many local minima, global at origin
+   * - ``RastriginFunction``
+     - Multimodal
+     - Highly multimodal, cosine waves
+   * - ``RosenbrockFunction``
+     - Unimodal
+     - Banana-shaped valley
+   * - ``HimmelblausFunction``
+     - Multimodal
+     - Four identical local minima
+   * - ``BealeFunction``
+     - Unimodal
+     - Sharp valley
+   * - ``BoothFunction``
+     - Unimodal
+     - Simple, smooth
+   * - ``GoldsteinPriceFunction``
+     - Multimodal
+     - Complex landscape
+   * - ``EasomFunction``
+     - Unimodal
+     - Flat with narrow peak
+   * - ``CrossInTrayFunction``
+     - Multimodal
+     - Four global minima
+   * - ``EggholderFunction``
+     - Multimodal
+     - Difficult, many local minima
+   * - ``DropWaveFunction``
+     - Multimodal
+     - Concentric waves
+   * - ``SchafferFunctionN2``
+     - Multimodal
+     - Circular ridges
+   * - ``LeviFunctionN13``
+     - Multimodal
+     - Complex interactions
+   * - ``MatyasFunction``
+     - Unimodal
+     - Simple, elliptical
+   * - ``McCormickFunction``
+     - Unimodal
+     - Asymmetric valley
+   * - ``ThreeHumpCamelFunction``
+     - Multimodal
+     - Three local minima
+
+----
+
+Classic Examples
+================
+
+Ackley Function
+---------------
+
+The Ackley function is a widely used multimodal test function with
+many local minima surrounding a global minimum at the origin.
+
+.. code-block:: python
+
+    from surfaces.test_functions import AckleyFunction
+
+    func = AckleyFunction()
+    result = func({"x0": 0.0, "x1": 0.0})  # Global minimum: 0.0
+
+**Properties:**
+
+- Global minimum: f(0, 0) = 0
+- Many local minima
+- Tests ability to escape local optima
+
+Rastrigin Function
+------------------
+
+A highly multimodal function with a cosine wave pattern.
+
+.. code-block:: python
+
+    from surfaces.test_functions import RastriginFunction
+
+    func = RastriginFunction(n_dim=2)
+    result = func({"x0": 0.0, "x1": 0.0})  # Global minimum: 0.0
+
+**Properties:**
+
+- Global minimum: f(0, 0) = 0
+- Regular grid of local minima
+- Number of local minima grows exponentially with dimension
+
+Rosenbrock Function
+-------------------
+
+The famous "banana function" with a narrow, curved valley.
+
+.. code-block:: python
+
+    from surfaces.test_functions import RosenbrockFunction
+
+    func = RosenbrockFunction(n_dim=2)
+    result = func({"x0": 1.0, "x1": 1.0})  # Global minimum: 0.0
+
+**Properties:**
+
+- Global minimum: f(1, 1) = 0
+- Non-separable (variables interact)
+- Tests ability to follow narrow valleys
+
+Himmelblau's Function
+---------------------
+
+A function with four identical local minima.
+
+.. code-block:: python
+
+    from surfaces.test_functions import HimmelblausFunction
+
+    func = HimmelblausFunction()
+    # Four global minima, all with f(x) = 0
+
+**Properties:**
+
+- Four global minima at:
+  - (3.0, 2.0)
+  - (-2.805, 3.131)
+  - (-3.779, -3.283)
+  - (3.584, -1.848)
+- Tests multi-basin exploration
+
+----
+
+Visualization
+=============
+
+2D functions can be visualized with Surfaces' built-in tools:
+
+.. code-block:: python
+
+    from surfaces.test_functions import AckleyFunction
+    from surfaces.visualization import plot_surface, plot_contour
+
+    func = AckleyFunction()
+
+    # 3D surface plot
+    fig_surface = plot_surface(func, title="Ackley Function")
+    fig_surface.show()
+
+    # 2D contour plot
+    fig_contour = plot_contour(func, title="Ackley Contour")
+    fig_contour.show()
+
+See the :ref:`function_gallery` for visualizations of all 2D functions.
+
+----
+
+Next Steps
+==========
+
+- :doc:`nd` - Scalable N-dimensional functions
+- :doc:`/user_guide/visualization` - Visualization guide
+- :doc:`/api_reference/test_functions/algebraic` - Complete API reference

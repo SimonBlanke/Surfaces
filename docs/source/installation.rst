@@ -4,70 +4,105 @@
 Installation
 ============
 
-This page covers various ways to install Surfaces and its dependencies.
+Surfaces is designed to be lightweight. The core installation requires
+only **numpy** as a dependency.
 
-Requirements
-============
+----
 
-Surfaces has minimal core requirements:
+Core Installation
+=================
+
+.. code-block:: bash
+
+    pip install surfaces
+
+This gives you:
+
+- All **Algebraic** test functions (1D, 2D, N-D)
+- All **BBOB** functions (Black-Box Optimization Benchmarking)
+- All **CEC** functions (Competition on Evolutionary Computation)
+- All **Engineering** design problems
+
+**Requirements:**
 
 - Python |min_python| or higher
 - NumPy >= 1.18.1
 
-Optional dependencies for additional features:
+That's it. No heavy dependencies, fast installation, CI/CD friendly.
 
-- **Visualization**: matplotlib, plotly
-- **Machine Learning functions**: scikit-learn
+----
 
-Installing from PyPI
-====================
+Optional Features
+=================
 
-The recommended way to install Surfaces is via pip:
+Add features only when you need them:
+
+.. grid:: 2 2 2 2
+   :gutter: 4
+
+   .. grid-item-card:: CEC Functions
+      :link: installation/cec
+      :link-type: doc
+
+      Additional setup for CEC benchmark suites.
+      Some CEC functions require extra configuration.
+
+      .. code-block:: bash
+
+          pip install surfaces[cec]
+
+   .. grid-item-card:: Machine Learning
+      :link: installation/machine_learning
+      :link-type: doc
+
+      ML-based test functions using scikit-learn,
+      XGBoost, and other ML libraries.
+
+      .. code-block:: bash
+
+          pip install surfaces[ml]
+
+   .. grid-item-card:: Surrogates
+      :link: installation/surrogates
+      :link-type: doc
+
+      Pre-trained surrogate models for fast
+      evaluation of expensive functions.
+
+      .. code-block:: bash
+
+          pip install surfaces[surrogates]
+
+   .. grid-item-card:: Visualization
+      :link: installation/visualization
+      :link-type: doc
+
+      Surface plots, contour plots, and
+      interactive visualizations.
+
+      .. code-block:: bash
+
+          pip install surfaces[viz]
+
+----
+
+Full Installation
+=================
+
+Install everything at once:
 
 .. code-block:: bash
 
-    # Minimal install (algebraic + engineering functions only)
-    pip install surfaces
-
-    # With visualization support
-    pip install surfaces[viz]
-
-    # With machine learning functions
-    pip install surfaces[ml]
-
-    # Full installation (all features)
     pip install surfaces[full]
 
-The minimal installation includes all algebraic (mathematical) and engineering
-test functions. These require only NumPy and are ideal for CI/CD pipelines
-where minimal dependencies are preferred.
+This includes all optional features: ML functions, surrogates, and visualization.
 
-Installing with Extras
-======================
-
-Available optional dependency groups:
-
-.. code-block:: bash
-
-    # Visualization (matplotlib + plotly)
-    pip install surfaces[viz]
-
-    # Machine learning functions (scikit-learn)
-    pip install surfaces[ml]
-
-    # All optional features
-    pip install surfaces[full]
-
-    # Development dependencies
-    pip install surfaces[dev]
-
-    # Test dependencies
-    pip install surfaces[test]
+----
 
 Installing from Source
 ======================
 
-To install the latest development version from GitHub:
+For the latest development version:
 
 .. code-block:: bash
 
@@ -81,21 +116,23 @@ For development with all dependencies:
 
     pip install -e ".[dev,test]"
 
+----
+
 Verifying Installation
 ======================
-
-You can verify that Surfaces is installed correctly:
 
 .. code-block:: python
 
     import surfaces
-    print(surfaces.__version__)
+    print(f"Surfaces version: {surfaces.__version__}")
 
     # Test a simple function
     from surfaces.test_functions import SphereFunction
     func = SphereFunction(n_dim=2)
     result = func({"x0": 0.0, "x1": 0.0})
     print(f"Sphere(0, 0) = {result}")  # Should print 0.0
+
+----
 
 Platform Support
 ================
@@ -106,27 +143,7 @@ Surfaces is tested on:
 - macOS
 - Windows
 
-Surfaces should work on any platform where Python and its dependencies are available.
-
-Dependency Notes
-================
-
-NumPy
------
-
-Surfaces uses NumPy for numerical operations. It is compatible with NumPy 1.x and 2.x.
-
-scikit-learn
-------------
-
-The machine learning test functions require scikit-learn for model training.
-Any recent version of scikit-learn should work.
-
-Plotly
-------
-
-The visualization features use Plotly for interactive plots. Plotly is optional
-for core functionality but required for visualization.
+----
 
 Troubleshooting
 ===============
@@ -134,35 +151,43 @@ Troubleshooting
 Import Errors
 -------------
 
-If you get import errors for visualization or ML functions:
+If you get import errors for specific features:
 
 .. code-block:: bash
 
-    # For visualization functions
-    pip install surfaces[viz]
-
-    # For machine learning functions
+    # For ML functions
     pip install surfaces[ml]
 
-    # For all features
-    pip install surfaces[full]
+    # For visualization
+    pip install surfaces[viz]
+
+    # For surrogates
+    pip install surfaces[surrogates]
 
 Version Conflicts
 -----------------
 
-If you encounter version conflicts, try creating a fresh virtual environment:
+Try a fresh virtual environment:
 
 .. code-block:: bash
 
     python -m venv surfaces-env
-    source surfaces-env/bin/activate  # On Windows: surfaces-env\Scripts\activate
+    source surfaces-env/bin/activate  # Windows: surfaces-env\Scripts\activate
     pip install surfaces
 
 Getting Help
 ------------
 
-If you encounter issues:
-
 1. Check the :doc:`faq` for common problems
 2. Search `existing issues <https://github.com/SimonBlanke/Surfaces/issues>`_
 3. Open a new issue on GitHub
+
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+
+   installation/cec
+   installation/machine_learning
+   installation/surrogates
+   installation/visualization
