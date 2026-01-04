@@ -12,23 +12,17 @@ the data structure directly.
 import numpy as np
 import pytest
 
-from tests.conftest import (
-    HAS_VIZ,
-    algebraic_functions_2d,
-    func_id,
-    instantiate_function,
-    requires_viz,
+from surfaces._visualize import (
+    _create_grid,
+    _plot_parameter_slice,
+    _plotly_contour,
+    _plotly_heatmap,
+    _plotly_surface,
+    _plotly_surface_nd,
 )
+from surfaces.test_functions.algebraic import algebraic_functions_2d
 
-if HAS_VIZ:
-    from surfaces._visualize import (
-        _create_grid,
-        _plot_parameter_slice,
-        _plotly_contour,
-        _plotly_heatmap,
-        _plotly_surface,
-        _plotly_surface_nd,
-    )
+from tests.conftest import func_id, instantiate_function
 
 
 # =============================================================================
@@ -37,7 +31,6 @@ if HAS_VIZ:
 
 
 @pytest.mark.viz
-@requires_viz
 class TestGridCreation:
     """Tests for grid creation helper."""
 
@@ -84,7 +77,6 @@ class TestGridCreation:
 
 
 @pytest.mark.viz
-@requires_viz
 class TestPlotlySurface:
     """Tests for 3D surface plot generation."""
 
@@ -239,7 +231,6 @@ class TestPlotlySurface:
 
 
 @pytest.mark.viz
-@requires_viz
 class TestPlotlyHeatmap:
     """Tests for 2D heatmap generation."""
 
@@ -333,7 +324,6 @@ class TestPlotlyHeatmap:
 
 
 @pytest.mark.viz
-@requires_viz
 class TestPlotlyContour:
     """Tests for contour plot generation."""
 
@@ -395,7 +385,6 @@ class TestPlotlyContour:
 
 
 @pytest.mark.viz
-@requires_viz
 class TestPlotlySurfaceND:
     """Tests for N-dimensional surface plot (projects to 2D)."""
 
@@ -435,7 +424,6 @@ class TestPlotlySurfaceND:
 
 
 @pytest.mark.viz
-@requires_viz
 class TestParameterSlice:
     """Tests for 1D parameter slice plots."""
 

@@ -14,17 +14,9 @@ optimization benchmarks. They're organized by:
 import numpy as np
 import pytest
 
-from tests.conftest import (
-    HAS_ML,
-    func_id,
-    get_sample_params,
-    instantiate_function,
-    machine_learning_functions,
-    requires_sklearn,
-)
+from surfaces.test_functions.machine_learning import machine_learning_functions
 
-# Skip all tests in this module if sklearn not installed
-pytestmark = requires_sklearn
+from tests.conftest import func_id, get_sample_params, instantiate_function
 
 
 # =============================================================================
@@ -90,7 +82,7 @@ class TestMLSearchSpace:
 class TestClassificationFunctions:
     """Test classification ML functions."""
 
-    @pytest.mark.skipif(not HAS_ML, reason="scikit-learn not installed")
+    
     def test_kneighbors_classifier(self, quick_ml_params):
         """KNeighborsClassifier function evaluates correctly."""
         from surfaces.test_functions import KNeighborsClassifierFunction
@@ -104,7 +96,7 @@ class TestClassificationFunctions:
         # Score should be between 0 and 1 (or loss equivalent)
         assert -1.0 <= result <= 1.0 or result >= 0
 
-    @pytest.mark.skipif(not HAS_ML, reason="scikit-learn not installed")
+    
     def test_decision_tree_classifier(self, quick_ml_params):
         """DecisionTreeClassifier function evaluates correctly."""
         from surfaces.test_functions import DecisionTreeClassifierFunction
@@ -116,7 +108,7 @@ class TestClassificationFunctions:
         assert isinstance(result, (int, float))
         assert np.isfinite(result)
 
-    @pytest.mark.skipif(not HAS_ML, reason="scikit-learn not installed")
+    
     def test_random_forest_classifier(self, quick_ml_params):
         """RandomForestClassifier function evaluates correctly."""
         from surfaces.test_functions import RandomForestClassifierFunction
@@ -138,7 +130,7 @@ class TestClassificationFunctions:
 class TestRegressionFunctions:
     """Test regression ML functions."""
 
-    @pytest.mark.skipif(not HAS_ML, reason="scikit-learn not installed")
+    
     def test_kneighbors_regressor(self, quick_regression_params):
         """KNeighborsRegressor function evaluates correctly."""
         from surfaces.test_functions import KNeighborsRegressorFunction
@@ -150,7 +142,7 @@ class TestRegressionFunctions:
         assert isinstance(result, (int, float))
         assert np.isfinite(result)
 
-    @pytest.mark.skipif(not HAS_ML, reason="scikit-learn not installed")
+    
     def test_decision_tree_regressor(self, quick_regression_params):
         """DecisionTreeRegressor function evaluates correctly."""
         from surfaces.test_functions import DecisionTreeRegressorFunction
@@ -172,7 +164,7 @@ class TestRegressionFunctions:
 class TestMLObjectiveDirection:
     """Test objective direction for ML functions."""
 
-    @pytest.mark.skipif(not HAS_ML, reason="scikit-learn not installed")
+    
     def test_minimize_returns_loss(self, quick_ml_params):
         """Minimize objective returns loss (lower is better)."""
         from surfaces.test_functions import KNeighborsClassifierFunction
@@ -184,7 +176,7 @@ class TestMLObjectiveDirection:
         # For classification, loss should be positive (1 - accuracy)
         assert isinstance(result, (int, float))
 
-    @pytest.mark.skipif(not HAS_ML, reason="scikit-learn not installed")
+    
     def test_maximize_returns_score(self, quick_ml_params):
         """Maximize objective returns negated score."""
         from surfaces.test_functions import KNeighborsClassifierFunction
@@ -205,7 +197,7 @@ class TestMLObjectiveDirection:
 class TestMLDataCollection:
     """Test data collection for ML functions."""
 
-    @pytest.mark.skipif(not HAS_ML, reason="scikit-learn not installed")
+    
     def test_tracks_evaluations(self, quick_ml_params):
         """ML functions track evaluation count."""
         from surfaces.test_functions import KNeighborsClassifierFunction
@@ -219,7 +211,7 @@ class TestMLDataCollection:
         func(params)
         assert func.n_evaluations == 2
 
-    @pytest.mark.skipif(not HAS_ML, reason="scikit-learn not installed")
+    
     def test_tracks_best_score(self, quick_ml_params):
         """ML functions track best score."""
         from surfaces.test_functions import KNeighborsClassifierFunction
@@ -241,7 +233,7 @@ class TestMLDataCollection:
 class TestMLMemory:
     """Test memory caching for ML functions."""
 
-    @pytest.mark.skipif(not HAS_ML, reason="scikit-learn not installed")
+    
     def test_memory_caches_results(self, quick_ml_params):
         """ML functions with memory=True cache results."""
         from surfaces.test_functions import KNeighborsClassifierFunction
@@ -257,7 +249,7 @@ class TestMLMemory:
 
         assert result1 == result2
 
-    @pytest.mark.skipif(not HAS_ML, reason="scikit-learn not installed")
+    
     def test_memory_different_params(self, quick_ml_params):
         """Different params don't use cached value."""
         from surfaces.test_functions import KNeighborsClassifierFunction
@@ -287,7 +279,7 @@ class TestMLMemory:
 class TestMLCallbacks:
     """Test callbacks for ML functions."""
 
-    @pytest.mark.skipif(not HAS_ML, reason="scikit-learn not installed")
+    
     def test_callback_invoked(self, quick_ml_params):
         """Callbacks are invoked after evaluation."""
         from surfaces.test_functions import KNeighborsClassifierFunction

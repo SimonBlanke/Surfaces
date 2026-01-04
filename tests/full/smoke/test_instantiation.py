@@ -5,13 +5,31 @@ and called without errors. They require additional dependencies
 like scikit-learn and CEC data packages.
 """
 
+import inspect
+
 import numpy as np
 import pytest
 
-from surfaces.test_functions.cec.cec2013 import CEC2013_FUNCTIONS
-from surfaces.test_functions.cec.cec2014 import CEC2014_FUNCTIONS
-from surfaces.test_functions.cec.cec2017 import CEC2017_FUNCTIONS
+import surfaces.test_functions.cec.cec2013 as cec2013
+import surfaces.test_functions.cec.cec2014 as cec2014
+import surfaces.test_functions.cec.cec2017 as cec2017
 from surfaces.test_functions.machine_learning import machine_learning_functions
+
+# Build CEC function lists dynamically
+CEC2013_FUNCTIONS = [
+    v for k, v in vars(cec2013).items()
+    if inspect.isclass(v) and not k.startswith("_") and k != "CEC2013Function"
+]
+
+CEC2014_FUNCTIONS = [
+    v for k, v in vars(cec2014).items()
+    if inspect.isclass(v) and not k.startswith("_") and k != "CEC2014Function"
+]
+
+CEC2017_FUNCTIONS = [
+    v for k, v in vars(cec2017).items()
+    if inspect.isclass(v) and not k.startswith("_") and k != "CEC2017Function"
+]
 
 
 def func_id(func_class):
@@ -25,18 +43,6 @@ def instantiate_function(func_class, **kwargs):
         return func_class(**kwargs)
     except TypeError:
         return func_class()
-
-
-def get_sample_params(func):
-    """Get sample parameters from a function's search space."""
-    params = {}
-    for key, values in func.search_space.items():
-        if hasattr(values, "__iter__") and not isinstance(values, str):
-            values_list = list(values)
-            params[key] = values_list[len(values_list) // 2]
-        else:
-            params[key] = values
-    return params
 
 
 # =============================================================================

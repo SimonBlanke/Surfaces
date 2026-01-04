@@ -13,13 +13,9 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+from streamlit.testing.v1 import AppTest
 
-from tests.conftest import HAS_STREAMLIT, requires_streamlit
-
-if HAS_STREAMLIT:
-    from streamlit.testing.v1 import AppTest
-
-    from surfaces._surrogates._dashboard.database import init_db
+from surfaces._surrogates._dashboard.database import init_db
 
 
 @pytest.fixture
@@ -38,7 +34,6 @@ def mock_db():
 
 
 @pytest.mark.dashboard
-@requires_streamlit
 class TestAppLoading:
     """Tests for basic app loading."""
 
@@ -82,7 +77,6 @@ class TestAppLoading:
 
 
 @pytest.mark.dashboard
-@requires_streamlit
 class TestSidebar:
     """Tests for sidebar components."""
 
@@ -137,7 +131,6 @@ class TestSidebar:
 
 
 @pytest.mark.dashboard
-@requires_streamlit
 class TestTabNavigation:
     """Tests for tab-based navigation."""
 
@@ -165,7 +158,6 @@ class TestTabNavigation:
 
 
 @pytest.mark.dashboard
-@requires_streamlit
 @pytest.mark.slow
 class TestIntegration:
     """Integration tests with actual database operations."""

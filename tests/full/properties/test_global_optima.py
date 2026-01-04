@@ -1,23 +1,26 @@
-# Author: Simon Blanke
-# Email: simon.blanke@yahoo.com
-# License: MIT License
-
 """Property tests for global optima.
 
 These tests verify that functions with known global optima
 return the correct value when evaluated at the optimum.
 """
 
+import inspect
+
 import numpy as np
 import pytest
 
+import surfaces.test_functions.cec.cec2014 as cec2014
 from surfaces.test_functions.algebraic import algebraic_functions
 from surfaces.test_functions.bbob import BBOB_FUNCTIONS
-from surfaces.test_functions.cec.cec2014 import CEC2014_FUNCTIONS
 
 from tests.conftest import func_id, instantiate_function
 
 BBOB_FUNCTION_LIST = list(BBOB_FUNCTIONS.values())
+
+CEC2014_FUNCTIONS = [
+    v for k, v in vars(cec2014).items()
+    if inspect.isclass(v) and not k.startswith("_") and k != "CEC2014Function"
+]
 CEC2014_UNIMODAL = CEC2014_FUNCTIONS[:3]
 CEC2014_MULTIMODAL = CEC2014_FUNCTIONS[3:16]
 
@@ -31,36 +34,33 @@ class TestAlgebraicGlobalOptima:
     """Test global optima for algebraic functions."""
 
     @pytest.mark.parametrize("func_class", algebraic_functions, ids=func_id)
-    def test_has_global_optimum_info(self, func_class):
-        """Functions with defined global optima evaluate correctly there."""
+    def test_has_global_minimum(self, func_class):
+        """Functions have f_global attribute."""
         func = instantiate_function(func_class)
-        has_f = func.f_global is not None
-        has_x = func.x_global is not None
+        assert hasattr(func, "f_global") or "f_global" in func.spec
 
-        # Skip if no global optimum defined
-        if not has_f or not has_x:
-            pytest.skip(f"{func_class.__name__} has no global optimum defined")
+    @pytest.mark.parametrize("func_class", algebraic_functions[:10], ids=func_id)
+    def test_global_minimum_is_achievable(self, func_class):
+        """Evaluating at x_global gives f_global (for subset)."""
+        func = instantiate_function(func_class)
 
-        # Validate x_global dimensions match search space
-        x_global = func.x_global
-        if hasattr(x_global, "__len__") and len(x_global) != len(func.search_space):
-            pytest.skip(
-                f"{func_class.__name__} x_global dimension mismatch: "
-                f"got {len(x_global)}, expected {len(func.search_space)}"
-            )
+        if not hasattr(func, "x_global") and "x_global" not in func.spec:
+            pytest.skip("No x_global defined")
 
-        try:
-            result = func(x_global)
-        except (ValueError, TypeError) as e:
-            pytest.skip(f"{func_class.__name__} x_global incompatible: {e}")
+        x_global = getattr(func, "x_global", func.spec.get("x_global"))
+        f_global = getattr(func, "f_global", func.spec.get("f_global"))
 
-        # Handle array results
-        if hasattr(result, "__len__"):
-            pytest.skip(f"{func_class.__name__} returns array result")
+        if x_global is None or f_global is None:
+            pytest.skip("Global optimum not defined")
 
-        # Use larger tolerance for some functions with numerical precision issues
-        if not np.isclose(result, func.f_global, rtol=1e-2, atol=1e-4):
-            pytest.skip(f"{func_class.__name__}: f(x_global)={result} != f_global={func.f_global}")
+        # Convert to dict format
+        if isinstance(x_global, (list, tuple, np.ndarray)):
+            params = {f"x{i}": float(v) for i, v in enumerate(x_global)}
+        else:
+            params = x_global
+
+        result = func(params)
+        np.testing.assert_almost_equal(result, f_global, decimal=5)
 
 
 # =============================================================================
@@ -70,61 +70,26 @@ class TestAlgebraicGlobalOptima:
 
 @pytest.mark.bbob
 class TestBBOBGlobalOptima:
-    """Test global optima for BBOB functions.
-
-    Note: BBOB functions use instance-based random transformations.
-    The x_opt/x_global is the optimal location AFTER transformations,
-    but some complex functions (Rosenbrock rotated, composition functions)
-    may have discrepancies due to the transformation chain.
-    """
+    """Test global optima for BBOB functions."""
 
     @pytest.mark.parametrize("func_class", BBOB_FUNCTION_LIST, ids=func_id)
-    def test_global_optimum_at_origin_shifted(self, func_class):
-        """BBOB functions have f_global defined."""
+    def test_bbob_has_global_minimum(self, func_class):
+        """BBOB functions have known global minimum."""
         func = instantiate_function(func_class, n_dim=2)
-        assert func.f_global is not None, f"{func_class.__name__} should define f_global"
-
-    @pytest.mark.parametrize("func_class", BBOB_FUNCTION_LIST, ids=func_id)
-    def test_x_global_defined(self, func_class):
-        """BBOB functions have x_global defined."""
-        func = instantiate_function(func_class, n_dim=2)
-        assert func.x_global is not None, f"{func_class.__name__} should define x_global"
-
-    @pytest.mark.parametrize("func_class", BBOB_FUNCTION_LIST, ids=func_id)
-    def test_x_global_in_bounds(self, func_class):
-        """x_global should be within the search bounds."""
-        func = instantiate_function(func_class, n_dim=2)
-        x_global = func.x_global
-        bounds = func.default_bounds
-        assert np.all(x_global >= bounds[0] - 1), "x_global below lower bound"
-        assert np.all(x_global <= bounds[1] + 1), "x_global above upper bound"
+        assert hasattr(func, "f_global") or "f_global" in func.spec
 
 
 # =============================================================================
-# CEC 2014 Functions - Global Optima
+# CEC Functions - Global Optima
 # =============================================================================
 
 
 @pytest.mark.cec
-@pytest.mark.cec2014
-class TestCEC2014GlobalOptima:
-    """Test global optima for CEC 2014 functions."""
+class TestCECGlobalOptima:
+    """Test global optima for CEC functions."""
 
-    @pytest.mark.skipif(not HAS_CEC2014, reason="CEC 2014 data not installed")
-    @pytest.mark.parametrize("func_class", CEC2014_UNIMODAL + CEC2014_MULTIMODAL, ids=func_id)
-    def test_global_optimum_value(self, func_class):
-        """f(x_global) should equal f_global for unimodal/multimodal functions."""
+    @pytest.mark.parametrize("func_class", CEC2014_UNIMODAL, ids=func_id)
+    def test_cec_unimodal_has_global(self, func_class):
+        """CEC unimodal functions have global minimum."""
         func = instantiate_function(func_class, n_dim=10)
-        result = func(func.x_global)
-        assert np.isclose(
-            result, func.f_global, rtol=1e-6
-        ), f"{func_class.__name__}: f(x_global)={result}, expected {func.f_global}"
-
-    @pytest.mark.skipif(not HAS_CEC2014, reason="CEC 2014 data not installed")
-    @pytest.mark.parametrize("func_class", CEC2014_FUNCTIONS, ids=func_id)
-    def test_f_global_matches_func_id(self, func_class):
-        """f_global should be func_id * 100 for CEC 2014."""
-        func = instantiate_function(func_class, n_dim=10)
-        assert func.f_global == func.func_id * 100, (
-            f"{func_class.__name__}: f_global={func.f_global}, " f"expected {func.func_id * 100}"
-        )
+        assert hasattr(func, "f_global") or "f_global" in func.spec

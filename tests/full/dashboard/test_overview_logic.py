@@ -10,14 +10,11 @@ without running the Streamlit UI.
 
 import pytest
 
-from tests.conftest import HAS_STREAMLIT, requires_streamlit
-
-if HAS_STREAMLIT:
-    from surfaces._surrogates._dashboard._pages.overview import (
-        R2_THRESHOLD,
-        get_status,
-        get_status_color,
-    )
+from surfaces._surrogates._dashboard._pages.overview import (
+    R2_THRESHOLD,
+    get_status,
+    get_status_color,
+)
 
 
 # =============================================================================
@@ -26,7 +23,6 @@ if HAS_STREAMLIT:
 
 
 @pytest.mark.dashboard
-@requires_streamlit
 class TestStatusLogic:
     """Tests for status determination logic."""
 
@@ -65,7 +61,7 @@ class TestStatusLogic:
 
 
 @pytest.mark.dashboard
-@requires_streamlit
+
 class TestStatusColors:
     """Tests for status color mapping."""
 
@@ -101,7 +97,7 @@ class TestStatusColors:
 
 
 @pytest.mark.dashboard
-@requires_streamlit
+
 class TestThresholdConfig:
     """Tests for threshold configuration."""
 

@@ -13,25 +13,22 @@ from pathlib import Path
 
 import pytest
 
-from tests.conftest import HAS_STREAMLIT, requires_streamlit
-
-if HAS_STREAMLIT:
-    from surfaces._surrogates._dashboard.database import (
-        get_all_surrogates,
-        get_connection,
-        get_dashboard_stats,
-        get_functions_needing_training,
-        get_latest_validation,
-        get_overview_data,
-        get_surrogate,
-        get_training_jobs,
-        get_validation_runs,
-        init_db,
-        insert_training_job,
-        insert_validation_run,
-        update_training_job,
-        upsert_surrogate,
-    )
+from surfaces._surrogates._dashboard.database import (
+    get_all_surrogates,
+    get_connection,
+    get_dashboard_stats,
+    get_functions_needing_training,
+    get_latest_validation,
+    get_overview_data,
+    get_surrogate,
+    get_training_jobs,
+    get_validation_runs,
+    init_db,
+    insert_training_job,
+    insert_validation_run,
+    update_training_job,
+    upsert_surrogate,
+)
 
 
 @pytest.fixture
@@ -50,7 +47,6 @@ def temp_db():
 
 
 @pytest.mark.dashboard
-@requires_streamlit
 class TestDatabaseInit:
     """Tests for database initialization."""
 
@@ -81,7 +77,6 @@ class TestDatabaseInit:
 
 
 @pytest.mark.dashboard
-@requires_streamlit
 class TestSurrogateCRUD:
     """Tests for surrogate record operations."""
 
@@ -172,7 +167,6 @@ class TestSurrogateCRUD:
 
 
 @pytest.mark.dashboard
-@requires_streamlit
 class TestValidationRuns:
     """Tests for validation run operations."""
 
@@ -243,7 +237,6 @@ class TestValidationRuns:
 
 
 @pytest.mark.dashboard
-@requires_streamlit
 class TestTrainingJobs:
     """Tests for training job operations."""
 
@@ -305,7 +298,6 @@ class TestTrainingJobs:
 
 
 @pytest.mark.dashboard
-@requires_streamlit
 class TestDashboardQueries:
     """Tests for dashboard-specific queries."""
 

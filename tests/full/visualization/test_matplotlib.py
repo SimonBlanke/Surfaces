@@ -8,27 +8,17 @@ These tests verify plot structure and data without displaying.
 Matplotlib figures can be inspected programmatically.
 """
 
+import matplotlib
+
+matplotlib.use("Agg")  # Non-interactive backend for testing
+import matplotlib.pyplot as plt
 import numpy as np
 import pytest
 
-from tests.conftest import (
-    HAS_VIZ,
-    algebraic_functions_2d,
-    func_id,
-    instantiate_function,
-    requires_viz,
-)
+from surfaces._visualize import _matplotlib_heatmap, _matplotlib_surface
+from surfaces.test_functions.algebraic import algebraic_functions_2d
 
-if HAS_VIZ:
-    import matplotlib
-
-    matplotlib.use("Agg")  # Non-interactive backend for testing
-    import matplotlib.pyplot as plt
-
-    from surfaces._visualize import (
-        _matplotlib_heatmap,
-        _matplotlib_surface,
-    )
+from tests.conftest import func_id, instantiate_function
 
 
 # =============================================================================
@@ -37,7 +27,6 @@ if HAS_VIZ:
 
 
 @pytest.mark.viz
-@requires_viz
 class TestMatplotlibHeatmap:
     """Tests for matplotlib heatmap generation."""
 
@@ -194,7 +183,6 @@ class TestMatplotlibHeatmap:
 
 
 @pytest.mark.viz
-@requires_viz
 class TestMatplotlibSurface:
     """Tests for matplotlib 3D surface plot generation."""
 
@@ -324,7 +312,6 @@ class TestMatplotlibSurface:
 
 
 @pytest.mark.viz
-@requires_viz
 class TestResourceCleanup:
     """Tests to verify figures are properly cleaned up."""
 
