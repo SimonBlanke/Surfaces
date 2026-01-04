@@ -14,16 +14,18 @@ import pytest
 
 
 def instantiate_function(func_class, n_dim=None):
-    """Instantiate a test function with appropriate parameters."""
-    try:
-        if n_dim is not None:
-            return func_class(n_dim=n_dim)
-        return func_class()
-    except TypeError as e:
-        if "n_dim" in str(e) or "required positional argument" in str(e):
-            dim = n_dim if n_dim is not None else 2
-            return func_class(n_dim=dim)
-        raise
+    """Instantiate a test function with appropriate parameters.
+
+    Uses the class's _spec['scalable'] attribute to determine if n_dim is required,
+    rather than relying on try-except for control flow.
+    """
+    spec = getattr(func_class, "_spec", {})
+    is_scalable = spec.get("scalable", False)
+
+    if is_scalable or n_dim is not None:
+        dim = n_dim if n_dim is not None else 2
+        return func_class(n_dim=dim)
+    return func_class()
 
 
 def get_sample_params(func):

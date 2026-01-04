@@ -231,11 +231,12 @@ class TestObjectiveDirection:
     def test_maximize_negates(self, func_class):
         """Maximize objective negates the function value."""
         func_min = instantiate_function(func_class)
-        # Create maximize version manually
-        try:
-            func_max = func_class(objective="maximize")
-        except TypeError:
+        # Create maximize version using scalable attribute
+        spec = getattr(func_class, "_spec", {})
+        if spec.get("scalable", False):
             func_max = func_class(n_dim=2, objective="maximize")
+        else:
+            func_max = func_class(objective="maximize")
 
         params = get_sample_params(func_min)
         result_min = func_min(params)

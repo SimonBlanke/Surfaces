@@ -24,11 +24,16 @@ def func_id(func_class):
 
 
 def instantiate_function(func_class, **kwargs):
-    """Instantiate a function class with appropriate parameters."""
-    try:
-        return func_class(**kwargs)
-    except TypeError:
-        return func_class()
+    """Instantiate a function class with appropriate parameters.
+
+    Uses the class's _spec['scalable'] attribute to determine if n_dim is required.
+    """
+    spec = getattr(func_class, "_spec", {})
+    is_scalable = spec.get("scalable", False)
+
+    if is_scalable and "n_dim" not in kwargs:
+        kwargs["n_dim"] = 2
+    return func_class(**kwargs)
 
 
 def get_sample_params(func):
