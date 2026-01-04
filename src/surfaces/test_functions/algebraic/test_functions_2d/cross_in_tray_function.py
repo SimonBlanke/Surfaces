@@ -120,9 +120,9 @@ class CrossInTrayFunction(AlgebraicFunction):
             y = params["x1"]
 
             loss1 = np.sin(self.angle * x) * np.sin(self.angle * y)
-            loss2 = np.exp(abs(self.B - (np.sqrt(x**2 + y**2) / np.pi)) + 1)
+            loss2 = np.exp(abs(self.B - (np.sqrt(x**2 + y**2) / np.pi)))
 
-            return -self.A * (np.abs(loss1 * loss2)) ** 0.1
+            return self.A * (np.abs(loss1 * loss2) + 1) ** 0.1
 
         self.pure_objective_function = cross_in_tray_function
 
