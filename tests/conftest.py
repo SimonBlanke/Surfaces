@@ -54,6 +54,27 @@ def func_id(func_class):
     return func_class.__name__
 
 
+# =============================================================================
+# Fixtures
+# =============================================================================
+
+
+@pytest.fixture
+def quick_ml_params():
+    """Provide minimal ML parameters for quick testing.
+
+    Uses small cv=2 to speed up cross-validation in tests.
+    """
+    from surfaces.test_functions.machine_learning.tabular.classification.datasets import (
+        iris_data,
+    )
+
+    return {
+        "cv": 2,
+        "dataset": iris_data,
+    }
+
+
 def pytest_configure(config):
     """Register custom markers."""
     config.addinivalue_line("markers", "smoke: Quick sanity checks (<1s each)")
