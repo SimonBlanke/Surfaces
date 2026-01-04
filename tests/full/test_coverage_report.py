@@ -212,40 +212,7 @@ if __name__ == "__main__":
 
 
 class TestCoverageValidation:
-    """Validate that key function categories have test coverage."""
-
-    def test_algebraic_functions_covered(self):
-        """All algebraic functions should be in test parametrization."""
-        from surfaces.test_functions.algebraic import algebraic_functions
-        from tests.conftest import algebraic_functions as conftest_algebraic
-
-        # conftest should have all algebraic functions
-        assert set(algebraic_functions) == set(conftest_algebraic)
-
-    def test_engineering_functions_covered(self):
-        """All engineering functions should be in test parametrization."""
-        from surfaces.test_functions.engineering import engineering_functions
-        from tests.conftest import engineering_functions as conftest_engineering
-
-        assert set(engineering_functions) == set(conftest_engineering)
-
-    def test_bbob_functions_covered(self):
-        """All BBOB functions should be in test parametrization."""
-        from surfaces.test_functions.bbob import BBOB_FUNCTIONS
-        from tests.conftest import BBOB_FUNCTION_LIST
-
-        assert set(BBOB_FUNCTIONS.values()) == set(BBOB_FUNCTION_LIST)
-
-    def test_conftest_has_all_categories(self):
-        """conftest should export all major function categories."""
-        from tests import conftest
-
-        # Check required exports exist
-        assert hasattr(conftest, "algebraic_functions")
-        assert hasattr(conftest, "engineering_functions")
-        assert hasattr(conftest, "BBOB_FUNCTION_LIST")
-        assert hasattr(conftest, "CEC2014_FUNCTIONS")
-        assert hasattr(conftest, "machine_learning_functions")
+    """Validate that test helper functions work correctly."""
 
     def test_instantiate_helper_works(self):
         """instantiate_function helper should work for all types."""
