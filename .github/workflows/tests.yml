@@ -235,3 +235,53 @@ jobs:
           files: ./coverage.xml
           fail_ci_if_error: false
           verbose: true
+
+  # ===========================================================================
+  # Stage 7: Example Tests (examples/ directory)
+  # ===========================================================================
+  test-examples:
+    name: Test Examples
+    needs: code-quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test]"
+
+      - name: Run example tests
+        run: python -m pytest examples/test_examples.py -v --tb=short
+
+  # ===========================================================================
+  # Stage 8: Documentation Snippet Tests
+  # ===========================================================================
+  test-doc-snippets:
+    name: Test Doc Snippets
+    needs: code-quality
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test]"
+          pip install -r requirements/all_integrations.txt
+
+      - name: Run documentation snippet tests
+        run: python -m pytest docs/tests/test_doc_snippets.py -v --tb=short
