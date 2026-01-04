@@ -8,6 +8,7 @@ scipy
 # Hyperparameter optimization
 optuna
 hyperopt
+hyperactive
 
 # Bayesian optimization
 scikit-optimize
