@@ -10,17 +10,15 @@ with correct structure and bounds.
 
 import pytest
 
-from tests.conftest import (
-    BBOB_FUNCTION_LIST,
-    CEC2014_FUNCTIONS,
-    HAS_CEC2014,
-    HAS_ML,
-    algebraic_functions,
-    engineering_functions,
-    func_id,
-    instantiate_function,
-    machine_learning_functions,
-)
+from surfaces.test_functions.algebraic import algebraic_functions
+from surfaces.test_functions.bbob import BBOB_FUNCTIONS
+from surfaces.test_functions.cec.cec2014 import CEC2014_FUNCTIONS
+from surfaces.test_functions.engineering import engineering_functions
+from surfaces.test_functions.machine_learning import machine_learning_functions
+
+from tests.conftest import func_id, instantiate_function
+
+BBOB_FUNCTION_LIST = list(BBOB_FUNCTIONS.values())
 
 # =============================================================================
 # Search Space Structure

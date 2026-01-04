@@ -1,8 +1,7 @@
-"""
-Tests that define the API contract for input formats accepted by test functions.
+"""Tests for input format API contract for mathematical test functions.
 
-These tests serve as documentation of what input types are supported.
-If a test here fails, it means the API contract has been broken.
+These tests verify that core test functions accept various input formats
+(dict, array, list, tuple, kwargs) consistently.
 """
 
 import numbers
@@ -10,7 +9,7 @@ import numbers
 import numpy as np
 import pytest
 
-from surfaces.test_functions import KNeighborsClassifierFunction, RastriginFunction, SphereFunction
+from surfaces.test_functions import RastriginFunction, SphereFunction
 
 
 def is_numeric(value):
@@ -19,7 +18,7 @@ def is_numeric(value):
 
 
 # =============================================================================
-# Mathematical Functions - Input Format Tests
+# Dictionary Input Tests
 # =============================================================================
 
 
@@ -47,6 +46,11 @@ class TestDictInput:
         assert is_numeric(result)
 
 
+# =============================================================================
+# Array Input Tests
+# =============================================================================
+
+
 class TestArrayInput:
     """Test functions accept numpy array input (values in sorted key order)."""
 
@@ -64,6 +68,11 @@ class TestArrayInput:
         func = SphereFunction(n_dim=2)
         result = func(np.array([1.0, 2.0], dtype=np.float32))
         assert is_numeric(result)
+
+
+# =============================================================================
+# List Input Tests
+# =============================================================================
 
 
 class TestListInput:
@@ -85,6 +94,11 @@ class TestListInput:
         assert is_numeric(result)
 
 
+# =============================================================================
+# Tuple Input Tests
+# =============================================================================
+
+
 class TestTupleInput:
     """Test functions accept tuple input (values in sorted key order)."""
 
@@ -99,6 +113,11 @@ class TestTupleInput:
         assert is_numeric(result)
 
 
+# =============================================================================
+# Kwargs Input Tests
+# =============================================================================
+
+
 class TestKwargsInput:
     """Test functions accept keyword arguments."""
 
@@ -111,6 +130,11 @@ class TestKwargsInput:
         func = SphereFunction(n_dim=2)
         result = func({"x0": 1.0}, x1=2.0)
         assert is_numeric(result)
+
+
+# =============================================================================
+# Higher Dimensions Tests
+# =============================================================================
 
 
 class TestHigherDimensions:
@@ -131,6 +155,11 @@ class TestHigherDimensions:
         func = SphereFunction(n_dim=5)
         result = func([0.0, 1.0, 2.0, 3.0, 4.0])
         assert is_numeric(result)
+
+
+# =============================================================================
+# 1D Function Tests
+# =============================================================================
 
 
 class Test1DFunction:
@@ -159,50 +188,7 @@ class Test1DFunction:
 
 
 # =============================================================================
-# ML Functions - Input Format Tests (mixed types: int, str, callable)
-# =============================================================================
-
-
-class TestMLFunctionInput:
-    """Test ML functions accept mixed-type dictionary input."""
-
-    def test_dict_with_mixed_types(self):
-        from surfaces.test_functions.machine_learning.tabular.classification.datasets import (
-            iris_data,
-        )
-
-        func = KNeighborsClassifierFunction()
-        result = func(
-            {
-                "n_neighbors": 5,
-                "algorithm": "auto",
-                "cv": 3,
-                "dataset": iris_data,
-            }
-        )
-        assert is_numeric(result)
-
-    def test_dict_with_string_categorical(self):
-        from surfaces.test_functions.machine_learning.tabular.classification.datasets import (
-            iris_data,
-        )
-
-        func = KNeighborsClassifierFunction()
-        # Test different categorical values
-        for algo in ["auto", "ball_tree", "kd_tree", "brute"]:
-            result = func(
-                {
-                    "n_neighbors": 5,
-                    "algorithm": algo,
-                    "cv": 3,
-                    "dataset": iris_data,
-                }
-            )
-            assert is_numeric(result)
-
-
-# =============================================================================
-# Consistency Tests - Same input via different formats should give same result
+# Consistency Tests
 # =============================================================================
 
 
@@ -248,7 +234,7 @@ class TestInputConsistency:
 
 
 # =============================================================================
-# Error Cases - Document expected error behavior
+# Error Cases
 # =============================================================================
 
 

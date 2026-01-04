@@ -10,15 +10,14 @@ properly defined and consistent across the class hierarchy.
 
 import pytest
 
-from tests.conftest import (
-    BBOB_FUNCTION_LIST,
-    CEC2014_FUNCTIONS,
-    CEC2014_UNIMODAL,
-    HAS_CEC2014,
-    algebraic_functions,
-    func_id,
-    instantiate_function,
-)
+from surfaces.test_functions.algebraic import algebraic_functions
+from surfaces.test_functions.bbob import BBOB_FUNCTIONS
+from surfaces.test_functions.cec.cec2014 import CEC2014_FUNCTIONS
+
+from tests.conftest import func_id, instantiate_function
+
+BBOB_FUNCTION_LIST = list(BBOB_FUNCTIONS.values())
+CEC2014_UNIMODAL = CEC2014_FUNCTIONS[:3]
 
 # =============================================================================
 # Spec Existence and Structure
