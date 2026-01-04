@@ -173,7 +173,31 @@ jobs:
         run: python -m pytest -x -p no:warnings tests/integration/
 
   # ===========================================================================
-  # Stage 5: Coverage (only on Ubuntu, Python 3.11)
+  # Stage 5: Internal Tests (private APIs: dashboard, surrogates)
+  # ===========================================================================
+  test-internal:
+    name: Internal Tests
+    needs: code-quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dashboard]"
+          pip install pytest
+
+      - name: Run internal tests
+        run: python -m pytest -x -p no:warnings tests/internal/
+
+  # ===========================================================================
+  # Stage 6: Coverage (only on Ubuntu, Python 3.11)
   # ===========================================================================
   coverage:
     name: Coverage
