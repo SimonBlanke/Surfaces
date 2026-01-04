@@ -10,11 +10,11 @@ surfaces = ["py.typed"]
 
 [project]
 name = "surfaces"
-version = "0.5.1"
+version = "0.6.0"
 description = "A collection and visualization of black-box objective functions"
 readme = "README.md"
-requires-python = ">=3.8"
-license = {file = "LICENSE"}
+requires-python = ">=3.10"
+license = "MIT"
 keywords = ["visualization", "data-science"]
 authors = [
   {name = "Simon Blanke", email = "simon.blanke@yahoo.com" }
@@ -24,8 +24,11 @@ maintainers = [
 ]
 classifiers=[
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Operating System :: OS Independent",
     "Topic :: Scientific/Engineering :: Information Analysis",
     "Topic :: Scientific/Engineering :: Mathematics",
