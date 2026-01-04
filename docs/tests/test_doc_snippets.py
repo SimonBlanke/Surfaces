@@ -157,9 +157,7 @@ def test_code_block_runs(code_block: tuple[Path, str, int]):
         pytest.skip("Incomplete snippet")
 
     # Create a temporary file with the code
-    with tempfile.NamedTemporaryFile(
-        mode="w", suffix=".py", delete=False
-    ) as tmp_file:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as tmp_file:
         tmp_file.write(code)
         tmp_path = tmp_file.name
 
@@ -208,9 +206,7 @@ def main():
             continue
 
         # Create temp file
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".py", delete=False
-        ) as tmp_file:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as tmp_file:
             tmp_file.write(code)
             tmp_path = tmp_file.name
 
