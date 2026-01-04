@@ -65,9 +65,7 @@ class EggholderFunction(AlgebraicFunction):
     n_dim = 2
 
     latex_formula = r"f(x, y) = -(y + 47)\sin\sqrt{\left|\frac{x}{2} + (y + 47)\right|} - x\sin\sqrt{|x - (y + 47)|}"
-    pgfmath_formula = (
-        "-(#2 + 47)*sin(deg(sqrt(abs(#1/2 + (#2 + 47))))) - #1*sin(deg(sqrt(abs(#1 - (#2 + 47)))))"
-    )
+    pgfmath_formula = "-(#2 + 47)*sin(deg(sqrt(abs(#1/2 + (#2 + 47))))) - #1*sin(deg(sqrt(abs(#1 - (#2 + 47)))))"
 
     # Function sheet attributes
     tagline = (
@@ -88,7 +86,9 @@ class EggholderFunction(AlgebraicFunction):
         catch_errors: Optional[Dict[type, float]] = None,
         noise: Optional["BaseNoise"] = None,
     ) -> None:
-        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
+        super().__init__(
+            objective, sleep, memory, collect_data, callbacks, catch_errors, noise
+        )
         self.n_dim = 2
 
     def _create_objective_function(self) -> None:
@@ -96,7 +96,7 @@ class EggholderFunction(AlgebraicFunction):
             x = params["x0"]
             y = params["x1"]
 
-            return (y + 47) * np.sin(np.sqrt(np.abs(x / 2 + (y + 47)))) - x * np.sin(
+            return -(y + 47) * np.sin(np.sqrt(np.abs(x / 2 + (y + 47)))) - x * np.sin(
                 np.sqrt(np.abs(x - (y + 47)))
             )
 
