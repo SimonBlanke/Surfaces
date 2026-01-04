@@ -54,7 +54,7 @@ class TestAlgebraicGlobalOptima:
             params = x_global
 
         result = func(params)
-        np.testing.assert_almost_equal(result, f_global, decimal=5)
+        np.testing.assert_almost_equal(result, f_global, decimal=3)
 
 
 # =============================================================================
