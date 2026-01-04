@@ -38,6 +38,17 @@ class DecisionTreeClassifierFunction(BaseClassification):
     min_samples_split_default = [2, 5, 10, 20, 50]
     min_samples_leaf_default = [1, 2, 5, 10, 20]
 
+    # Function sheet attributes
+    latex_formula = r"\text{CV-Accuracy} = f(\text{max\_depth}, \text{min\_samples\_split}, \text{min\_samples\_leaf})"
+    tagline = (
+        "Cross-validated accuracy of a Decision Tree classifier. "
+        "Tree depth and leaf constraints define the hyperparameter landscape."
+    )
+    display_bounds = {"max_depth": (2, 20), "min_samples_split": (2, 50)}
+    display_projection = {"dims": ("max_depth", "min_samples_split"), "fixed": {"min_samples_leaf": 1}}
+    reference = None
+    reference_url = "https://scikit-learn.org/stable/modules/tree.html"
+
     def __init__(
         self,
         dataset: str = "digits",

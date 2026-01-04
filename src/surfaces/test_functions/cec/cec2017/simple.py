@@ -28,6 +28,17 @@ class ShiftedRotatedBentCigar(CEC2017Function):
         "separable": False,
     }
 
+    # Function sheet attributes
+    latex_formula = r"f(\vec{z}) = z_1^2 + 10^6 \sum_{i=2}^{n} z_i^2 \quad \text{where } \vec{z} = M(\vec{x} - \vec{o})"
+    tagline = (
+        "A shifted and rotated ill-conditioned function. "
+        "One dimension dominates, creating a narrow valley in transformed space."
+    )
+    display_bounds = (-100.0, 100.0)
+    display_projection = {"fixed_value": 0.0}
+    reference = "CEC 2017 Competition"
+    reference_url = "https://github.com/P-N-Suganthan/CEC2017-BoundConstrained"
+
     def _create_objective_function(self) -> None:
         def bent_cigar(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)

@@ -32,6 +32,17 @@ class Sphere(BBOBFunction):
         "separable": True,
     }
 
+    # Function sheet attributes
+    latex_formula = r"f(\vec{x}) = \sum_{i=1}^{n} (x_i - x_i^*)^2 + f_{\text{opt}}"
+    tagline = (
+        "The BBOB baseline function. A simple shifted sphere used to "
+        "calibrate algorithm performance on the easiest possible landscape."
+    )
+    display_bounds = (-5.0, 5.0)
+    display_projection = {"fixed_value": 0.0}
+    reference = "Hansen et al. (2009)"
+    reference_url = "https://numbbo.github.io/coco/testsuites/bbob"
+
     def _create_objective_function(self) -> None:
         def sphere(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)

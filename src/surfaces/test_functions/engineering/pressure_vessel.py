@@ -137,6 +137,17 @@ class PressureVesselFunction(EngineeringFunction):
     variable_names = ["Ts", "Th", "R", "L"]
     variable_bounds = [(0.0625, 6.1875), (0.0625, 6.1875), (10.0, 200.0), (10.0, 200.0)]
 
+    # Function sheet attributes
+    latex_formula = r"f(T_s, T_h, R, L) = 0.6224 T_s R L + 1.7781 T_h R^2 + 3.1661 T_s^2 L + 19.84 T_s^2 R"
+    tagline = (
+        "A cylindrical tank design problem minimizing manufacturing cost. "
+        "Shell/head thickness and vessel dimensions must satisfy stress and volume constraints."
+    )
+    display_bounds = {"R": (10.0, 80.0), "L": (10.0, 200.0)}
+    display_projection = {"dims": ("R", "L"), "fixed": {"Ts": 0.8125, "Th": 0.4375}}
+    reference = "Sandgren (1990)"
+    reference_url = "https://doi.org/10.1115/1.2912596"
+
     f_global = 5868.7649
     x_global = np.array([0.8125, 0.4375, 42.0984, 176.6366])
 
