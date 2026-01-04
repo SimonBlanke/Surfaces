@@ -2,9 +2,14 @@
 
 from surfaces.test_functions import ThreeBarTrussFunction
 
-# Create the three-bar truss design function
 truss = ThreeBarTrussFunction()
 
-# Evaluate a design: A1 and A2 are cross-sectional areas
-volume = truss({"A1": 0.5, "A2": 0.5})
-print(f"Truss volume: {volume:.4f}")
+# First evaluation
+params1 = {"A1": 0.5, "A2": 0.5}
+score1 = truss(params1)
+print(f"params: {params1} -> score: {score1:.4f}")
+
+# Second evaluation
+params2 = {"A1": 0.8, "A2": 0.4}
+score2 = truss(params2)
+print(f"params: {params2} -> score: {score2:.4f}")

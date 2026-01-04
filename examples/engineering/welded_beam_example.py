@@ -2,9 +2,14 @@
 
 from surfaces.test_functions import WeldedBeamFunction
 
-# Create the welded beam design function
 welded_beam = WeldedBeamFunction()
 
-# Evaluate a design: h=weld thickness, l=weld length, t=beam height, b=beam width
-cost = welded_beam({"h": 0.5, "l": 4.0, "t": 5.0, "b": 0.5})
-print(f"Welded beam cost: {cost:.4f}")
+# First evaluation
+params1 = {"h": 0.5, "l": 4.0, "t": 5.0, "b": 0.5}
+score1 = welded_beam(params1)
+print(f"params: {params1} -> score: {score1:.4f}")
+
+# Second evaluation
+params2 = {"h": 1.0, "l": 2.0, "t": 3.0, "b": 1.0}
+score2 = welded_beam(params2)
+print(f"params: {params2} -> score: {score2:.4f}")

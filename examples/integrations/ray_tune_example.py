@@ -32,7 +32,7 @@ tuner = tune.Tuner(
     objective,
     param_space=search_space,
     tune_config=tune.TuneConfig(
-        num_samples=30,
+        num_samples=10,
         metric="loss",
         mode="min",
     ),
@@ -44,4 +44,6 @@ results = tuner.fit()
 # Results
 best = results.get_best_result(metric="loss", mode="min")
 print(f"Best loss: {best.metrics['loss']:.6f}")
-print(f"Best config: x0={best.config['x0']:.4f}, x1={best.config['x1']:.4f}, x2={best.config['x2']:.4f}")
+print(
+    f"Best config: x0={best.config['x0']:.4f}, x1={best.config['x1']:.4f}, x2={best.config['x2']:.4f}"
+)

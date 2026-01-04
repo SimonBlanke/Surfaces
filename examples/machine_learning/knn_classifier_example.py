@@ -2,9 +2,14 @@
 
 from surfaces.test_functions import KNeighborsClassifierFunction
 
-# Create the KNN test function
 knn = KNeighborsClassifierFunction()
 
-# Evaluate with specific hyperparameters
-accuracy = knn({"n_neighbors": 5, "algorithm": "auto"})
-print(f"KNN accuracy: {accuracy:.4f}")
+# First evaluation
+params1 = {"n_neighbors": 3, "algorithm": "auto"}
+score1 = knn(params1)
+print(f"params: {params1} -> score: {score1:.4f}")
+
+# Second evaluation
+params2 = {"n_neighbors": 10, "algorithm": "ball_tree"}
+score2 = knn(params2)
+print(f"params: {params2} -> score: {score2:.4f}")

@@ -2,10 +2,14 @@
 
 from surfaces.test_functions.cec.cec2013 import Sphere
 
-# Create a 10-dimensional CEC 2013 Sphere function
 sphere = Sphere(n_dim=10)
 
-# Evaluate at a point
-origin = {f"x{i}": 0.0 for i in range(10)}
-result = sphere(origin)
-print(f"CEC 2013 Sphere: {result:.4f}")
+# First evaluation
+params1 = {f"x{i}": 1.0 for i in range(10)}
+score1 = sphere(params1)
+print(f"params: x0=1.0, ..., x9=1.0 -> score: {score1:.4f}")
+
+# Second evaluation
+params2 = {f"x{i}": 0.0 for i in range(10)}
+score2 = sphere(params2)
+print(f"params: x0=0.0, ..., x9=0.0 -> score: {score2:.4f}")

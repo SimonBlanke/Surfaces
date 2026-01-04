@@ -1,7 +1,6 @@
 """Hyperactive Integration - Optimize a Surfaces test function."""
 
 import numpy as np
-
 from hyperactive.experiment.func import FunctionExperiment
 from hyperactive.opt.gfo import HillClimbing
 
