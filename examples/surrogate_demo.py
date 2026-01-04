@@ -7,6 +7,7 @@ for fast evaluation.
 """
 
 import time
+
 from surfaces.test_functions import KNeighborsClassifierFunction
 
 
