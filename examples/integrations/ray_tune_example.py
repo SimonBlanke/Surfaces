@@ -1,7 +1,11 @@
 """Ray Tune Integration - Optimize a Surfaces test function."""
 
-from ray import tune
-from ray.tune.search.basic_variant import BasicVariantGenerator
+import os
+
+# Suppress Ray logs
+os.environ["RAY_DEDUP_LOGS"] = "0"
+
+from ray import train, tune
 
 from surfaces.test_functions import SphereFunction
 
@@ -13,7 +17,7 @@ def objective(config):
     """Objective function for Ray Tune."""
     params = {"x0": config["x0"], "x1": config["x1"], "x2": config["x2"]}
     loss = sphere(params)
-    return {"loss": loss}
+    train.report({"loss": loss})
 
 
 # Define search space
@@ -28,16 +32,16 @@ tuner = tune.Tuner(
     objective,
     param_space=search_space,
     tune_config=tune.TuneConfig(
-        num_samples=50,
-        search_alg=BasicVariantGenerator(),
+        num_samples=30,
         metric="loss",
         mode="min",
     ),
+    run_config=train.RunConfig(verbose=0),
 )
 
 results = tuner.fit()
 
 # Results
-best_result = results.get_best_result(metric="loss", mode="min")
-print(f"Best loss: {best_result.metrics['loss']:.6f}")
-print(f"Best config: {best_result.config}")
+best = results.get_best_result(metric="loss", mode="min")
+print(f"Best loss: {best.metrics['loss']:.6f}")
+print(f"Best config: x0={best.config['x0']:.4f}, x1={best.config['x1']:.4f}, x2={best.config['x2']:.4f}")
