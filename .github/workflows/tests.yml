@@ -113,6 +113,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # XGBoost requires OpenMP runtime (libomp) on macOS
+      - name: Install libomp (macOS)
+        if: runner.os == 'macOS'
+        run: brew install libomp
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
