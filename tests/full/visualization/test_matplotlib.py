@@ -17,9 +17,7 @@ import pytest
 
 from surfaces._visualize import _matplotlib_heatmap, _matplotlib_surface
 from surfaces.test_functions.algebraic import algebraic_functions_2d
-
 from tests.conftest import func_id, instantiate_function
-
 
 # =============================================================================
 # Matplotlib Heatmap Tests

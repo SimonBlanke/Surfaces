@@ -21,9 +21,7 @@ from surfaces._visualize import (
     _plotly_surface_nd,
 )
 from surfaces.test_functions.algebraic import algebraic_functions_2d
-
 from tests.conftest import func_id, instantiate_function
-
 
 # =============================================================================
 # Grid Creation Tests

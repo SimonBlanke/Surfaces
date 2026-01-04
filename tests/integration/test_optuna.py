@@ -3,8 +3,8 @@
 Tests that Surfaces functions work correctly with Optuna hyperparameter optimization.
 """
 
-import pytest
 import optuna
+import pytest
 
 from surfaces.test_functions.algebraic import RastriginFunction, SphereFunction
 

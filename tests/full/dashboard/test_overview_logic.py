@@ -16,7 +16,6 @@ from surfaces._surrogates._dashboard._pages.overview import (
     get_status_color,
 )
 
-
 # =============================================================================
 # Status Logic Tests
 # =============================================================================
@@ -61,7 +60,6 @@ class TestStatusLogic:
 
 
 @pytest.mark.dashboard
-
 class TestStatusColors:
     """Tests for status color mapping."""
 
@@ -97,7 +95,6 @@ class TestStatusColors:
 
 
 @pytest.mark.dashboard
-
 class TestThresholdConfig:
     """Tests for threshold configuration."""
 

@@ -17,17 +17,20 @@ from surfaces.test_functions.machine_learning import machine_learning_functions
 
 # Build CEC function lists dynamically
 CEC2013_FUNCTIONS = [
-    v for k, v in vars(cec2013).items()
+    v
+    for k, v in vars(cec2013).items()
     if inspect.isclass(v) and not k.startswith("_") and k != "CEC2013Function"
 ]
 
 CEC2014_FUNCTIONS = [
-    v for k, v in vars(cec2014).items()
+    v
+    for k, v in vars(cec2014).items()
     if inspect.isclass(v) and not k.startswith("_") and k != "CEC2014Function"
 ]
 
 CEC2017_FUNCTIONS = [
-    v for k, v in vars(cec2017).items()
+    v
+    for k, v in vars(cec2017).items()
     if inspect.isclass(v) and not k.startswith("_") and k != "CEC2017Function"
 ]
 

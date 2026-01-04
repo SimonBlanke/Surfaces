@@ -13,9 +13,9 @@ from surfaces.test_functions.algebraic import (
     algebraic_functions_nd,
 )
 from surfaces.test_functions.bbob import BBOB_FUNCTIONS
+from surfaces.test_functions.engineering import engineering_functions
 
 BBOB_FUNCTION_LIST = list(BBOB_FUNCTIONS.values())
-from surfaces.test_functions.engineering import engineering_functions
 
 
 def func_id(func_class):

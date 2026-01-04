@@ -3,8 +3,8 @@
 Tests that Surfaces functions work correctly with Nevergrad optimization.
 """
 
-import pytest
 import nevergrad as ng
+import pytest
 
 from surfaces.test_functions.algebraic import SphereFunction
 

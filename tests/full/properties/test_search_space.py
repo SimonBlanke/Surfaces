@@ -13,13 +13,13 @@ from surfaces.test_functions.algebraic import algebraic_functions
 from surfaces.test_functions.bbob import BBOB_FUNCTIONS
 from surfaces.test_functions.engineering import engineering_functions
 from surfaces.test_functions.machine_learning import machine_learning_functions
-
 from tests.conftest import func_id, instantiate_function
 
 BBOB_FUNCTION_LIST = list(BBOB_FUNCTIONS.values())
 
 CEC2014_FUNCTIONS = [
-    v for k, v in vars(cec2014).items()
+    v
+    for k, v in vars(cec2014).items()
     if inspect.isclass(v) and not k.startswith("_") and k != "CEC2014Function"
 ]
 
