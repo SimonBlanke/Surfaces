@@ -3,8 +3,18 @@
 Tests that Surfaces functions work correctly with Hyperopt.
 """
 
+import sys
+
 import numpy as np
 import pytest
+
+# Hyperopt uses deprecated pkg_resources which fails on Python 3.12+
+if sys.version_info >= (3, 12):
+    pytest.skip(
+        "Hyperopt uses deprecated pkg_resources (upstream issue)",
+        allow_module_level=True,
+    )
+
 from hyperopt import Trials, fmin, hp, tpe
 
 from surfaces.test_functions.algebraic import SphereFunction
