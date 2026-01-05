@@ -15,7 +15,7 @@ description = "A collection and visualization of black-box objective functions"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
-keywords = ["visualization", "data-science"]
+keywords = ["test-functions", "optimization", "gradient-free-optimization", "visualization", "data-science", "cec", "bbob", "machine-learning", "surrogate-models"]
 authors = [
   {name = "Simon Blanke", email = "simon.blanke@yahoo.com" }
 ]
