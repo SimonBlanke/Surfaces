@@ -4,12 +4,11 @@
 
 """Base class for algebraic test functions with closed-form expressions."""
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
+from typing import Any, Callable, Dict, List, Optional, Union
 
 import numpy as np
 
-if TYPE_CHECKING:
-    from surfaces.noise import BaseNoise
+from surfaces.modifiers import BaseModifier
 
 from .._base_test_function import BaseTestFunction
 
@@ -24,8 +23,8 @@ class AlgebraicFunction(BaseTestFunction):
     ----------
     objective : str, default="minimize"
         Either "minimize" or "maximize".
-    sleep : float, default=0
-        Artificial delay in seconds added to each evaluation.
+    modifiers : list of BaseModifier, optional
+        List of modifiers to apply to function evaluations.
 
     Examples
     --------
@@ -51,14 +50,13 @@ class AlgebraicFunction(BaseTestFunction):
     def __init__(
         self,
         objective: str = "minimize",
-        sleep: float = 0,
+        modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
         collect_data: bool = True,
         callbacks: Optional[Union[Callable, List[Callable]]] = None,
         catch_errors: Optional[Dict[type, float]] = None,
-        noise: Optional["BaseNoise"] = None,
     ) -> None:
-        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
+        super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
 
     def _create_n_dim_search_space(
         self,

@@ -3,13 +3,12 @@
 # License: MIT License
 
 import time
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
+from typing import Any, Callable, Dict, List, Optional, Union
+
+from surfaces.modifiers import BaseModifier
 
 from ..._surrogates import load_surrogate
 from .._base_test_function import BaseTestFunction
-
-if TYPE_CHECKING:
-    from surfaces.noise import BaseNoise
 
 
 class MachineLearningFunction(BaseTestFunction):
@@ -23,8 +22,8 @@ class MachineLearningFunction(BaseTestFunction):
     ----------
     objective : str, default="maximize"
         Either "minimize" or "maximize".
-    sleep : float, default=0
-        Artificial delay in seconds added to each evaluation.
+    modifiers : list of BaseModifier, optional
+        List of modifiers to apply to function evaluations.
     use_surrogate : bool, default=False
         If True and a pre-trained surrogate exists, use it for fast evaluation.
         Falls back to real evaluation if no surrogate is available.
@@ -51,16 +50,15 @@ class MachineLearningFunction(BaseTestFunction):
     def __init__(
         self,
         objective: str = "maximize",
-        sleep: float = 0,
+        modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
         collect_data: bool = True,
         callbacks: Optional[Union[Callable, List[Callable]]] = None,
         catch_errors: Optional[Dict[type, float]] = None,
-        noise: Optional["BaseNoise"] = None,
         use_surrogate: bool = False,
         **kwargs: Any,
     ) -> None:
-        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
+        super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.use_surrogate = use_surrogate
         self._surrogate = None
 

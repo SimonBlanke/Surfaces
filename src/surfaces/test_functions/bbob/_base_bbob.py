@@ -17,14 +17,13 @@ References:
     Technical Report 2009/20, Research Center PPE.
 """
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
+from typing import Any, Callable, Dict, List, Optional, Union
 
 import numpy as np
 
-from ..algebraic._base_algebraic_function import AlgebraicFunction
+from surfaces.modifiers import BaseModifier
 
-if TYPE_CHECKING:
-    from surfaces.noise import BaseNoise
+from ..algebraic._base_algebraic_function import AlgebraicFunction
 
 
 class BBOBFunction(AlgebraicFunction):
@@ -46,8 +45,8 @@ class BBOBFunction(AlgebraicFunction):
         generating optimal location, optimal value, and transformation matrices.
     objective : str, default="minimize"
         Either "minimize" or "maximize".
-    sleep : float, default=0
-        Artificial delay in seconds added to each evaluation.
+    modifiers : list of BaseModifier, optional
+        List of modifiers to apply to function evaluations.
 
     Attributes
     ----------
@@ -77,12 +76,11 @@ class BBOBFunction(AlgebraicFunction):
         n_dim: int = 10,
         instance: int = 1,
         objective: str = "minimize",
-        sleep: float = 0,
+        modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
         collect_data: bool = True,
         callbacks: Optional[Union[Callable, List[Callable]]] = None,
         catch_errors: Optional[Dict[type, float]] = None,
-        noise: Optional["BaseNoise"] = None,
     ) -> None:
         self.n_dim = n_dim
         self.instance = instance
@@ -95,7 +93,7 @@ class BBOBFunction(AlgebraicFunction):
         self._R = None
         self._lambda_alpha = None
 
-        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
+        super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
 
     def _compute_seed(self) -> int:
         """Compute random seed from function ID, dimension, and instance."""

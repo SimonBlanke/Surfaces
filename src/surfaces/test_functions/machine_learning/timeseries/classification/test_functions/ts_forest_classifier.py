@@ -1,8 +1,10 @@
 """Time Series Forest Classifier test function using sktime."""
 
-from typing import Any, Dict
+from typing import Any, Dict, List, Optional
 
 from .._base_ts_classification import BaseTSClassification
+
+from surfaces.modifiers import BaseModifier
 from ..datasets import DATASETS
 
 
@@ -64,7 +66,7 @@ class TSForestClassifierFunction(BaseTSClassification):
         dataset: str = "gunpoint",
         cv: int = 5,
         objective: str = "maximize",
-        sleep: float = 0,
+        modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
         collect_data: bool = True,
         callbacks=None,

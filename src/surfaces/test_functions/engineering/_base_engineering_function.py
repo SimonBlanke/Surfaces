@@ -4,14 +4,13 @@
 
 """Base class for engineering design optimization test functions."""
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 
-from .._base_test_function import BaseTestFunction
+from surfaces.modifiers import BaseModifier
 
-if TYPE_CHECKING:
-    from surfaces.noise import BaseNoise
+from .._base_test_function import BaseTestFunction
 
 
 class EngineeringFunction(BaseTestFunction):
@@ -31,8 +30,8 @@ class EngineeringFunction(BaseTestFunction):
     ----------
     objective : str, default="minimize"
         Either "minimize" or "maximize".
-    sleep : float, default=0
-        Artificial delay in seconds added to each evaluation.
+    modifiers : list of BaseModifier, optional
+        List of modifiers to apply to function evaluations.
     penalty_coefficient : float, default=1e6
         Coefficient for constraint violation penalties. Higher values
         enforce constraints more strictly but may create steep gradients.
@@ -74,16 +73,15 @@ class EngineeringFunction(BaseTestFunction):
     def __init__(
         self,
         objective: str = "minimize",
-        sleep: float = 0,
+        modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
         collect_data: bool = True,
         callbacks: Optional[Union[Callable, List[Callable]]] = None,
         catch_errors: Optional[Dict[type, float]] = None,
-        noise: Optional["BaseNoise"] = None,
         penalty_coefficient: float = 1e6,
     ) -> None:
         self.penalty_coefficient = penalty_coefficient
-        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
+        super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
 
     @property
     def n_dim(self) -> int:

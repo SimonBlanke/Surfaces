@@ -8,12 +8,11 @@ from __future__ import annotations
 
 from abc import abstractmethod
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 
-if TYPE_CHECKING:
-    from surfaces.noise import BaseNoise
+from surfaces.modifiers import BaseModifier
 
 from ..algebraic._base_algebraic_function import AlgebraicFunction
 from ._data_utils import get_data_file
@@ -44,8 +43,8 @@ class CECFunction(AlgebraicFunction):
         Number of dimensions.
     objective : str, default="minimize"
         Either "minimize" or "maximize".
-    sleep : float, default=0
-        Artificial delay in seconds added to each evaluation.
+    modifiers : list of BaseModifier, optional
+        List of modifiers to apply to function evaluations.
 
     Attributes
     ----------
@@ -80,17 +79,16 @@ class CECFunction(AlgebraicFunction):
         self,
         n_dim: int = 10,
         objective: str = "minimize",
-        sleep: float = 0,
+        modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
         collect_data: bool = True,
         callbacks: Optional[Union[Callable, List[Callable]]] = None,
         catch_errors: Optional[Dict[type, float]] = None,
-        noise: Optional["BaseNoise"] = None,
     ) -> None:
         if n_dim not in self.supported_dims:
             raise ValueError(f"n_dim must be one of {self.supported_dims}, got {n_dim}")
         self.n_dim = n_dim
-        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
+        super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
 
     @property
     @abstractmethod

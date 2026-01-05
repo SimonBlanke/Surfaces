@@ -1,6 +1,6 @@
 """K-Nearest Neighbors Time-Series Classifier using DTW-like distance."""
 
-from typing import Any, Dict
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 from sklearn.model_selection import cross_val_score
@@ -8,6 +8,8 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler
 
 from .._base_ts_classification import BaseTSClassification
+
+from surfaces.modifiers import BaseModifier
 from ..datasets import DATASETS
 
 
@@ -56,7 +58,7 @@ class KNNTSClassifierFunction(BaseTSClassification):
         dataset: str = "gunpoint",
         cv: int = 5,
         objective: str = "maximize",
-        sleep: float = 0,
+        modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
         collect_data: bool = True,
         callbacks=None,

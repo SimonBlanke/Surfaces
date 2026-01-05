@@ -152,10 +152,33 @@ All test functions support:
 | Parameter | Description |
 |-----------|-------------|
 | `objective` | "minimize" or "maximize" |
-| `sleep` | Artificial delay per evaluation (seconds) |
+| `modifiers` | List of modifiers (noise, delay, etc.) |
 | `memory` | Cache repeated evaluations |
 | `collect_data` | Store evaluation history |
 | `callbacks` | List of callback functions |
+
+### Using Modifiers
+
+Modifiers allow you to augment test functions with effects like noise, delays, or transformations. They are applied in the order specified:
+
+```python
+from surfaces.test_functions.algebraic.test_functions_nd import SphereFunction
+from surfaces.modifiers import DelayModifier, GaussianNoise
+
+func = SphereFunction(
+    n_dim=2,
+    modifiers=[
+        DelayModifier(delay=0.01),         # Simulate expensive evaluation
+        GaussianNoise(sigma=0.1, seed=42)  # Add measurement noise
+    ]
+)
+
+# Evaluate with modifiers
+result = func([1.0, 2.0])
+
+# Get true value without modifiers
+true_value = func.true_value([1.0, 2.0])
+```
 
 N-dimensional functions additionally support:
 | Parameter | Description |

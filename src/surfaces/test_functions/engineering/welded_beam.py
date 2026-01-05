@@ -4,11 +4,13 @@
 
 """Welded beam design optimization problem."""
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 
 from ._base_engineering_function import EngineeringFunction
+
+from surfaces.modifiers import BaseModifier
 
 
 class WeldedBeamFunction(EngineeringFunction):
@@ -150,7 +152,7 @@ class WeldedBeamFunction(EngineeringFunction):
         sigma_max: float = 30000.0,
         delta_max: float = 0.25,
         objective: str = "minimize",
-        sleep: float = 0,
+        modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
         collect_data: bool = True,
         callbacks=None,

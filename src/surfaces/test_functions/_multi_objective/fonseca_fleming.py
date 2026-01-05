@@ -10,6 +10,8 @@ import numpy as np
 
 from ._base_multi_objective import MultiObjectiveFunction
 
+from surfaces.modifiers import BaseModifier
+
 
 class FonsecaFleming(MultiObjectiveFunction):
     """Fonseca-Fleming multi-objective test function.
@@ -28,8 +30,8 @@ class FonsecaFleming(MultiObjectiveFunction):
     ----------
     n_dim : int, default=3
         Number of input dimensions.
-    sleep : float, default=0
-        Artificial delay in seconds added to each evaluation.
+    modifiers : list of BaseModifier, optional
+        List of modifiers to apply to function evaluations.
 
     Attributes
     ----------

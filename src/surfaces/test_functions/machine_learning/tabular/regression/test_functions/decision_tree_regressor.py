@@ -1,11 +1,13 @@
 """Decision Tree Regressor test function with surrogate support."""
 
-from typing import Any, Dict
+from typing import Any, Dict, List, Optional
 
 from sklearn.model_selection import cross_val_score
 from sklearn.tree import DecisionTreeRegressor
 
 from .._base_regression import BaseRegression
+
+from surfaces.modifiers import BaseModifier
 from ..datasets import DATASETS
 
 
@@ -39,7 +41,7 @@ class DecisionTreeRegressorFunction(BaseRegression):
         dataset: str = "diabetes",
         cv: int = 5,
         objective: str = "maximize",
-        sleep: float = 0,
+        modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
         collect_data: bool = True,
         callbacks=None,

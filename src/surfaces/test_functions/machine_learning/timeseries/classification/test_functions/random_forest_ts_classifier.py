@@ -1,12 +1,14 @@
 """Random Forest Time-Series Classifier test function using feature extraction."""
 
-from typing import Any, Dict
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_val_score
 
 from .._base_ts_classification import BaseTSClassification
+
+from surfaces.modifiers import BaseModifier
 from ..datasets import DATASETS
 
 
@@ -90,7 +92,7 @@ class RandomForestTSClassifierFunction(BaseTSClassification):
         dataset: str = "gunpoint",
         cv: int = 5,
         objective: str = "maximize",
-        sleep: float = 0,
+        modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
         collect_data: bool = True,
         callbacks=None,

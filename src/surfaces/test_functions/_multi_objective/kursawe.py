@@ -10,6 +10,8 @@ import numpy as np
 
 from ._base_multi_objective import MultiObjectiveFunction
 
+from surfaces.modifiers import BaseModifier
+
 
 class Kursawe(MultiObjectiveFunction):
     """Kursawe multi-objective test function.
@@ -29,8 +31,8 @@ class Kursawe(MultiObjectiveFunction):
     ----------
     n_dim : int, default=3
         Number of input dimensions. Must be >= 2.
-    sleep : float, default=0
-        Artificial delay in seconds added to each evaluation.
+    modifiers : list of BaseModifier, optional
+        List of modifiers to apply to function evaluations.
 
     Attributes
     ----------

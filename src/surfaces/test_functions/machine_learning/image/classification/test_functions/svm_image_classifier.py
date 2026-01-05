@@ -1,6 +1,6 @@
 """SVM Image Classifier test function."""
 
-from typing import Any, Dict
+from typing import Any, Dict, List, Optional
 
 from sklearn.decomposition import PCA
 from sklearn.model_selection import cross_val_score
@@ -8,6 +8,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 
 from .._base_image_classification import BaseImageClassification
+
+from surfaces.modifiers import BaseModifier
 from ..datasets import DATASETS
 
 
@@ -60,7 +62,7 @@ class SVMImageClassifierFunction(BaseImageClassification):
         cv: int = 3,
         n_components: int = 50,
         objective: str = "maximize",
-        sleep: float = 0,
+        modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
         collect_data: bool = True,
         callbacks=None,

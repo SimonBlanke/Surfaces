@@ -106,11 +106,16 @@ This can improve performance in tight optimization loops.
 Can I add artificial delays?
 ----------------------------
 
-Yes, use the ``sleep`` parameter to simulate expensive function evaluations:
+Yes, use the ``DelayModifier`` to simulate expensive function evaluations:
 
 .. code-block:: python
 
-    func = SphereFunction(n_dim=2, sleep=0.1)  # 100ms delay per evaluation
+    from surfaces.modifiers import DelayModifier
+
+    func = SphereFunction(
+        n_dim=2,
+        modifiers=[DelayModifier(delay=0.1)]  # 100ms delay per evaluation
+    )
 
 What Python versions are supported?
 -----------------------------------

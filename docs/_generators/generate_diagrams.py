@@ -426,7 +426,7 @@ They simulate measurement uncertainty and test algorithm robustness to noisy obj
 .. code-block:: python
 
     from surfaces.test_functions import SphereFunction
-    from surfaces.noise import GaussianNoise
+    from surfaces.modifiers import GaussianNoise
 
     noise = GaussianNoise(sigma=0.1, seed=42)
     func = SphereFunction(n_dim=2, noise=noise)

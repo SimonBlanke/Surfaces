@@ -8,8 +8,7 @@ import numpy as np
 
 from .._base_algebraic_function import AlgebraicFunction
 
-if TYPE_CHECKING:
-    from surfaces.noise import BaseNoise
+from surfaces.modifiers import BaseModifier
 
 
 class SphereFunction(AlgebraicFunction):
@@ -36,8 +35,8 @@ class SphereFunction(AlgebraicFunction):
         Scaling parameter.
     metric : str, default="score"
         Either "loss" (minimize) or "score" (maximize).
-    sleep : float, default=0
-        Artificial delay in seconds added to each evaluation.
+    modifiers : list of BaseModifier, optional
+        List of modifiers to apply to function evaluations.
     validate : bool, default=True
         Whether to validate parameters against the search space.
 
@@ -92,14 +91,13 @@ class SphereFunction(AlgebraicFunction):
         n_dim: int,
         A: float = 1,
         objective: str = "minimize",
-        sleep: float = 0,
+        modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
         collect_data: bool = True,
         callbacks: Optional[Union[Callable, List[Callable]]] = None,
         catch_errors: Optional[Dict[type, float]] = None,
-        noise: Optional["BaseNoise"] = None,
     ) -> None:
-        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
+        super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = n_dim
         self.A = A
         self.x_global = np.zeros(n_dim)

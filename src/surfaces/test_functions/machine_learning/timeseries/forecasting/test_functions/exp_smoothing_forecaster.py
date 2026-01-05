@@ -1,8 +1,10 @@
 """Exponential Smoothing Forecaster test function using sktime."""
 
-from typing import Any, Dict
+from typing import Any, Dict, List, Optional
 
 from .._base_forecasting import BaseForecasting
+
+from surfaces.modifiers import BaseModifier
 from ..datasets import DATASETS
 
 
@@ -64,7 +66,7 @@ class ExpSmoothingForecasterFunction(BaseForecasting):
         dataset: str = "airline",
         forecast_horizon: int = 12,
         objective: str = "maximize",
-        sleep: float = 0,
+        modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
         collect_data: bool = True,
         callbacks=None,

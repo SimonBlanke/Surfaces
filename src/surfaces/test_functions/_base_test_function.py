@@ -3,12 +3,11 @@
 # License: MIT License
 
 import time
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Type, Union
+from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
 
 import numpy as np
 
-if TYPE_CHECKING:
-    from surfaces.noise import BaseNoise
+from surfaces.modifiers import BaseModifier, ModifierPipeline
 
 
 class BaseTestFunction:
@@ -18,8 +17,12 @@ class BaseTestFunction:
     ----------
     objective : str, default="minimize"
         Either "minimize" or "maximize".
-    sleep : float, default=0
-        Artificial delay in seconds added to each evaluation.
+    modifiers : list of BaseModifier, optional
+        List of modifiers to apply to function evaluations. Modifiers are
+        applied in the order they appear in the list. Examples include
+        noise (GaussianNoise, UniformNoise, MultiplicativeNoise) and
+        delays (DelayModifier). See surfaces.modifiers and surfaces.noise
+        modules for available modifiers.
     memory : bool, default=False
         If True, caches evaluated positions to avoid redundant computations.
         The cache key is the position as a tuple of sorted parameter values.
@@ -37,11 +40,6 @@ class BaseTestFunction:
         corresponding value is returned instead of propagating the error.
         Use ... (Ellipsis) as a catch-all key for any unmatched exceptions.
         Exceptions not matching any key will still propagate normally.
-    noise : BaseNoise, optional
-        Noise layer to apply to function evaluations. Adds stochastic
-        disturbances for testing algorithm robustness. See surfaces.noise
-        module for available noise types (GaussianNoise, UniformNoise,
-        MultiplicativeNoise).
 
     Attributes
     ----------
@@ -138,25 +136,43 @@ class BaseTestFunction:
     ...     catch_errors={...: float('inf')}
     ... )
 
-    Noise Example
-    -------------
+    Modifiers Example
+    -----------------
     Add noise to simulate measurement uncertainty:
 
-    >>> from surfaces.noise import GaussianNoise
-    >>> noise = GaussianNoise(sigma=0.1, seed=42)
-    >>> func = SphereFunction(n_dim=2, noise=noise)
+    >>> from surfaces.modifiers import GaussianNoise
+    >>> func = SphereFunction(
+    ...     n_dim=2,
+    ...     modifiers=[GaussianNoise(sigma=0.1, seed=42)]
+    ... )
     >>> result = func([1.0, 2.0])  # Returns noisy evaluation
-    >>> true_result = func.true_value([1.0, 2.0])  # Without noise
+    >>> true_result = func.true_value([1.0, 2.0])  # Without modifiers
+
+    Combine multiple modifiers (applied in order):
+
+    >>> from surfaces.modifiers import DelayModifier
+    >>> from surfaces.modifiers import GaussianNoise
+    >>> func = SphereFunction(
+    ...     n_dim=2,
+    ...     modifiers=[
+    ...         DelayModifier(delay=0.01),  # Applied first
+    ...         GaussianNoise(sigma=0.1)     # Applied second
+    ...     ]
+    ... )
 
     Decaying noise over optimization:
 
-    >>> noise = GaussianNoise(
-    ...     sigma=0.5,
-    ...     sigma_final=0.01,
-    ...     schedule="linear",
-    ...     total_evaluations=1000
+    >>> func = SphereFunction(
+    ...     n_dim=2,
+    ...     modifiers=[
+    ...         GaussianNoise(
+    ...             sigma=0.5,
+    ...             sigma_final=0.01,
+    ...             schedule="linear",
+    ...             total_evaluations=1000
+    ...         )
+    ...     ]
     ... )
-    >>> func = SphereFunction(n_dim=2, noise=noise)
     """
 
     pure_objective_function: callable
@@ -224,21 +240,19 @@ class BaseTestFunction:
     def __init__(
         self,
         objective="minimize",
-        sleep=0,
+        modifiers: Optional[List[BaseModifier]] = None,
         memory=False,
         collect_data=True,
         callbacks=None,
         catch_errors=None,
-        noise: Optional["BaseNoise"] = None,
     ):
         if objective not in ("minimize", "maximize"):
             raise ValueError(f"objective must be 'minimize' or 'maximize', got '{objective}'")
         self.objective = objective
-        self.sleep = sleep
         self.memory = memory
         self.collect_data = collect_data
         self.catch_errors: Optional[Dict[Type[Exception], float]] = catch_errors
-        self._noise: Optional["BaseNoise"] = noise
+        self._modifiers: ModifierPipeline = ModifierPipeline(modifiers if modifiers is not None else [])
         self._memory_cache: Dict[Tuple, float] = {}
 
         # Normalize callbacks to list
@@ -329,16 +343,14 @@ class BaseTestFunction:
         return tuple(params[k] for k in sorted(params.keys()))
 
     def _evaluate(self, params: Dict[str, Any]) -> float:
-        """Evaluate with timing, noise, and objective transformation.
+        """Evaluate with modifiers and objective transformation.
 
         If catch_errors is provided, exceptions matching the specified types
         return the corresponding value instead of propagating. Use ... (Ellipsis)
         as a catch-all key for any unmatched exceptions.
 
-        Noise is applied after error handling but before the objective transform.
+        Modifiers are applied after error handling but before the objective transform.
         """
-        time.sleep(self.sleep)
-
         try:
             raw_value = self.pure_objective_function(params)
         except Exception as e:
@@ -349,9 +361,14 @@ class BaseTestFunction:
                         return return_value
             raise
 
-        # Apply noise layer if configured
-        if self._noise is not None:
-            raw_value = self._noise.apply(raw_value, params)
+        # Apply modifiers if configured
+        if len(self._modifiers) > 0:
+            context = {
+                "evaluation_count": self.n_evaluations,
+                "best_score": self.best_score,
+                "search_data": self.search_data,
+            }
+            raw_value = self._modifiers.apply(raw_value, params, context)
 
         if self.objective == "maximize":
             return -raw_value
@@ -411,16 +428,16 @@ class BaseTestFunction:
         self.reset_memory()
 
     # =========================================================================
-    # Noise Management
+    # Modifier Management
     # =========================================================================
 
     def true_value(
         self, params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None, **kwargs
     ) -> float:
-        """Evaluate the function without noise.
+        """Evaluate the function without modifiers.
 
         Returns the true (deterministic) function value, bypassing any
-        configured noise layer. Useful for analysis and comparison.
+        configured modifiers. Useful for analysis and comparison.
 
         This method does not update search_data, n_evaluations, or callbacks.
         It also ignores memory caching.
@@ -435,16 +452,18 @@ class BaseTestFunction:
         Returns
         -------
         float
-            The true function value without noise.
+            The true function value without modifiers.
 
         Examples
         --------
-        >>> from surfaces.noise import GaussianNoise
-        >>> noise = GaussianNoise(sigma=0.1, seed=42)
-        >>> func = SphereFunction(n_dim=2, noise=noise)
-        >>> noisy = func([1.0, 2.0])
+        >>> from surfaces.modifiers import GaussianNoise
+        >>> func = SphereFunction(
+        ...     n_dim=2,
+        ...     modifiers=[GaussianNoise(sigma=0.1, seed=42)]
+        ... )
+        >>> modified = func([1.0, 2.0])
         >>> true = func.true_value([1.0, 2.0])
-        >>> print(f"Noise added: {noisy - true:.4f}")
+        >>> print(f"Difference: {modified - true:.4f}")
         """
         params = self._normalize_input(params, **kwargs)
         raw_value = self.pure_objective_function(params)
@@ -452,36 +471,18 @@ class BaseTestFunction:
             return -raw_value
         return raw_value
 
-    def reset_noise(self, seed: Optional[int] = None) -> None:
-        """Reset the noise layer state.
+    def reset_modifiers(self) -> None:
+        """Reset all modifiers' internal state.
 
-        Resets the noise layer's evaluation counter and random state.
-        Has no effect if no noise layer is configured.
-
-        Parameters
-        ----------
-        seed : int, optional
-            New seed for the noise random state. If None, uses the
-            original seed.
+        Resets evaluation counters, random states, and any other
+        stateful components in the modifier pipeline.
         """
-        if self._noise is not None:
-            self._noise.reset(seed)
+        self._modifiers.reset()
 
     @property
-    def noise(self) -> Optional["BaseNoise"]:
-        """The configured noise layer, or None if no noise is configured."""
-        return self._noise
-
-    @property
-    def last_noise(self) -> Optional[float]:
-        """The noise value from the most recent evaluation.
-
-        Returns None if no noise layer is configured or if no
-        evaluation has been performed yet.
-        """
-        if self._noise is not None:
-            return self._noise.last_noise
-        return None
+    def modifiers(self) -> ModifierPipeline:
+        """The modifier pipeline for this function."""
+        return self._modifiers
 
     # =========================================================================
     # Callback Management

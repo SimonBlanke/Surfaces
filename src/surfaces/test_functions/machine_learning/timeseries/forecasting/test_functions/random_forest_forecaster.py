@@ -1,12 +1,14 @@
 """Random Forest Forecaster test function."""
 
-from typing import Any, Dict
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import TimeSeriesSplit
 
 from .._base_forecasting import BaseForecasting
+
+from surfaces.modifiers import BaseModifier
 from ..datasets import DATASETS
 from .gradient_boosting_forecaster import create_lagged_features
 
@@ -64,7 +66,7 @@ class RandomForestForecasterFunction(BaseForecasting):
         dataset: str = "airline",
         cv: int = 5,
         objective: str = "maximize",
-        sleep: float = 0,
+        modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
         collect_data: bool = True,
         callbacks=None,

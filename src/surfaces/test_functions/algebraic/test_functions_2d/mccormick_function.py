@@ -8,8 +8,7 @@ import numpy as np
 
 from .._base_algebraic_function import AlgebraicFunction
 
-if TYPE_CHECKING:
-    from surfaces.noise import BaseNoise
+from surfaces.modifiers import BaseModifier
 
 
 class McCormickFunction(AlgebraicFunction):
@@ -30,8 +29,8 @@ class McCormickFunction(AlgebraicFunction):
     ----------
     metric : str, default="score"
         Either "loss" (minimize) or "score" (maximize).
-    sleep : float, default=0
-        Artificial delay in seconds added to each evaluation.
+    modifiers : list of BaseModifier, optional
+        List of modifiers to apply to function evaluations.
 
     Attributes
     ----------
@@ -79,14 +78,13 @@ class McCormickFunction(AlgebraicFunction):
     def __init__(
         self,
         objective: str = "minimize",
-        sleep: float = 0,
+        modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
         collect_data: bool = True,
         callbacks: Optional[Union[Callable, List[Callable]]] = None,
         catch_errors: Optional[Dict[type, float]] = None,
-        noise: Optional["BaseNoise"] = None,
     ) -> None:
-        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
+        super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 2
 
     def _create_objective_function(self) -> None:

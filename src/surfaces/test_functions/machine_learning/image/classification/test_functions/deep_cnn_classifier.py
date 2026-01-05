@@ -1,10 +1,12 @@
 """Deep CNN Image Classifier test function."""
 
-from typing import Any, Dict
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 
 from .._base_image_classification import BaseImageClassification
+
+from surfaces.modifiers import BaseModifier
 from ..datasets import DATASETS
 
 
@@ -69,7 +71,7 @@ class DeepCNNClassifierFunction(BaseImageClassification):
         epochs: int = 5,
         validation_split: float = 0.2,
         objective: str = "maximize",
-        sleep: float = 0,
+        modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
         collect_data: bool = True,
         callbacks=None,

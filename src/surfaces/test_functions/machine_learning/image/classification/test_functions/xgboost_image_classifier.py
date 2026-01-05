@@ -1,10 +1,12 @@
 """XGBoost Image Classifier test function."""
 
-from typing import Any, Dict
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 
 from .._base_image_classification import BaseImageClassification
+
+from surfaces.modifiers import BaseModifier
 from ..datasets import DATASETS
 
 
@@ -70,7 +72,7 @@ class XGBoostImageClassifierFunction(BaseImageClassification):
         cv: int = 3,
         n_components: int = 50,
         objective: str = "maximize",
-        sleep: float = 0,
+        modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
         collect_data: bool = True,
         callbacks=None,

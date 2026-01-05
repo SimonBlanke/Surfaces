@@ -4,13 +4,15 @@
 
 """Base class for noise layers."""
 
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from typing import Any, Dict, Optional
 
 import numpy as np
 
+from .._base_modifier import BaseModifier
 
-class BaseNoise(ABC):
+
+class BaseNoise(BaseModifier):
     """Base class for noise layers that can be applied to test functions.
 
     Noise layers add stochastic disturbances to function evaluations,
@@ -39,7 +41,7 @@ class BaseNoise(ABC):
 
     Examples
     --------
-    >>> from surfaces.noise import GaussianNoise
+    >>> from surfaces.modifiers import GaussianNoise
     >>> noise = GaussianNoise(sigma=0.1, seed=42)
     >>> noisy_value = noise.apply(5.0, {"x0": 0.5})
     >>> print(noise.last_noise)  # The noise that was added
@@ -94,7 +96,7 @@ class BaseNoise(ABC):
 
         return 1.0
 
-    def apply(self, value: float, params: Dict[str, Any]) -> float:
+    def apply(self, value: float, params: Dict[str, Any], context: Dict[str, Any]) -> float:
         """Apply noise to a function value.
 
         Parameters
@@ -103,6 +105,8 @@ class BaseNoise(ABC):
             The original function value.
         params : dict
             The input parameters (available for heteroscedastic noise).
+        context : dict
+            Context information (unused by noise modifiers).
 
         Returns
         -------

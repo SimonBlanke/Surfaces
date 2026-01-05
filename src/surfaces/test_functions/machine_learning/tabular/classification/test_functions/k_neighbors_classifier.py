@@ -1,12 +1,14 @@
 """K-Nearest Neighbors Classifier test function with surrogate support."""
 
-from typing import Any, Dict
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 from sklearn.model_selection import cross_val_score
 from sklearn.neighbors import KNeighborsClassifier
 
 from .._base_classification import BaseClassification
+
+from surfaces.modifiers import BaseModifier
 from ..datasets import DATASETS
 
 
@@ -29,8 +31,8 @@ class KNeighborsClassifierFunction(BaseClassification):
         Falls back to real evaluation if no surrogate is available.
     objective : str, default="maximize"
         Either "minimize" or "maximize".
-    sleep : float, default=0
-        Artificial delay in seconds added to each evaluation.
+    modifiers : list of BaseModifier, optional
+        List of modifiers to apply to function evaluations.
 
     Attributes
     ----------
@@ -73,7 +75,7 @@ class KNeighborsClassifierFunction(BaseClassification):
         dataset: str = "digits",
         cv: int = 5,
         objective: str = "maximize",
-        sleep: float = 0,
+        modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
         collect_data: bool = True,
         callbacks=None,

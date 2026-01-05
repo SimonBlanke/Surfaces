@@ -5,9 +5,11 @@
 """Base class for multi-objective optimization test functions."""
 
 import time
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
+
+from surfaces.modifiers import BaseModifier, ModifierPipeline
 
 
 class MultiObjectiveFunction:
@@ -21,8 +23,11 @@ class MultiObjectiveFunction:
     ----------
     n_dim : int
         Number of input dimensions.
-    sleep : float, default=0
-        Artificial delay in seconds added to each evaluation.
+    modifiers : list of BaseModifier, optional
+        List of modifiers to apply to function evaluations.
+        Note: Value-modifying modifiers (like noise) are not supported for
+        multi-objective functions. Only side-effect modifiers (like delay)
+        work correctly.
 
     Attributes
     ----------
@@ -70,9 +75,9 @@ class MultiObjectiveFunction:
         return wrapper
 
     @_create_objective_function_
-    def __init__(self, n_dim: int, sleep: float = 0):
+    def __init__(self, n_dim: int, modifiers: Optional[List[BaseModifier]] = None):
         self.n_dim = n_dim
-        self.sleep = sleep
+        self._modifiers: ModifierPipeline = ModifierPipeline(modifiers if modifiers is not None else [])
 
     def _create_objective_function(self):
         raise NotImplementedError("'_create_objective_function' must be implemented")
@@ -140,9 +145,21 @@ class MultiObjectiveFunction:
         return {**params, **kwargs}
 
     def _evaluate(self, params: Dict[str, Any]) -> np.ndarray:
-        """Evaluate with timing."""
-        time.sleep(self.sleep)
-        return self.pure_objective_function(params)
+        """Evaluate with modifiers.
+
+        Note: Modifiers are applied to the first objective value only,
+        primarily for side-effects like delays. Value-modifying modifiers
+        (like noise) are not recommended for multi-objective functions.
+        """
+        result = self.pure_objective_function(params)
+
+        # Apply modifiers for side-effects (e.g., delay)
+        # We pass the first objective value through the modifier pipeline
+        if len(self._modifiers) > 0:
+            context = {}
+            _ = self._modifiers.apply(result[0], params, context)
+
+        return result
 
     def _params_to_array(self, params: Dict[str, Any]) -> np.ndarray:
         """Convert parameter dict to numpy array."""

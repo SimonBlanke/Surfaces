@@ -4,11 +4,13 @@
 
 """Pressure vessel design optimization problem."""
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 
 from ._base_engineering_function import EngineeringFunction
+
+from surfaces.modifiers import BaseModifier
 
 
 class PressureVesselFunction(EngineeringFunction):
@@ -157,7 +159,7 @@ class PressureVesselFunction(EngineeringFunction):
         self,
         min_volume: float = 750.0,
         objective: str = "minimize",
-        sleep: float = 0,
+        modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
         collect_data: bool = True,
         callbacks=None,

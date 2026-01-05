@@ -8,6 +8,8 @@ import numpy as np
 
 from .._base_algebraic_function import AlgebraicFunction
 
+from surfaces.modifiers import BaseModifier
+
 if TYPE_CHECKING:
     pass
 
@@ -39,8 +41,8 @@ class HimmelblausFunction(AlgebraicFunction):
         Second constant term.
     metric : str, default="score"
         Either "loss" (minimize) or "score" (maximize).
-    sleep : float, default=0
-        Artificial delay in seconds added to each evaluation.
+    modifiers : list of BaseModifier, optional
+        List of modifiers to apply to function evaluations.
 
     Attributes
     ----------
@@ -106,7 +108,7 @@ class HimmelblausFunction(AlgebraicFunction):
         catch_errors=None,
         noise=None,
     ):
-        super().__init__(objective, sleep, memory, collect_data, callbacks, catch_errors, noise)
+        super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 2
 
         self.A = A

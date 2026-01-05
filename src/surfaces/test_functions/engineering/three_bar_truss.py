@@ -4,11 +4,13 @@
 
 """Three-bar truss design optimization problem."""
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 
 from ._base_engineering_function import EngineeringFunction
+
+from surfaces.modifiers import BaseModifier
 
 
 class ThreeBarTrussFunction(EngineeringFunction):
@@ -136,7 +138,7 @@ class ThreeBarTrussFunction(EngineeringFunction):
         P: float = 2.0,
         sigma_max: float = 2.0,
         objective: str = "minimize",
-        sleep: float = 0,
+        modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
         collect_data: bool = True,
         callbacks=None,
