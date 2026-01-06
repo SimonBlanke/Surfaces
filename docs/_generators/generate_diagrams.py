@@ -321,52 +321,43 @@ Surfaces provides **{n_eng} engineering problems** from structural and mechanica
 
 
 def generate_presets_overview() -> str:
-    """Generate overview for Presets page."""
+    """Generate overview for Collection suites page."""
     try:
-        from surfaces.presets import (
-            algebraic_2d,
-            algebraic_nd,
-            bbob,
-            cec2014,
-            cec2017,
-            engineering,
-            quick,
-            standard,
-        )
+        from surfaces import collection
 
-        n_quick = len(quick)
-        n_standard = len(standard)
-        n_alg2d = len(algebraic_2d)
-        n_algnd = len(algebraic_nd)
-        n_bbob = len(bbob)
-        n_cec14 = len(cec2014)
-        n_cec17 = len(cec2017)
-        n_eng = len(engineering)
+        n_quick = len(collection.quick)
+        n_standard = len(collection.standard)
+        n_alg2d = len(collection.algebraic_2d)
+        n_algnd = len(collection.algebraic_nd)
+        n_bbob = len(collection.bbob)
+        n_cec14 = len(collection.cec2014)
+        n_cec17 = len(collection.cec2017)
+        n_eng = len(collection.engineering)
     except ImportError:
         n_quick = n_standard = n_alg2d = n_algnd = n_bbob = n_cec14 = n_cec17 = n_eng = 0
 
-    return f"""Presets are curated collections of test function classes for standardized benchmarking.
-Using presets ensures comparable results across different studies and projects.
+    return f"""The collection provides curated suites of test function classes for standardized benchmarking.
+Using suites ensures comparable results across different studies and projects.
 
 .. mermaid::
 
     flowchart LR
-        PR[Presets]
+        CL[collection]
 
-        PR --> QK[quick<br/>{n_quick} functions]
-        PR --> ST[standard<br/>{n_standard} functions]
-        PR --> A2[algebraic_2d<br/>{n_alg2d} functions]
-        PR --> AN[algebraic_nd<br/>{n_algnd} functions]
-        PR --> BB[bbob<br/>{n_bbob} functions]
-        PR --> C14[cec2014<br/>{n_cec14} functions]
-        PR --> C17[cec2017<br/>{n_cec17} functions]
-        PR --> EN[engineering<br/>{n_eng} functions]
+        CL --> QK[quick<br/>{n_quick} functions]
+        CL --> ST[standard<br/>{n_standard} functions]
+        CL --> A2[algebraic_2d<br/>{n_alg2d} functions]
+        CL --> AN[algebraic_nd<br/>{n_algnd} functions]
+        CL --> BB[bbob<br/>{n_bbob} functions]
+        CL --> C14[cec2014<br/>{n_cec14} functions]
+        CL --> C17[cec2017<br/>{n_cec17} functions]
+        CL --> EN[engineering<br/>{n_eng} functions]
 
         QK --> QKd[Fast sanity checks]
         ST --> STd[Diverse landscapes]
         BB --> BBd[COCO benchmark]
 
-        style PR fill:#1A1854,color:#fff
+        style CL fill:#1A1854,color:#fff
         style QK fill:#5A7A8B,color:#fff
         style ST fill:#5A7A8B,color:#fff
         style A2 fill:#5A7A8B,color:#fff
@@ -378,13 +369,13 @@ Using presets ensures comparable results across different studies and projects.
 
 **Usage Pattern:**
 
-Presets contain function **classes**, not instances. Use ``instantiate()`` for mixed presets:
+Suites contain function **classes**, not instances. Use ``.instantiate()`` to create instances:
 
 .. code-block:: python
 
-    from surfaces.presets import standard, instantiate
+    from surfaces import collection
 
-    functions = instantiate(standard, n_dim=10)
+    functions = collection.standard.instantiate(n_dim=10)
     for func in functions:
         result = optimizer.minimize(func)
 """
