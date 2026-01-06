@@ -1,17 +1,17 @@
-.. _user_guide_presets:
+.. _user_guide_collection:
 
-=======
-Presets
-=======
+==========
+Collection
+==========
 
-Presets are pre-configured collections of test functions for common
-benchmarking scenarios. They save time by providing ready-to-use
-function sets.
+The collection module provides a unified interface to browse, filter, and
+select test functions. It includes pre-defined suites for common benchmarking
+scenarios.
 
 ----
 
-Why Use Presets?
-================
+Why Use Collection?
+===================
 
 Instead of manually selecting functions:
 
@@ -32,95 +32,171 @@ Instead of manually selecting functions:
         # ...
     ]
 
-Use a preset:
+Use the collection:
 
 .. code-block:: python
 
-    # With preset - simple
-    from surfaces.presets import classic_benchmark
+    # With collection - simple
+    from surfaces import collection
 
-    functions = classic_benchmark(n_dim=10)
+    functions = collection.standard.instantiate(n_dim=10)
 
 ----
 
-Available Presets
-=================
+Pre-defined Suites
+==================
 
-Classic Benchmark
------------------
+Quick Suite
+-----------
 
-Standard test functions commonly used in optimization papers.
+Fast sanity check (5 functions) for smoke tests and development iteration.
 
 .. code-block:: python
 
-    from surfaces.presets import classic_benchmark
+    from surfaces import collection
 
-    functions = classic_benchmark(n_dim=10)
+    functions = collection.quick.instantiate(n_dim=10)
 
     for func in functions:
-        result = func(func.search_space_sample())
-        print(f"{func.__class__.__name__}: {result:.4f}")
+        print(f"{func.__class__.__name__}")
 
-**Includes:**
+**Includes:** Sphere, Ackley, Rosenbrock, Rastrigin, Griewank
 
-- Sphere
-- Rastrigin
-- Rosenbrock
-- Ackley
-- Griewank
-- Styblinski-Tang
+Standard Suite
+--------------
 
-Quick Test
+Academic comparison (15 functions) covering diverse landscape types.
+
+.. code-block:: python
+
+    from surfaces import collection
+
+    functions = collection.standard.instantiate(n_dim=10)
+
+**Includes:** Classic functions for publication-quality benchmarking.
+
+BBOB Suite
 ----------
 
-A small set for fast iteration during development.
+Full COCO/BBOB benchmark (24 functions) for standardized comparison.
 
 .. code-block:: python
 
-    from surfaces.presets import quick_test
+    from surfaces import collection
 
-    functions = quick_test(n_dim=5)
+    functions = collection.bbob.instantiate(n_dim=10)
 
-**Includes:**
+CEC Suites
+----------
 
-- Sphere (easy)
-- Rastrigin (medium)
-- Rosenbrock (hard)
-
-Multimodal Challenge
---------------------
-
-Functions with many local optima to test global optimization.
+IEEE CEC competition benchmarks.
 
 .. code-block:: python
 
-    from surfaces.presets import multimodal_challenge
+    from surfaces import collection
 
-    functions = multimodal_challenge(n_dim=10)
+    # CEC 2014 (30 functions)
+    functions_2014 = collection.cec2014.instantiate(n_dim=10)
 
-**Includes:**
+    # CEC 2017 (10 functions)
+    functions_2017 = collection.cec2017.instantiate(n_dim=10)
 
-- Rastrigin
-- Ackley
-- Griewank
-- Schwefel
-- Levy
+Engineering Suite
+-----------------
+
+Constrained engineering design problems (5 functions).
+
+.. code-block:: python
+
+    from surfaces import collection
+
+    functions = collection.engineering.instantiate()
+
+    for func in functions:
+        print(f"{func.__class__.__name__}: {len(func.constraints)} constraints")
 
 ----
 
-Using Presets for Benchmarking
-==============================
+Filtering Functions
+===================
+
+Filter functions by properties:
 
 .. code-block:: python
 
-    from surfaces.presets import classic_benchmark
+    from surfaces import collection
+
+    # All unimodal functions
+    unimodal = collection.filter(unimodal=True)
+
+    # Convex algebraic functions
+    convex = collection.filter(category="algebraic", convex=True)
+
+    # Separable functions
+    separable = collection.filter(separable=True)
+
+Available filter criteria:
+
+- ``category``: "algebraic", "bbob", "cec", "engineering", "ml"
+- ``unimodal``: True/False
+- ``convex``: True/False
+- ``separable``: True/False
+- ``scalable``: True/False
+- ``n_dim``: Specific dimension or None for variable
+
+----
+
+Searching Functions
+===================
+
+Search by name or tagline:
+
+.. code-block:: python
+
+    from surfaces import collection
+
+    # Find all Rastrigin variants
+    rastrigin = collection.search("rastrigin")
+    print(f"Found {len(rastrigin)} Rastrigin functions")
+
+    for func_cls in rastrigin:
+        print(f"  - {func_cls.__name__}")
+
+----
+
+Set Operations
+==============
+
+Combine collections using set operations:
+
+.. code-block:: python
+
+    from surfaces import collection
+
+    # Union: all functions from both suites
+    combined = collection.quick + collection.engineering
+
+    # Intersection: functions in both
+    common = collection.filter(scalable=True) & collection.bbob
+
+    # Difference: remove engineering from all
+    non_engineering = collection - collection.engineering
+
+----
+
+Using with Optimizers
+=====================
+
+.. code-block:: python
+
+    from surfaces import collection
     from gradient_free_optimizers import BayesianOptimizer
 
-    functions = classic_benchmark(n_dim=10)
+    functions = collection.standard.instantiate(n_dim=10)
     results = {}
 
     for func in functions:
-        opt = BayesianOptimizer(func.search_space())
+        opt = BayesianOptimizer(func.search_space)
         opt.search(func, n_iter=100)
 
         results[func.__class__.__name__] = opt.best_score
@@ -131,62 +207,32 @@ Using Presets for Benchmarking
 
 ----
 
-Creating Custom Presets
-=======================
-
-You can create your own presets:
+Listing Available Suites
+========================
 
 .. code-block:: python
 
-    from surfaces.test_functions import (
-        SphereFunction,
-        RastriginFunction,
-        RosenbrockFunction,
-    )
+    from surfaces import collection
 
-    def my_preset(n_dim=10):
-        return [
-            SphereFunction(n_dim=n_dim),
-            RastriginFunction(n_dim=n_dim),
-            RosenbrockFunction(n_dim=n_dim),
-        ]
-
-    # Use your preset
-    for func in my_preset(n_dim=20):
-        print(func.__class__.__name__)
+    for name, count in collection.list_suites().items():
+        print(f"{name}: {count} functions")
 
 ----
 
-Preset Parameters
-=================
+Iterating Over All Functions
+============================
 
-All presets accept common parameters:
-
-.. code-block:: python
-
-    functions = classic_benchmark(
-        n_dim=10,           # Number of dimensions
-        # Additional parameters may vary by preset
-    )
-
-----
-
-Combining Presets
-=================
-
-Combine multiple presets:
+The collection itself contains all available functions:
 
 .. code-block:: python
 
-    from surfaces.presets import classic_benchmark, multimodal_challenge
+    from surfaces import collection
 
-    all_functions = (
-        classic_benchmark(n_dim=10) +
-        multimodal_challenge(n_dim=10)
-    )
+    print(f"Total functions: {len(collection)}")
 
-    # Remove duplicates if needed
-    unique_functions = list({type(f): f for f in all_functions}.values())
+    # Iterate over all
+    for func_cls in collection:
+        print(func_cls.__name__)
 
 ----
 
@@ -194,5 +240,5 @@ Next Steps
 ==========
 
 - :doc:`test_functions/index` - All available test functions
-- :doc:`integrations/index` - Use presets with optimization frameworks
-- :doc:`/api_reference/presets` - Complete presets API
+- :doc:`integrations/index` - Use collection with optimization frameworks
+- :doc:`/api_reference/collection` - Complete collection API

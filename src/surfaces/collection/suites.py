@@ -2,7 +2,7 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-"""Pre-defined function presets for standardized optimizer testing."""
+"""Pre-defined function suites for standardized optimizer testing."""
 
 # =============================================================================
 # Algebraic Functions (always available - numpy only)
@@ -148,7 +148,7 @@ from ..test_functions.engineering import (
 )
 
 # =============================================================================
-# PRESET DEFINITIONS
+# SUITE DEFINITIONS
 # =============================================================================
 
 quick = [
@@ -351,3 +351,15 @@ Purpose: Test constraint handling capabilities.
 Use case: Constrained optimization algorithm evaluation.
 Note: Functions use penalty methods; check is_feasible() for solutions.
 """
+
+# All suite names for iteration
+SUITE_NAMES = [
+    "quick",
+    "standard",
+    "algebraic_2d",
+    "algebraic_nd",
+    "bbob",
+    "cec2014",
+    "cec2017",
+    "engineering",
+]

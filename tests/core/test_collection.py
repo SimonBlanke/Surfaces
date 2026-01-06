@@ -15,11 +15,6 @@ class TestCollectionImports:
 
         assert collection is not None
 
-    def test_import_collection_class(self):
-        from surfaces.collection import Collection
-
-        assert Collection is not None
-
     def test_collection_is_singleton(self):
         from surfaces import collection
         from surfaces.collection import _CollectionSingleton
@@ -175,10 +170,12 @@ class TestCollectionFilter:
 
     def test_filter_returns_collection(self):
         from surfaces import collection
-        from surfaces.collection import Collection
 
         result = collection.filter(unimodal=True)
-        assert isinstance(result, Collection)
+        # Result should be a collection-like object
+        assert hasattr(result, "filter")
+        assert hasattr(result, "search")
+        assert hasattr(result, "instantiate")
 
 
 class TestCollectionSearch:
@@ -213,10 +210,12 @@ class TestCollectionSearch:
 
     def test_search_returns_collection(self):
         from surfaces import collection
-        from surfaces.collection import Collection
 
         result = collection.search("sphere")
-        assert isinstance(result, Collection)
+        # Result should be a collection-like object
+        assert hasattr(result, "filter")
+        assert hasattr(result, "search")
+        assert hasattr(result, "instantiate")
 
 
 class TestCollectionChaining:
@@ -397,6 +396,86 @@ class TestCollectionInstantiation:
             params = {name: (b[0] + b[1]) / 2 for name, b in func.search_space.items()}
             result = func(params)
             assert isinstance(result, (int, float))
+
+    def test_instantiate_method(self):
+        """Test Collection.instantiate() method."""
+        from surfaces import collection
+
+        functions = collection.quick.instantiate(n_dim=5)
+        assert len(functions) == 5
+        for func in functions:
+            assert hasattr(func, "search_space")
+            assert callable(func)
+
+    def test_instantiate_method_evaluation(self):
+        """Test that instantiated functions can be evaluated."""
+        from surfaces import collection
+
+        functions = collection.quick.instantiate(n_dim=5)
+        for func in functions:
+            params = {
+                name: (bounds[0] + bounds[1]) / 2
+                for name, bounds in func.search_space.items()
+            }
+            result = func(params)
+            assert isinstance(result, (int, float))
+
+    def test_instantiate_algebraic_2d(self):
+        """2D functions should have 2 dimensions regardless of n_dim param."""
+        from surfaces import collection
+
+        functions = collection.algebraic_2d.instantiate()
+        for func in functions:
+            assert len(func.search_space) == 2
+
+    def test_instantiate_algebraic_nd(self):
+        """ND functions should have the specified n_dim."""
+        from surfaces import collection
+
+        for n_dim in [5, 10, 20]:
+            functions = collection.algebraic_nd.instantiate(n_dim=n_dim)
+            for func in functions:
+                assert len(func.search_space) == n_dim
+
+    def test_instantiate_standard_mixed(self):
+        """Standard suite has mixed 2D and ND functions."""
+        from surfaces import collection
+
+        functions = collection.standard.instantiate(n_dim=5)
+        dims = [len(func.search_space) for func in functions]
+        assert 2 in dims  # Has 2D functions
+        assert 5 in dims  # Has 5D functions
+
+
+class TestShow:
+    """Test show method."""
+
+    def test_show(self):
+        from surfaces import collection
+
+        suites = collection.show()
+        assert isinstance(suites, dict)
+        assert "quick" in suites
+        assert "standard" in suites
+        assert suites["quick"] == 5
+        assert suites["bbob"] == 24
+
+    def test_show_all_present(self):
+        from surfaces import collection
+
+        suites = collection.show()
+        expected = [
+            "quick",
+            "standard",
+            "algebraic_2d",
+            "algebraic_nd",
+            "bbob",
+            "cec2014",
+            "cec2017",
+            "engineering",
+        ]
+        for name in expected:
+            assert name in suites
 
 
 class TestNoDuplicates:
