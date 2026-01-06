@@ -48,4 +48,20 @@ __all__ = [
     "ShiftedRotatedNonContRastrigin",
     "ShiftedRotatedLevy",
     "ShiftedRotatedSchwefel",
+    # Function list
+    "cec2017_functions",
+]
+
+cec2017_functions = [
+    # Simple (F1-F10)
+    ShiftedRotatedBentCigar,
+    ShiftedRotatedSumDiffPow,
+    ShiftedRotatedZakharov,
+    ShiftedRotatedRosenbrock,
+    ShiftedRotatedRastrigin,
+    ShiftedRotatedSchafferF7,
+    ShiftedRotatedLunacekBiRastrigin,
+    ShiftedRotatedNonContRastrigin,
+    ShiftedRotatedLevy,
+    ShiftedRotatedSchwefel,
 ]

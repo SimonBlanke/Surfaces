@@ -96,4 +96,43 @@ __all__ = [
     "CompositionFunction6",
     "CompositionFunction7",
     "CompositionFunction8",
+    # Function list
+    "cec2014_functions",
+]
+
+cec2014_functions = [
+    # Unimodal (F1-F3)
+    RotatedHighConditionedElliptic,
+    RotatedBentCigar,
+    RotatedDiscus,
+    # Multimodal (F4-F16)
+    ShiftedRotatedRosenbrock,
+    ShiftedRotatedAckley,
+    ShiftedRotatedWeierstrass,
+    ShiftedRotatedGriewank,
+    ShiftedRastrigin,
+    ShiftedRotatedRastrigin,
+    ShiftedSchwefel,
+    ShiftedRotatedSchwefel,
+    ShiftedRotatedKatsuura,
+    ShiftedRotatedHappyCat,
+    ShiftedRotatedHGBat,
+    ShiftedRotatedExpandedGriewankRosenbrock,
+    ShiftedRotatedExpandedScafferF6,
+    # Hybrid (F17-F22)
+    HybridFunction1,
+    HybridFunction2,
+    HybridFunction3,
+    HybridFunction4,
+    HybridFunction5,
+    HybridFunction6,
+    # Composition (F23-F30)
+    CompositionFunction1,
+    CompositionFunction2,
+    CompositionFunction3,
+    CompositionFunction4,
+    CompositionFunction5,
+    CompositionFunction6,
+    CompositionFunction7,
+    CompositionFunction8,
 ]
