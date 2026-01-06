@@ -12,8 +12,8 @@ from surfaces.test_functions.algebraic import (
     algebraic_functions_2d,
     algebraic_functions_nd,
 )
-from surfaces.test_functions.bbob import bbob_functions
-from surfaces.test_functions.engineering import engineering_functions
+from surfaces.test_functions.benchmark.bbob import bbob_functions
+from surfaces.test_functions.algebraic.constrained import constrained_functions
 
 
 def func_id(func_class):
@@ -92,15 +92,15 @@ class TestAlgebraicInstantiation:
 class TestEngineeringInstantiation:
     """Smoke tests for engineering function instantiation."""
 
-    @pytest.mark.parametrize("func_class", engineering_functions, ids=func_id)
-    def test_engineering_functions(self, func_class):
+    @pytest.mark.parametrize("func_class", constrained_functions, ids=func_id)
+    def test_constrained_functions(self, func_class):
         """Engineering functions instantiate and evaluate correctly."""
         func = instantiate_function(func_class)
         assert len(func.search_space) > 0
         result = func(get_sample_params(func))
         assert isinstance(result, (int, float))
 
-    @pytest.mark.parametrize("func_class", engineering_functions, ids=func_id)
+    @pytest.mark.parametrize("func_class", constrained_functions, ids=func_id)
     def test_engineering_has_constraints(self, func_class):
         """Engineering functions have constraint methods."""
         func = instantiate_function(func_class)

@@ -7,7 +7,7 @@
 import pytest
 
 from surfaces.test_functions import RastriginFunction, SphereFunction
-from surfaces.test_functions.engineering import CantileverBeamFunction
+from surfaces.test_functions.algebraic.constrained import CantileverBeamFunction
 
 
 class TestCallbackBasics:

@@ -7,7 +7,7 @@
 import numpy as np
 import pytest
 
-from surfaces.test_functions.cec.cec2014 import (
+from surfaces.test_functions.benchmark.cec.cec2014 import (
     CompositionFunction1,
     CompositionFunction2,
     CompositionFunction3,

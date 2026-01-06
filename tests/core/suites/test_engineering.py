@@ -12,13 +12,13 @@ algorithms. Each function provides constraint handling via penalty methods.
 import numpy as np
 import pytest
 
-from surfaces.test_functions.engineering import (
+from surfaces.test_functions.algebraic.constrained import (
     CantileverBeamFunction,
     PressureVesselFunction,
     TensionCompressionSpringFunction,
     ThreeBarTrussFunction,
     WeldedBeamFunction,
-    engineering_functions,
+    constrained_functions,
 )
 from tests.conftest import func_id, get_sample_params, instantiate_function
 
@@ -31,14 +31,14 @@ from tests.conftest import func_id, get_sample_params, instantiate_function
 class TestEngineeringInstantiation:
     """Test basic instantiation and evaluation."""
 
-    @pytest.mark.parametrize("func_class", engineering_functions, ids=func_id)
+    @pytest.mark.parametrize("func_class", constrained_functions, ids=func_id)
     def test_instantiates(self, func_class):
         """Engineering functions instantiate correctly."""
         func = instantiate_function(func_class)
         assert func is not None
         assert len(func.search_space) > 0
 
-    @pytest.mark.parametrize("func_class", engineering_functions, ids=func_id)
+    @pytest.mark.parametrize("func_class", constrained_functions, ids=func_id)
     def test_evaluates(self, func_class):
         """Engineering functions evaluate and return numeric result."""
         func = instantiate_function(func_class)
@@ -46,7 +46,7 @@ class TestEngineeringInstantiation:
         result = func(params)
         assert isinstance(result, (int, float))
 
-    @pytest.mark.parametrize("func_class", engineering_functions, ids=func_id)
+    @pytest.mark.parametrize("func_class", constrained_functions, ids=func_id)
     def test_returns_finite(self, func_class):
         """Engineering functions return finite values."""
         func = instantiate_function(func_class)
@@ -64,35 +64,35 @@ class TestEngineeringInstantiation:
 class TestConstraintMethods:
     """Test constraint-related methods."""
 
-    @pytest.mark.parametrize("func_class", engineering_functions, ids=func_id)
+    @pytest.mark.parametrize("func_class", constrained_functions, ids=func_id)
     def test_has_constraints_method(self, func_class):
         """Engineering functions have constraints method."""
         func = instantiate_function(func_class)
         assert hasattr(func, "constraints")
         assert callable(func.constraints)
 
-    @pytest.mark.parametrize("func_class", engineering_functions, ids=func_id)
+    @pytest.mark.parametrize("func_class", constrained_functions, ids=func_id)
     def test_has_is_feasible_method(self, func_class):
         """Engineering functions have is_feasible method."""
         func = instantiate_function(func_class)
         assert hasattr(func, "is_feasible")
         assert callable(func.is_feasible)
 
-    @pytest.mark.parametrize("func_class", engineering_functions, ids=func_id)
+    @pytest.mark.parametrize("func_class", constrained_functions, ids=func_id)
     def test_has_raw_objective_method(self, func_class):
         """Engineering functions have raw_objective method."""
         func = instantiate_function(func_class)
         assert hasattr(func, "raw_objective")
         assert callable(func.raw_objective)
 
-    @pytest.mark.parametrize("func_class", engineering_functions, ids=func_id)
+    @pytest.mark.parametrize("func_class", constrained_functions, ids=func_id)
     def test_has_penalty_method(self, func_class):
         """Engineering functions have penalty method."""
         func = instantiate_function(func_class)
         assert hasattr(func, "penalty")
         assert callable(func.penalty)
 
-    @pytest.mark.parametrize("func_class", engineering_functions, ids=func_id)
+    @pytest.mark.parametrize("func_class", constrained_functions, ids=func_id)
     def test_constraints_returns_sequence(self, func_class):
         """constraints() returns array-like sequence."""
         func = instantiate_function(func_class)
@@ -102,7 +102,7 @@ class TestConstraintMethods:
         assert hasattr(constraints, "__len__")
         assert len(constraints) > 0
 
-    @pytest.mark.parametrize("func_class", engineering_functions, ids=func_id)
+    @pytest.mark.parametrize("func_class", constrained_functions, ids=func_id)
     def test_is_feasible_returns_bool(self, func_class):
         """is_feasible() returns boolean."""
         func = instantiate_function(func_class)
@@ -120,7 +120,7 @@ class TestConstraintMethods:
 class TestPenaltyBehavior:
     """Test penalty calculation behavior."""
 
-    @pytest.mark.parametrize("func_class", engineering_functions, ids=func_id)
+    @pytest.mark.parametrize("func_class", constrained_functions, ids=func_id)
     def test_penalty_non_negative(self, func_class):
         """Penalty is always >= 0."""
         func = instantiate_function(func_class)
@@ -128,7 +128,7 @@ class TestPenaltyBehavior:
         penalty = func.penalty(params)
         assert penalty >= 0
 
-    @pytest.mark.parametrize("func_class", engineering_functions, ids=func_id)
+    @pytest.mark.parametrize("func_class", constrained_functions, ids=func_id)
     def test_feasible_zero_penalty(self, func_class):
         """Feasible solutions have zero penalty."""
         func = instantiate_function(func_class)
@@ -137,7 +137,7 @@ class TestPenaltyBehavior:
             penalty = func.penalty(params)
             assert np.isclose(penalty, 0.0)
 
-    @pytest.mark.parametrize("func_class", engineering_functions, ids=func_id)
+    @pytest.mark.parametrize("func_class", constrained_functions, ids=func_id)
     def test_objective_includes_penalty(self, func_class):
         """__call__ returns raw_objective + penalty."""
         func = instantiate_function(func_class)
@@ -251,7 +251,7 @@ class TestCantileverBeam:
 class TestEngineeringInputFormats:
     """Test input format handling."""
 
-    @pytest.mark.parametrize("func_class", engineering_functions, ids=func_id)
+    @pytest.mark.parametrize("func_class", constrained_functions, ids=func_id)
     def test_dict_input(self, func_class):
         """Engineering functions accept dict input."""
         func = instantiate_function(func_class)
@@ -259,7 +259,7 @@ class TestEngineeringInputFormats:
         result = func(params)
         assert np.isfinite(result)
 
-    @pytest.mark.parametrize("func_class", engineering_functions, ids=func_id)
+    @pytest.mark.parametrize("func_class", constrained_functions, ids=func_id)
     def test_constraint_methods_accept_dict(self, func_class):
         """Constraint methods accept dict input."""
         func = instantiate_function(func_class)

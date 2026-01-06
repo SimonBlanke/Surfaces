@@ -36,15 +36,15 @@ def get_all_function_classes() -> Dict[str, List[type]]:
 
     # Engineering functions
     try:
-        from surfaces.test_functions.engineering import engineering_functions
+        from surfaces.test_functions.algebraic.constrained import constrained_functions
 
-        result["Engineering"] = engineering_functions
+        result["Engineering"] = constrained_functions
     except ImportError:
         pass
 
     # BBOB functions
     try:
-        from surfaces.test_functions.bbob import bbob_functions
+        from surfaces.test_functions.benchmark.bbob import bbob_functions
 
         result["BBOB"] = bbob_functions
     except ImportError:
@@ -52,7 +52,7 @@ def get_all_function_classes() -> Dict[str, List[type]]:
 
     # CEC 2013 functions
     try:
-        from surfaces.test_functions.cec.cec2013 import cec2013_functions
+        from surfaces.test_functions.benchmark.cec.cec2013 import cec2013_functions
 
         result["CEC 2013"] = cec2013_functions
     except ImportError:
@@ -60,7 +60,7 @@ def get_all_function_classes() -> Dict[str, List[type]]:
 
     # CEC 2014 functions
     try:
-        from surfaces.test_functions.cec.cec2014 import cec2014_functions
+        from surfaces.test_functions.benchmark.cec.cec2014 import cec2014_functions
 
         result["CEC 2014"] = cec2014_functions
     except ImportError:
@@ -68,7 +68,7 @@ def get_all_function_classes() -> Dict[str, List[type]]:
 
     # CEC 2017 functions
     try:
-        from surfaces.test_functions.cec.cec2017 import cec2017_functions
+        from surfaces.test_functions.benchmark.cec.cec2017 import cec2017_functions
 
         result["CEC 2017"] = cec2017_functions
     except ImportError:

@@ -7,7 +7,7 @@ properly defined and consistent across algebraic and BBOB functions.
 import pytest
 
 from surfaces.test_functions.algebraic import algebraic_functions
-from surfaces.test_functions.bbob import bbob_functions
+from surfaces.test_functions.benchmark.bbob import bbob_functions
 from tests.conftest import func_id, instantiate_function
 
 

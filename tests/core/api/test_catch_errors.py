@@ -9,7 +9,7 @@ import math
 import pytest
 
 from surfaces.test_functions import SphereFunction
-from surfaces.test_functions.engineering import CantileverBeamFunction
+from surfaces.test_functions.algebraic.constrained import CantileverBeamFunction
 
 
 class FailingSphereFunction(SphereFunction):

@@ -20,7 +20,7 @@ Reference:
 import numpy as np
 import pytest
 
-from surfaces.test_functions.bbob import (
+from surfaces.test_functions.benchmark.bbob import (
     BBOB_FUNCTIONS,
     bbob_functions,
     # Low/Moderate Conditioning (f6-f9)
