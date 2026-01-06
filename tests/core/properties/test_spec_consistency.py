@@ -7,10 +7,8 @@ properly defined and consistent across algebraic and BBOB functions.
 import pytest
 
 from surfaces.test_functions.algebraic import algebraic_functions
-from surfaces.test_functions.bbob import BBOB_FUNCTIONS
+from surfaces.test_functions.bbob import bbob_functions
 from tests.conftest import func_id, instantiate_function
-
-BBOB_FUNCTION_LIST = list(BBOB_FUNCTIONS.values())
 
 
 # =============================================================================
@@ -37,7 +35,7 @@ class TestSpecStructure:
         for key in required_keys:
             assert key in spec, f"Spec missing required key: {key}"
 
-    @pytest.mark.parametrize("func_class", BBOB_FUNCTION_LIST, ids=func_id)
+    @pytest.mark.parametrize("func_class", bbob_functions, ids=func_id)
     def test_bbob_has_func_id(self, func_class):
         """BBOB functions have func_id in spec."""
         func = instantiate_function(func_class, n_dim=2)

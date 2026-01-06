@@ -44,36 +44,33 @@ def get_all_function_classes() -> Dict[str, List[type]]:
 
     # BBOB functions
     try:
-        from surfaces.test_functions.bbob import BBOB_FUNCTIONS
+        from surfaces.test_functions.bbob import bbob_functions
 
-        result["BBOB"] = list(BBOB_FUNCTIONS.values())
+        result["BBOB"] = bbob_functions
     except ImportError:
         pass
 
     # CEC 2013 functions
     try:
-        from tests.conftest import CEC2013_FUNCTIONS
+        from surfaces.test_functions.cec.cec2013 import cec2013_functions
 
-        if CEC2013_FUNCTIONS:
-            result["CEC 2013"] = CEC2013_FUNCTIONS
+        result["CEC 2013"] = cec2013_functions
     except ImportError:
         pass
 
     # CEC 2014 functions
     try:
-        from tests.conftest import CEC2014_FUNCTIONS
+        from surfaces.test_functions.cec.cec2014 import cec2014_functions
 
-        if CEC2014_FUNCTIONS:
-            result["CEC 2014"] = CEC2014_FUNCTIONS
+        result["CEC 2014"] = cec2014_functions
     except ImportError:
         pass
 
     # CEC 2017 functions
     try:
-        from tests.conftest import CEC2017_FUNCTIONS
+        from surfaces.test_functions.cec.cec2017 import cec2017_functions
 
-        if CEC2017_FUNCTIONS:
-            result["CEC 2017"] = CEC2017_FUNCTIONS
+        result["CEC 2017"] = cec2017_functions
     except ImportError:
         pass
 

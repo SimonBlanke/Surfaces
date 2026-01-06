@@ -93,9 +93,12 @@ __all__ = [
     "Gallagher21",
     "Katsuura",
     "LunacekBiRastrigin",
+    # Function collections
+    "bbob_functions",
+    "BBOB_FUNCTIONS",
 ]
 
-# Function ID to class mapping
+# Function ID to class mapping (for BBOB-specific func_id lookups)
 BBOB_FUNCTIONS = {
     1: Sphere,
     2: EllipsoidalSeparable,
@@ -122,3 +125,36 @@ BBOB_FUNCTIONS = {
     23: Katsuura,
     24: LunacekBiRastrigin,
 }
+
+# Function list (consistent with other modules)
+bbob_functions = [
+    # Separable (f1-f5)
+    Sphere,
+    EllipsoidalSeparable,
+    RastriginSeparable,
+    BuecheRastrigin,
+    LinearSlope,
+    # Low/Moderate Conditioning (f6-f9)
+    AttractiveSector,
+    StepEllipsoidal,
+    RosenbrockOriginal,
+    RosenbrockRotated,
+    # High Conditioning & Unimodal (f10-f14)
+    EllipsoidalRotated,
+    Discus,
+    BentCigar,
+    SharpRidge,
+    DifferentPowers,
+    # Multimodal with Adequate Global Structure (f15-f19)
+    RastriginRotated,
+    Weierstrass,
+    SchaffersF7,
+    SchaffersF7Ill,
+    GriewankRosenbrock,
+    # Multimodal with Weak Global Structure (f20-f24)
+    Schwefel,
+    Gallagher101,
+    Gallagher21,
+    Katsuura,
+    LunacekBiRastrigin,
+]

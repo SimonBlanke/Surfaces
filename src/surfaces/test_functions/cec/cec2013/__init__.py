@@ -87,4 +87,40 @@ __all__ = [
     "CompositionFunction6",
     "CompositionFunction7",
     "CompositionFunction8",
+    # Function list
+    "cec2013_functions",
+]
+
+cec2013_functions = [
+    # Unimodal (F1-F5)
+    Sphere,
+    RotatedHighConditionedElliptic,
+    RotatedBentCigar,
+    RotatedDiscus,
+    DifferentPowers,
+    # Multimodal (F6-F20)
+    RotatedRosenbrock,
+    RotatedSchafferF7,
+    RotatedAckley,
+    RotatedWeierstrass,
+    RotatedGriewank,
+    Rastrigin,
+    RotatedRastrigin,
+    StepRastrigin,
+    Schwefel,
+    RotatedSchwefel,
+    RotatedKatsuura,
+    LunacekBiRastrigin,
+    RotatedLunacekBiRastrigin,
+    RotatedExpandedGriewankRosenbrock,
+    RotatedExpandedScafferF6,
+    # Composition (F21-F28)
+    CompositionFunction1,
+    CompositionFunction2,
+    CompositionFunction3,
+    CompositionFunction4,
+    CompositionFunction5,
+    CompositionFunction6,
+    CompositionFunction7,
+    CompositionFunction8,
 ]

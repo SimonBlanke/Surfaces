@@ -7,11 +7,9 @@ have valid search spaces with correct structure and bounds.
 import pytest
 
 from surfaces.test_functions.algebraic import algebraic_functions
-from surfaces.test_functions.bbob import BBOB_FUNCTIONS
+from surfaces.test_functions.bbob import bbob_functions
 from surfaces.test_functions.engineering import engineering_functions
 from tests.conftest import func_id, instantiate_function
-
-BBOB_FUNCTION_LIST = list(BBOB_FUNCTIONS.values())
 
 
 # =============================================================================
@@ -36,7 +34,7 @@ class TestSearchSpaceStructure:
         assert isinstance(func.search_space, dict)
         assert len(func.search_space) > 0
 
-    @pytest.mark.parametrize("func_class", BBOB_FUNCTION_LIST, ids=func_id)
+    @pytest.mark.parametrize("func_class", bbob_functions, ids=func_id)
     def test_bbob_search_space_is_dict(self, func_class):
         """BBOB functions have dict search space."""
         func = instantiate_function(func_class, n_dim=2)

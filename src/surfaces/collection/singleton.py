@@ -67,9 +67,9 @@ class _CollectionSingleton(Collection):
         add_functions(algebraic_functions)
 
         # BBOB functions (always available)
-        from ..test_functions.bbob import BBOB_FUNCTIONS
+        from ..test_functions.bbob import bbob_functions
 
-        add_functions(list(BBOB_FUNCTIONS.values()))
+        add_functions(bbob_functions)
 
         # Engineering functions (always available)
         from ..test_functions.engineering import engineering_functions
@@ -77,9 +77,11 @@ class _CollectionSingleton(Collection):
         add_functions(engineering_functions)
 
         # CEC functions (always available)
+        from ..test_functions.cec.cec2013 import cec2013_functions
         from ..test_functions.cec.cec2014 import cec2014_functions
         from ..test_functions.cec.cec2017 import cec2017_functions
 
+        add_functions(cec2013_functions)
         add_functions(cec2014_functions)
         add_functions(cec2017_functions)
 

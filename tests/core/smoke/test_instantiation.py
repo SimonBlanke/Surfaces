@@ -12,10 +12,8 @@ from surfaces.test_functions.algebraic import (
     algebraic_functions_2d,
     algebraic_functions_nd,
 )
-from surfaces.test_functions.bbob import BBOB_FUNCTIONS
+from surfaces.test_functions.bbob import bbob_functions
 from surfaces.test_functions.engineering import engineering_functions
-
-BBOB_FUNCTION_LIST = list(BBOB_FUNCTIONS.values())
 
 
 def func_id(func_class):
@@ -121,7 +119,7 @@ class TestEngineeringInstantiation:
 class TestBBOBInstantiation:
     """Smoke tests for BBOB function instantiation."""
 
-    @pytest.mark.parametrize("func_class", BBOB_FUNCTION_LIST, ids=func_id)
+    @pytest.mark.parametrize("func_class", bbob_functions, ids=func_id)
     def test_bbob_functions(self, func_class):
         """BBOB functions instantiate and evaluate correctly."""
         func = instantiate_function(func_class, n_dim=2)
@@ -130,7 +128,7 @@ class TestBBOBInstantiation:
         assert isinstance(result, (int, float))
         assert np.isfinite(result)
 
-    @pytest.mark.parametrize("func_class", BBOB_FUNCTION_LIST, ids=func_id)
+    @pytest.mark.parametrize("func_class", bbob_functions, ids=func_id)
     def test_bbob_has_func_id(self, func_class):
         """BBOB functions have func_id in spec."""
         func = instantiate_function(func_class, n_dim=2)

@@ -8,10 +8,8 @@ import numpy as np
 import pytest
 
 from surfaces.test_functions.algebraic import algebraic_functions
-from surfaces.test_functions.bbob import BBOB_FUNCTIONS
+from surfaces.test_functions.bbob import bbob_functions
 from tests.conftest import func_id, instantiate_function
-
-BBOB_FUNCTION_LIST = list(BBOB_FUNCTIONS.values())
 
 
 # =============================================================================
@@ -44,8 +42,10 @@ class TestAlgebraicGlobalOptima:
             pytest.skip("Global optimum not defined")
 
         # Convert to dict format
-        # Handle multiple global minima (2D array) - use first one
+        # Handle multiple global minima (2D array or tuple of tuples) - use first one
         if isinstance(x_global, np.ndarray) and x_global.ndim == 2:
+            x_global = x_global[0]
+        elif isinstance(x_global, tuple) and len(x_global) > 0 and isinstance(x_global[0], tuple):
             x_global = x_global[0]
 
         if isinstance(x_global, (list, tuple, np.ndarray)):
@@ -66,7 +66,7 @@ class TestAlgebraicGlobalOptima:
 class TestBBOBGlobalOptima:
     """Test global optima for BBOB functions."""
 
-    @pytest.mark.parametrize("func_class", BBOB_FUNCTION_LIST, ids=func_id)
+    @pytest.mark.parametrize("func_class", bbob_functions, ids=func_id)
     def test_bbob_has_global_minimum(self, func_class):
         """BBOB functions have known global minimum."""
         func = instantiate_function(func_class, n_dim=2)

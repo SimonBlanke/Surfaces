@@ -22,6 +22,7 @@ import pytest
 
 from surfaces.test_functions.bbob import (
     BBOB_FUNCTIONS,
+    bbob_functions,
     # Low/Moderate Conditioning (f6-f9)
     AttractiveSector,
     BentCigar,
@@ -66,7 +67,7 @@ MULTIMODAL_ADEQUATE = [
 ]
 MULTIMODAL_WEAK = [Schwefel, Gallagher101, Gallagher21, Katsuura, LunacekBiRastrigin]
 
-ALL_BBOB = list(BBOB_FUNCTIONS.values())
+ALL_BBOB = bbob_functions
 
 
 def func_id(func_class):
