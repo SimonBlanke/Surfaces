@@ -291,29 +291,25 @@ class TestNoiseIntegration:
         noise = GaussianNoise(sigma=0.1, seed=42)
         func = SphereFunction(n_dim=2, modifiers=[noise])
 
-        # Before any evaluation
-        noise_mod = func.modifiers.get_by_type(GaussianNoise) or func.modifiers.get_by_type(UniformNoise) or func.modifiers.get_by_type(MultiplicativeNoise)
-        assert noise_mod is None or noise_mod.last_noise is None
+        # Before any evaluation - noise is configured but not yet applied
+        assert noise.last_noise is None
 
         # After evaluation
         func([0.0, 0.0])
-        noise_mod = func.modifiers.get_by_type(type(noise))
-        assert noise_mod.last_noise is not None
+        assert noise.last_noise is not None
 
     def test_modifiers_property(self):
         """Test that modifiers property returns the configured modifiers."""
         noise = GaussianNoise(sigma=0.1, seed=42)
         func = SphereFunction(n_dim=2, modifiers=[noise])
 
-        assert func.modifiers.get_by_type(type(noise)) is noise
+        assert noise in func.modifiers
 
     def test_no_noise_by_default(self):
         """Test that functions have no noise by default."""
         func = SphereFunction(n_dim=2)
 
         assert len(func.modifiers) == 0
-        noise_mod = func.modifiers.get_by_type(GaussianNoise) or func.modifiers.get_by_type(UniformNoise) or func.modifiers.get_by_type(MultiplicativeNoise)
-        assert noise_mod is None or noise_mod.last_noise is None
 
         result1 = func([1.0, 2.0])
         result2 = func([1.0, 2.0])

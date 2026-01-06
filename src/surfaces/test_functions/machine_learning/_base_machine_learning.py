@@ -112,13 +112,14 @@ class MachineLearningFunction(BaseTestFunction):
             raw_value = self.pure_objective_function(params)
 
         # Apply modifiers if configured
-        if len(self._modifiers) > 0:
+        if self._modifiers:
             context = {
                 "evaluation_count": self.n_evaluations,
                 "best_score": self.best_score,
                 "search_data": self.search_data,
             }
-            raw_value = self._modifiers.apply(raw_value, params, context)
+            for modifier in self._modifiers:
+                raw_value = modifier.apply(raw_value, params, context)
 
         if self.objective == "minimize":
             return -raw_value

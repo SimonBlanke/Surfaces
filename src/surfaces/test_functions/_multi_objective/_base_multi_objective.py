@@ -4,12 +4,11 @@
 
 """Base class for multi-objective optimization test functions."""
 
-import time
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 
-from surfaces.modifiers import BaseModifier, ModifierPipeline
+from surfaces.modifiers import BaseModifier
 
 
 class MultiObjectiveFunction:
@@ -77,7 +76,7 @@ class MultiObjectiveFunction:
     @_create_objective_function_
     def __init__(self, n_dim: int, modifiers: Optional[List[BaseModifier]] = None):
         self.n_dim = n_dim
-        self._modifiers: ModifierPipeline = ModifierPipeline(modifiers if modifiers is not None else [])
+        self._modifiers: List[BaseModifier] = modifiers if modifiers is not None else []
 
     def _create_objective_function(self):
         raise NotImplementedError("'_create_objective_function' must be implemented")
@@ -155,9 +154,11 @@ class MultiObjectiveFunction:
 
         # Apply modifiers for side-effects (e.g., delay)
         # We pass the first objective value through the modifier pipeline
-        if len(self._modifiers) > 0:
+        if self._modifiers:
             context = {}
-            _ = self._modifiers.apply(result[0], params, context)
+            value = result[0]
+            for modifier in self._modifiers:
+                value = modifier.apply(value, params, context)
 
         return result
 

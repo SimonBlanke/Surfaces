@@ -7,7 +7,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
 
 import numpy as np
 
-from surfaces.modifiers import BaseModifier, ModifierPipeline
+from surfaces.modifiers import BaseModifier
 
 
 class BaseTestFunction:
@@ -252,7 +252,7 @@ class BaseTestFunction:
         self.memory = memory
         self.collect_data = collect_data
         self.catch_errors: Optional[Dict[Type[Exception], float]] = catch_errors
-        self._modifiers: ModifierPipeline = ModifierPipeline(modifiers if modifiers is not None else [])
+        self._modifiers: List[BaseModifier] = modifiers if modifiers is not None else []
         self._memory_cache: Dict[Tuple, float] = {}
 
         # Normalize callbacks to list
@@ -362,13 +362,14 @@ class BaseTestFunction:
             raise
 
         # Apply modifiers if configured
-        if len(self._modifiers) > 0:
+        if self._modifiers:
             context = {
                 "evaluation_count": self.n_evaluations,
                 "best_score": self.best_score,
                 "search_data": self.search_data,
             }
-            raw_value = self._modifiers.apply(raw_value, params, context)
+            for modifier in self._modifiers:
+                raw_value = modifier.apply(raw_value, params, context)
 
         if self.objective == "maximize":
             return -raw_value
@@ -475,13 +476,14 @@ class BaseTestFunction:
         """Reset all modifiers' internal state.
 
         Resets evaluation counters, random states, and any other
-        stateful components in the modifier pipeline.
+        stateful components in the modifiers list.
         """
-        self._modifiers.reset()
+        for modifier in self._modifiers:
+            modifier.reset()
 
     @property
-    def modifiers(self) -> ModifierPipeline:
-        """The modifier pipeline for this function."""
+    def modifiers(self) -> List[BaseModifier]:
+        """The list of modifiers for this function."""
         return self._modifiers
 
     # =========================================================================
