@@ -6,9 +6,9 @@ import numpy as np
 from sklearn.model_selection import cross_val_score
 from sklearn.neighbors import KNeighborsRegressor
 
-from .._base_regression import BaseRegression
-
 from surfaces.modifiers import BaseModifier
+
+from .._base_regression import BaseRegression
 from ..datasets import DATASETS
 
 

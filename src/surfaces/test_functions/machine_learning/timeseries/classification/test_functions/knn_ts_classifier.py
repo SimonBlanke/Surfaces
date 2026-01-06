@@ -7,9 +7,9 @@ from sklearn.model_selection import cross_val_score
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler
 
-from .._base_ts_classification import BaseTSClassification
-
 from surfaces.modifiers import BaseModifier
+
+from .._base_ts_classification import BaseTSClassification
 from ..datasets import DATASETS
 
 

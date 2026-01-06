@@ -8,9 +8,9 @@ from typing import Any, Dict, List, Optional
 
 import numpy as np
 
-from ._base_engineering_function import EngineeringFunction
-
 from surfaces.modifiers import BaseModifier
+
+from ._base_engineering_function import EngineeringFunction
 
 
 class PressureVesselFunction(EngineeringFunction):

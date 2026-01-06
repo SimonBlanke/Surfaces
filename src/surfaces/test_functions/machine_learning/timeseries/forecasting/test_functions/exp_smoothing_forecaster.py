@@ -2,9 +2,9 @@
 
 from typing import Any, Dict, List, Optional
 
-from .._base_forecasting import BaseForecasting
-
 from surfaces.modifiers import BaseModifier
+
+from .._base_forecasting import BaseForecasting
 from ..datasets import DATASETS
 
 

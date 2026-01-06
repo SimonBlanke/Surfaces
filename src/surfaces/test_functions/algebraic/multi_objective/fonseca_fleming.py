@@ -10,8 +10,6 @@ import numpy as np
 
 from ._base_multi_objective import MultiObjectiveFunction
 
-from surfaces.modifiers import BaseModifier
-
 
 class FonsecaFleming(MultiObjectiveFunction):
     """Fonseca-Fleming multi-objective test function.

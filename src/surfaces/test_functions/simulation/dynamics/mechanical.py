@@ -113,9 +113,7 @@ class DampedOscillatorFunction(ODESimulationFunction):
         """Return initial conditions [position, velocity]."""
         return np.array([self.x0, self.v0])
 
-    def _ode_system(
-        self, t: float, y: np.ndarray, params: Dict[str, Any]
-    ) -> np.ndarray:
+    def _ode_system(self, t: float, y: np.ndarray, params: Dict[str, Any]) -> np.ndarray:
         """Damped oscillator ODE system.
 
         dx/dt = v
@@ -131,9 +129,7 @@ class DampedOscillatorFunction(ODESimulationFunction):
 
         return np.array([dx_dt, dv_dt])
 
-    def _compute_objective(
-        self, t: np.ndarray, y: np.ndarray, params: Dict[str, Any]
-    ) -> float:
+    def _compute_objective(self, t: np.ndarray, y: np.ndarray, params: Dict[str, Any]) -> float:
         """Compute objective from oscillator trajectory."""
         x = y[0, :]  # Position
         c = params["damping"]

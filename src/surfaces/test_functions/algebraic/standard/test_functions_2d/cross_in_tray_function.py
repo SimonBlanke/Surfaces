@@ -2,12 +2,13 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-import math
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from ..._base_algebraic_function import AlgebraicFunction
+import numpy as np
 
 from surfaces.modifiers import BaseModifier
+
+from ..._base_algebraic_function import AlgebraicFunction
 
 
 class CrossInTrayFunction(AlgebraicFunction):
@@ -114,10 +115,10 @@ class CrossInTrayFunction(AlgebraicFunction):
             x = params["x0"]
             y = params["x1"]
 
-            loss1 = math.sin(self.angle * x) * math.sin(self.angle * y)
-            loss2 = math.exp(abs(self.B - (math.sqrt(x**2 + y**2) / math.pi)))
+            loss1 = np.sin(self.angle * x) * np.sin(self.angle * y)
+            loss2 = np.exp(np.abs(self.B - (np.sqrt(x**2 + y**2) / np.pi)))
 
-            return self.A * (abs(loss1 * loss2) + 1) ** 0.1
+            return self.A * (np.abs(loss1 * loss2) + 1) ** 0.1
 
         self.pure_objective_function = cross_in_tray_function
 

@@ -11,42 +11,44 @@ This module contains well-known benchmark suites from the optimization community
 
 # BBOB functions
 from .bbob import (
-    BBOBFunction,
-    # Separable (f1-f5)
-    Sphere,
-    EllipsoidalSeparable,
-    RastriginSeparable,
-    BuecheRastrigin,
-    LinearSlope,
+    BBOB_FUNCTIONS,
     # Low/Moderate Conditioning (f6-f9)
     AttractiveSector,
-    StepEllipsoidal,
-    RosenbrockOriginal,
-    RosenbrockRotated,
+    BBOBFunction,
+    BentCigar,
+    BuecheRastrigin,
+    DifferentPowers,
+    Discus,
     # High Conditioning & Unimodal (f10-f14)
     EllipsoidalRotated,
-    Discus,
-    BentCigar,
-    SharpRidge,
-    DifferentPowers,
+    EllipsoidalSeparable,
+    Gallagher21,
+    Gallagher101,
+    GriewankRosenbrock,
+    Katsuura,
+    LinearSlope,
+    LunacekBiRastrigin,
     # Multimodal with Adequate Global Structure (f15-f19)
     RastriginRotated,
-    Weierstrass,
+    RastriginSeparable,
+    RosenbrockOriginal,
+    RosenbrockRotated,
     SchaffersF7,
     SchaffersF7Ill,
-    GriewankRosenbrock,
     # Multimodal with Weak Global Structure (f20-f24)
     Schwefel,
-    Gallagher101,
-    Gallagher21,
-    Katsuura,
-    LunacekBiRastrigin,
+    SharpRidge,
+    # Separable (f1-f5)
+    Sphere,
+    StepEllipsoidal,
+    Weierstrass,
+    bbob_functions,
 )
-from .bbob import bbob_functions, BBOB_FUNCTIONS
 
 # CEC functions (require cec data package)
 try:
     from .cec import CECFunction
+
     cec_functions = []  # CEC functions are loaded dynamically
 except ImportError:
     cec_functions = []

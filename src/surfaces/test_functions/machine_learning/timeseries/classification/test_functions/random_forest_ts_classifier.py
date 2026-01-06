@@ -6,9 +6,9 @@ import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_val_score
 
-from .._base_ts_classification import BaseTSClassification
-
 from surfaces.modifiers import BaseModifier
+
+from .._base_ts_classification import BaseTSClassification
 from ..datasets import DATASETS
 
 

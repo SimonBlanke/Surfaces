@@ -2,11 +2,11 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import Any, Callable, Dict, List, Optional, Union
-
-from ..._base_algebraic_function import AlgebraicFunction
+from typing import Any, Dict, List, Optional
 
 from surfaces.modifiers import BaseModifier
+
+from ..._base_algebraic_function import AlgebraicFunction
 
 
 class HimmelblausFunction(AlgebraicFunction):

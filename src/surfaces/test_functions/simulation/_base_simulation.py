@@ -15,8 +15,6 @@ dependencies (FEniCS, OpenMM, Cantera, etc.).
 from abc import abstractmethod
 from typing import Any, Callable, Dict, List, Optional, Union
 
-import numpy as np
-
 from surfaces.modifiers import BaseModifier
 
 from .._base_test_function import BaseTestFunction

@@ -4,9 +4,9 @@
 
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from ..._base_algebraic_function import AlgebraicFunction
-
 from surfaces.modifiers import BaseModifier
+
+from ..._base_algebraic_function import AlgebraicFunction
 
 
 class SphereFunction(AlgebraicFunction):

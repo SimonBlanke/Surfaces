@@ -22,7 +22,6 @@ import pytest
 
 from surfaces.test_functions.benchmark.bbob import (
     BBOB_FUNCTIONS,
-    bbob_functions,
     # Low/Moderate Conditioning (f6-f9)
     AttractiveSector,
     BentCigar,
@@ -52,6 +51,7 @@ from surfaces.test_functions.benchmark.bbob import (
     Sphere,
     StepEllipsoidal,
     Weierstrass,
+    bbob_functions,
 )
 
 # Organize functions by category

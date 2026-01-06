@@ -7,9 +7,9 @@ from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 
-from .._base_image_classification import BaseImageClassification
-
 from surfaces.modifiers import BaseModifier
+
+from .._base_image_classification import BaseImageClassification
 from ..datasets import DATASETS
 
 

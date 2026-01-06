@@ -277,7 +277,6 @@ class ShiftedRotatedNonContRastrigin(CEC2017Function):
             z = 0.0512 * shifted
             z = M @ z
 
-            D = self.n_dim
             result = np.sum(z**2 - 10 * np.cos(2 * np.pi * z) + 10)
 
             return result + self.f_global

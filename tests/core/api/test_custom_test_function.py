@@ -7,8 +7,8 @@
 import numpy as np
 import pytest
 
-from surfaces.test_functions._custom_test_function import CustomTestFunction
 from surfaces.modifiers import GaussianNoise
+from surfaces.test_functions._custom_test_function import CustomTestFunction
 
 
 class TestCustomTestFunctionBasic:

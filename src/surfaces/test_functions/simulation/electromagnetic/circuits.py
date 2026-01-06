@@ -117,32 +117,27 @@ class RLCCircuitFunction(ODESimulationFunction):
             # Sinusoidal input
             return self.V_amplitude * np.sin(2 * np.pi * self.V_frequency * t)
 
-    def _ode_system(
-        self, t: float, y: np.ndarray, params: Dict[str, Any]
-    ) -> np.ndarray:
+    def _ode_system(self, t: float, y: np.ndarray, params: Dict[str, Any]) -> np.ndarray:
         """RLC circuit ODE system.
 
         dQ/dt = I
         dI/dt = (V(t) - R*I - Q/C) / L
         """
-        Q, I = y
+        Q, current = y
         R = params["R"]
         L = params["L"]
         C = params["C"]
 
         V = self._voltage_input(t)
 
-        dQ_dt = I
-        dI_dt = (V - R * I - Q / C) / L
+        dQ_dt = current
+        dI_dt = (V - R * current - Q / C) / L
 
         return np.array([dQ_dt, dI_dt])
 
-    def _compute_objective(
-        self, t: np.ndarray, y: np.ndarray, params: Dict[str, Any]
-    ) -> float:
+    def _compute_objective(self, t: np.ndarray, y: np.ndarray, params: Dict[str, Any]) -> float:
         """Compute objective from circuit response."""
-        Q = y[0, :]  # Charge
-        I = y[1, :]  # Current
+        # y[0, :] = Charge, y[1, :] = Current (extracted in subclasses if needed)
 
         R = params["R"]
         L = params["L"]
@@ -287,13 +282,9 @@ class RCFilterFunction(ODESimulationFunction):
 
     def _voltage_input(self, t: float) -> float:
         """Generate input voltage signal."""
-        return self.V_in_dc + self.V_in_ac * np.sin(
-            2 * np.pi * self.input_frequency * t
-        )
+        return self.V_in_dc + self.V_in_ac * np.sin(2 * np.pi * self.input_frequency * t)
 
-    def _ode_system(
-        self, t: float, y: np.ndarray, params: Dict[str, Any]
-    ) -> np.ndarray:
+    def _ode_system(self, t: float, y: np.ndarray, params: Dict[str, Any]) -> np.ndarray:
         """RC filter ODE system.
 
         dV_out/dt = (V_in - V_out) / (R * C)
@@ -309,9 +300,7 @@ class RCFilterFunction(ODESimulationFunction):
 
         return np.array([dV_out_dt])
 
-    def _compute_objective(
-        self, t: np.ndarray, y: np.ndarray, params: Dict[str, Any]
-    ) -> float:
+    def _compute_objective(self, t: np.ndarray, y: np.ndarray, params: Dict[str, Any]) -> float:
         """Compute objective from filter response."""
         V_out = y[0, :]
         R = params["R"]

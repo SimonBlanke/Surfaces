@@ -109,9 +109,7 @@ class LotkaVolterraFunction(ODESimulationFunction):
         """Return initial populations [prey, predator]."""
         return np.array([self.x0, self.y0])
 
-    def _ode_system(
-        self, t: float, y: np.ndarray, params: Dict[str, Any]
-    ) -> np.ndarray:
+    def _ode_system(self, t: float, y: np.ndarray, params: Dict[str, Any]) -> np.ndarray:
         """Lotka-Volterra ODE system.
 
         dx/dt = alpha*x - beta*x*y
@@ -128,9 +126,7 @@ class LotkaVolterraFunction(ODESimulationFunction):
 
         return np.array([dx_dt, dy_dt])
 
-    def _compute_objective(
-        self, t: np.ndarray, y: np.ndarray, params: Dict[str, Any]
-    ) -> float:
+    def _compute_objective(self, t: np.ndarray, y: np.ndarray, params: Dict[str, Any]) -> float:
         """Compute objective from population trajectories."""
         prey = y[0, :]
         predator = y[1, :]

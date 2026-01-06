@@ -5,9 +5,9 @@ from typing import Any, Dict, List, Optional
 from sklearn.model_selection import cross_val_score
 from sklearn.tree import DecisionTreeClassifier
 
-from .._base_classification import BaseClassification
-
 from surfaces.modifiers import BaseModifier
+
+from .._base_classification import BaseClassification
 from ..datasets import DATASETS
 
 

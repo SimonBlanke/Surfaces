@@ -5,7 +5,7 @@
 """Base class for ODE-based simulation test functions."""
 
 from abc import abstractmethod
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 from scipy.integrate import solve_ivp
@@ -79,9 +79,7 @@ class ODESimulationFunction(SimulationFunction):
         super().__init__(**kwargs)
 
     @abstractmethod
-    def _ode_system(
-        self, t: float, y: np.ndarray, params: Dict[str, Any]
-    ) -> np.ndarray:
+    def _ode_system(self, t: float, y: np.ndarray, params: Dict[str, Any]) -> np.ndarray:
         """Define the ODE system dy/dt = f(t, y, params).
 
         Parameters
@@ -112,9 +110,7 @@ class ODESimulationFunction(SimulationFunction):
         pass
 
     @abstractmethod
-    def _compute_objective(
-        self, t: np.ndarray, y: np.ndarray, params: Dict[str, Any]
-    ) -> float:
+    def _compute_objective(self, t: np.ndarray, y: np.ndarray, params: Dict[str, Any]) -> float:
         """Compute objective value from ODE solution.
 
         Parameters

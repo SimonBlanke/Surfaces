@@ -6,9 +6,9 @@ import numpy as np
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.model_selection import TimeSeriesSplit
 
-from .._base_forecasting import BaseForecasting
-
 from surfaces.modifiers import BaseModifier
+
+from .._base_forecasting import BaseForecasting
 from ..datasets import DATASETS
 
 

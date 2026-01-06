@@ -111,9 +111,7 @@ class ConsecutiveReactionFunction(ODESimulationFunction):
         """Return initial concentrations [A, B, C]."""
         return np.array([self.A0, self.B0, self.C0])
 
-    def _ode_system(
-        self, t: float, y: np.ndarray, params: Dict[str, Any]
-    ) -> np.ndarray:
+    def _ode_system(self, t: float, y: np.ndarray, params: Dict[str, Any]) -> np.ndarray:
         """Consecutive reaction ODE system.
 
         dA/dt = -k1 * A
@@ -130,11 +128,9 @@ class ConsecutiveReactionFunction(ODESimulationFunction):
 
         return np.array([dA_dt, dB_dt, dC_dt])
 
-    def _compute_objective(
-        self, t: np.ndarray, y: np.ndarray, params: Dict[str, Any]
-    ) -> float:
+    def _compute_objective(self, t: np.ndarray, y: np.ndarray, params: Dict[str, Any]) -> float:
         """Compute objective from concentration trajectories."""
-        A = y[0, :]
+        _A = y[0, :]  # noqa: F841 - extracted for completeness
         B = y[1, :]
         C = y[2, :]
 

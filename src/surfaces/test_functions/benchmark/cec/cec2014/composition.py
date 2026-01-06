@@ -531,7 +531,7 @@ class CompositionFunction7(_CompositionBase):
         def hybrid1(z: np.ndarray) -> float:
             # Similar to F17: Elliptic + Bent Cigar + Rastrigin
             D = len(z)
-            g1, g2, g3 = D // 3, D // 3, D - 2 * (D // 3)
+            g1, g2 = D // 3, D // 3
             return (
                 _high_conditioned_elliptic(z[:g1])
                 + _bent_cigar(z[g1 : g1 + g2])
@@ -541,7 +541,7 @@ class CompositionFunction7(_CompositionBase):
         def hybrid2(z: np.ndarray) -> float:
             # Similar to F18: Griewank + Weierstrass + Rosenbrock
             D = len(z)
-            g1, g2, g3 = D // 3, D // 3, D - 2 * (D // 3)
+            g1, g2 = D // 3, D // 3
             return _griewank(z[:g1]) + _weierstrass(z[g1 : g1 + g2]) + _rosenbrock(z[g1 + g2 :])
 
         def hybrid3(z: np.ndarray) -> float:
@@ -550,7 +550,6 @@ class CompositionFunction7(_CompositionBase):
             g1 = D // 4
             g2 = D // 4
             g3 = D // 4
-            g4 = D - 3 * (D // 4)
             return (
                 _griewank(z[:g1])
                 + _weierstrass(z[g1 : g1 + g2])
@@ -605,7 +604,6 @@ class CompositionFunction8(_CompositionBase):
             g1 = D // 4
             g2 = D // 4
             g3 = D // 4
-            g4 = D - 3 * (D // 4)
             return (
                 _hgbat(z[:g1])
                 + _discus(z[g1 : g1 + g2])

@@ -4,8 +4,6 @@
 
 """Tests for collection module."""
 
-import pytest
-
 
 class TestCollectionImports:
     """Test that collection can be imported."""
@@ -267,9 +265,8 @@ class TestCollectionIteration:
         assert len(collection) > 50
 
     def test_contains(self):
-        from surfaces.test_functions import SphereFunction
-
         from surfaces import collection
+        from surfaces.test_functions import SphereFunction
 
         assert SphereFunction in collection.quick
         assert SphereFunction in collection

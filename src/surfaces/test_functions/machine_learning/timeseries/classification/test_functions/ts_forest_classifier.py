@@ -2,9 +2,9 @@
 
 from typing import Any, Dict, List, Optional
 
-from .._base_ts_classification import BaseTSClassification
-
 from surfaces.modifiers import BaseModifier
+
+from .._base_ts_classification import BaseTSClassification
 from ..datasets import DATASETS
 
 

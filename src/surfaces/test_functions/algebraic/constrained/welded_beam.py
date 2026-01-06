@@ -8,9 +8,9 @@ from typing import Any, Dict, List, Optional
 
 import numpy as np
 
-from ._base_engineering_function import EngineeringFunction
-
 from surfaces.modifiers import BaseModifier
+
+from ._base_engineering_function import EngineeringFunction
 
 
 class WeldedBeamFunction(EngineeringFunction):
@@ -179,18 +179,18 @@ class WeldedBeamFunction(EngineeringFunction):
     def raw_objective(self, params: Dict[str, Any]) -> float:
         """Calculate fabrication cost."""
         h = params["h"]
-        l = params["l"]
+        weld_len = params["l"]
         t = params["t"]
         b = params["b"]
 
         # Weld cost + beam material cost
-        cost = 1.10471 * h**2 * l + 0.04811 * t * b * (14.0 + l)
+        cost = 1.10471 * h**2 * weld_len + 0.04811 * t * b * (14.0 + weld_len)
         return cost
 
     def _calculate_stresses(self, params: Dict[str, Any]) -> tuple:
         """Calculate shear and bending stresses."""
         h = params["h"]
-        l = params["l"]
+        weld_len = params["l"]
         t = params["t"]
         b = params["b"]
         P = self.P
@@ -198,17 +198,17 @@ class WeldedBeamFunction(EngineeringFunction):
 
         # Weld geometry
         # Primary shear stress
-        tau_prime = P / (np.sqrt(2) * h * l)
+        tau_prime = P / (np.sqrt(2) * h * weld_len)
 
         # Secondary shear stress (due to moment)
-        M = P * (L + l / 2)
-        R = np.sqrt(l**2 / 4 + ((h + t) / 2) ** 2)
-        J = 2 * (np.sqrt(2) * h * l * (l**2 / 12 + ((h + t) / 2) ** 2))
+        M = P * (L + weld_len / 2)
+        R = np.sqrt(weld_len**2 / 4 + ((h + t) / 2) ** 2)
+        J = 2 * (np.sqrt(2) * h * weld_len * (weld_len**2 / 12 + ((h + t) / 2) ** 2))
 
         tau_double_prime = M * R / J
 
         # Combined shear stress (using resultant)
-        cos_theta = l / (2 * R)
+        cos_theta = weld_len / (2 * R)
         tau = np.sqrt(
             tau_prime**2 + 2 * tau_prime * tau_double_prime * cos_theta + tau_double_prime**2
         )
@@ -221,7 +221,6 @@ class WeldedBeamFunction(EngineeringFunction):
     def constraints(self, params: Dict[str, Any]) -> List[float]:
         """Evaluate design constraints."""
         h = params["h"]
-        l = params["l"]
         t = params["t"]
         b = params["b"]
         P = self.P

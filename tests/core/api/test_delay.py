@@ -60,10 +60,7 @@ class TestDelayIntegration:
 
     def test_delay_with_sphere_function(self):
         """Test DelayModifier integrated with SphereFunction."""
-        func = SphereFunction(
-            n_dim=2,
-            modifiers=[DelayModifier(delay=0.05)]
-        )
+        func = SphereFunction(n_dim=2, modifiers=[DelayModifier(delay=0.05)])
 
         start = time.perf_counter()
         result = func({"x0": 1.0, "x1": 1.0})
@@ -74,10 +71,7 @@ class TestDelayIntegration:
 
     def test_multiple_evaluations_delay(self):
         """Test that each evaluation is delayed."""
-        func = SphereFunction(
-            n_dim=2,
-            modifiers=[DelayModifier(delay=0.02)]
-        )
+        func = SphereFunction(n_dim=2, modifiers=[DelayModifier(delay=0.02)])
 
         n_evals = 5
         start = time.perf_counter()
@@ -90,10 +84,7 @@ class TestDelayIntegration:
 
     def test_true_value_bypasses_delay(self):
         """Test that true_value() bypasses the delay modifier."""
-        func = SphereFunction(
-            n_dim=2,
-            modifiers=[DelayModifier(delay=0.1)]
-        )
+        func = SphereFunction(n_dim=2, modifiers=[DelayModifier(delay=0.1)])
 
         start = time.perf_counter()
         result = func.true_value({"x0": 1.0, "x1": 1.0})

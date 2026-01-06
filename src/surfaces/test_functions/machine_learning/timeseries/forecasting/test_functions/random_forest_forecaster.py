@@ -6,9 +6,9 @@ import numpy as np
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import TimeSeriesSplit
 
-from .._base_forecasting import BaseForecasting
-
 from surfaces.modifiers import BaseModifier
+
+from .._base_forecasting import BaseForecasting
 from ..datasets import DATASETS
 from .gradient_boosting_forecaster import create_lagged_features
 

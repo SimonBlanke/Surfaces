@@ -2,24 +2,33 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-"""Electromagnetic simulation functions (Meep-based).
+"""Electromagnetic simulation functions.
 
-This module provides FDTD electromagnetic benchmarks including:
+This module provides optimization benchmarks for electromagnetic systems:
+
+ODE-based (scipy.integrate):
+- Electrical circuits (RLC, RC filters)
+
+FDTD-based (future, requires meep):
 - Waveguide optimization
 - Antenna design
 - Photonic device optimization
 
-Requirements
-------------
-- meep
-- numpy
-
 Examples
 --------
->>> from surfaces.test_functions.simulation.electromagnetic import WaveguideSplitter
->>> func = WaveguideSplitter(wavelength=1.55, resolution=20)
->>> result = func(design_params)
+>>> from surfaces.test_functions.simulation.electromagnetic import RLCCircuitFunction
+>>> func = RLCCircuitFunction(target_frequency=100.0)
+>>> result = func({"R": 10.0, "L": 0.01, "C": 0.0001})
 """
 
-__all__: list = []
-electromagnetic_functions: list = []
+from .circuits import RCFilterFunction, RLCCircuitFunction
+
+__all__ = [
+    "RLCCircuitFunction",
+    "RCFilterFunction",
+]
+
+electromagnetic_functions = [
+    RLCCircuitFunction,
+    RCFilterFunction,
+]

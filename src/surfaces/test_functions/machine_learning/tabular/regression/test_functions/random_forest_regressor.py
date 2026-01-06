@@ -6,9 +6,9 @@ import numpy as np
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import cross_val_score
 
-from .._base_regression import BaseRegression
-
 from surfaces.modifiers import BaseModifier
+
+from .._base_regression import BaseRegression
 from ..datasets import DATASETS
 
 

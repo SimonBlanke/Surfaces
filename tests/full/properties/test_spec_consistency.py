@@ -8,7 +8,7 @@ import inspect
 
 import pytest
 
-import surfaces.test_functions.cec.cec2014 as cec2014
+import surfaces.test_functions.benchmark.cec.cec2014 as cec2014
 from tests.conftest import func_id, instantiate_function
 
 CEC2014_FUNCTIONS = [

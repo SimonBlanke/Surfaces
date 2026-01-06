@@ -34,6 +34,17 @@ from ..test_functions.algebraic import (
     StyblinskiTangFunction,
     ThreeHumpCamelFunction,
 )
+
+# =============================================================================
+# Engineering Functions (always available - numpy only)
+# =============================================================================
+from ..test_functions.algebraic.constrained import (
+    CantileverBeamFunction,
+    PressureVesselFunction,
+    TensionCompressionSpringFunction,
+    ThreeBarTrussFunction,
+    WeldedBeamFunction,
+)
 from ..test_functions.benchmark.bbob import (
     # Low/Moderate Conditioning (f6-f9)
     AttractiveSector,
@@ -134,17 +145,6 @@ from ..test_functions.benchmark.cec.cec2017 import (
 )
 from ..test_functions.benchmark.cec.cec2017 import (
     ShiftedRotatedSchwefel as CEC2017_ShiftedRotatedSchwefel,
-)
-
-# =============================================================================
-# Engineering Functions (always available - numpy only)
-# =============================================================================
-from ..test_functions.algebraic.constrained import (
-    CantileverBeamFunction,
-    PressureVesselFunction,
-    TensionCompressionSpringFunction,
-    ThreeBarTrussFunction,
-    WeldedBeamFunction,
 )
 
 # =============================================================================

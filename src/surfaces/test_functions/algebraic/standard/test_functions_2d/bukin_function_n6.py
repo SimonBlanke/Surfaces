@@ -2,12 +2,13 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-import math
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from ..._base_algebraic_function import AlgebraicFunction
+import numpy as np
 
 from surfaces.modifiers import BaseModifier
+
+from ..._base_algebraic_function import AlgebraicFunction
 
 
 class BukinFunctionN6(AlgebraicFunction):
@@ -94,7 +95,7 @@ class BukinFunctionN6(AlgebraicFunction):
             x = params["x0"]
             y = params["x1"]
 
-            return 100 * math.sqrt(abs(y - 0.01 * x**2)) + 0.01 * abs(x + 10)
+            return 100 * np.sqrt(np.abs(y - 0.01 * x**2)) + 0.01 * np.abs(x + 10)
 
         self.pure_objective_function = bukin_function_n6
 

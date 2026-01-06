@@ -87,7 +87,11 @@ def test_search_space_nd_custom_bounds(test_function):
 @pytest.mark.ml
 @pytest.mark.parametrize(*machine_learning_functions_d)
 def test_ml_search_space(test_function):
-    """Test that ML functions have valid search_space."""
+    """Test that ML functions have valid search_space.
+
+    Note: This test only validates search_space structure, not function evaluation.
+    Function evaluation is tested in test_input_formats_ml.py with faster functions.
+    """
     try:
         test_function_ = test_function()
     except ImportError as e:
@@ -97,10 +101,8 @@ def test_ml_search_space(test_function):
     assert isinstance(search_space, dict)
     assert len(search_space) > 0
 
-    # Test that the function works
-    sample_params = {
-        key: list(values)[0] if hasattr(values, "__iter__") else values
-        for key, values in search_space.items()
-    }
-    result = test_function_(sample_params)
-    assert isinstance(result, (int, float))
+    # Validate search space structure (without calling the expensive ML function)
+    for key, values in search_space.items():
+        assert isinstance(key, str), f"Key {key} should be string"
+        assert hasattr(values, "__iter__"), f"Values for {key} should be iterable"
+        assert len(list(values)) > 0, f"Values for {key} should not be empty"

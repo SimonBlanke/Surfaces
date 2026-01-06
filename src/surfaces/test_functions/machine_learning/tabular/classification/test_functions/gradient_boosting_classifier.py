@@ -6,9 +6,9 @@ import numpy as np
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.model_selection import cross_val_score
 
-from .._base_classification import BaseClassification
-
 from surfaces.modifiers import BaseModifier
+
+from .._base_classification import BaseClassification
 from ..datasets import DATASETS
 
 

@@ -10,9 +10,9 @@ import inspect
 import numpy as np
 import pytest
 
-import surfaces.test_functions.cec.cec2013 as cec2013
-import surfaces.test_functions.cec.cec2014 as cec2014
-import surfaces.test_functions.cec.cec2017 as cec2017
+import surfaces.test_functions.benchmark.cec.cec2013 as cec2013
+import surfaces.test_functions.benchmark.cec.cec2014 as cec2014
+import surfaces.test_functions.benchmark.cec.cec2017 as cec2017
 from surfaces.test_functions.machine_learning import machine_learning_functions
 
 # Build CEC function lists dynamically

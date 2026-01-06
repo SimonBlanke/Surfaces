@@ -12,66 +12,64 @@ This module contains three categories of algebraic functions:
 
 from ._base_algebraic_function import AlgebraicFunction, MathematicalFunction
 
+# Constrained functions (engineering design problems)
+from .constrained import (
+    CantileverBeamFunction,
+    EngineeringFunction,
+    PressureVesselFunction,
+    TensionCompressionSpringFunction,
+    ThreeBarTrussFunction,
+    WeldedBeamFunction,
+    constrained_functions,
+)
+
+# Multi-objective functions
+from .multi_objective import (
+    ZDT1,
+    FonsecaFleming,
+    Kursawe,
+    MultiObjectiveFunction,
+    multi_objective_functions,
+)
+
 # Standard functions (1D, 2D, ND)
 from .standard import (
-    # 1D
-    DampedSineFunction,
-    ForresterFunction,
-    GramacyAndLeeFunction,
-    QuadraticExponentialFunction,
-    SineProductFunction,
     # 2D
     AckleyFunction,
     BealeFunction,
     BoothFunction,
     BukinFunctionN6,
     CrossInTrayFunction,
+    # 1D
+    DampedSineFunction,
     DropWaveFunction,
     EasomFunction,
     EggholderFunction,
+    ForresterFunction,
     GoldsteinPriceFunction,
+    GramacyAndLeeFunction,
+    # ND
+    GriewankFunction,
     HimmelblausFunction,
     HölderTableFunction,
     LangermannFunction,
     LeviFunctionN13,
     MatyasFunction,
     McCormickFunction,
-    SchafferFunctionN2,
-    SimionescuFunction,
-    ThreeHumpCamelFunction,
-    # ND
-    GriewankFunction,
+    QuadraticExponentialFunction,
     RastriginFunction,
     RosenbrockFunction,
+    SchafferFunctionN2,
+    SimionescuFunction,
+    SineProductFunction,
     SphereFunction,
     StyblinskiTangFunction,
-)
-from .standard import (
+    ThreeHumpCamelFunction,
     standard_functions,
     standard_functions_1d,
     standard_functions_2d,
     standard_functions_nd,
 )
-
-# Constrained functions (engineering design problems)
-from .constrained import (
-    EngineeringFunction,
-    CantileverBeamFunction,
-    PressureVesselFunction,
-    TensionCompressionSpringFunction,
-    ThreeBarTrussFunction,
-    WeldedBeamFunction,
-)
-from .constrained import constrained_functions
-
-# Multi-objective functions
-from .multi_objective import (
-    MultiObjectiveFunction,
-    FonsecaFleming,
-    Kursawe,
-    ZDT1,
-)
-from .multi_objective import multi_objective_functions
 
 __all__ = [
     # Base classes

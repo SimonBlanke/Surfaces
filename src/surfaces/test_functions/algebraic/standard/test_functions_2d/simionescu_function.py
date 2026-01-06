@@ -3,11 +3,11 @@
 # License: MIT License
 
 import math
-from typing import Any, Callable, Dict, List, Optional, Union
-
-from ..._base_algebraic_function import AlgebraicFunction
+from typing import Any, Dict, List, Optional
 
 from surfaces.modifiers import BaseModifier
+
+from ..._base_algebraic_function import AlgebraicFunction
 
 
 class SimionescuFunction(AlgebraicFunction):
@@ -124,12 +124,12 @@ class SimionescuFunction(AlgebraicFunction):
 
             # Use atan2 for safe handling of y=0 case
             constraint_radius = self.r_T + self.r_S * math.cos(self.n * math.atan2(x, y))
-            constraint = constraint_radius ** 2
+            constraint = constraint_radius**2
 
             # Check if point is within the constraint boundary
             if x**2 + y**2 <= constraint:
                 return self.A * x * y
-            return float('nan')
+            return float("nan")
 
         self.pure_objective_function = simionescu_function
 

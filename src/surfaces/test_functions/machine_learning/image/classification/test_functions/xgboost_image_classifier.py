@@ -4,9 +4,9 @@ from typing import Any, Dict, List, Optional
 
 import numpy as np
 
-from .._base_image_classification import BaseImageClassification
-
 from surfaces.modifiers import BaseModifier
+
+from .._base_image_classification import BaseImageClassification
 from ..datasets import DATASETS
 
 
