@@ -1,7 +1,7 @@
 """Using noise modifiers to simulate noisy objective functions."""
 
+from surfaces.modifiers import GaussianNoise, MultiplicativeNoise, UniformNoise
 from surfaces.test_functions import SphereFunction
-from surfaces.modifiers import GaussianNoise, UniformNoise, MultiplicativeNoise
 
 # Create a function with Gaussian noise
 gaussian_noise = GaussianNoise(sigma=0.1, seed=42)
@@ -19,10 +19,7 @@ for i in range(5):
 print(f"  Last noise added: {gaussian_noise.last_noise:.4f}")
 
 # Uniform noise example
-uniform_sphere = SphereFunction(
-    n_dim=2,
-    modifiers=[UniformNoise(low=-0.5, high=0.5, seed=42)]
-)
+uniform_sphere = SphereFunction(n_dim=2, modifiers=[UniformNoise(low=-0.5, high=0.5, seed=42)])
 
 print("\nUniform Noise (low=-0.5, high=0.5):")
 print(f"  True value at {point}: {uniform_sphere.true_value(point)}")
@@ -31,10 +28,7 @@ for i in range(5):
     print(f"  Evaluation {i+1}: {result:.4f}")
 
 # Multiplicative noise - scales with function value
-mult_sphere = SphereFunction(
-    n_dim=2,
-    modifiers=[MultiplicativeNoise(sigma=0.1, seed=42)]
-)
+mult_sphere = SphereFunction(n_dim=2, modifiers=[MultiplicativeNoise(sigma=0.1, seed=42)])
 
 print("\nMultiplicative Noise (sigma=0.1):")
 print(f"  True value at {point}: {mult_sphere.true_value(point)}")
@@ -44,11 +38,7 @@ for i in range(5):
 
 # Noise scheduling - decay noise over evaluations
 scheduled_noise = GaussianNoise(
-    sigma=1.0,
-    sigma_final=0.01,
-    schedule="linear",
-    total_evaluations=100,
-    seed=42
+    sigma=1.0, sigma_final=0.01, schedule="linear", total_evaluations=100, seed=42
 )
 scheduled_sphere = SphereFunction(n_dim=2, modifiers=[scheduled_noise])
 
@@ -56,11 +46,7 @@ print("\nScheduled Noise (linear decay from 1.0 to 0.01 over 100 evals):")
 for eval_num in [1, 25, 50, 75, 100]:
     # Reset to start fresh
     scheduled_noise = GaussianNoise(
-        sigma=1.0,
-        sigma_final=0.01,
-        schedule="linear",
-        total_evaluations=100,
-        seed=42
+        sigma=1.0, sigma_final=0.01, schedule="linear", total_evaluations=100, seed=42
     )
     # Simulate evaluations up to eval_num
     for _ in range(eval_num):

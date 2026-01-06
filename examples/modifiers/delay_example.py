@@ -2,13 +2,13 @@
 
 import time
 
-from surfaces.test_functions import SphereFunction
 from surfaces.modifiers import DelayModifier
+from surfaces.test_functions import SphereFunction
 
 # Create a function with artificial delay
 slow_sphere = SphereFunction(
     n_dim=2,
-    modifiers=[DelayModifier(delay=0.1)]  # 100ms delay per evaluation
+    modifiers=[DelayModifier(delay=0.1)],  # 100ms delay per evaluation
 )
 
 point = {"x0": 1.0, "x1": 1.0}
@@ -21,7 +21,7 @@ start = time.perf_counter()
 result = slow_sphere(point)
 elapsed = time.perf_counter() - start
 
-print(f"Single evaluation:")
+print("Single evaluation:")
 print(f"  Result: {result}")
 print(f"  Time: {elapsed*1000:.1f}ms (expected: ~100ms)")
 

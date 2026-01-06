@@ -2,8 +2,8 @@
 
 import time
 
-from surfaces.test_functions import SphereFunction
 from surfaces.modifiers import DelayModifier, GaussianNoise
+from surfaces.test_functions import SphereFunction
 
 # Real-world scenario: expensive noisy function
 # Modifiers are applied in order: delay first, then noise
@@ -29,14 +29,14 @@ for i in range(5):
     print(f"  Evaluation {i+1}: {result:.4f}")
 elapsed = time.perf_counter() - start
 
-print(f"\nStatistics:")
+print("\nStatistics:")
 print(f"  Mean: {sum(results)/len(results):.4f}")
 print(f"  Total time: {elapsed*1000:.1f}ms")
 print(f"  Per evaluation: {elapsed/len(results)*1000:.1f}ms")
 
 # Access modifiers list
 modifiers = realistic_sphere.modifiers
-print(f"\nModifiers info:")
+print("\nModifiers info:")
 print(f"  Number of modifiers: {len(modifiers)}")
 print(f"  Modifiers: {modifiers}")
 
