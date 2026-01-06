@@ -162,7 +162,7 @@ All test functions support:
 Modifiers allow you to augment test functions with effects like noise, delays, or transformations. They are applied in the order specified:
 
 ```python
-from surfaces.test_functions.algebraic.test_functions_nd import SphereFunction
+from surfaces.test_functions.algebraic import SphereFunction
 from surfaces.modifiers import DelayModifier, GaussianNoise
 
 func = SphereFunction(
