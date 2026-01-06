@@ -2,16 +2,12 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
-
-import numpy as np
+import math
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from .._base_algebraic_function import AlgebraicFunction
 
 from surfaces.modifiers import BaseModifier
-
-if TYPE_CHECKING:
-    pass
 
 
 class EasomFunction(AlgebraicFunction):
@@ -74,7 +70,7 @@ class EasomFunction(AlgebraicFunction):
     }
 
     f_global = -1.0
-    x_global = np.array([np.pi, np.pi])
+    x_global = (math.pi, math.pi)
 
     default_bounds = (-10.0, 10.0)
     n_dim = 2
@@ -115,8 +111,8 @@ class EasomFunction(AlgebraicFunction):
             x = params["x0"]
             y = params["x1"]
 
-            loss1 = self.A * np.cos(x * self.angle) * np.cos(y * self.angle)
-            loss2 = np.exp(-((x - np.pi / self.B) ** 2 + (y - np.pi / self.B) ** 2))
+            loss1 = self.A * math.cos(x * self.angle) * math.cos(y * self.angle)
+            loss2 = math.exp(-((x - math.pi / self.B) ** 2 + (y - math.pi / self.B) ** 2))
 
             return loss1 * loss2
 

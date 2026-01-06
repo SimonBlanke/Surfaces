@@ -2,16 +2,12 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
-
-import numpy as np
+import math
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from .._base_algebraic_function import AlgebraicFunction
 
 from surfaces.modifiers import BaseModifier
-
-if TYPE_CHECKING:
-    pass
 
 
 class HölderTableFunction(AlgebraicFunction):
@@ -67,13 +63,11 @@ class HölderTableFunction(AlgebraicFunction):
     }
 
     f_global = -19.2085
-    x_global = np.array(
-        [
-            [8.05502, 9.66459],
-            [8.05502, -9.66459],
-            [-8.05502, 9.66459],
-            [-8.05502, -9.66459],
-        ]
+    x_global = (
+        (8.05502, 9.66459),
+        (8.05502, -9.66459),
+        (-8.05502, 9.66459),
+        (-8.05502, -9.66459),
     )
 
     default_bounds = (-10.0, 10.0)
@@ -113,10 +107,10 @@ class HölderTableFunction(AlgebraicFunction):
             x = params["x0"]
             y = params["x1"]
 
-            loss1 = np.sin(self.angle * x) * np.cos(self.angle * y)
-            loss2 = np.exp(abs(1 - (np.sqrt(x**2 + y**2) / np.pi)))
+            loss1 = math.sin(self.angle * x) * math.cos(self.angle * y)
+            loss2 = math.exp(abs(1 - (math.sqrt(x**2 + y**2) / math.pi)))
 
-            return -np.abs(loss1 * loss2)
+            return -abs(loss1 * loss2)
 
         self.pure_objective_function = hölder_table_function
 

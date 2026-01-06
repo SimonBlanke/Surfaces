@@ -2,9 +2,8 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
-
-import numpy as np
+import math
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from .._base_algebraic_function import AlgebraicFunction
 
@@ -70,9 +69,9 @@ class LangermannFunction(AlgebraicFunction):
     reference = None
     reference_url = "https://www.sfu.ca/~ssurjano/langer.html"
 
-    c = np.array([1, 2, 5, 2, 3])
+    c = (1, 2, 5, 2, 3)
     m = 5
-    A = np.array([[3, 5, 2, 1, 7], [5, 2, 1, 4, 9]])
+    A = ((3, 5, 2, 1, 7), (5, 2, 1, 4, 9))
 
     def __init__(
         self,
@@ -99,13 +98,13 @@ class LangermannFunction(AlgebraicFunction):
                     dim_str = "x" + str(dim)
                     x = params[dim_str]
 
-                    loss_sum2 += x - self.A[dim, m]
-                    loss_sum3 += x - self.A[dim, m]
+                    loss_sum2 += x - self.A[dim][m]
+                    loss_sum3 += x - self.A[dim][m]
 
-                loss_sum2 *= -1 / np.pi
-                loss_sum3 *= np.pi
+                loss_sum2 *= -1 / math.pi
+                loss_sum3 *= math.pi
 
-            return loss_sum1 * np.exp(loss_sum2) * np.cos(loss_sum3)
+            return loss_sum1 * math.exp(loss_sum2) * math.cos(loss_sum3)
 
         self.pure_objective_function = langermann_function
 

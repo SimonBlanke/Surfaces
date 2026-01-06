@@ -2,9 +2,8 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
-
-import numpy as np
+import math
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from .._base_algebraic_function import AlgebraicFunction
 
@@ -70,7 +69,7 @@ class ForresterFunction(AlgebraicFunction):
     }
 
     f_global = -6.020740055766075
-    x_global = np.array([0.7572487144081974])
+    x_global = (0.7572487144081974,)
 
     default_bounds = (0.0, 1.0)
     n_dim = 1
@@ -103,7 +102,7 @@ class ForresterFunction(AlgebraicFunction):
         def forrester_function(params: Dict[str, Any]) -> float:
             x = params["x0"]
 
-            return ((6 * x - 2) ** 2) * np.sin(12 * x - 4)
+            return ((6 * x - 2) ** 2) * math.sin(12 * x - 4)
 
         self.pure_objective_function = forrester_function
 

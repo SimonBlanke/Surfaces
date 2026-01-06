@@ -2,9 +2,8 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
-
-import numpy as np
+import math
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from .._base_algebraic_function import AlgebraicFunction
 
@@ -66,7 +65,7 @@ class GramacyAndLeeFunction(AlgebraicFunction):
     }
 
     f_global = -0.869011134989500
-    x_global = np.array([0.548563444114526])
+    x_global = (0.548563444114526,)
 
     default_bounds = (0.5, 2.5)
     n_dim = 1
@@ -99,7 +98,7 @@ class GramacyAndLeeFunction(AlgebraicFunction):
         def gramacy_and_lee_function(params: Dict[str, Any]) -> float:
             x = params["x0"]
 
-            return (np.sin(10 * np.pi * x) / (2 * x)) + (x - 1) ** 4
+            return (math.sin(10 * math.pi * x) / (2 * x)) + (x - 1) ** 4
 
         self.pure_objective_function = gramacy_and_lee_function
 

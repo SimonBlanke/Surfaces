@@ -2,9 +2,8 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
-
-import numpy as np
+import math
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from .._base_algebraic_function import AlgebraicFunction
 
@@ -61,7 +60,7 @@ class BukinFunctionN6(AlgebraicFunction):
     }
 
     f_global = 0.0
-    x_global = np.array([-10.0, 1.0])
+    x_global = (-10.0, 1.0)
 
     default_bounds = (-8.0, 8.0)
     n_dim = 2
@@ -95,7 +94,7 @@ class BukinFunctionN6(AlgebraicFunction):
             x = params["x0"]
             y = params["x1"]
 
-            return 100 * np.sqrt(np.abs(y - 0.01 * x**2)) + 0.01 * np.abs(x + 10)
+            return 100 * math.sqrt(abs(y - 0.01 * x**2)) + 0.01 * abs(x + 10)
 
         self.pure_objective_function = bukin_function_n6
 

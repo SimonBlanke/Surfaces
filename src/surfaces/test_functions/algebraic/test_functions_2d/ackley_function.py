@@ -2,9 +2,8 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
-
-import numpy as np
+import math
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from .._base_algebraic_function import AlgebraicFunction
 
@@ -73,7 +72,7 @@ class AckleyFunction(AlgebraicFunction):
     }
 
     f_global = 0.0
-    x_global = np.array([0.0, 0.0])
+    x_global = (0.0, 0.0)
 
     default_bounds = (-5.0, 5.0)
     n_dim = 2
@@ -93,7 +92,7 @@ class AckleyFunction(AlgebraicFunction):
     def __init__(
         self,
         A: float = 20,
-        angle: float = 2 * np.pi,
+        angle: float = 2 * math.pi,
         objective: str = "minimize",
         modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
@@ -113,9 +112,9 @@ class AckleyFunction(AlgebraicFunction):
             x = params["x0"]
             y = params["x1"]
 
-            loss1 = -self.A * np.exp(-0.2 * np.sqrt(0.5 * (x * x + y * y)))
-            loss2 = -np.exp(0.5 * (np.cos(self.angle * x) + np.cos(self.angle * y)))
-            loss3 = np.exp(1)
+            loss1 = -self.A * math.exp(-0.2 * math.sqrt(0.5 * (x * x + y * y)))
+            loss2 = -math.exp(0.5 * (math.cos(self.angle * x) + math.cos(self.angle * y)))
+            loss3 = math.exp(1)
             loss4 = self.A
 
             return loss1 + loss2 + loss3 + loss4

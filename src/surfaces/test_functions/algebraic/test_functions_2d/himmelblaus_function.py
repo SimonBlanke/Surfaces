@@ -2,16 +2,11 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
-
-import numpy as np
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from .._base_algebraic_function import AlgebraicFunction
 
 from surfaces.modifiers import BaseModifier
-
-if TYPE_CHECKING:
-    pass
 
 
 class HimmelblausFunction(AlgebraicFunction):
@@ -72,13 +67,11 @@ class HimmelblausFunction(AlgebraicFunction):
     }
 
     f_global = 0.0
-    x_global = np.array(
-        [
-            [3.0, 2.0],
-            [-2.805118, 3.131312],
-            [-3.779310, -3.283186],
-            [3.584428, -1.848126],
-        ]
+    x_global = (
+        (3.0, 2.0),
+        (-2.805118, 3.131312),
+        (-3.779310, -3.283186),
+        (3.584428, -1.848126),
     )
 
     default_bounds = (-5.0, 5.0)

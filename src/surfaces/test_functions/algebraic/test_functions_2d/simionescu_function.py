@@ -2,16 +2,12 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
-
-import numpy as np
+import math
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from .._base_algebraic_function import AlgebraicFunction
 
 from surfaces.modifiers import BaseModifier
-
-if TYPE_CHECKING:
-    pass
 
 
 class SimionescuFunction(AlgebraicFunction):
@@ -78,11 +74,9 @@ class SimionescuFunction(AlgebraicFunction):
     }
 
     f_global = -0.072
-    x_global = np.array(
-        [
-            [0.84852813, -0.84852813],
-            [-0.84852813, 0.84852813],
-        ]
+    x_global = (
+        (0.84852813, -0.84852813),
+        (-0.84852813, 0.84852813),
     )
 
     default_bounds = (-1.25, 1.25)
@@ -125,22 +119,17 @@ class SimionescuFunction(AlgebraicFunction):
 
     def _create_objective_function(self) -> None:
         def simionescu_function(params: Dict[str, Any]) -> float:
-            x = np.asarray(params["x0"]).reshape(-1)
-            y = np.asarray(params["x1"]).reshape(-1)
+            x = params["x0"]
+            y = params["x1"]
 
-            condition = (self.r_T + self.r_S * np.cos(self.n * np.arctan(x / y))) ** 2
+            # Use atan2 for safe handling of y=0 case
+            constraint_radius = self.r_T + self.r_S * math.cos(self.n * math.atan2(x, y))
+            constraint = constraint_radius ** 2
 
-            mask = x**2 + y**2 <= condition
-            mask_int = mask.astype(int)
-
-            loss = self.A * x * y
-            loss = mask_int * loss
-            loss[~mask] = np.nan
-
-            # Return scalar if input was scalar
-            if loss.size == 1:
-                return float(loss[0])
-            return loss
+            # Check if point is within the constraint boundary
+            if x**2 + y**2 <= constraint:
+                return self.A * x * y
+            return float('nan')
 
         self.pure_objective_function = simionescu_function
 

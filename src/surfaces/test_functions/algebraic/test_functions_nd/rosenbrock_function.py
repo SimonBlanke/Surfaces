@@ -2,9 +2,7 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
-
-import numpy as np
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from .._base_algebraic_function import AlgebraicFunction
 
@@ -110,7 +108,7 @@ class RosenbrockFunction(AlgebraicFunction):
 
         self.A = A
         self.B = B
-        self.x_global = np.ones(n_dim)
+        self.x_global = tuple(1.0 for _ in range(n_dim))
 
     def _create_objective_function(self) -> None:
         def rosenbrock_function(params: Dict[str, Any]) -> float:

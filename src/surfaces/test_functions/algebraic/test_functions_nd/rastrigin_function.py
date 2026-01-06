@@ -2,9 +2,8 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
-
-import numpy as np
+import math
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from .._base_algebraic_function import AlgebraicFunction
 
@@ -91,7 +90,7 @@ class RastriginFunction(AlgebraicFunction):
         self,
         n_dim: int,
         A: float = 10,
-        angle: float = 2 * np.pi,
+        angle: float = 2 * math.pi,
         objective: str = "minimize",
         modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
@@ -104,7 +103,7 @@ class RastriginFunction(AlgebraicFunction):
         self.n_dim = n_dim
         self.A = A
         self.angle = angle
-        self.x_global = np.zeros(n_dim)
+        self.x_global = tuple(0.0 for _ in range(n_dim))
 
     def _create_objective_function(self) -> None:
         def rastrigin_function(params: Dict[str, Any]) -> float:
@@ -113,7 +112,7 @@ class RastriginFunction(AlgebraicFunction):
                 dim_str = "x" + str(dim)
                 x = params[dim_str]
 
-                loss += x * x - self.A * np.cos(self.angle * x)
+                loss += x * x - self.A * math.cos(self.angle * x)
 
             return self.A * self.n_dim + loss
 

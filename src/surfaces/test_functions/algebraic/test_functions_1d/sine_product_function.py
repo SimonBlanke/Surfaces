@@ -2,9 +2,8 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
-
-import numpy as np
+import math
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from .._base_algebraic_function import AlgebraicFunction
 
@@ -69,7 +68,7 @@ class SineProductFunction(AlgebraicFunction):
     }
 
     f_global = -7.916727371587256
-    x_global = np.array([7.9786653537049483])
+    x_global = (7.9786653537049483,)
 
     default_bounds = (0.0, 10.0)
     n_dim = 1
@@ -102,7 +101,7 @@ class SineProductFunction(AlgebraicFunction):
         def sine_product_function(params: Dict[str, Any]) -> float:
             x = params["x0"]
 
-            return -x * np.sin(x)
+            return -x * math.sin(x)
 
         self.pure_objective_function = sine_product_function
 

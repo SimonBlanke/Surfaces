@@ -2,9 +2,8 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
-
-import numpy as np
+import math
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from .._base_algebraic_function import AlgebraicFunction
 
@@ -58,7 +57,7 @@ class SchafferFunctionN2(AlgebraicFunction):
     }
 
     f_global = 0.0
-    x_global = np.array([0.0, 0.0])
+    x_global = (0.0, 0.0)
 
     default_bounds = (-50.0, 50.0)
     n_dim = 2
@@ -92,7 +91,7 @@ class SchafferFunctionN2(AlgebraicFunction):
             x = params["x0"]
             y = params["x1"]
 
-            return 0.5 + (np.sin(x**2 - y**2) ** 2 - 0.5) / ((1 + 0.001 * (x**2 + y**2)) ** 2)
+            return 0.5 + (math.sin(x**2 - y**2) ** 2 - 0.5) / ((1 + 0.001 * (x**2 + y**2)) ** 2)
 
         self.pure_objective_function = schaffer_function_n2
 

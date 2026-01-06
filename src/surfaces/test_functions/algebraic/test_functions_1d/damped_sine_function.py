@@ -2,9 +2,8 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
-
-import numpy as np
+import math
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from .._base_algebraic_function import AlgebraicFunction
 
@@ -69,7 +68,7 @@ class DampedSineFunction(AlgebraicFunction):
     }
 
     f_global = -0.8242393984760573
-    x_global = np.array([0.6795787635255166])
+    x_global = (0.6795787635255166,)
 
     default_bounds = (-10.0, 10.0)
     n_dim = 1
@@ -102,7 +101,7 @@ class DampedSineFunction(AlgebraicFunction):
         def damped_sine_function(params: Dict[str, Any]) -> float:
             x = params["x0"]
 
-            return -(x + np.sin(x)) * np.exp(-(x**2))
+            return -(x + math.sin(x)) * math.exp(-(x**2))
 
         self.pure_objective_function = damped_sine_function
 

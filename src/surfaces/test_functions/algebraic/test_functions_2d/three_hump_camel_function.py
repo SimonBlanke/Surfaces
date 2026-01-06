@@ -2,9 +2,7 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
-
-import numpy as np
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from .._base_algebraic_function import AlgebraicFunction
 
@@ -60,7 +58,7 @@ class ThreeHumpCamelFunction(AlgebraicFunction):
     }
 
     f_global = 0.0
-    x_global = np.array([0.0, 0.0])
+    x_global = (0.0, 0.0)
 
     default_bounds = (-5.0, 5.0)
     n_dim = 2

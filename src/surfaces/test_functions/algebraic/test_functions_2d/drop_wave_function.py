@@ -2,9 +2,8 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
-
-import numpy as np
+import math
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from .._base_algebraic_function import AlgebraicFunction
 
@@ -60,7 +59,7 @@ class DropWaveFunction(AlgebraicFunction):
     }
 
     f_global = -1.0
-    x_global = np.array([0.0, 0.0])
+    x_global = (0.0, 0.0)
 
     default_bounds = (-5.0, 5.0)
     n_dim = 2
@@ -94,7 +93,7 @@ class DropWaveFunction(AlgebraicFunction):
             x = params["x0"]
             y = params["x1"]
 
-            return -(1 + np.cos(12 * np.sqrt(x**2 + y**2))) / (0.5 * (x**2 + y**2) + 2)
+            return -(1 + math.cos(12 * math.sqrt(x**2 + y**2))) / (0.5 * (x**2 + y**2) + 2)
 
         self.pure_objective_function = drop_wave_function
 

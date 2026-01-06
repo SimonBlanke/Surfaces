@@ -2,9 +2,8 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
-
-import numpy as np
+import math
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from .._base_algebraic_function import AlgebraicFunction
 
@@ -69,7 +68,7 @@ class QuadraticExponentialFunction(AlgebraicFunction):
     }
 
     f_global = -3.8504507087979953
-    x_global = np.array([2.8680325095605212])
+    x_global = (2.8680325095605212,)
 
     default_bounds = (1.9, 3.9)
     n_dim = 1
@@ -102,7 +101,7 @@ class QuadraticExponentialFunction(AlgebraicFunction):
         def quadratic_exponential_function(params: Dict[str, Any]) -> float:
             x = params["x0"]
 
-            return -(16 * x**2 - 24 * x + 5) * np.exp(-x)
+            return -(16 * x**2 - 24 * x + 5) * math.exp(-x)
 
         self.pure_objective_function = quadratic_exponential_function
 

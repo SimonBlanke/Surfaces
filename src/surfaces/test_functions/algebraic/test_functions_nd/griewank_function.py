@@ -2,9 +2,8 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
-
-import numpy as np
+import math
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from .._base_algebraic_function import AlgebraicFunction
 
@@ -93,7 +92,7 @@ class GriewankFunction(AlgebraicFunction):
     ) -> None:
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = n_dim
-        self.x_global = np.zeros(n_dim)
+        self.x_global = tuple(0.0 for _ in range(n_dim))
 
     def _create_objective_function(self) -> None:
         def griewank_function(params: Dict[str, Any]) -> float:
@@ -104,7 +103,7 @@ class GriewankFunction(AlgebraicFunction):
                 x = params[dim_str]
 
                 loss_sum += x**2 / 4000
-                loss_product *= np.cos(x / np.sqrt(dim + 1))
+                loss_product *= math.cos(x / math.sqrt(dim + 1))
 
             return loss_sum - loss_product + 1
 

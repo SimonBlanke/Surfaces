@@ -2,9 +2,8 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
-
-import numpy as np
+import math
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from .._base_algebraic_function import AlgebraicFunction
 
@@ -58,7 +57,7 @@ class McCormickFunction(AlgebraicFunction):
     }
 
     f_global = -1.9133
-    x_global = np.array([-0.54719, -1.54719])
+    x_global = (-0.54719, -1.54719)
 
     default_bounds = (-5.0, 5.0)
     n_dim = 2
@@ -92,7 +91,7 @@ class McCormickFunction(AlgebraicFunction):
             x = params["x0"]
             y = params["x1"]
 
-            return np.sin(x + y) + (x - y) ** 2 - 1.5 * x + 2.5 * y + 1
+            return math.sin(x + y) + (x - y) ** 2 - 1.5 * x + 2.5 * y + 1
 
         self.pure_objective_function = mccormick_function
 

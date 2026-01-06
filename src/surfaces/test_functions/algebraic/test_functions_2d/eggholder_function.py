@@ -2,9 +2,8 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
-
-import numpy as np
+import math
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from .._base_algebraic_function import AlgebraicFunction
 
@@ -58,7 +57,7 @@ class EggholderFunction(AlgebraicFunction):
     }
 
     f_global = -959.6407
-    x_global = np.array([512.0, 404.2319])
+    x_global = (512.0, 404.2319)
 
     default_bounds = (-1000.0, 1000.0)
     n_dim = 2
@@ -94,8 +93,8 @@ class EggholderFunction(AlgebraicFunction):
             x = params["x0"]
             y = params["x1"]
 
-            return -(y + 47) * np.sin(np.sqrt(np.abs(x / 2 + (y + 47)))) - x * np.sin(
-                np.sqrt(np.abs(x - (y + 47)))
+            return -(y + 47) * math.sin(math.sqrt(abs(x / 2 + (y + 47)))) - x * math.sin(
+                math.sqrt(abs(x - (y + 47)))
             )
 
         self.pure_objective_function = eggholder_function

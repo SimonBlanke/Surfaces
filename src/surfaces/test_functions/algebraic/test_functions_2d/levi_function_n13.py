@@ -2,9 +2,8 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
-
-import numpy as np
+import math
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from .._base_algebraic_function import AlgebraicFunction
 
@@ -58,7 +57,7 @@ class LeviFunctionN13(AlgebraicFunction):
     }
 
     f_global = 0.0
-    x_global = np.array([1.0, 1.0])
+    x_global = (1.0, 1.0)
 
     default_bounds = (-10.0, 10.0)
     n_dim = 2
@@ -95,9 +94,9 @@ class LeviFunctionN13(AlgebraicFunction):
             y = params["x1"]
 
             return (
-                np.sin(3 * np.pi * x) ** 2
-                + (x + 1) ** 2 * (1 + np.sin(3 * np.pi * y) ** 2)
-                + (y - 1) ** 2 * (1 + np.sin(3 * np.pi * y) ** 2)
+                math.sin(3 * math.pi * x) ** 2
+                + (x + 1) ** 2 * (1 + math.sin(3 * math.pi * y) ** 2)
+                + (y - 1) ** 2 * (1 + math.sin(3 * math.pi * y) ** 2)
             )
 
         self.pure_objective_function = levi_function_n13

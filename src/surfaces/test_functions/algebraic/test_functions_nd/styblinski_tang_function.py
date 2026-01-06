@@ -2,9 +2,7 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
-
-import numpy as np
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from .._base_algebraic_function import AlgebraicFunction
 
@@ -86,7 +84,7 @@ class StyblinskiTangFunction(AlgebraicFunction):
     ) -> None:
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = n_dim
-        self.x_global = np.full(n_dim, -2.903534)
+        self.x_global = tuple(-2.903534 for _ in range(n_dim))
         self.f_global = -39.16617 * n_dim
 
     def _create_objective_function(self) -> None:

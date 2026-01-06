@@ -2,9 +2,7 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
-
-import numpy as np
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from .._base_algebraic_function import AlgebraicFunction
 
@@ -100,7 +98,7 @@ class SphereFunction(AlgebraicFunction):
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = n_dim
         self.A = A
-        self.x_global = np.zeros(n_dim)
+        self.x_global = tuple(0.0 for _ in range(n_dim))
 
     def _create_objective_function(self) -> None:
         def sphere_function(params: Dict[str, Any]) -> float:
