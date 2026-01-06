@@ -35,7 +35,7 @@ CEC 2013
 
 .. code-block:: python
 
-    from surfaces.test_functions.cec import (
+    from surfaces.test_functions.benchmark.cec import (
         # Basic functions
         Rastrigin,
         RotatedRastrigin,
@@ -54,7 +54,7 @@ CEC 2014
 
 .. code-block:: python
 
-    from surfaces.test_functions.cec import (
+    from surfaces.test_functions.benchmark.cec import (
         # CEC 2014 functions
         # ...
     )
@@ -66,7 +66,7 @@ Updated benchmark suite with modern test functions.
 
 .. code-block:: python
 
-    from surfaces.test_functions.cec import (
+    from surfaces.test_functions.benchmark.cec import (
         # CEC 2017 functions
         # ...
     )
@@ -78,7 +78,7 @@ Usage Example
 
 .. code-block:: python
 
-    from surfaces.test_functions.cec import RotatedRastrigin
+    from surfaces.test_functions.benchmark.cec import RotatedRastrigin
 
     # Create a 10-dimensional function
     func = RotatedRastrigin(n_dim=10)

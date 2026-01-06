@@ -18,11 +18,11 @@ Functions that can be optimized dimension-by-dimension.
    :template: class.rst
    :nosignatures:
 
-   surfaces.test_functions.bbob.Sphere
-   surfaces.test_functions.bbob.EllipsoidalSeparable
-   surfaces.test_functions.bbob.RastriginSeparable
-   surfaces.test_functions.bbob.BuecheRastrigin
-   surfaces.test_functions.bbob.LinearSlope
+   surfaces.test_functions.benchmark.bbob.Sphere
+   surfaces.test_functions.benchmark.bbob.EllipsoidalSeparable
+   surfaces.test_functions.benchmark.bbob.RastriginSeparable
+   surfaces.test_functions.benchmark.bbob.BuecheRastrigin
+   surfaces.test_functions.benchmark.bbob.LinearSlope
 
 ----
 
@@ -36,10 +36,10 @@ Functions with condition numbers <= 10.
    :template: class.rst
    :nosignatures:
 
-   surfaces.test_functions.bbob.AttractiveSector
-   surfaces.test_functions.bbob.StepEllipsoidal
-   surfaces.test_functions.bbob.RosenbrockOriginal
-   surfaces.test_functions.bbob.RosenbrockRotated
+   surfaces.test_functions.benchmark.bbob.AttractiveSector
+   surfaces.test_functions.benchmark.bbob.StepEllipsoidal
+   surfaces.test_functions.benchmark.bbob.RosenbrockOriginal
+   surfaces.test_functions.benchmark.bbob.RosenbrockRotated
 
 ----
 
@@ -53,11 +53,11 @@ Ill-conditioned unimodal functions.
    :template: class.rst
    :nosignatures:
 
-   surfaces.test_functions.bbob.EllipsoidalRotated
-   surfaces.test_functions.bbob.Discus
-   surfaces.test_functions.bbob.BentCigar
-   surfaces.test_functions.bbob.SharpRidge
-   surfaces.test_functions.bbob.DifferentPowers
+   surfaces.test_functions.benchmark.bbob.EllipsoidalRotated
+   surfaces.test_functions.benchmark.bbob.Discus
+   surfaces.test_functions.benchmark.bbob.BentCigar
+   surfaces.test_functions.benchmark.bbob.SharpRidge
+   surfaces.test_functions.benchmark.bbob.DifferentPowers
 
 ----
 
@@ -71,11 +71,11 @@ Multimodal functions with a discernible global pattern.
    :template: class.rst
    :nosignatures:
 
-   surfaces.test_functions.bbob.RastriginRotated
-   surfaces.test_functions.bbob.Weierstrass
-   surfaces.test_functions.bbob.SchaffersF7
-   surfaces.test_functions.bbob.SchaffersF7Ill
-   surfaces.test_functions.bbob.GriewankRosenbrock
+   surfaces.test_functions.benchmark.bbob.RastriginRotated
+   surfaces.test_functions.benchmark.bbob.Weierstrass
+   surfaces.test_functions.benchmark.bbob.SchaffersF7
+   surfaces.test_functions.benchmark.bbob.SchaffersF7Ill
+   surfaces.test_functions.benchmark.bbob.GriewankRosenbrock
 
 ----
 
@@ -89,8 +89,8 @@ Highly deceptive multimodal functions.
    :template: class.rst
    :nosignatures:
 
-   surfaces.test_functions.bbob.Schwefel
-   surfaces.test_functions.bbob.Gallagher101
-   surfaces.test_functions.bbob.Gallagher21
-   surfaces.test_functions.bbob.Katsuura
-   surfaces.test_functions.bbob.LunacekBiRastrigin
+   surfaces.test_functions.benchmark.bbob.Schwefel
+   surfaces.test_functions.benchmark.bbob.Gallagher101
+   surfaces.test_functions.benchmark.bbob.Gallagher21
+   surfaces.test_functions.benchmark.bbob.Katsuura
+   surfaces.test_functions.benchmark.bbob.LunacekBiRastrigin

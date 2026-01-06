@@ -1,6 +1,6 @@
 """CEC 2017 Rastrigin - Shifted and rotated multimodal function."""
 
-from surfaces.test_functions.cec.cec2017 import ShiftedRotatedRastrigin
+from surfaces.test_functions.benchmark.cec.cec2017 import ShiftedRotatedRastrigin
 
 rastrigin = ShiftedRotatedRastrigin(n_dim=10)
 

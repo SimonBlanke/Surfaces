@@ -95,7 +95,7 @@ CEC functions have shifted optima:
 
 .. code-block:: python
 
-    from surfaces.test_functions.cec import RotatedRastrigin
+    from surfaces.test_functions.benchmark.cec import RotatedRastrigin
 
     func = RotatedRastrigin(n_dim=10)
 
@@ -122,7 +122,7 @@ Composition functions combine multiple basic functions:
 
 .. code-block:: python
 
-    from surfaces.test_functions.cec import CompositionFunction1
+    from surfaces.test_functions.benchmark.cec import CompositionFunction1
 
     func = CompositionFunction1(n_dim=10)
 
@@ -139,7 +139,7 @@ Usage Example
 
 .. code-block:: python
 
-    from surfaces.test_functions.cec.cec2013 import (
+    from surfaces.test_functions.benchmark.cec.cec2013 import (
         RotatedRastrigin,
         RotatedBentCigar,
         CompositionFunction1,
@@ -204,7 +204,7 @@ If you're preparing for CEC competitions:
 
 .. code-block:: python
 
-    from surfaces.test_functions.cec.cec2017 import (
+    from surfaces.test_functions.benchmark.cec.cec2017 import (
         # Import the specific year's functions
         # ...
     )

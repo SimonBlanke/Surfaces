@@ -175,7 +175,7 @@ known-first-party = ["surfaces"]
 # Pytest Configuration
 # =============================================================================
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests", "docs", "examples"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
 addopts = "-p no:warnings"

@@ -1,6 +1,6 @@
 """CEC 2013 Sphere - Unimodal baseline function."""
 
-from surfaces.test_functions.cec.cec2013 import Sphere
+from surfaces.test_functions.benchmark.cec.cec2013 import Sphere
 
 sphere = Sphere(n_dim=10)
 

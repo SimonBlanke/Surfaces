@@ -1,6 +1,6 @@
 """BBOB Sphere (f1) - Simplest separable function."""
 
-from surfaces.test_functions.bbob import Sphere
+from surfaces.test_functions.benchmark.bbob import Sphere
 
 sphere = Sphere(n_dim=3, instance=1)
 

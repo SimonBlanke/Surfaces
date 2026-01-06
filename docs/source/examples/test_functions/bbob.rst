@@ -18,7 +18,7 @@ Basic BBOB Usage
 .. code-block:: python
 
     import numpy as np
-    from surfaces.test_functions.bbob import (
+    from surfaces.test_functions.benchmark.bbob import (
         Sphere,
         RosenbrockRotated,
         RastriginRotated,
@@ -49,7 +49,7 @@ BBOB Function Groups
     """Evaluate functions from different BBOB groups."""
 
     import numpy as np
-    from surfaces.test_functions.bbob import (
+    from surfaces.test_functions.benchmark.bbob import (
         # Separable
         Sphere,
         EllipsoidalSeparable,

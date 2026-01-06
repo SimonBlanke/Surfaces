@@ -1,6 +1,6 @@
 """CEC 2014 Rotated Ackley - Multimodal benchmark function."""
 
-from surfaces.test_functions.cec.cec2014 import ShiftedRotatedAckley
+from surfaces.test_functions.benchmark.cec.cec2014 import ShiftedRotatedAckley
 
 ackley = ShiftedRotatedAckley(n_dim=10)
 

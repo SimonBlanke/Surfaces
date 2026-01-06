@@ -1,6 +1,6 @@
 """BBOB Rastrigin Rotated (f15) - Multimodal with adequate global structure."""
 
-from surfaces.test_functions.bbob import RastriginRotated
+from surfaces.test_functions.benchmark.bbob import RastriginRotated
 
 rastrigin = RastriginRotated(n_dim=2, instance=1)
 

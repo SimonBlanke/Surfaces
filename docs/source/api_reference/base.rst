@@ -37,7 +37,7 @@ BBOBFunction
 
 Base class for BBOB (Black-Box Optimization Benchmarking) functions.
 
-.. autoclass:: surfaces.test_functions.bbob._base_bbob.BBOBFunction
+.. autoclass:: surfaces.test_functions.benchmark.bbob._base_bbob.BBOBFunction
    :members:
    :show-inheritance:
 
@@ -46,28 +46,28 @@ CECFunction
 
 Base class for CEC competition benchmark functions.
 
-.. autoclass:: surfaces.test_functions.cec._base_cec.CECFunction
+.. autoclass:: surfaces.test_functions.benchmark.cec._base_cec.CECFunction
    :members:
    :show-inheritance:
 
 CEC2013Function
 """""""""""""""
 
-.. autoclass:: surfaces.test_functions.cec.cec2013._base_cec2013.CEC2013Function
+.. autoclass:: surfaces.test_functions.benchmark.cec.cec2013._base_cec2013.CEC2013Function
    :members:
    :show-inheritance:
 
 CEC2014Function
 """""""""""""""
 
-.. autoclass:: surfaces.test_functions.cec.cec2014._base_cec2014.CEC2014Function
+.. autoclass:: surfaces.test_functions.benchmark.cec.cec2014._base_cec2014.CEC2014Function
    :members:
    :show-inheritance:
 
 CEC2017Function
 """""""""""""""
 
-.. autoclass:: surfaces.test_functions.cec.cec2017._base_cec2017.CEC2017Function
+.. autoclass:: surfaces.test_functions.benchmark.cec.cec2017._base_cec2017.CEC2017Function
    :members:
    :show-inheritance:
 
@@ -122,6 +122,6 @@ EngineeringFunction
 
 Base class for engineering design optimization problems with constraints.
 
-.. autoclass:: surfaces.test_functions.engineering._base_engineering_function.EngineeringFunction
+.. autoclass:: surfaces.test_functions.algebraic.constrained._base_constrained_function.EngineeringFunction
    :members:
    :show-inheritance:

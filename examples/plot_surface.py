@@ -1,6 +1,6 @@
 import os
 
-from surfaces.test_functions.algebraic.test_functions_2d import AckleyFunction
+from surfaces.test_functions.algebraic import AckleyFunction
 from surfaces.visualize import plot_surface
 
 func = AckleyFunction()

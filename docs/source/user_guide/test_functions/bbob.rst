@@ -145,7 +145,7 @@ Usage Example
 
 .. code-block:: python
 
-    from surfaces.test_functions.bbob import (
+    from surfaces.test_functions.benchmark.bbob import (
         Sphere,
         RosenbrockRotated,
         RastriginRotated,

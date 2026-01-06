@@ -63,11 +63,11 @@ def get_all_test_functions() -> Dict[str, List[Type]]:
         categories["algebraic_2d"] = []
         categories["algebraic_nd"] = []
 
-    # Engineering functions (always available)
+    # Constrained/Engineering functions (always available)
     try:
-        from surfaces.test_functions.engineering import engineering_functions
+        from surfaces.test_functions.algebraic.constrained import constrained_functions
 
-        categories["engineering"] = list(engineering_functions)
+        categories["engineering"] = list(constrained_functions)
     except ImportError as e:
         print(f"Warning: Could not import engineering functions: {e}")
         categories["engineering"] = []
@@ -115,14 +115,14 @@ def get_all_test_functions() -> Dict[str, List[Type]]:
 
     # BBOB functions (if available)
     try:
-        from surfaces.test_functions.bbob import (
+        from surfaces.test_functions.benchmark.bbob import (
             high_conditioning,
             low_conditioning,
             multimodal_adequate,
             multimodal_weak,
             separable,
         )
-        from surfaces.test_functions.bbob._base_bbob import BBOBFunction
+        from surfaces.test_functions.benchmark.bbob._base_bbob import BBOBFunction
 
         bbob_funcs = []
         for module in [
@@ -150,7 +150,7 @@ def get_all_test_functions() -> Dict[str, List[Type]]:
 
     # CEC functions (if available)
     try:
-        from surfaces.test_functions import cec
+        from surfaces.test_functions.benchmark import cec
 
         cec_funcs = []
         for submodule_name in ["cec2014", "cec2017"]:

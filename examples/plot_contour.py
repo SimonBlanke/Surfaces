@@ -1,6 +1,6 @@
 import os
 
-from surfaces.test_functions.algebraic.test_functions_2d import BealeFunction
+from surfaces.test_functions.algebraic import BealeFunction
 from surfaces.visualize import plot_contour
 
 func = BealeFunction()

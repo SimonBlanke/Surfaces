@@ -1,6 +1,6 @@
 """BBOB Ellipsoidal Rotated (f10) - Ill-conditioned unimodal function."""
 
-from surfaces.test_functions.bbob import EllipsoidalRotated
+from surfaces.test_functions.benchmark.bbob import EllipsoidalRotated
 
 ellipsoid = EllipsoidalRotated(n_dim=3, instance=1)
 

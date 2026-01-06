@@ -120,7 +120,7 @@ def generate_bbob_overview() -> str:
     """Generate overview for BBOB Functions page."""
     # Get BBOB function counts by category (from __init__.py structure)
     try:
-        import surfaces.test_functions.bbob  # noqa: F401
+        import surfaces.test_functions.benchmark.bbob  # noqa: F401
 
         # Count based on BBOB function ID ranges
         # f1-f5: Separable, f6-f9: Low, f10-f14: High, f15-f19: Adequate, f20-f24: Weak
@@ -173,7 +173,7 @@ Surfaces provides all **{total} noiseless BBOB functions** (f1-f24), organized i
 def generate_cec_overview() -> str:
     """Generate overview for CEC Functions page."""
     try:
-        from surfaces.test_functions.cec import cec2013, cec2014, cec2017
+        from surfaces.test_functions.benchmark.cec import cec2013, cec2014, cec2017
 
         # Count excluding base classes
         n_2013 = len([x for x in cec2013.__all__ if not x.startswith("CEC20")])

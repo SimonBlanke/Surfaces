@@ -18,7 +18,7 @@ CEC 2013 Functions
 .. code-block:: python
 
     import numpy as np
-    from surfaces.test_functions.cec.cec2013 import (
+    from surfaces.test_functions.benchmark.cec.cec2013 import (
         RotatedRastrigin,
         RotatedBentCigar,
         CompositionFunction1,
@@ -46,7 +46,7 @@ Shifted Optima
 
     """Demonstrate that CEC optima are NOT at the origin."""
 
-    from surfaces.test_functions.cec.cec2013 import RotatedRastrigin
+    from surfaces.test_functions.benchmark.cec.cec2013 import RotatedRastrigin
     from surfaces.test_functions import RastriginFunction
 
     # Standard Rastrigin - optimum at origin
@@ -69,7 +69,7 @@ Composition Functions
     """CEC composition functions combine multiple landscapes."""
 
     import numpy as np
-    from surfaces.test_functions.cec.cec2013 import (
+    from surfaces.test_functions.benchmark.cec.cec2013 import (
         CompositionFunction1,
         CompositionFunction2,
         CompositionFunction3,
