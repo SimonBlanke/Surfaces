@@ -2,7 +2,6 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-import time
 from typing import Any, Callable, Dict, List, Optional, Union
 
 from surfaces.modifiers import BaseModifier
@@ -102,15 +101,24 @@ class MachineLearningFunction(BaseTestFunction):
 
         ML functions naturally return scores (higher is better),
         so we negate when objective is "minimize".
-        """
-        time.sleep(self.sleep)
 
+        Modifiers are applied after evaluation but before objective transformation.
+        """
         if self.use_surrogate and self._surrogate is not None:
             # Use _get_surrogate_params to include fixed params (dataset, cv)
             surrogate_params = self._get_surrogate_params(params)
             raw_value = self._surrogate.predict(surrogate_params)
         else:
             raw_value = self.pure_objective_function(params)
+
+        # Apply modifiers if configured
+        if len(self._modifiers) > 0:
+            context = {
+                "evaluation_count": self.n_evaluations,
+                "best_score": self.best_score,
+                "search_data": self.search_data,
+            }
+            raw_value = self._modifiers.apply(raw_value, params, context)
 
         if self.objective == "minimize":
             return -raw_value

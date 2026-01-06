@@ -63,7 +63,6 @@ class KNNTSClassifierFunction(BaseTSClassification):
         collect_data: bool = True,
         callbacks=None,
         catch_errors=None,
-        noise=None,
         use_surrogate: bool = False,
     ):
         if dataset not in DATASETS:
@@ -80,12 +79,11 @@ class KNNTSClassifierFunction(BaseTSClassification):
 
         super().__init__(
             objective=objective,
-            sleep=sleep,
+            modifiers=modifiers,
             memory=memory,
             collect_data=collect_data,
             callbacks=callbacks,
             catch_errors=catch_errors,
-            noise=noise,
             use_surrogate=use_surrogate,
         )
 

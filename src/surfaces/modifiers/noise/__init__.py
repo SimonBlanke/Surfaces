@@ -13,14 +13,18 @@ Examples
 Basic usage with a test function:
 
 >>> from surfaces.test_functions import SphereFunction
->>> from surfaces.noise import GaussianNoise
+>>> from surfaces.modifiers import GaussianNoise
 >>>
->>> noise = GaussianNoise(sigma=0.1, seed=42)
->>> func = SphereFunction(n_dim=2, noise=noise)
+>>> func = SphereFunction(
+...     n_dim=2,
+...     modifiers=[GaussianNoise(sigma=0.1, seed=42)]
+... )
 >>> result = func([0.5, 0.5])  # Returns noisy evaluation
 
 Decaying noise over optimization:
 
+>>> from surfaces.modifiers import GaussianNoise
+>>>
 >>> noise = GaussianNoise(
 ...     sigma=0.5,
 ...     sigma_final=0.01,
@@ -28,7 +32,7 @@ Decaying noise over optimization:
 ...     total_evaluations=1000,
 ...     seed=42
 ... )
->>> func = SphereFunction(n_dim=2, noise=noise)
+>>> func = SphereFunction(n_dim=2, modifiers=[noise])
 
 Available noise types:
 

@@ -2,7 +2,7 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
 
 import numpy as np
 
@@ -96,12 +96,11 @@ class HölderTableFunction(AlgebraicFunction):
         A=10,
         angle=1,
         objective="minimize",
-        sleep=0,
+        modifiers: Optional[List[BaseModifier]] = None,
         memory=False,
         collect_data=True,
         callbacks=None,
         catch_errors=None,
-        noise=None,
     ):
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 2

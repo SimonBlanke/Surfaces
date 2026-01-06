@@ -142,20 +142,18 @@ class ThreeBarTrussFunction(EngineeringFunction):
         memory: bool = False,
         collect_data: bool = True,
         callbacks=None,
-        catch_errors: bool = False,
-        noise=None,
+        catch_errors=None,
         penalty_coefficient: float = 1e6,
     ):
         self.P = P
         self.sigma_max = sigma_max
         super().__init__(
             objective,
-            sleep,
+            modifiers,
             memory,
             collect_data,
             callbacks,
             catch_errors,
-            noise,
             penalty_coefficient,
         )
 

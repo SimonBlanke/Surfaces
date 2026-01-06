@@ -90,15 +90,14 @@ class Gallagher101(BBOBFunction):
         n_dim=10,
         instance=1,
         objective="minimize",
-        sleep=0,
+        modifiers=None,
         memory=False,
         collect_data=True,
         callbacks=None,
         catch_errors=None,
-        noise=None,
     ):
         super().__init__(
-            n_dim, instance, objective, sleep, memory, collect_data, callbacks, catch_errors, noise
+            n_dim, instance, objective, modifiers, memory, collect_data, callbacks, catch_errors
         )
         self._setup_peaks(101)
 
@@ -167,15 +166,14 @@ class Gallagher21(BBOBFunction):
         n_dim=10,
         instance=1,
         objective="minimize",
-        sleep=0,
+        modifiers=None,
         memory=False,
         collect_data=True,
         callbacks=None,
         catch_errors=None,
-        noise=None,
     ):
         super().__init__(
-            n_dim, instance, objective, sleep, memory, collect_data, callbacks, catch_errors, noise
+            n_dim, instance, objective, modifiers, memory, collect_data, callbacks, catch_errors
         )
         self._setup_peaks(21)
 
