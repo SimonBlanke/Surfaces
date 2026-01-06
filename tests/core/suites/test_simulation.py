@@ -5,7 +5,6 @@
 """Tests for simulation-based test functions."""
 
 import numpy as np
-import pytest
 
 
 class TestSimulationImports:
