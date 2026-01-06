@@ -47,7 +47,7 @@ objective function landscape. These surrogates are:
 
 .. code-block:: python
 
-    from surfaces.test_functions import KNeighborsClassifierSurrogate
+    from surfaces.test_functions.machine_learning import KNeighborsClassifierSurrogate
 
     # This is FAST - uses pre-trained approximation
     func = KNeighborsClassifierSurrogate()
@@ -97,7 +97,7 @@ Compare optimizer performance on ML hyperparameter optimization:
 
 .. code-block:: python
 
-    from surfaces.test_functions import KNeighborsClassifierSurrogate
+    from surfaces.test_functions.machine_learning import KNeighborsClassifierSurrogate
     from scipy.optimize import differential_evolution
 
     # Create the surrogate function

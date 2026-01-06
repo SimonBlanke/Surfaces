@@ -3,7 +3,7 @@
 import numpy as np
 from scipy.optimize import minimize
 
-from surfaces.test_functions import RosenbrockFunction
+from surfaces.test_functions.algebraic import RosenbrockFunction
 
 # Create a 3-dimensional Rosenbrock function
 rosenbrock = RosenbrockFunction(n_dim=3)

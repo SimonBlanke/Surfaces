@@ -1,6 +1,6 @@
 """Random Forest Classifier - Hyperparameter tuning for ensemble models."""
 
-from surfaces.test_functions import RandomForestClassifierFunction
+from surfaces.test_functions.machine_learning import RandomForestClassifierFunction
 
 rf = RandomForestClassifierFunction()
 

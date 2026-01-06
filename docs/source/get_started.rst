@@ -71,7 +71,7 @@ Let's evaluate the classic Sphere function:
 
 .. code-block:: python
 
-    from surfaces.test_functions import SphereFunction
+    from surfaces.test_functions.algebraic import SphereFunction
 
     # Create a 2D Sphere function
     func = SphereFunction(n_dim=2)

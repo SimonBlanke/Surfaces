@@ -39,7 +39,7 @@ Each engineering function provides methods to work with constraints:
 
 .. code-block:: python
 
-    from surfaces.test_functions import WeldedBeamFunction
+    from surfaces.test_functions.algebraic import WeldedBeamFunction
 
     func = WeldedBeamFunction()
 
@@ -81,7 +81,7 @@ stress, deflection, and buckling constraints:
 
 .. code-block:: python
 
-    from surfaces.test_functions import WeldedBeamFunction
+    from surfaces.test_functions.algebraic import WeldedBeamFunction
     from scipy.optimize import differential_evolution
 
     # Create the function

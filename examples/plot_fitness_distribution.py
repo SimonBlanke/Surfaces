@@ -1,6 +1,6 @@
 import os
 
-from surfaces.test_functions.algebraic.test_functions_nd import GriewankFunction
+from surfaces.test_functions.algebraic import GriewankFunction
 from surfaces.visualize import plot_fitness_distribution
 
 func = GriewankFunction(n_dim=10)

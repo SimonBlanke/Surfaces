@@ -3,7 +3,7 @@
 import time
 
 from surfaces.modifiers import DelayModifier, GaussianNoise
-from surfaces.test_functions import SphereFunction
+from surfaces.test_functions.algebraic import SphereFunction
 
 # Real-world scenario: expensive noisy function
 # Modifiers are applied in order: delay first, then noise

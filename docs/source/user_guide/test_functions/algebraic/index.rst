@@ -90,7 +90,7 @@ Quick Start
 
 .. code-block:: python
 
-    from surfaces.test_functions import (
+    from surfaces.test_functions.algebraic import (
         # 2D only
         AckleyFunction,
         HimmelblausFunction,

@@ -1,6 +1,6 @@
 """Example: Using the Sphere function at different dimensions."""
 
-from surfaces.test_functions import SphereFunction
+from surfaces.test_functions.algebraic import SphereFunction
 
 # 1D Sphere function
 sphere_1d = SphereFunction(n_dim=1)

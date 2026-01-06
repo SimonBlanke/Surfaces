@@ -1,6 +1,6 @@
 """Pressure Vessel Design - Minimize cost of a cylindrical vessel."""
 
-from surfaces.test_functions import PressureVesselFunction
+from surfaces.test_functions.algebraic import PressureVesselFunction
 
 pressure_vessel = PressureVesselFunction()
 

@@ -8,7 +8,7 @@ for fast evaluation.
 
 import time
 
-from surfaces.test_functions import KNeighborsClassifierFunction
+from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
 
 def main():

@@ -6,7 +6,7 @@
 
 import pytest
 
-from surfaces.test_functions import RastriginFunction, SphereFunction
+from surfaces.test_functions.algebraic import RastriginFunction, SphereFunction
 from surfaces.test_functions.algebraic.constrained import CantileverBeamFunction
 
 

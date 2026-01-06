@@ -3,7 +3,7 @@
 import numpy as np
 from gradient_free_optimizers import HillClimbingOptimizer
 
-from surfaces.test_functions import SphereFunction
+from surfaces.test_functions.algebraic import SphereFunction
 
 # Create a 5-dimensional Sphere function
 sphere = SphereFunction(n_dim=5)

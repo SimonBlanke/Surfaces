@@ -24,7 +24,7 @@ Basic Usage
 .. code-block:: python
 
     import optuna
-    from surfaces.test_functions import RastriginFunction
+    from surfaces.test_functions.algebraic import RastriginFunction
 
     func = RastriginFunction(n_dim=5)
     space = func.search_space()
@@ -51,7 +51,7 @@ Optuna handles mixed continuous and categorical parameters:
 
 .. code-block:: python
 
-    from surfaces.test_functions import KNeighborsClassifierFunction
+    from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
     func = KNeighborsClassifierFunction()
 
@@ -163,7 +163,7 @@ Benchmarking Multiple Functions
 
 .. code-block:: python
 
-    from surfaces.test_functions import SphereFunction, RastriginFunction, AckleyFunction
+    from surfaces.test_functions.algebraic import SphereFunction, RastriginFunction, AckleyFunction
 
     functions = [
         ('Sphere', SphereFunction(n_dim=10)),

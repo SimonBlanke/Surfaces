@@ -31,7 +31,7 @@ expensive ML hyperparameter optimization problems:
 
 .. code-block:: python
 
-    from surfaces.test_functions import KNeighborsClassifierSurrogate
+    from surfaces.test_functions.machine_learning import KNeighborsClassifierSurrogate
 
     # Fast evaluation - no actual model training
     func = KNeighborsClassifierSurrogate()
@@ -112,7 +112,7 @@ Benchmark an optimizer on realistic ML landscapes:
 
 .. code-block:: python
 
-    from surfaces.test_functions import KNeighborsClassifierSurrogate
+    from surfaces.test_functions.machine_learning import KNeighborsClassifierSurrogate
     from gradient_free_optimizers import BayesianOptimization
 
     # Create surrogate function

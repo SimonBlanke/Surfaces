@@ -1,6 +1,6 @@
 """Example: Using a simple 1D test function."""
 
-from surfaces.test_functions import GramacyAndLeeFunction
+from surfaces.test_functions.algebraic import GramacyAndLeeFunction
 
 # Create the 1D Gramacy & Lee function
 gramacy_lee = GramacyAndLeeFunction()

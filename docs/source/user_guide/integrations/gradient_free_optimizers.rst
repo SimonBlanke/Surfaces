@@ -24,7 +24,7 @@ Basic Usage
 .. code-block:: python
 
     from gradient_free_optimizers import RandomSearchOptimizer
-    from surfaces.test_functions import RastriginFunction
+    from surfaces.test_functions.algebraic import RastriginFunction
 
     func = RastriginFunction(n_dim=5)
 
@@ -143,7 +143,7 @@ Compare optimizers on Surfaces functions:
         BayesianOptimizer,
         ParticleSwarmOptimizer,
     )
-    from surfaces.test_functions import RastriginFunction
+    from surfaces.test_functions.algebraic import RastriginFunction
 
     func = RastriginFunction(n_dim=10)
 

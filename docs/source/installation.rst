@@ -127,7 +127,7 @@ Verifying Installation
     print(f"Surfaces version: {surfaces.__version__}")
 
     # Test a simple function
-    from surfaces.test_functions import SphereFunction
+    from surfaces.test_functions.algebraic import SphereFunction
     func = SphereFunction(n_dim=2)
     result = func({"x0": 0.0, "x1": 0.0})
     print(f"Sphere(0, 0) = {result}")  # Should print 0.0

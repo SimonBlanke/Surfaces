@@ -37,7 +37,7 @@ Adds normally distributed noise to the objective value.
 
 .. code-block:: python
 
-    from surfaces.test_functions import SphereFunction
+    from surfaces.test_functions.algebraic import SphereFunction
     from surfaces.modifiers import GaussianNoise
 
     # Create function with Gaussian noise (standard deviation 0.1)
@@ -108,7 +108,7 @@ Consider the noise level relative to the function's range:
 
 .. code-block:: python
 
-    from surfaces.test_functions import SphereFunction
+    from surfaces.test_functions.algebraic import SphereFunction
     from surfaces.modifiers import GaussianNoise
 
     base = SphereFunction(n_dim=3)
@@ -135,7 +135,7 @@ For reproducible benchmarks, set a random seed:
 
 .. code-block:: python
 
-    from surfaces.test_functions import SphereFunction
+    from surfaces.test_functions.algebraic import SphereFunction
     from surfaces.modifiers import GaussianNoise
 
     # Use seed parameter for reproducibility

@@ -65,7 +65,7 @@ def _ensure_registered():
     if ML_SURROGATE_REGISTRY:
         return  # Already registered
 
-    from surfaces.test_functions import (
+    from surfaces.test_functions.machine_learning import (
         # Classification
         DecisionTreeClassifierFunction,
         # Regression

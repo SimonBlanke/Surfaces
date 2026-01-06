@@ -1,6 +1,6 @@
 """Welded Beam Design - Minimize fabrication cost of a welded beam."""
 
-from surfaces.test_functions import WeldedBeamFunction
+from surfaces.test_functions.algebraic import WeldedBeamFunction
 
 welded_beam = WeldedBeamFunction()
 

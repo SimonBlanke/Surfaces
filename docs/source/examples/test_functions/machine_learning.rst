@@ -17,7 +17,7 @@ Basic ML Function
 
 .. code-block:: python
 
-    from surfaces.test_functions import KNeighborsClassifierFunction
+    from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
     # Create ML-based test function
     func = KNeighborsClassifierFunction()
@@ -37,7 +37,7 @@ Search Space with Categoricals
 
 .. code-block:: python
 
-    from surfaces.test_functions import KNeighborsClassifierFunction
+    from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
     func = KNeighborsClassifierFunction()
     space = func.search_space
@@ -57,7 +57,7 @@ Multiple ML Functions
 .. code-block:: python
 
     import random
-    from surfaces.test_functions import (
+    from surfaces.test_functions.machine_learning import (
         KNeighborsClassifierFunction,
         DecisionTreeClassifierFunction,
     )

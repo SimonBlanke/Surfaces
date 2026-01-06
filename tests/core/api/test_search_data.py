@@ -7,7 +7,7 @@ and timing information.
 
 import numpy as np
 
-from surfaces.test_functions import SphereFunction
+from surfaces.test_functions.algebraic import SphereFunction
 
 
 class TestSearchDataCollection:

@@ -45,7 +45,7 @@ unimodal. If your optimizer cannot solve Sphere, something is wrong.
 
 .. code-block:: python
 
-    from surfaces.test_functions import SphereFunction
+    from surfaces.test_functions.algebraic import SphereFunction
 
     # Any dimension
     func = SphereFunction(n_dim=10)
@@ -67,7 +67,7 @@ A highly multimodal function with a regular pattern of local minima.
 
 .. code-block:: python
 
-    from surfaces.test_functions import RastriginFunction
+    from surfaces.test_functions.algebraic import RastriginFunction
 
     func = RastriginFunction(n_dim=10)
 
@@ -89,7 +89,7 @@ the global minimum.
 
 .. code-block:: python
 
-    from surfaces.test_functions import RosenbrockFunction
+    from surfaces.test_functions.algebraic import RosenbrockFunction
 
     func = RosenbrockFunction(n_dim=10)
 
@@ -110,7 +110,7 @@ Combines a sum term with a product term that creates local minima.
 
 .. code-block:: python
 
-    from surfaces.test_functions import GriewankFunction
+    from surfaces.test_functions.algebraic import GriewankFunction
 
     func = GriewankFunction(n_dim=10)
     result = func({f"x{i}": 0.0 for i in range(10)})  # 0.0
@@ -128,7 +128,7 @@ An asymmetric multimodal function.
 
 .. code-block:: python
 
-    from surfaces.test_functions import StyblinskiTangFunction
+    from surfaces.test_functions.algebraic import StyblinskiTangFunction
 
     func = StyblinskiTangFunction(n_dim=10)
 
@@ -151,7 +151,7 @@ N-D functions are crucial for understanding how optimizers scale:
 
 .. code-block:: python
 
-    from surfaces.test_functions import RastriginFunction
+    from surfaces.test_functions.algebraic import RastriginFunction
     import time
 
     for n_dim in [2, 5, 10, 20, 50, 100]:

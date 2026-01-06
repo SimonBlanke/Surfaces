@@ -8,7 +8,7 @@ os.environ["RAY_AIR_NEW_OUTPUT"] = "0"
 
 from ray import train, tune
 
-from surfaces.test_functions import SphereFunction
+from surfaces.test_functions.algebraic import SphereFunction
 
 # Create a 3-dimensional Sphere function
 sphere = SphereFunction(n_dim=3)

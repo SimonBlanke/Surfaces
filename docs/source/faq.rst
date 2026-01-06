@@ -70,7 +70,7 @@ Use batch evaluation:
 .. code-block:: python
 
     import numpy as np
-    from surfaces.test_functions import SphereFunction
+    from surfaces.test_functions.algebraic import SphereFunction
 
     func = SphereFunction(n_dim=3)
 

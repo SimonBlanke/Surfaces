@@ -27,7 +27,7 @@ Basic Usage
     from smac import HyperparameterOptimizationFacade, Scenario
     from ConfigSpace import ConfigurationSpace, Float
 
-    from surfaces.test_functions import RosenbrockFunction
+    from surfaces.test_functions.algebraic import RosenbrockFunction
 
     func = RosenbrockFunction(n_dim=5)
     space = func.search_space()

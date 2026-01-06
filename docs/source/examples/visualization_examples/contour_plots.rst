@@ -18,7 +18,7 @@ Basic Contour Plot
 .. code-block:: python
 
     import os
-    from surfaces.test_functions import RastriginFunction
+    from surfaces.test_functions.algebraic import RastriginFunction
     from surfaces.visualize import plot_contour
 
     func = RastriginFunction(n_dim=2)
@@ -37,7 +37,7 @@ Customizing Contours
 .. code-block:: python
 
     import os
-    from surfaces.test_functions import RosenbrockFunction
+    from surfaces.test_functions.algebraic import RosenbrockFunction
     from surfaces.visualize import plot_contour
 
     func = RosenbrockFunction(n_dim=2)
@@ -59,7 +59,7 @@ Comparing Landscapes
 .. code-block:: python
 
     import os
-    from surfaces.test_functions import (
+    from surfaces.test_functions.algebraic import (
         SphereFunction,
         RastriginFunction,
         HimmelblausFunction,
@@ -87,7 +87,7 @@ Matplotlib Backend
 
     import matplotlib.pyplot as plt
     import numpy as np
-    from surfaces.test_functions import BealeFunction
+    from surfaces.test_functions.algebraic import BealeFunction
 
     func = BealeFunction()
     space = func.search_space

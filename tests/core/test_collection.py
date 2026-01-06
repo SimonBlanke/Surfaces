@@ -266,7 +266,7 @@ class TestCollectionIteration:
 
     def test_contains(self):
         from surfaces import collection
-        from surfaces.test_functions import SphereFunction
+        from surfaces.test_functions.algebraic import SphereFunction
 
         assert SphereFunction in collection.quick
         assert SphereFunction in collection

@@ -1,14 +1,12 @@
 import pytest
 from gradient_free_optimizers import RandomSearchOptimizer
 
-from surfaces.test_functions import (
-    machine_learning_functions,
-)
 from surfaces.test_functions.algebraic import (
     algebraic_functions_1d,
     algebraic_functions_2d,
     algebraic_functions_nd,
 )
+from surfaces.test_functions.machine_learning import machine_learning_functions
 
 algebraic_functions_1d_param = (
     "test_function",

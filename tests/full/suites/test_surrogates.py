@@ -189,7 +189,7 @@ class TestSurrogateAvailability:
 
     def test_use_surrogate_parameter_exists(self):
         """ML functions have use_surrogate parameter."""
-        from surfaces.test_functions import KNeighborsClassifierFunction
+        from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
         # Should not raise
         func = KNeighborsClassifierFunction(use_surrogate=False)
@@ -197,7 +197,7 @@ class TestSurrogateAvailability:
 
     def test_use_surrogate_false_by_default(self):
         """use_surrogate defaults to False."""
-        from surfaces.test_functions import KNeighborsClassifierFunction
+        from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
         func = KNeighborsClassifierFunction()
         assert not func.use_surrogate
@@ -206,7 +206,7 @@ class TestSurrogateAvailability:
     def test_use_surrogate_true_loads_model(self):
         """use_surrogate=True attempts to load surrogate."""
         from surfaces._surrogates import get_surrogate_path
-        from surfaces.test_functions import KNeighborsClassifierFunction
+        from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
         # Check if surrogate exists
         path = get_surrogate_path("k_neighbors_classifier")
@@ -236,7 +236,7 @@ class TestSurrogateValidator:
     def test_validator_requires_surrogate_false(self):
         """Validator raises if use_surrogate=True."""
         from surfaces._surrogates import SurrogateValidator, get_surrogate_path
-        from surfaces.test_functions import KNeighborsClassifierFunction
+        from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
         # Check if surrogate exists
         path = get_surrogate_path("k_neighbors_classifier")
@@ -254,7 +254,7 @@ class TestSurrogateValidator:
     def test_validator_init(self):
         """Validator initializes with real function."""
         from surfaces._surrogates import SurrogateValidator, get_surrogate_path
-        from surfaces.test_functions import KNeighborsClassifierFunction
+        from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
         # Check if surrogate exists
         path = get_surrogate_path("k_neighbors_classifier")
@@ -284,7 +284,7 @@ class TestSurrogatePrediction:
     def test_surrogate_returns_float(self):
         """Surrogate prediction returns float."""
         from surfaces._surrogates import get_surrogate_path
-        from surfaces.test_functions import KNeighborsClassifierFunction
+        from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
         # Check if surrogate exists
         path = get_surrogate_path("k_neighbors_classifier")
@@ -308,7 +308,7 @@ class TestSurrogatePrediction:
         import time
 
         from surfaces._surrogates import get_surrogate_path
-        from surfaces.test_functions import KNeighborsClassifierFunction
+        from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
         # Check if surrogate exists
         path = get_surrogate_path("k_neighbors_classifier")
@@ -345,7 +345,7 @@ class TestSurrogatePrediction:
     def test_surrogate_results_reasonable(self):
         """Surrogate results are within reasonable range."""
         from surfaces._surrogates import get_surrogate_path
-        from surfaces.test_functions import KNeighborsClassifierFunction
+        from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
         path = get_surrogate_path("k_neighbors_classifier")
         if path is None:
@@ -395,7 +395,7 @@ class TestSurrogateIntegration:
 
         # 4. Make prediction with all required params
         # Surrogate expects fixed params (cv, dataset) plus hyperparams
-        from surfaces.test_functions import KNeighborsClassifierFunction
+        from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
         from surfaces.test_functions.machine_learning.tabular.classification.datasets import (
             iris_data,
         )
@@ -426,7 +426,7 @@ class TestSurrogateIntegration:
 
         assert callable(objective_func)
 
-        from surfaces.test_functions import KNeighborsClassifierFunction
+        from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
         from surfaces.test_functions.machine_learning.tabular.classification.datasets import (
             iris_data,
         )

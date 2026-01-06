@@ -36,7 +36,7 @@ Classification and regression on tabular datasets.
 
 .. code-block:: python
 
-    from surfaces.test_functions import (
+    from surfaces.test_functions.machine_learning import (
         KNeighborsClassifierFunction,
         KNeighborsRegressorFunction,
         GradientBoostingRegressorFunction,
@@ -59,7 +59,7 @@ ML functions on image classification tasks.
 
 .. code-block:: python
 
-    from surfaces.test_functions import (
+    from surfaces.test_functions.machine_learning import (
         # Image-based ML functions
         # ...
     )
@@ -71,7 +71,7 @@ ML functions for time series forecasting.
 
 .. code-block:: python
 
-    from surfaces.test_functions import (
+    from surfaces.test_functions.machine_learning import (
         # Time series ML functions
         # ...
     )
@@ -115,7 +115,7 @@ For XGBoost-based test functions:
 
 .. code-block:: python
 
-    from surfaces.test_functions import XGBoostClassifierFunction
+    from surfaces.test_functions.machine_learning import XGBoostClassifierFunction
 
     func = XGBoostClassifierFunction()
     score = func({
@@ -131,7 +131,7 @@ Usage Example
 
 .. code-block:: python
 
-    from surfaces.test_functions import KNeighborsClassifierFunction
+    from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
     from scipy.optimize import differential_evolution
 
     # Create ML-based test function

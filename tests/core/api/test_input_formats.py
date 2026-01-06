@@ -9,7 +9,7 @@ import numbers
 import numpy as np
 import pytest
 
-from surfaces.test_functions import RastriginFunction, SphereFunction
+from surfaces.test_functions.algebraic import RastriginFunction, SphereFunction
 
 
 def is_numeric(value):
@@ -166,21 +166,21 @@ class Test1DFunction:
     """Test input formats for 1D functions."""
 
     def test_dict_1d(self):
-        from surfaces.test_functions import GramacyAndLeeFunction
+        from surfaces.test_functions.algebraic import GramacyAndLeeFunction
 
         func = GramacyAndLeeFunction()
         result = func({"x0": 0.5})
         assert is_numeric(result)
 
     def test_array_1d(self):
-        from surfaces.test_functions import GramacyAndLeeFunction
+        from surfaces.test_functions.algebraic import GramacyAndLeeFunction
 
         func = GramacyAndLeeFunction()
         result = func(np.array([0.5]))
         assert is_numeric(result)
 
     def test_list_1d(self):
-        from surfaces.test_functions import GramacyAndLeeFunction
+        from surfaces.test_functions.algebraic import GramacyAndLeeFunction
 
         func = GramacyAndLeeFunction()
         result = func([0.5])

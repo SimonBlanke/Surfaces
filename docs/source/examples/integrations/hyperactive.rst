@@ -18,7 +18,7 @@ Basic Hyperactive Usage
 .. code-block:: python
 
     from hyperactive.opt.gfo import HillClimbing
-    from surfaces.test_functions import RastriginFunction
+    from surfaces.test_functions.algebraic import RastriginFunction
 
     func = RastriginFunction(n_dim=5)
 
@@ -44,7 +44,7 @@ Different Optimizers
         RandomSearch,
         SimulatedAnnealing,
     )
-    from surfaces.test_functions import RastriginFunction
+    from surfaces.test_functions.algebraic import RastriginFunction
 
     func = RastriginFunction(n_dim=5)
 

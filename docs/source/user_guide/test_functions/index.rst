@@ -112,7 +112,7 @@ All test functions share the same interface:
 
 .. code-block:: python
 
-    from surfaces.test_functions import SphereFunction, KNeighborsClassifierFunction
+    from surfaces.test_functions.algebraic import SphereFunction, KNeighborsClassifierFunction
 
     # Same interface for algebraic and ML functions
     for func_class in [SphereFunction, KNeighborsClassifierFunction]:

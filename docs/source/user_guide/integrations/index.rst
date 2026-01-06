@@ -109,7 +109,7 @@ All integrations follow a similar pattern:
 
 .. code-block:: python
 
-    from surfaces.test_functions import RastriginFunction
+    from surfaces.test_functions.algebraic import RastriginFunction
 
     # 1. Create function
     func = RastriginFunction(n_dim=5)

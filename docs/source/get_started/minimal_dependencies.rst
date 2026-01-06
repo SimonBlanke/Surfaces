@@ -148,7 +148,7 @@ Verify your installation:
     print(f"Surfaces version: {surfaces.__version__}")
 
     # Core functions work with minimal install
-    from surfaces.test_functions import SphereFunction
+    from surfaces.test_functions.algebraic import SphereFunction
     func = SphereFunction(n_dim=3)
     print(f"Sphere(1,1,1) = {func({'x0': 1, 'x1': 1, 'x2': 1})}")
 

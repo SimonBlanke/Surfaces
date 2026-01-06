@@ -18,7 +18,7 @@ Basic GFO Usage
 .. code-block:: python
 
     from gradient_free_optimizers import RandomSearchOptimizer
-    from surfaces.test_functions import RastriginFunction
+    from surfaces.test_functions.algebraic import RastriginFunction
 
     func = RastriginFunction(n_dim=5)
 
@@ -43,7 +43,7 @@ Different Optimizers
         BayesianOptimizer,
         ParticleSwarmOptimizer,
     )
-    from surfaces.test_functions import RastriginFunction
+    from surfaces.test_functions.algebraic import RastriginFunction
 
     func = RastriginFunction(n_dim=10)
 
@@ -68,7 +68,7 @@ With Memory Tracking
 .. code-block:: python
 
     from gradient_free_optimizers import BayesianOptimizer
-    from surfaces.test_functions import RosenbrockFunction
+    from surfaces.test_functions.algebraic import RosenbrockFunction
 
     func = RosenbrockFunction(n_dim=5)
 

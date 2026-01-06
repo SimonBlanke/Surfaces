@@ -4,7 +4,7 @@ import numpy as np
 from hyperactive.experiment.func import FunctionExperiment
 from hyperactive.opt.gfo import HillClimbing
 
-from surfaces.test_functions import RastriginFunction
+from surfaces.test_functions.algebraic import RastriginFunction
 
 # Create a 3-dimensional Rastrigin function
 rastrigin = RastriginFunction(n_dim=3)

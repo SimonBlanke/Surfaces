@@ -8,7 +8,7 @@ import math
 
 import pytest
 
-from surfaces.test_functions import SphereFunction
+from surfaces.test_functions.algebraic import SphereFunction
 from surfaces.test_functions.algebraic.constrained import CantileverBeamFunction
 
 

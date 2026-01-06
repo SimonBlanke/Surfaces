@@ -1,6 +1,6 @@
 """Decision Tree Classifier - Hyperparameter tuning for Decision Trees."""
 
-from surfaces.test_functions import DecisionTreeClassifierFunction
+from surfaces.test_functions.machine_learning import DecisionTreeClassifierFunction
 
 dt = DecisionTreeClassifierFunction()
 

@@ -17,7 +17,7 @@ Welded Beam Design
 
 .. code-block:: python
 
-    from surfaces.test_functions import WeldedBeamFunction
+    from surfaces.test_functions.algebraic import WeldedBeamFunction
 
     func = WeldedBeamFunction()
 
@@ -47,7 +47,7 @@ Constraint Handling
 
 .. code-block:: python
 
-    from surfaces.test_functions import WeldedBeamFunction
+    from surfaces.test_functions.algebraic import WeldedBeamFunction
 
     func = WeldedBeamFunction()
     params = {"h": 0.2, "l": 3.5, "t": 9.0, "b": 0.2}
@@ -67,7 +67,7 @@ Exploring the Design Space
 .. code-block:: python
 
     import random
-    from surfaces.test_functions import WeldedBeamFunction
+    from surfaces.test_functions.algebraic import WeldedBeamFunction
 
     func = WeldedBeamFunction()
     space = func.search_space

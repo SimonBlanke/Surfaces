@@ -258,7 +258,7 @@ Get started in just a few lines of code:
 
 .. code-block:: python
 
-    from surfaces.test_functions import SphereFunction
+    from surfaces.test_functions.algebraic import SphereFunction
 
     # Create a 3-dimensional Sphere function
     func = SphereFunction(n_dim=3)
@@ -278,7 +278,7 @@ Get started in just a few lines of code:
 
 .. code-block:: python
 
-    from surfaces.test_functions import RosenbrockFunction
+    from surfaces.test_functions.algebraic import RosenbrockFunction
     from scipy.optimize import minimize
 
     # Create the test function
@@ -299,7 +299,7 @@ Get started in just a few lines of code:
 
 .. code-block:: python
 
-    from surfaces.test_functions import KNeighborsClassifierFunction
+    from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
     # Create an ML-based test function
     func = KNeighborsClassifierFunction()

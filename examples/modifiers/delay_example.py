@@ -3,7 +3,7 @@
 import time
 
 from surfaces.modifiers import DelayModifier
-from surfaces.test_functions import SphereFunction
+from surfaces.test_functions.algebraic import SphereFunction
 
 # Create a function with artificial delay
 slow_sphere = SphereFunction(

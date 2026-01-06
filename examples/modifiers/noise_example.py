@@ -1,7 +1,7 @@
 """Using noise modifiers to simulate noisy objective functions."""
 
 from surfaces.modifiers import GaussianNoise, MultiplicativeNoise, UniformNoise
-from surfaces.test_functions import SphereFunction
+from surfaces.test_functions.algebraic import SphereFunction
 
 # Create a function with Gaussian noise
 gaussian_noise = GaussianNoise(sigma=0.1, seed=42)

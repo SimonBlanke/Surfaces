@@ -19,7 +19,7 @@ The primary and recommended interface:
 
 .. code-block:: python
 
-    from surfaces.test_functions import AckleyFunction
+    from surfaces.test_functions.algebraic import AckleyFunction
 
     func = AckleyFunction()
 
@@ -34,7 +34,7 @@ Keyword Arguments
 
 .. code-block:: python
 
-    from surfaces.test_functions import AckleyFunction
+    from surfaces.test_functions.algebraic import AckleyFunction
 
     func = AckleyFunction()
 
@@ -51,7 +51,7 @@ Comparison
 
     """Compare input formats."""
 
-    from surfaces.test_functions import SphereFunction
+    from surfaces.test_functions.algebraic import SphereFunction
 
     func = SphereFunction(n_dim=3)
 

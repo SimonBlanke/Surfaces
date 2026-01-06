@@ -1,6 +1,6 @@
 import os
 
-from surfaces.test_functions.algebraic.test_functions_nd import RastriginFunction
+from surfaces.test_functions.algebraic import RastriginFunction
 from surfaces.visualize import plot_convergence
 
 func = RastriginFunction(n_dim=10)

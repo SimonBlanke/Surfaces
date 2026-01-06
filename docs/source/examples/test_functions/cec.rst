@@ -47,7 +47,7 @@ Shifted Optima
     """Demonstrate that CEC optima are NOT at the origin."""
 
     from surfaces.test_functions.benchmark.cec.cec2013 import RotatedRastrigin
-    from surfaces.test_functions import RastriginFunction
+    from surfaces.test_functions.algebraic import RastriginFunction
 
     # Standard Rastrigin - optimum at origin
     standard = RastriginFunction(n_dim=5)

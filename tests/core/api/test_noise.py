@@ -5,7 +5,7 @@ import numpy as np
 import pytest
 
 from surfaces.modifiers import GaussianNoise, MultiplicativeNoise, UniformNoise
-from surfaces.test_functions import SphereFunction
+from surfaces.test_functions.algebraic import SphereFunction
 
 
 class TestGaussianNoise:

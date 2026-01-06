@@ -18,7 +18,7 @@ Basic Algebraic Functions
 .. code-block:: python
 
     import numpy as np
-    from surfaces.test_functions import (
+    from surfaces.test_functions.algebraic import (
         SphereFunction,
         RastriginFunction,
         RosenbrockFunction,
@@ -48,7 +48,7 @@ Comparing Function Landscapes
     """Compare difficulty of different algebraic functions."""
 
     import numpy as np
-    from surfaces.test_functions import SphereFunction, RastriginFunction
+    from surfaces.test_functions.algebraic import SphereFunction, RastriginFunction
 
     def random_search(func, n_iter=1000, seed=42):
         np.random.seed(seed)
@@ -77,7 +77,7 @@ Scaling with Dimension
     """Test how functions scale with dimensionality."""
 
     import numpy as np
-    from surfaces.test_functions import RastriginFunction
+    from surfaces.test_functions.algebraic import RastriginFunction
     import time
 
     for n_dim in [2, 5, 10, 20, 50]:

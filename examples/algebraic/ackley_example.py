@@ -1,6 +1,6 @@
 """Ackley Function - Multimodal with a nearly flat outer region."""
 
-from surfaces.test_functions import AckleyFunction
+from surfaces.test_functions.algebraic import AckleyFunction
 
 ackley = AckleyFunction()
 

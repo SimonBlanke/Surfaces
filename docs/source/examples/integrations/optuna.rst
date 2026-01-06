@@ -18,7 +18,7 @@ Basic Optuna Usage
 .. code-block:: python
 
     import optuna
-    from surfaces.test_functions import RastriginFunction
+    from surfaces.test_functions.algebraic import RastriginFunction
 
     optuna.logging.set_verbosity(optuna.logging.WARNING)
 
@@ -46,7 +46,7 @@ With Categorical Parameters
 .. code-block:: python
 
     import optuna
-    from surfaces.test_functions import KNeighborsClassifierFunction
+    from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
     optuna.logging.set_verbosity(optuna.logging.WARNING)
 
@@ -75,7 +75,7 @@ Benchmarking Multiple Functions
     """Benchmark Optuna on multiple Surfaces functions."""
 
     import optuna
-    from surfaces.test_functions import SphereFunction, RastriginFunction
+    from surfaces.test_functions.algebraic import SphereFunction, RastriginFunction
 
     optuna.logging.set_verbosity(optuna.logging.WARNING)
 

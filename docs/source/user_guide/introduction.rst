@@ -26,7 +26,7 @@ a consistent interface:
 
 .. code-block:: python
 
-    from surfaces.test_functions import SphereFunction
+    from surfaces.test_functions.algebraic import SphereFunction
 
     # Create a function instance
     func = SphereFunction(n_dim=3, metric="loss", sleep=0)

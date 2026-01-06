@@ -1,6 +1,6 @@
 """Sphere Function - The simplest convex benchmark function."""
 
-from surfaces.test_functions import SphereFunction
+from surfaces.test_functions.algebraic import SphereFunction
 
 sphere = SphereFunction(n_dim=3)
 

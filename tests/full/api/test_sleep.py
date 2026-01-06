@@ -1,6 +1,7 @@
 import pytest
 
-from surfaces.test_functions import machine_learning_functions, mathematical_functions
+from surfaces.test_functions.algebraic import mathematical_functions
+from surfaces.test_functions.machine_learning import machine_learning_functions
 
 mathematical_functions_d = (
     "test_function",

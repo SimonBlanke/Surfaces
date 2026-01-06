@@ -18,7 +18,7 @@ Instead of manually selecting functions:
 .. code-block:: python
 
     # Manual selection - tedious
-    from surfaces.test_functions import (
+    from surfaces.test_functions.algebraic import (
         SphereFunction,
         RastriginFunction,
         RosenbrockFunction,

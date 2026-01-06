@@ -25,7 +25,7 @@ Basic Surface Plot
 
 .. code-block:: python
 
-    from surfaces.test_functions import AckleyFunction
+    from surfaces.test_functions.algebraic import AckleyFunction
     from surfaces import visualize
 
     # Create a 2D function
@@ -44,7 +44,7 @@ For a top-down view:
 
 .. code-block:: python
 
-    from surfaces.test_functions import RosenbrockFunction
+    from surfaces.test_functions.algebraic import RosenbrockFunction
     from surfaces import visualize
 
     func = RosenbrockFunction(n_dim=2)
@@ -102,7 +102,7 @@ For N-dimensional functions, visualization shows a 2D slice:
 
 .. code-block:: python
 
-    from surfaces.test_functions import SphereFunction
+    from surfaces.test_functions.algebraic import SphereFunction
 
     # Create a 5D function
     func = SphereFunction(n_dim=5)
@@ -121,7 +121,7 @@ Visualize multiple functions side by side:
 
 .. code-block:: python
 
-    from surfaces.test_functions import (
+    from surfaces.test_functions.algebraic import (
         SphereFunction,
         AckleyFunction,
         RastriginFunction

@@ -213,7 +213,7 @@ class TestCoverageValidation:
 
     def test_instantiate_helper_works(self):
         """instantiate_function helper should work for all types."""
-        from surfaces.test_functions import BealeFunction, SphereFunction
+        from surfaces.test_functions.algebraic import BealeFunction, SphereFunction
         from tests.conftest import instantiate_function
 
         # ND function with n_dim

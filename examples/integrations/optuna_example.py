@@ -2,7 +2,7 @@
 
 import optuna
 
-from surfaces.test_functions import AckleyFunction
+from surfaces.test_functions.algebraic import AckleyFunction
 
 # Suppress Optuna logs
 optuna.logging.set_verbosity(optuna.logging.WARNING)

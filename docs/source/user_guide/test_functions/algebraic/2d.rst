@@ -82,7 +82,7 @@ many local minima surrounding a global minimum at the origin.
 
 .. code-block:: python
 
-    from surfaces.test_functions import AckleyFunction
+    from surfaces.test_functions.algebraic import AckleyFunction
 
     func = AckleyFunction()
     result = func({"x0": 0.0, "x1": 0.0})  # Global minimum: 0.0
@@ -100,7 +100,7 @@ A highly multimodal function with a cosine wave pattern.
 
 .. code-block:: python
 
-    from surfaces.test_functions import RastriginFunction
+    from surfaces.test_functions.algebraic import RastriginFunction
 
     func = RastriginFunction(n_dim=2)
     result = func({"x0": 0.0, "x1": 0.0})  # Global minimum: 0.0
@@ -118,7 +118,7 @@ The famous "banana function" with a narrow, curved valley.
 
 .. code-block:: python
 
-    from surfaces.test_functions import RosenbrockFunction
+    from surfaces.test_functions.algebraic import RosenbrockFunction
 
     func = RosenbrockFunction(n_dim=2)
     result = func({"x0": 1.0, "x1": 1.0})  # Global minimum: 0.0
@@ -136,7 +136,7 @@ A function with four identical local minima.
 
 .. code-block:: python
 
-    from surfaces.test_functions import HimmelblausFunction
+    from surfaces.test_functions.algebraic import HimmelblausFunction
 
     func = HimmelblausFunction()
     # Four global minima, all with f(x) = 0
@@ -159,7 +159,7 @@ Visualization
 
 .. code-block:: python
 
-    from surfaces.test_functions import AckleyFunction
+    from surfaces.test_functions.algebraic import AckleyFunction
     from surfaces.visualization import plot_surface, plot_contour
 
     func = AckleyFunction()

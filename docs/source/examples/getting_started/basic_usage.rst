@@ -17,7 +17,7 @@ Creating a Test Function
 
 .. code-block:: python
 
-    from surfaces.test_functions import SphereFunction
+    from surfaces.test_functions.algebraic import SphereFunction
 
     # Create a 3-dimensional Sphere function
     func = SphereFunction(n_dim=3)
@@ -32,7 +32,7 @@ Evaluating the Function
 
 .. code-block:: python
 
-    from surfaces.test_functions import SphereFunction
+    from surfaces.test_functions.algebraic import SphereFunction
 
     func = SphereFunction(n_dim=3)
 
@@ -53,7 +53,7 @@ Loss for Minimization
 
 .. code-block:: python
 
-    from surfaces.test_functions import SphereFunction
+    from surfaces.test_functions.algebraic import SphereFunction
 
     func = SphereFunction(n_dim=3)
 
@@ -74,7 +74,7 @@ Complete Example
 
     """Basic usage of Surfaces test functions."""
 
-    from surfaces.test_functions import SphereFunction, RastriginFunction
+    from surfaces.test_functions.algebraic import SphereFunction, RastriginFunction
 
     def main():
         # Create functions

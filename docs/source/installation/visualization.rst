@@ -33,7 +33,7 @@ Surface Plots
 
 .. code-block:: python
 
-    from surfaces.test_functions import AckleyFunction
+    from surfaces.test_functions.algebraic import AckleyFunction
     from surfaces.visualization import plot_surface
 
     func = AckleyFunction()
@@ -47,7 +47,7 @@ Contour Plots
 
 .. code-block:: python
 
-    from surfaces.test_functions import RastriginFunction
+    from surfaces.test_functions.algebraic import RastriginFunction
     from surfaces.visualization import plot_contour
 
     func = RastriginFunction(n_dim=2)
@@ -76,7 +76,7 @@ Basic Surface Plot
 
 .. code-block:: python
 
-    from surfaces.test_functions import HimmelblausFunction
+    from surfaces.test_functions.algebraic import HimmelblausFunction
     from surfaces.visualization import plot_surface
 
     func = HimmelblausFunction()
@@ -108,7 +108,7 @@ Multiple Functions
 
 .. code-block:: python
 
-    from surfaces.test_functions import (
+    from surfaces.test_functions.algebraic import (
         SphereFunction,
         RastriginFunction,
         AckleyFunction
@@ -135,7 +135,7 @@ For publication-quality static figures:
 .. code-block:: python
 
     import matplotlib.pyplot as plt
-    from surfaces.test_functions import BealeFunction
+    from surfaces.test_functions.algebraic import BealeFunction
     from surfaces.visualization import plot_contour_matplotlib
 
     func = BealeFunction()

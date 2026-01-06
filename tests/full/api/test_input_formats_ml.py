@@ -8,7 +8,7 @@ import numbers
 
 import pytest
 
-from surfaces.test_functions import KNeighborsClassifierFunction
+from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 from surfaces.test_functions.machine_learning.tabular.classification.datasets import iris_data
 
 

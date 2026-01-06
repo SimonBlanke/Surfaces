@@ -1,6 +1,6 @@
 """Example: Using machine learning test functions."""
 
-from surfaces.test_functions import KNeighborsClassifierFunction
+from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
 # Create an ML-based test function
 k_neighbors = KNeighborsClassifierFunction()

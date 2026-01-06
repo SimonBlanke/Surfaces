@@ -1,6 +1,6 @@
 """KNN Classifier - Hyperparameter tuning for K-Nearest Neighbors."""
 
-from surfaces.test_functions import KNeighborsClassifierFunction
+from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
 knn = KNeighborsClassifierFunction()
 

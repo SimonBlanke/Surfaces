@@ -18,7 +18,7 @@ Basic scipy Integration
 .. code-block:: python
 
     import numpy as np
-    from surfaces.test_functions import RosenbrockFunction
+    from surfaces.test_functions.algebraic import RosenbrockFunction
     from scipy.optimize import minimize
 
     # Create test function
@@ -48,7 +48,7 @@ Global Optimization
 .. code-block:: python
 
     import numpy as np
-    from surfaces.test_functions import RastriginFunction
+    from surfaces.test_functions.algebraic import RastriginFunction
     from scipy.optimize import differential_evolution
 
     func = RastriginFunction(n_dim=10)
@@ -81,7 +81,7 @@ Comparing scipy Methods
     """Compare different scipy optimization methods."""
 
     import numpy as np
-    from surfaces.test_functions import RosenbrockFunction
+    from surfaces.test_functions.algebraic import RosenbrockFunction
     from scipy.optimize import minimize, differential_evolution
 
     func = RosenbrockFunction(n_dim=5)

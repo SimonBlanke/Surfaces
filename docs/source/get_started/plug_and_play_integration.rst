@@ -63,7 +63,7 @@ Every Surfaces function has a built-in ``to_scipy()`` method:
 
 .. code-block:: python
 
-    from surfaces.test_functions import RosenbrockFunction
+    from surfaces.test_functions.algebraic import RosenbrockFunction
     from scipy.optimize import minimize
 
     func = RosenbrockFunction(n_dim=5)
@@ -83,7 +83,7 @@ Use Surfaces functions directly in Optuna objectives:
 .. code-block:: python
 
     import optuna
-    from surfaces.test_functions import AckleyFunction
+    from surfaces.test_functions.algebraic import AckleyFunction
 
     func = AckleyFunction(n_dim=3)
     space = func.search_space()
@@ -106,7 +106,7 @@ Surfaces search spaces work directly with GFO:
 .. code-block:: python
 
     from gradient_free_optimizers import RandomSearchOptimizer
-    from surfaces.test_functions import RastriginFunction
+    from surfaces.test_functions.algebraic import RastriginFunction
 
     func = RastriginFunction(n_dim=5)
 

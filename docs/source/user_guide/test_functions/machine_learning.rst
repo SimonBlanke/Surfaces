@@ -64,7 +64,7 @@ Example: K-Neighbors Classifier
 
 .. code-block:: python
 
-    from surfaces.test_functions import KNeighborsClassifierFunction
+    from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
     # Create the function
     func = KNeighborsClassifierFunction()
@@ -98,7 +98,7 @@ Example: Gradient Boosting Regressor
 
 .. code-block:: python
 
-    from surfaces.test_functions import GradientBoostingRegressorFunction
+    from surfaces.test_functions.machine_learning import GradientBoostingRegressorFunction
 
     func = GradientBoostingRegressorFunction()
 
@@ -208,7 +208,7 @@ Importing Functions
 .. code-block:: python
 
     # Import specific functions
-    from surfaces.test_functions import (
+    from surfaces.test_functions.machine_learning import (
         KNeighborsClassifierFunction,
         KNeighborsRegressorFunction,
         GradientBoostingRegressorFunction,

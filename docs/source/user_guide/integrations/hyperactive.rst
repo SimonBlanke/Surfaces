@@ -25,7 +25,7 @@ Basic Usage
 .. code-block:: python
 
     from hyperactive import Hyperactive
-    from surfaces.test_functions import RastriginFunction
+    from surfaces.test_functions.algebraic import RastriginFunction
 
     func = RastriginFunction(n_dim=5)
 
@@ -45,7 +45,7 @@ Run multiple optimizations in parallel:
 
 .. code-block:: python
 
-    from surfaces.test_functions import SphereFunction, RastriginFunction, AckleyFunction
+    from surfaces.test_functions.algebraic import SphereFunction, RastriginFunction, AckleyFunction
 
     sphere = SphereFunction(n_dim=5)
     rastrigin = RastriginFunction(n_dim=5)
@@ -169,7 +169,7 @@ Benchmarking Setup
 
     from hyperactive import Hyperactive
     from hyperactive.optimizers import BayesianOptimizer, RandomSearchOptimizer
-    from surfaces.test_functions import RastriginFunction
+    from surfaces.test_functions.algebraic import RastriginFunction
     import numpy as np
 
     func = RastriginFunction(n_dim=10)

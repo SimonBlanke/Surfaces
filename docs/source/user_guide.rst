@@ -106,7 +106,7 @@ Quick Example
 
 .. code-block:: python
 
-    from surfaces.test_functions import SphereFunction
+    from surfaces.test_functions.algebraic import SphereFunction
 
     # 1. Create the function
     func = SphereFunction(n_dim=3)

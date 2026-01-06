@@ -1,6 +1,6 @@
 """Three-Bar Truss Design - Minimize volume of a truss structure."""
 
-from surfaces.test_functions import ThreeBarTrussFunction
+from surfaces.test_functions.algebraic import ThreeBarTrussFunction
 
 truss = ThreeBarTrussFunction()
 

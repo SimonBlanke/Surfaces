@@ -24,7 +24,7 @@ Basic Usage
 .. code-block:: python
 
     from ray import tune
-    from surfaces.test_functions import RastriginFunction
+    from surfaces.test_functions.algebraic import RastriginFunction
 
     func = RastriginFunction(n_dim=5)
     space = func.search_space()

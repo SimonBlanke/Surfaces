@@ -82,7 +82,7 @@ class TestClassificationFunctions:
 
     def test_kneighbors_classifier(self, quick_ml_params):
         """KNeighborsClassifier function evaluates correctly."""
-        from surfaces.test_functions import KNeighborsClassifierFunction
+        from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
         func = KNeighborsClassifierFunction()
         params = {**get_sample_params(func), **quick_ml_params}
@@ -95,7 +95,7 @@ class TestClassificationFunctions:
 
     def test_decision_tree_classifier(self, quick_ml_params):
         """DecisionTreeClassifier function evaluates correctly."""
-        from surfaces.test_functions import DecisionTreeClassifierFunction
+        from surfaces.test_functions.machine_learning import DecisionTreeClassifierFunction
 
         func = DecisionTreeClassifierFunction()
         params = {**get_sample_params(func), **quick_ml_params}
@@ -106,7 +106,7 @@ class TestClassificationFunctions:
 
     def test_random_forest_classifier(self, quick_ml_params):
         """RandomForestClassifier function evaluates correctly."""
-        from surfaces.test_functions import RandomForestClassifierFunction
+        from surfaces.test_functions.machine_learning import RandomForestClassifierFunction
 
         func = RandomForestClassifierFunction()
         params = {**get_sample_params(func), **quick_ml_params}
@@ -127,7 +127,7 @@ class TestRegressionFunctions:
 
     def test_kneighbors_regressor(self, quick_regression_params):
         """KNeighborsRegressor function evaluates correctly."""
-        from surfaces.test_functions import KNeighborsRegressorFunction
+        from surfaces.test_functions.machine_learning import KNeighborsRegressorFunction
 
         func = KNeighborsRegressorFunction()
         params = {**get_sample_params(func), **quick_regression_params}
@@ -138,7 +138,7 @@ class TestRegressionFunctions:
 
     def test_decision_tree_regressor(self, quick_regression_params):
         """DecisionTreeRegressor function evaluates correctly."""
-        from surfaces.test_functions import DecisionTreeRegressorFunction
+        from surfaces.test_functions.machine_learning import DecisionTreeRegressorFunction
 
         func = DecisionTreeRegressorFunction()
         params = {**get_sample_params(func), **quick_regression_params}
@@ -159,7 +159,7 @@ class TestMLObjectiveDirection:
 
     def test_minimize_returns_loss(self, quick_ml_params):
         """Minimize objective returns loss (lower is better)."""
-        from surfaces.test_functions import KNeighborsClassifierFunction
+        from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
         func = KNeighborsClassifierFunction(objective="minimize")
         params = {**get_sample_params(func), **quick_ml_params}
@@ -170,7 +170,7 @@ class TestMLObjectiveDirection:
 
     def test_maximize_returns_score(self, quick_ml_params):
         """Maximize objective returns negated score."""
-        from surfaces.test_functions import KNeighborsClassifierFunction
+        from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
         func = KNeighborsClassifierFunction(objective="maximize")
         params = {**get_sample_params(func), **quick_ml_params}
@@ -190,7 +190,7 @@ class TestMLDataCollection:
 
     def test_tracks_evaluations(self, quick_ml_params):
         """ML functions track evaluation count."""
-        from surfaces.test_functions import KNeighborsClassifierFunction
+        from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
         func = KNeighborsClassifierFunction()
         params = {**get_sample_params(func), **quick_ml_params}
@@ -203,7 +203,7 @@ class TestMLDataCollection:
 
     def test_tracks_best_score(self, quick_ml_params):
         """ML functions track best score."""
-        from surfaces.test_functions import KNeighborsClassifierFunction
+        from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
         func = KNeighborsClassifierFunction()
         params = {**get_sample_params(func), **quick_ml_params}
@@ -224,7 +224,7 @@ class TestMLMemory:
 
     def test_memory_caches_results(self, quick_ml_params):
         """ML functions with memory=True cache results."""
-        from surfaces.test_functions import KNeighborsClassifierFunction
+        from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
         func = KNeighborsClassifierFunction(memory=True)
         params = {**get_sample_params(func), **quick_ml_params}
@@ -239,7 +239,7 @@ class TestMLMemory:
 
     def test_memory_different_params(self, quick_ml_params):
         """Different params don't use cached value."""
-        from surfaces.test_functions import KNeighborsClassifierFunction
+        from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
         func = KNeighborsClassifierFunction(memory=True)
 
@@ -268,7 +268,7 @@ class TestMLCallbacks:
 
     def test_callback_invoked(self, quick_ml_params):
         """Callbacks are invoked after evaluation."""
-        from surfaces.test_functions import KNeighborsClassifierFunction
+        from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
         records = []
         func = KNeighborsClassifierFunction(callbacks=lambda r: records.append(r))

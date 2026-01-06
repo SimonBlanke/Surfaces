@@ -35,7 +35,7 @@ A common 1D test function with multiple local minima.
 
 .. code-block:: python
 
-    from surfaces.test_functions import GramacyAndLeeFunction
+    from surfaces.test_functions.algebraic import GramacyAndLeeFunction
 
     func = GramacyAndLeeFunction()
 
@@ -60,7 +60,7 @@ A smooth 1D function often used for surrogate model testing.
 
 .. code-block:: python
 
-    from surfaces.test_functions import ForresterFunction
+    from surfaces.test_functions.algebraic import ForresterFunction
 
     func = ForresterFunction()
     result = func({"x0": 0.757})
@@ -85,7 +85,7 @@ Use Cases
 
     import numpy as np
     import matplotlib.pyplot as plt
-    from surfaces.test_functions import GramacyAndLeeFunction
+    from surfaces.test_functions.algebraic import GramacyAndLeeFunction
 
     func = GramacyAndLeeFunction()
     space = func.search_space()

@@ -14,7 +14,7 @@ Basic Usage
 
 .. code-block:: python
 
-    from surfaces.test_functions import RosenbrockFunction
+    from surfaces.test_functions.algebraic import RosenbrockFunction
     from scipy.optimize import minimize
 
     # Create test function
@@ -95,7 +95,7 @@ Compare multiple scipy optimizers:
 
 .. code-block:: python
 
-    from surfaces.test_functions import RastriginFunction
+    from surfaces.test_functions.algebraic import RastriginFunction
     from scipy.optimize import minimize, differential_evolution
 
     func = RastriginFunction(n_dim=10)
@@ -124,7 +124,7 @@ with categorical parameters cannot be converted:
 
 .. code-block:: python
 
-    from surfaces.test_functions import KNeighborsClassifierFunction
+    from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 
     func = KNeighborsClassifierFunction()
 

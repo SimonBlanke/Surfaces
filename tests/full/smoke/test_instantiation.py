@@ -125,7 +125,7 @@ class TestMLInstantiation:
 
     def test_ml_function_evaluates(self):
         """At least one ML function evaluates correctly (quick test)."""
-        from surfaces.test_functions import KNeighborsClassifierFunction
+        from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
         from surfaces.test_functions.machine_learning.tabular.classification.datasets import (
             iris_data,
         )

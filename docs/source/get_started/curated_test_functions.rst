@@ -122,7 +122,7 @@ Quick Example
 
 .. code-block:: python
 
-    from surfaces.test_functions import (
+    from surfaces.test_functions.algebraic import (
         # Algebraic
         SphereFunction,
         RastriginFunction,

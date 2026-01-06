@@ -6,7 +6,7 @@ import time
 import pytest
 
 from surfaces.modifiers import DelayModifier
-from surfaces.test_functions import SphereFunction
+from surfaces.test_functions.algebraic import SphereFunction
 
 
 class TestDelayModifier:

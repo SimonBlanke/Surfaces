@@ -17,7 +17,7 @@ Getting the Search Space
 
 .. code-block:: python
 
-    from surfaces.test_functions import RastriginFunction
+    from surfaces.test_functions.algebraic import RastriginFunction
 
     func = RastriginFunction(n_dim=3)
 
@@ -38,7 +38,7 @@ Sampling from Search Space
 .. code-block:: python
 
     import numpy as np
-    from surfaces.test_functions import RastriginFunction
+    from surfaces.test_functions.algebraic import RastriginFunction
 
     func = RastriginFunction(n_dim=3)
     space = func.search_space
@@ -58,7 +58,7 @@ Search Space Structure
 
 .. code-block:: python
 
-    from surfaces.test_functions import RastriginFunction
+    from surfaces.test_functions.algebraic import RastriginFunction
 
     func = RastriginFunction(n_dim=3)
     space = func.search_space
@@ -77,7 +77,7 @@ Complete Example
     """Working with search spaces."""
 
     import numpy as np
-    from surfaces.test_functions import RosenbrockFunction
+    from surfaces.test_functions.algebraic import RosenbrockFunction
 
     def main():
         func = RosenbrockFunction(n_dim=5)

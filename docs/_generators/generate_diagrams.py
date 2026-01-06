@@ -416,7 +416,7 @@ They simulate measurement uncertainty and test algorithm robustness to noisy obj
 
 .. code-block:: python
 
-    from surfaces.test_functions import SphereFunction
+    from surfaces.test_functions.algebraic import SphereFunction
     from surfaces.modifiers import GaussianNoise
 
     noise = GaussianNoise(sigma=0.1, seed=42)
@@ -466,7 +466,7 @@ Use ``available_plots(func)`` to see which plots work with your function:
 
 .. code-block:: python
 
-    from surfaces.test_functions import SphereFunction
+    from surfaces.test_functions.algebraic import SphereFunction
     from surfaces.visualize import available_plots, auto_plot
 
     func = SphereFunction(n_dim=2)
@@ -607,7 +607,7 @@ from basic function evaluation to integration with popular optimization librarie
 
 .. code-block:: python
 
-    from surfaces.test_functions import SphereFunction
+    from surfaces.test_functions.algebraic import SphereFunction
 
     # Create and evaluate
     func = SphereFunction(n_dim=5)

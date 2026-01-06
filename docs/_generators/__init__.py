@@ -195,7 +195,7 @@ def extract_metadata(func_class: Type) -> Dict[str, Any]:
 
     Examples
     --------
-    >>> from surfaces.test_functions import SphereFunction
+    >>> from surfaces.test_functions.algebraic import SphereFunction
     >>> meta = extract_metadata(SphereFunction)
     >>> meta['name']
     'SphereFunction'

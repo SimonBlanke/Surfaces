@@ -1,6 +1,6 @@
 """Rastrigin Function - A highly multimodal benchmark function."""
 
-from surfaces.test_functions import RastriginFunction
+from surfaces.test_functions.algebraic import RastriginFunction
 
 rastrigin = RastriginFunction(n_dim=2)
 
