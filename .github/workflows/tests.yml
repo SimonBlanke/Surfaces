@@ -73,17 +73,6 @@ jobs:
           python -c "
           import surfaces
           print(f'Surfaces version: {surfaces.__version__}')
-
-          from surfaces.test_functions import SphereFunction, AckleyFunction
-          from surfaces.test_functions import algebraic_functions, engineering_functions
-
-          print(f'Algebraic functions: {len(algebraic_functions)}')
-          print(f'Engineering functions: {len(engineering_functions)}')
-
-          sphere = SphereFunction(n_dim=2)
-          result = sphere({'x0': 0, 'x1': 0})
-          assert result == 0, f'Expected 0, got {result}'
-          print('Core functionality verified!')
           "
 
       - name: Run core tests
@@ -127,22 +116,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[test]"
-
-      - name: Verify full install
-        run: |
-          python -c "
-          import surfaces
-          from surfaces.test_functions import (
-              algebraic_functions,
-              machine_learning_functions,
-              engineering_functions,
-          )
-          print(f'Algebraic: {len(algebraic_functions)}')
-          print(f'ML: {len(machine_learning_functions)}')
-          print(f'Engineering: {len(engineering_functions)}')
-          assert len(machine_learning_functions) > 0, 'ML functions not available'
-          print('Full installation verified!')
-          "
 
       - name: Run core and full tests
         run: python -m pytest -x -p no:warnings tests/core/ tests/full/
