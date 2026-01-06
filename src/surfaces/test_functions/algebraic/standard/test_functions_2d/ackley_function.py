@@ -5,7 +5,6 @@
 import math
 from typing import Any, Callable, Dict, List, Optional, Union
 
-import numpy as np
 
 from surfaces.modifiers import BaseModifier
 
@@ -102,7 +101,9 @@ class AckleyFunction(AlgebraicFunction):
         callbacks: Optional[Union[Callable, List[Callable]]] = None,
         catch_errors: Optional[Dict[type, float]] = None,
     ) -> None:
-        super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
+        super().__init__(
+            objective, modifiers, memory, collect_data, callbacks, catch_errors
+        )
 
         self.n_dim = 2
 
@@ -114,12 +115,12 @@ class AckleyFunction(AlgebraicFunction):
             x = params["x0"]
             y = params["x1"]
 
-            loss1 = -self.A * np.exp(-0.2 * np.sqrt(0.5 * (x * x + y * y)))
-            loss2 = -np.exp(0.5 * (np.cos(self.angle * x) + np.cos(self.angle * y)))
-            loss3 = np.exp(1)
-            loss4 = self.A
+            term1 = -self.A * math.exp(-0.2 * math.sqrt(0.5 * (x * x + y * y)))
+            term2 = -math.exp(
+                0.5 * (math.cos(self.angle * x) + math.cos(self.angle * y))
+            )
 
-            return loss1 + loss2 + loss3 + loss4
+            return term1 + term2 + math.e + self.A
 
         self.pure_objective_function = ackley_function
 
