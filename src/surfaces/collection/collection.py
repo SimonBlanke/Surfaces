@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Iterator, List, Optional, Type
 
-from .utils import get_category, get_merged_spec, get_n_dim, instantiate
+from .utils import get_category, get_merged_spec, get_n_dim
 
 if TYPE_CHECKING:
     from ..test_functions._base_test_function import BaseTestFunction
@@ -163,32 +163,6 @@ class Collection:
                 continue
 
         return Collection(result)
-
-    def instantiate(self, n_dim: int = 10) -> List["BaseTestFunction"]:
-        """Instantiate all functions in this collection.
-
-        Handles the complexity of mixed function types (fixed-dimension vs scalable).
-        Fixed-dimension functions are instantiated directly, while scalable functions
-        receive the n_dim parameter.
-
-        Parameters
-        ----------
-        n_dim : int, default=10
-            Number of dimensions for scalable functions.
-
-        Returns
-        -------
-        list
-            List of instantiated function objects.
-
-        Examples
-        --------
-        >>> from surfaces import collection
-        >>> functions = collection.quick.instantiate(n_dim=10)
-        >>> for func in functions:
-        ...     result = optimizer.minimize(func)
-        """
-        return instantiate(self._functions, n_dim=n_dim)
 
     def describe(self) -> str:
         """Return a formatted description of all functions in the collection.

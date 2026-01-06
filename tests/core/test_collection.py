@@ -175,7 +175,7 @@ class TestCollectionFilter:
         # Result should be a collection-like object
         assert hasattr(result, "filter")
         assert hasattr(result, "search")
-        assert hasattr(result, "instantiate")
+        assert hasattr(result, "describe")
 
 
 class TestCollectionSearch:
@@ -215,7 +215,7 @@ class TestCollectionSearch:
         # Result should be a collection-like object
         assert hasattr(result, "filter")
         assert hasattr(result, "search")
-        assert hasattr(result, "instantiate")
+        assert hasattr(result, "describe")
 
 
 class TestCollectionChaining:
@@ -397,35 +397,12 @@ class TestCollectionInstantiation:
             result = func(params)
             assert isinstance(result, (int, float))
 
-    def test_instantiate_method(self):
-        """Test Collection.instantiate() method."""
-        from surfaces import collection
-
-        functions = collection.quick.instantiate(n_dim=5)
-        assert len(functions) == 5
-        for func in functions:
-            assert hasattr(func, "search_space")
-            assert callable(func)
-
-    def test_instantiate_method_evaluation(self):
-        """Test that instantiated functions can be evaluated."""
-        from surfaces import collection
-
-        functions = collection.quick.instantiate(n_dim=5)
-        for func in functions:
-            params = {
-                name: (bounds[0] + bounds[1]) / 2
-                for name, bounds in func.search_space.items()
-            }
-            result = func(params)
-            assert isinstance(result, (int, float))
-
     def test_instantiate_algebraic_2d(self):
-        """2D functions should have 2 dimensions regardless of n_dim param."""
+        """2D functions should have 2 dimensions."""
         from surfaces import collection
 
-        functions = collection.algebraic_2d.instantiate()
-        for func in functions:
+        for func_cls in collection.algebraic_2d:
+            func = func_cls()
             assert len(func.search_space) == 2
 
     def test_instantiate_algebraic_nd(self):
@@ -433,18 +410,9 @@ class TestCollectionInstantiation:
         from surfaces import collection
 
         for n_dim in [5, 10, 20]:
-            functions = collection.algebraic_nd.instantiate(n_dim=n_dim)
-            for func in functions:
+            for func_cls in collection.algebraic_nd:
+                func = func_cls(n_dim=n_dim)
                 assert len(func.search_space) == n_dim
-
-    def test_instantiate_standard_mixed(self):
-        """Standard suite has mixed 2D and ND functions."""
-        from surfaces import collection
-
-        functions = collection.standard.instantiate(n_dim=5)
-        dims = [len(func.search_space) for func in functions]
-        assert 2 in dims  # Has 2D functions
-        assert 5 in dims  # Has 5D functions
 
 
 class TestShow:

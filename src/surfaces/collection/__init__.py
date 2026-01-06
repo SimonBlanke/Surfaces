@@ -12,7 +12,7 @@ Examples
 >>> from surfaces import collection
 >>>
 >>> # collection is iterable and contains all functions
->>> len(collection)                       # 118 functions
+>>> len(collection)                       # Total number of functions
 >>> for func_cls in collection:
 ...     print(func_cls.__name__)
 >>>
@@ -27,8 +27,10 @@ Examples
 >>> collection.bbob                       # 24 COCO/BBOB functions
 >>> collection.engineering                # 5 constrained problems
 >>>
->>> # Instantiate all functions in a collection
->>> functions = collection.quick.instantiate(n_dim=10)
+>>> # Iterate and instantiate
+>>> for func_cls in collection.quick:
+...     func = func_cls(n_dim=10)         # ND functions need n_dim
+...     result = func({"x0": 0.0, ...})
 """
 
 from .singleton import _CollectionSingleton
