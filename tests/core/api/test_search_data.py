@@ -86,7 +86,9 @@ class TestSearchDataCollection:
 
     def test_total_time_tracked(self):
         """Test that total_time accumulates."""
-        func = SphereFunction(n_dim=2, sleep=0.01)
+        from surfaces.modifiers import DelayModifier
+
+        func = SphereFunction(n_dim=2, modifiers=[DelayModifier(delay=0.01)])
 
         func([0.0, 0.0])
         assert func.total_time >= 0.01
@@ -186,7 +188,9 @@ class TestMemoryAndSearchDataInteraction:
 
     def test_cached_evaluations_no_time_added(self):
         """Test that cached evaluations don't add to total_time."""
-        func = SphereFunction(n_dim=2, memory=True, sleep=0.05)
+        from surfaces.modifiers import DelayModifier
+
+        func = SphereFunction(n_dim=2, memory=True, modifiers=[DelayModifier(delay=0.05)])
 
         func([1.0, 1.0])
         time_after_first = func.total_time

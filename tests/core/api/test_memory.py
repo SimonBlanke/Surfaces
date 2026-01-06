@@ -66,11 +66,12 @@ def test_memory_disabled_by_default(test_function):
     assert len(func._memory_cache) == 0
 
 
-def test_memory_skips_sleep_on_cache_hit():
-    """Test that cached evaluations skip the sleep delay."""
+def test_memory_skips_delay_on_cache_hit():
+    """Test that cached evaluations skip the delay modifier."""
     from surfaces.test_functions import SphereFunction
+    from surfaces.modifiers import DelayModifier
 
-    func = SphereFunction(n_dim=2, memory=True, sleep=0.1)
+    func = SphereFunction(n_dim=2, memory=True, modifiers=[DelayModifier(delay=0.1)])
 
     start = time.time()
     func([0.0, 0.0])
