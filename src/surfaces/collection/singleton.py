@@ -38,7 +38,7 @@ class _CollectionSingleton(Collection):
     >>> collection.quick                      # 5 functions for smoke tests
     >>> collection.standard                   # 15 functions for academic comparison
     >>> collection.bbob                       # 24 COCO/BBOB functions
-    >>> collection.engineering                # 5 constrained problems
+    >>> collection.constrained                # 5 constrained problems
     """
 
     def __init__(self) -> None:
@@ -67,23 +67,26 @@ class _CollectionSingleton(Collection):
         add_functions(algebraic_functions)
 
         # BBOB functions (always available)
-        from ..test_functions.bbob import bbob_functions
+        from ..test_functions.benchmark.bbob import bbob_functions
 
         add_functions(bbob_functions)
 
-        # Engineering functions (always available)
-        from ..test_functions.engineering import engineering_functions
+        # Constrained functions (always available)
+        from ..test_functions.algebraic.constrained import constrained_functions
 
-        add_functions(engineering_functions)
+        add_functions(constrained_functions)
 
-        # CEC functions (always available)
-        from ..test_functions.cec.cec2013 import cec2013_functions
-        from ..test_functions.cec.cec2014 import cec2014_functions
-        from ..test_functions.cec.cec2017 import cec2017_functions
+        # CEC functions (require cec data package)
+        try:
+            from ..test_functions.benchmark.cec.cec2013 import cec2013_functions
+            from ..test_functions.benchmark.cec.cec2014 import cec2014_functions
+            from ..test_functions.benchmark.cec.cec2017 import cec2017_functions
 
-        add_functions(cec2013_functions)
-        add_functions(cec2014_functions)
-        add_functions(cec2017_functions)
+            add_functions(cec2013_functions)
+            add_functions(cec2014_functions)
+            add_functions(cec2017_functions)
+        except ImportError:
+            pass  # CEC data package not installed
 
         # ML functions (require sklearn)
         try:
@@ -177,9 +180,9 @@ class _CollectionSingleton(Collection):
         return self._get_predefined("cec2017")
 
     @property
-    def engineering(self) -> Collection:
+    def constrained(self) -> Collection:
         """Constrained engineering problems (5 functions)."""
-        return self._get_predefined("engineering")
+        return self._get_predefined("constrained")
 
     @property
     def algebraic_2d(self) -> Collection:

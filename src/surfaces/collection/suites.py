@@ -34,7 +34,7 @@ from ..test_functions.algebraic import (
     StyblinskiTangFunction,
     ThreeHumpCamelFunction,
 )
-from ..test_functions.bbob import (
+from ..test_functions.benchmark.bbob import (
     # Low/Moderate Conditioning (f6-f9)
     AttractiveSector,
     BentCigar,
@@ -67,7 +67,7 @@ from ..test_functions.bbob import (
 # =============================================================================
 # BBOB Functions (always available - numpy only)
 # =============================================================================
-from ..test_functions.bbob import (
+from ..test_functions.benchmark.bbob import (
     # Separable (f1-f5)
     Sphere as BBOB_Sphere,
 )
@@ -75,7 +75,7 @@ from ..test_functions.bbob import (
 # =============================================================================
 # CEC Functions (always available - numpy only)
 # =============================================================================
-from ..test_functions.cec.cec2014 import (
+from ..test_functions.benchmark.cec.cec2014 import (
     # Composition
     CompositionFunction1,
     CompositionFunction2,
@@ -107,17 +107,17 @@ from ..test_functions.cec.cec2014 import (
     ShiftedRotatedWeierstrass,
     ShiftedSchwefel,
 )
-from ..test_functions.cec.cec2014 import (
+from ..test_functions.benchmark.cec.cec2014 import (
     ShiftedRotatedRastrigin as CEC2014_ShiftedRotatedRastrigin,
 )
-from ..test_functions.cec.cec2014 import (
+from ..test_functions.benchmark.cec.cec2014 import (
     # Multimodal
     ShiftedRotatedRosenbrock as CEC2014_ShiftedRotatedRosenbrock,
 )
-from ..test_functions.cec.cec2014 import (
+from ..test_functions.benchmark.cec.cec2014 import (
     ShiftedRotatedSchwefel as CEC2014_ShiftedRotatedSchwefel,
 )
-from ..test_functions.cec.cec2017 import (
+from ..test_functions.benchmark.cec.cec2017 import (
     ShiftedRotatedBentCigar,
     ShiftedRotatedLevy,
     ShiftedRotatedLunacekBiRastrigin,
@@ -126,20 +126,20 @@ from ..test_functions.cec.cec2017 import (
     ShiftedRotatedSumDiffPow,
     ShiftedRotatedZakharov,
 )
-from ..test_functions.cec.cec2017 import (
+from ..test_functions.benchmark.cec.cec2017 import (
     ShiftedRotatedRastrigin as CEC2017_ShiftedRotatedRastrigin,
 )
-from ..test_functions.cec.cec2017 import (
+from ..test_functions.benchmark.cec.cec2017 import (
     ShiftedRotatedRosenbrock as CEC2017_ShiftedRotatedRosenbrock,
 )
-from ..test_functions.cec.cec2017 import (
+from ..test_functions.benchmark.cec.cec2017 import (
     ShiftedRotatedSchwefel as CEC2017_ShiftedRotatedSchwefel,
 )
 
 # =============================================================================
 # Engineering Functions (always available - numpy only)
 # =============================================================================
-from ..test_functions.engineering import (
+from ..test_functions.algebraic.constrained import (
     CantileverBeamFunction,
     PressureVesselFunction,
     TensionCompressionSpringFunction,
@@ -338,7 +338,7 @@ Reference: Awad et al. (2016) CEC 2017 problem definitions.
 Note: Requires n_dim parameter when instantiating.
 """
 
-engineering = [
+constrained = [
     ThreeBarTrussFunction,
     WeldedBeamFunction,
     PressureVesselFunction,
@@ -361,5 +361,5 @@ SUITE_NAMES = [
     "bbob",
     "cec2014",
     "cec2017",
-    "engineering",
+    "constrained",
 ]

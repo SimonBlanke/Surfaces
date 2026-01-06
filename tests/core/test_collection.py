@@ -58,8 +58,8 @@ class TestPredefinedCollections:
     def test_engineering(self):
         from surfaces import collection
 
-        assert len(collection.engineering) == 5
-        assert collection.engineering._name == "engineering"
+        assert len(collection.constrained) == 5
+        assert collection.constrained._name == "constrained"
 
     def test_algebraic_2d(self):
         from surfaces import collection
@@ -143,7 +143,7 @@ class TestCollectionFilter:
         from surfaces import collection
 
         result = collection.filter(category="algebraic")
-        assert len(result) == 28  # All algebraic functions
+        assert len(result) == 28  # standard algebraic functions only
         assert all("algebraic" in f.__module__ for f in result)
 
     def test_filter_by_category_bbob(self):
@@ -153,12 +153,12 @@ class TestCollectionFilter:
         assert len(result) == 24
         assert all("bbob" in f.__module__ for f in result)
 
-    def test_filter_by_category_engineering(self):
+    def test_filter_by_category_constrained(self):
         from surfaces import collection
 
-        result = collection.filter(category="engineering")
+        result = collection.filter(category="constrained")
         assert len(result) == 5
-        assert all("engineering" in f.__module__ for f in result)
+        assert all("constrained" in f.__module__ for f in result)
 
     def test_filter_multiple_criteria(self):
         from surfaces import collection
@@ -292,7 +292,7 @@ class TestCollectionSetOperations:
     def test_union(self):
         from surfaces import collection
 
-        combined = collection.quick + collection.engineering
+        combined = collection.quick + collection.constrained
         assert len(combined) == 10  # 5 + 5, no overlap
 
     def test_union_no_duplicates(self):
@@ -355,7 +355,7 @@ class TestModuleFunctions:
         assert isinstance(cats, list)
         assert "algebraic" in cats
         assert "bbob" in cats
-        assert "engineering" in cats
+        assert "constrained" in cats
 
     def test_properties(self):
         from surfaces import collection
@@ -440,7 +440,7 @@ class TestShow:
             "bbob",
             "cec2014",
             "cec2017",
-            "engineering",
+            "constrained",
         ]
         for name in expected:
             assert name in suites

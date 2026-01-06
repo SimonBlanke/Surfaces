@@ -42,15 +42,18 @@ def get_category(func_cls: Type) -> str:
     """Determine the category of a function class."""
     module = func_cls.__module__
 
-    if ".algebraic" in module:
+    # Check more specific patterns first
+    if ".constrained" in module:
+        return "constrained"
+    elif ".algebraic" in module:
         return "algebraic"
     elif ".bbob" in module:
         return "bbob"
     elif ".cec" in module:
         return "cec"
-    elif ".engineering" in module:
-        return "engineering"
     elif ".machine_learning" in module:
         return "ml"
+    elif ".simulation" in module:
+        return "simulation"
     else:
         return "other"
