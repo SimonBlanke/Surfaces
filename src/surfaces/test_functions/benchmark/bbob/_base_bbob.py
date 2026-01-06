@@ -23,7 +23,7 @@ import numpy as np
 
 from surfaces.modifiers import BaseModifier
 
-from ..algebraic._base_algebraic_function import AlgebraicFunction
+from ...algebraic._base_algebraic_function import AlgebraicFunction
 
 
 class BBOBFunction(AlgebraicFunction):

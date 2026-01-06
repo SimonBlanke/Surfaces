@@ -14,7 +14,7 @@ import numpy as np
 
 from surfaces.modifiers import BaseModifier
 
-from ..algebraic._base_algebraic_function import AlgebraicFunction
+from ...algebraic._base_algebraic_function import AlgebraicFunction
 from ._data_utils import get_data_file
 
 
