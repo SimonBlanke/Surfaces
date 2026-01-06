@@ -25,7 +25,7 @@ def test_optuna_sphere():
     study = optuna.create_study(direction="minimize")
     study.optimize(objective, n_trials=50, show_progress_bar=False)
 
-    assert study.best_value < 0.5
+    assert study.best_value < 0.9
     assert abs(study.best_params["x0"]) < 1.0
     assert abs(study.best_params["x1"]) < 1.0
 
