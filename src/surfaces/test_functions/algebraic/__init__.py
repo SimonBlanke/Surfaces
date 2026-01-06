@@ -127,8 +127,9 @@ __all__ = [
     "multi_objective_functions",
 ]
 
-# Combined list of all algebraic functions
-algebraic_functions = standard_functions + constrained_functions
+# Combined list of standard algebraic functions (same as before restructuring)
+# Note: constrained_functions are separate because they use different variable naming
+algebraic_functions = standard_functions
 
 # Backwards compatibility aliases
 mathematical_functions = algebraic_functions
