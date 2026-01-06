@@ -38,12 +38,13 @@ Adds normally distributed noise to the objective value.
 .. code-block:: python
 
     from surfaces.test_functions import SphereFunction
-    from surfaces.noise import GaussianNoise
+    from surfaces.modifiers import GaussianNoise
 
-    base = SphereFunction(n_dim=3)
-
-    # Add Gaussian noise with standard deviation 0.1
-    noisy = GaussianNoise(base, sigma=0.1)
+    # Create function with Gaussian noise (standard deviation 0.1)
+    noisy = SphereFunction(
+        n_dim=3,
+        modifiers=[GaussianNoise(sigma=0.1)]
+    )
 
     # Multiple evaluations at same point give different results
     point = {"x0": 1.0, "x1": 1.0, "x2": 1.0}
@@ -62,9 +63,12 @@ Adds uniformly distributed noise.
 
 .. code-block:: python
 
-    from surfaces.noise import UniformNoise
+    from surfaces.modifiers import UniformNoise
 
-    noisy = UniformNoise(base, low=-0.1, high=0.1)
+    noisy = SphereFunction(
+        n_dim=3,
+        modifiers=[UniformNoise(low=-0.1, high=0.1)]
+    )
 
 **Parameters:**
 
@@ -105,7 +109,7 @@ Consider the noise level relative to the function's range:
 .. code-block:: python
 
     from surfaces.test_functions import SphereFunction
-    from surfaces.noise import GaussianNoise
+    from surfaces.modifiers import GaussianNoise
 
     base = SphereFunction(n_dim=3)
 
@@ -117,7 +121,10 @@ Consider the noise level relative to the function's range:
 
     # Choose noise relative to range
     sigma = 0.01 * func_range  # 1% noise
-    noisy = GaussianNoise(base, sigma=sigma)
+    noisy = SphereFunction(
+        n_dim=3,
+        modifiers=[GaussianNoise(sigma=sigma)]
+    )
 
 ----
 
@@ -128,20 +135,26 @@ For reproducible benchmarks, set a random seed:
 
 .. code-block:: python
 
-    import numpy as np
-    from surfaces.noise import GaussianNoise
+    from surfaces.test_functions import SphereFunction
+    from surfaces.modifiers import GaussianNoise
 
-    # Set seed for reproducibility
-    np.random.seed(42)
+    # Use seed parameter for reproducibility
+    noisy = SphereFunction(
+        n_dim=3,
+        modifiers=[GaussianNoise(sigma=0.1, seed=42)]
+    )
 
-    noisy = GaussianNoise(base, sigma=0.1)
+    point = {"x0": 1.0, "x1": 1.0, "x2": 1.0}
 
-    # Now results are reproducible
+    # Create another function with same seed
+    noisy2 = SphereFunction(
+        n_dim=3,
+        modifiers=[GaussianNoise(sigma=0.1, seed=42)]
+    )
+
+    # Results are reproducible across instances with same seed
     result1 = noisy(point)
-
-    np.random.seed(42)
-    result2 = noisy(point)
-
+    result2 = noisy2(point)
     assert result1 == result2
 
 ----

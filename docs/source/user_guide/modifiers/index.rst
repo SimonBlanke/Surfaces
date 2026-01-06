@@ -47,16 +47,19 @@ Modifiers wrap existing test functions:
 .. code-block:: python
 
     from surfaces.test_functions import SphereFunction
-    from surfaces.noise import GaussianNoise
+    from surfaces.modifiers import GaussianNoise
 
-    # Create base function
-    base_func = SphereFunction(n_dim=5)
-
-    # Add noise modifier
-    noisy_func = GaussianNoise(base_func, sigma=0.1)
+    # Create function with noise modifier
+    noisy_func = SphereFunction(
+        n_dim=5,
+        modifiers=[GaussianNoise(sigma=0.1)]
+    )
 
     # Evaluate - now includes random noise
     result = noisy_func({"x0": 0, "x1": 0, "x2": 0, "x3": 0, "x4": 0})
+
+    # Get true value without noise
+    true_result = noisy_func.true_value({"x0": 0, "x1": 0, "x2": 0, "x3": 0, "x4": 0})
 
 ----
 

@@ -11,7 +11,7 @@ Noise
 Base Class
 ==========
 
-.. autoclass:: surfaces.noise.BaseNoise
+.. autoclass:: surfaces.modifiers.BaseNoise
    :members:
    :show-inheritance:
 
@@ -25,7 +25,7 @@ GaussianNoise
 
 Additive Gaussian noise: ``f(x) + N(0, sigma^2)``
 
-.. autoclass:: surfaces.noise.GaussianNoise
+.. autoclass:: surfaces.modifiers.GaussianNoise
    :members:
    :show-inheritance:
 
@@ -34,7 +34,7 @@ UniformNoise
 
 Additive uniform noise: ``f(x) + U(low, high)``
 
-.. autoclass:: surfaces.noise.UniformNoise
+.. autoclass:: surfaces.modifiers.UniformNoise
    :members:
    :show-inheritance:
 
@@ -43,6 +43,6 @@ MultiplicativeNoise
 
 Multiplicative noise: ``f(x) * (1 + N(0, sigma^2))``
 
-.. autoclass:: surfaces.noise.MultiplicativeNoise
+.. autoclass:: surfaces.modifiers.MultiplicativeNoise
    :members:
    :show-inheritance:
