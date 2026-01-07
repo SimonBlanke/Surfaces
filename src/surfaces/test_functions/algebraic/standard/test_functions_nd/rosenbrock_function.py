@@ -4,6 +4,7 @@
 
 from typing import Any, Callable, Dict, List, Optional, Union
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
 from surfaces.modifiers import BaseModifier
 
 from ..._base_algebraic_function import AlgebraicFunction
@@ -124,6 +125,26 @@ class RosenbrockFunction(AlgebraicFunction):
             return loss
 
         self.pure_objective_function = rosenbrock_function
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Array of shape (n_points, n_dim).
+
+        Returns
+        -------
+        ArrayLike
+            Array of shape (n_points,).
+        """
+        xp = get_array_namespace(X)
+        # f(x) = sum((A - x_i)^2 + B*(x_{i+1} - x_i^2)^2) for i=0..n-2
+        x_i = X[:, :-1]  # x_0, x_1, ..., x_{n-2}
+        x_i1 = X[:, 1:]  # x_1, x_2, ..., x_{n-1}
+        term = (self.A - x_i) ** 2 + self.B * (x_i1 - x_i**2) ** 2
+        return xp.sum(term, axis=1)
 
     def _search_space(
         self,

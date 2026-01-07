@@ -5,6 +5,9 @@
 import math
 from typing import Any, Callable, Dict, List, Optional, Union
 
+import numpy as np
+
+from surfaces._array_utils import ArrayLike, get_array_namespace
 from surfaces.modifiers import BaseModifier
 
 from ..._base_algebraic_function import AlgebraicFunction
@@ -108,6 +111,31 @@ class GriewankFunction(AlgebraicFunction):
             return loss_sum - loss_product + 1
 
         self.pure_objective_function = griewank_function
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Array of shape (n_points, n_dim).
+
+        Returns
+        -------
+        ArrayLike
+            Array of shape (n_points,).
+        """
+        xp = get_array_namespace(X)
+
+        # f(x) = sum(x_i^2/4000) - prod(cos(x_i/sqrt(i+1))) + 1
+        sum_term = xp.sum(X**2 / 4000, axis=1)
+
+        # Create sqrt(i+1) divisor: [1, sqrt(2), sqrt(3), ..., sqrt(n)]
+        sqrt_indices = xp.sqrt(xp.arange(1, self.n_dim + 1, dtype=X.dtype))
+        cos_args = X / sqrt_indices  # Broadcasting: (n_points, n_dim) / (n_dim,)
+        prod_term = xp.prod(xp.cos(cos_args), axis=1)
+
+        return sum_term - prod_term + 1
 
     def _search_space(
         self,
