@@ -12,6 +12,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
 from surfaces.modifiers import BaseModifier
 
 from ...algebraic._base_algebraic_function import AlgebraicFunction
@@ -309,3 +310,117 @@ class CECFunction(AlgebraicFunction):
             Array of parameter values.
         """
         return np.array([params[f"x{i}"] for i in range(self.n_dim)])
+
+    # =====================================================================
+    # Batch evaluation helper methods
+    # =====================================================================
+
+    def _batch_shift(self, X: ArrayLike, index: int = None) -> ArrayLike:
+        """Apply shift transformation to batch: Z = X - o.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Input batch of shape (n_points, n_dim).
+        index : int, optional
+            Shift vector index. If None, uses func_id.
+
+        Returns
+        -------
+        ArrayLike
+            Shifted batch of shape (n_points, n_dim).
+        """
+        xp = get_array_namespace(X)
+        shift = xp.asarray(self._get_shift_vector(index))
+        return X - shift
+
+    def _batch_rotate(self, X: ArrayLike, index: int = None) -> ArrayLike:
+        """Apply rotation transformation to batch: Z = X @ M.T.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Input batch of shape (n_points, n_dim).
+        index : int, optional
+            Rotation matrix index. If None, uses func_id.
+
+        Returns
+        -------
+        ArrayLike
+            Rotated batch of shape (n_points, n_dim).
+        """
+        xp = get_array_namespace(X)
+        M = xp.asarray(self._get_rotation_matrix(index))
+        return X @ M.T
+
+    def _batch_shift_rotate(
+        self, X: ArrayLike, shift_index: int = None, rotate_index: int = None
+    ) -> ArrayLike:
+        """Apply shift then rotation to batch: Z = (X - o) @ M.T.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Input batch of shape (n_points, n_dim).
+        shift_index : int, optional
+            Shift vector index. If None, uses func_id.
+        rotate_index : int, optional
+            Rotation matrix index. If None, uses func_id.
+
+        Returns
+        -------
+        ArrayLike
+            Transformed batch of shape (n_points, n_dim).
+        """
+        return self._batch_rotate(self._batch_shift(X, shift_index), rotate_index)
+
+    def _batch_oscillation(self, X: ArrayLike) -> ArrayLike:
+        """Apply oscillation transformation (T_osz) to batch.
+
+        This transformation adds oscillations to the landscape,
+        making the function more difficult to optimize.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Input batch of shape (n_points, n_dim).
+
+        Returns
+        -------
+        ArrayLike
+            Transformed batch of shape (n_points, n_dim).
+        """
+        xp = get_array_namespace(X)
+        x_hat = xp.where(X != 0, xp.log(xp.abs(X)), 0.0)
+        c1 = xp.where(X > 0, 10.0, 5.5)
+        c2 = xp.where(X > 0, 7.9, 3.1)
+        result = xp.sign(X) * xp.exp(x_hat + 0.049 * (xp.sin(c1 * x_hat) + xp.sin(c2 * x_hat)))
+        return xp.where(X != 0, result, 0.0)
+
+    def _batch_asymmetric(self, X: ArrayLike, beta: float) -> ArrayLike:
+        """Apply asymmetric transformation to batch.
+
+        This transformation makes the landscape asymmetric,
+        with different scaling in positive and negative regions.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Input batch of shape (n_points, n_dim).
+        beta : float
+            Asymmetry parameter.
+
+        Returns
+        -------
+        ArrayLike
+            Transformed batch of shape (n_points, n_dim).
+        """
+        xp = get_array_namespace(X)
+        D = X.shape[1]
+        i = xp.arange(D, dtype=X.dtype)
+        if D > 1:
+            exp_factor = 1 + beta * i / (D - 1) * xp.sqrt(xp.abs(X))
+        else:
+            exp_factor = xp.ones_like(X)
+        result = xp.where(X > 0, xp.abs(X) ** exp_factor, X)
+        return result
