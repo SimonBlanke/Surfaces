@@ -8,6 +8,9 @@ from typing import Any, Dict
 
 import numpy as np
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
+
+from .._batch_transforms import batch_f_pen, batch_lambda_alpha, batch_t_osz
 from ._base_bbob import BBOBFunction
 
 
@@ -43,6 +46,26 @@ class AttractiveSector(BBOBFunction):
             return self.t_osz(result) ** 0.9 + self.f_opt
 
         self.pure_objective_function = attractive_sector
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        x_opt = xp.asarray(self.x_opt)
+        R = xp.asarray(self.R)
+        Q = xp.asarray(self.Q)
+
+        # z = Q @ Lambda @ R @ (x - x_opt)
+        Z = (X - x_opt) @ R.T
+        Z = batch_lambda_alpha(Z, 10, self.n_dim)
+        Z = Z @ Q.T
+
+        # s = 100 where z * x_opt > 0, else 1
+        s = xp.where(Z * x_opt > 0, 100.0, 1.0)
+        result = xp.sum((s * Z) ** 2, axis=1)
+
+        # Apply scalar t_osz: need element-wise version
+        result = batch_t_osz(result.reshape(-1, 1))[:, 0]
+        return result**0.9 + self.f_opt
 
 
 class StepEllipsoidal(BBOBFunction):
@@ -87,6 +110,40 @@ class StepEllipsoidal(BBOBFunction):
 
         self.pure_objective_function = step_ellipsoidal
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        x_opt = xp.asarray(self.x_opt)
+        R = xp.asarray(self.R)
+        Q = xp.asarray(self.Q)
+
+        # z_hat = Lambda @ R @ (x - x_opt)
+        Z_hat = (X - x_opt) @ R.T
+        Z_hat = batch_lambda_alpha(Z_hat, 10, self.n_dim)
+
+        # Step function
+        Z_tilde = xp.where(
+            xp.abs(Z_hat) > 0.5,
+            xp.floor(0.5 + Z_hat),
+            xp.floor(0.5 + 10 * Z_hat) / 10,
+        )
+
+        Z = Z_tilde @ Q.T
+
+        # coeffs = 10^(2*i/(n-1))
+        i = xp.arange(self.n_dim, dtype=X.dtype)
+        if self.n_dim > 1:
+            coeffs = xp.power(10.0, 2 * i / (self.n_dim - 1))
+        else:
+            coeffs = xp.ones(1, dtype=X.dtype)
+
+        # result = 0.1 * max(|z_hat[0]|/1e4, sum(coeffs * z**2))
+        term1 = xp.abs(Z_hat[:, 0]) / 1e4
+        term2 = xp.sum(coeffs * Z**2, axis=1)
+        result = 0.1 * xp.maximum(term1, term2)
+
+        return result + batch_f_pen(X) + self.f_opt
+
 
 class RosenbrockOriginal(BBOBFunction):
     """f8: Rosenbrock Function, Original.
@@ -126,6 +183,21 @@ class RosenbrockOriginal(BBOBFunction):
 
         self.pure_objective_function = rosenbrock
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        x_opt = xp.asarray(self.x_opt)
+        c = max(1, xp.sqrt(self.n_dim) / 8)
+
+        Z = c * (X - x_opt) + 1
+
+        # Rosenbrock: sum(100*(z_i^2 - z_{i+1})^2 + (z_i - 1)^2)
+        z_i = Z[:, :-1]
+        z_i1 = Z[:, 1:]
+        result = xp.sum(100 * (z_i**2 - z_i1) ** 2 + (z_i - 1) ** 2, axis=1)
+
+        return result + self.f_opt
+
 
 class RosenbrockRotated(BBOBFunction):
     """f9: Rosenbrock Function, Rotated.
@@ -160,3 +232,18 @@ class RosenbrockRotated(BBOBFunction):
             return result + self.f_opt
 
         self.pure_objective_function = rosenbrock_rotated
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        R = xp.asarray(self.R)
+        c = max(1, xp.sqrt(self.n_dim) / 8)
+
+        Z = c * (X @ R.T) + 0.5
+
+        # Rosenbrock: sum(100*(z_i^2 - z_{i+1})^2 + (z_i - 1)^2)
+        z_i = Z[:, :-1]
+        z_i1 = Z[:, 1:]
+        result = xp.sum(100 * (z_i**2 - z_i1) ** 2 + (z_i - 1) ** 2, axis=1)
+
+        return result + self.f_opt
