@@ -7,6 +7,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
 
 import numpy as np
 
+from surfaces._array_utils import ArrayLike, get_array_namespace, is_array_like
 from surfaces.modifiers import BaseModifier
 
 
@@ -528,3 +529,87 @@ class BaseTestFunction:
     def callbacks(self) -> List[Callable[[Dict[str, Any]], None]]:
         """List of registered callbacks (read-only copy)."""
         return self._callbacks.copy()
+
+    def batch(self, X: ArrayLike) -> ArrayLike:
+        """Evaluate multiple parameter sets in a single call.
+
+        This method enables efficient batch evaluation through vectorization.
+        The input array type determines the computation backend (numpy, cupy, jax).
+
+        Parameters
+        ----------
+        X : ArrayLike
+            2D array of shape (n_points, n_dim) where each row is a parameter set.
+            Supports numpy, cupy, and jax arrays. The output array type matches
+            the input type.
+
+        Returns
+        -------
+        ArrayLike
+            1D array of shape (n_points,) with evaluation results.
+            Returns the same array type as input (numpy -> numpy, cupy -> cupy).
+
+        Raises
+        ------
+        NotImplementedError
+            If the function does not implement _batch_objective.
+        ValueError
+            If X has wrong number of dimensions or wrong n_dim.
+
+        Examples
+        --------
+        >>> import numpy as np
+        >>> func = SphereFunction(n_dim=3)
+        >>> X = np.array([
+        ...     [0.0, 0.0, 0.0],
+        ...     [1.0, 1.0, 1.0],
+        ...     [2.0, 2.0, 2.0],
+        ... ])
+        >>> results = func.batch(X)
+        >>> results.shape
+        (3,)
+
+        With cupy (GPU):
+
+        >>> import cupy as cp
+        >>> X_gpu = cp.array([[1.0, 2.0, 3.0]])
+        >>> results_gpu = func.batch(X_gpu)  # Stays on GPU
+
+        Notes
+        -----
+        - This method bypasses memory caching, modifiers, and data collection
+          for maximum performance
+        - For functions that don't implement _batch_objective, this method
+          raises NotImplementedError
+        - The objective transformation (minimize/maximize) is applied
+        """
+        if not hasattr(self, "_batch_objective"):
+            raise NotImplementedError(
+                f"{type(self).__name__} does not support vectorized batch evaluation. "
+                "Implement _batch_objective(X) to enable this feature."
+            )
+
+        # Validate input
+        if not is_array_like(X):
+            raise TypeError(
+                f"Expected array-like input with shape (n_points, n_dim), "
+                f"got {type(X).__name__}"
+            )
+
+        if X.ndim != 2:
+            raise ValueError(
+                f"Expected 2D array with shape (n_points, n_dim), got {X.ndim}D array"
+            )
+
+        if X.shape[1] != self.n_dim:
+            raise ValueError(f"Expected {self.n_dim} dimensions, got {X.shape[1]}")
+
+        # Compute vectorized result
+        result = self._batch_objective(X)
+
+        # Apply objective transformation
+        if self.objective == "maximize":
+            xp = get_array_namespace(X)
+            result = -result
+
+        return result
