@@ -4,6 +4,7 @@
 
 from typing import Any, Callable, Dict, List, Optional, Union
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
 from surfaces.modifiers import BaseModifier
 
 from ..._base_algebraic_function import AlgebraicFunction
@@ -99,6 +100,24 @@ class StyblinskiTangFunction(AlgebraicFunction):
             return loss / 2
 
         self.pure_objective_function = styblinski_tang_function
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Array of shape (n_points, n_dim).
+
+        Returns
+        -------
+        ArrayLike
+            Array of shape (n_points,).
+        """
+        xp = get_array_namespace(X)
+        # f(x) = 0.5 * sum(x_i^4 - 16*x_i^2 + 5*x_i)
+        term = X**4 - 16 * X**2 + 5 * X
+        return xp.sum(term, axis=1) / 2
 
     def _search_space(
         self,
