@@ -4,10 +4,19 @@
 
 """BBOB Separable Functions (f1-f5)."""
 
+import math
 from typing import Any, Dict
 
 import numpy as np
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
+
+from .._batch_transforms import (
+    batch_f_pen,
+    batch_lambda_alpha,
+    batch_t_asy,
+    batch_t_osz,
+)
 from ._base_bbob import BBOBFunction
 
 
@@ -51,6 +60,24 @@ class Sphere(BBOBFunction):
 
         self.pure_objective_function = sphere
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation for Sphere.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Array of shape (n_points, n_dim).
+
+        Returns
+        -------
+        ArrayLike
+            Array of shape (n_points,).
+        """
+        xp = get_array_namespace(X)
+        x_opt = xp.asarray(self.x_opt)
+        Z = X - x_opt
+        return xp.sum(Z**2, axis=1) + self.f_opt
+
 
 class EllipsoidalSeparable(BBOBFunction):
     """f2: Separable Ellipsoidal Function.
@@ -83,6 +110,32 @@ class EllipsoidalSeparable(BBOBFunction):
 
         self.pure_objective_function = ellipsoidal
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation for Ellipsoidal.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Array of shape (n_points, n_dim).
+
+        Returns
+        -------
+        ArrayLike
+            Array of shape (n_points,).
+        """
+        xp = get_array_namespace(X)
+        x_opt = xp.asarray(self.x_opt)
+
+        # Compute coefficients: 10^6^(i/(n-1))
+        i = xp.arange(self.n_dim, dtype=X.dtype)
+        if self.n_dim > 1:
+            coeffs = xp.power(1e6, i / (self.n_dim - 1))
+        else:
+            coeffs = xp.ones(1, dtype=X.dtype)
+
+        Z = batch_t_osz(X - x_opt)
+        return xp.sum(coeffs * Z**2, axis=1) + self.f_opt
+
 
 class RastriginSeparable(BBOBFunction):
     """f3: Rastrigin Function (Separable).
@@ -113,6 +166,33 @@ class RastriginSeparable(BBOBFunction):
             return 10 * (D - np.sum(np.cos(2 * np.pi * z))) + np.sum(z**2) + self.f_opt
 
         self.pure_objective_function = rastrigin
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation for Rastrigin.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Array of shape (n_points, n_dim).
+
+        Returns
+        -------
+        ArrayLike
+            Array of shape (n_points,).
+        """
+        xp = get_array_namespace(X)
+        x_opt = xp.asarray(self.x_opt)
+        D = self.n_dim
+
+        # z = Lambda @ t_asy(t_osz(x - x_opt), 0.2)
+        Z = batch_t_osz(X - x_opt)
+        Z = batch_t_asy(Z, 0.2, self.n_dim)
+        Z = batch_lambda_alpha(Z, 10, self.n_dim)
+
+        # 10 * (D - sum(cos(2*pi*z))) + sum(z**2)
+        cos_sum = xp.sum(xp.cos(2 * math.pi * Z), axis=1)
+        sq_sum = xp.sum(Z**2, axis=1)
+        return 10 * (D - cos_sum) + sq_sum + self.f_opt
 
 
 class BuecheRastrigin(BBOBFunction):
@@ -162,6 +242,40 @@ class BuecheRastrigin(BBOBFunction):
 
         self.pure_objective_function = bueche_rastrigin
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation for Bueche-Rastrigin.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Array of shape (n_points, n_dim).
+
+        Returns
+        -------
+        ArrayLike
+            Array of shape (n_points,).
+        """
+        xp = get_array_namespace(X)
+        x_opt = xp.asarray(self.x_opt)
+        D = self.n_dim
+
+        Z = X - x_opt
+
+        # Apply scaling: s=10 where (even index AND z > 0), else s=1
+        even_idx = xp.arange(D) % 2 == 0  # shape (n_dim,)
+        mask = even_idx & (Z > 0)  # Broadcasting: shape (n_points, n_dim)
+        s = xp.where(mask, 10.0, 1.0)
+
+        Z = s * batch_t_osz(Z)
+        Z = batch_lambda_alpha(Z, 10, self.n_dim)
+
+        # 10 * (D - sum(cos(2*pi*z))) + sum(z**2) + 100 * f_pen(x)
+        cos_sum = xp.sum(xp.cos(2 * math.pi * Z), axis=1)
+        sq_sum = xp.sum(Z**2, axis=1)
+        penalty = batch_f_pen(X)
+
+        return 10 * (D - cos_sum) + sq_sum + 100 * penalty + self.f_opt
+
 
 class LinearSlope(BBOBFunction):
     """f5: Linear Slope Function.
@@ -204,3 +318,33 @@ class LinearSlope(BBOBFunction):
             return np.sum(5 * np.abs(s) - s * z) + self.f_opt
 
         self.pure_objective_function = linear_slope
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation for LinearSlope.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Array of shape (n_points, n_dim).
+
+        Returns
+        -------
+        ArrayLike
+            Array of shape (n_points,).
+        """
+        xp = get_array_namespace(X)
+        x_opt = xp.asarray(self.x_opt)
+
+        # s = sign(x_opt) * 10^(i/(n-1))
+        i = xp.arange(self.n_dim, dtype=X.dtype)
+        if self.n_dim > 1:
+            s = xp.sign(x_opt) * xp.power(10.0, i / (self.n_dim - 1))
+        else:
+            s = xp.sign(x_opt)
+
+        # Clip x to ensure we don't go past the boundary
+        # z = where(x_opt * x < 25, x, x_opt)
+        Z = xp.where(x_opt * X < 25, X, x_opt)
+
+        # sum(5 * |s| - s * z)
+        return xp.sum(5 * xp.abs(s) - s * Z, axis=1) + self.f_opt
