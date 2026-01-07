@@ -4,10 +4,14 @@
 
 """BBOB Multimodal Functions with Weak Global Structure (f20-f24)."""
 
+import math
 from typing import Any, Dict
 
 import numpy as np
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
+
+from .._batch_transforms import batch_f_pen, batch_lambda_alpha, batch_t_osz
 from ._base_bbob import BBOBFunction
 
 
@@ -64,6 +68,36 @@ class Schwefel(BBOBFunction):
             return result + 4.189828872724339 + self.f_pen(x) + self.f_opt
 
         self.pure_objective_function = schwefel
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        x_opt = xp.asarray(self.x_opt)
+        D = self.n_dim
+
+        # z transformations
+        Z = 2 * xp.sign(x_opt) * (X - x_opt)
+        abs_x_opt = xp.abs(x_opt)
+        Z = batch_lambda_alpha(Z - 2 * abs_x_opt, 10, D) + 2 * abs_x_opt
+        Z = 100 * (Z + 4.2096874633 * abs_x_opt / 2)
+
+        # Conditional computation vectorized
+        abs_Z = xp.abs(Z)
+        in_bounds = abs_Z <= 500
+
+        # In-bounds case: z * sin(sqrt(|z|))
+        term_in = Z * xp.sin(xp.sqrt(abs_Z))
+
+        # Out-of-bounds case
+        mod_term = 500 - abs_Z % 500
+        term_out = mod_term * xp.sin(xp.sqrt(xp.abs(mod_term)))
+        term_out = term_out - (Z - 500) ** 2 / (10000 * D) * xp.sign(Z)
+
+        # Combine using where
+        terms = xp.where(in_bounds, term_in, term_out)
+        result = -xp.sum(terms, axis=1) / (100 * D)
+
+        return result + 4.189828872724339 + batch_f_pen(X) + self.f_opt
 
 
 class Gallagher101(BBOBFunction):
@@ -141,6 +175,31 @@ class Gallagher101(BBOBFunction):
 
         self.pure_objective_function = gallagher
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        n_points = X.shape[0]
+        n_peaks = len(self._w)
+        D = self.n_dim
+
+        # Compute all peak values for all points
+        peak_vals = xp.zeros((n_points, n_peaks), dtype=X.dtype)
+        for k in range(n_peaks):
+            y_k = xp.asarray(self._y[k])
+            C_k = xp.asarray(self._C[k])
+            diff = X - y_k  # (n_points, n_dim)
+            # Quadratic form: sum((diff @ C) * diff, axis=1)
+            quad = xp.sum((diff @ C_k) * diff, axis=1)  # (n_points,)
+            exponent = -0.5 / D * quad
+            peak_vals[:, k] = self._w[k] * xp.exp(exponent)
+
+        max_vals = xp.max(peak_vals, axis=1)  # (n_points,)
+
+        # Apply scalar t_osz via batch version
+        result = batch_t_osz((10 - max_vals).reshape(-1, 1))[:, 0] ** 2
+
+        return result + batch_f_pen(X) + self.f_opt
+
 
 class Gallagher21(BBOBFunction):
     """f22: Gallagher's Gaussian 21-hi Peaks Function.
@@ -217,6 +276,31 @@ class Gallagher21(BBOBFunction):
 
         self.pure_objective_function = gallagher
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        n_points = X.shape[0]
+        n_peaks = len(self._w)
+        D = self.n_dim
+
+        # Compute all peak values for all points
+        peak_vals = xp.zeros((n_points, n_peaks), dtype=X.dtype)
+        for k in range(n_peaks):
+            y_k = xp.asarray(self._y[k])
+            C_k = xp.asarray(self._C[k])
+            diff = X - y_k  # (n_points, n_dim)
+            # Quadratic form: sum((diff @ C) * diff, axis=1)
+            quad = xp.sum((diff @ C_k) * diff, axis=1)  # (n_points,)
+            exponent = -0.5 / D * quad
+            peak_vals[:, k] = self._w[k] * xp.exp(exponent)
+
+        max_vals = xp.max(peak_vals, axis=1)  # (n_points,)
+
+        # Apply scalar t_osz via batch version
+        result = batch_t_osz((10 - max_vals).reshape(-1, 1))[:, 0] ** 2
+
+        return result + batch_f_pen(X) + self.f_opt
+
 
 class Katsuura(BBOBFunction):
     """f23: Katsuura Function.
@@ -258,6 +342,39 @@ class Katsuura(BBOBFunction):
             return result + self.f_pen(x) + self.f_opt
 
         self.pure_objective_function = katsuura
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        x_opt = xp.asarray(self.x_opt)
+        R = xp.asarray(self.R)
+        Q = xp.asarray(self.Q)
+        D = self.n_dim
+
+        # z = Q @ Lambda @ R @ (x - x_opt)
+        Z = (X - x_opt) @ R.T
+        Z = batch_lambda_alpha(Z, 100, D)
+        Z = Z @ Q.T
+
+        # Vectorize double loop over i (dimensions) and j (1..32)
+        j = xp.arange(1, 33, dtype=X.dtype)  # shape (32,)
+        pow2j = xp.power(2.0, j)  # shape (32,)
+
+        # Z[:, :, None] has shape (n_points, D, 1)
+        # Broadcast to (n_points, D, 32)
+        scaled = Z[:, :, None] * pow2j
+        inner = xp.abs(scaled - xp.round(scaled)) / pow2j  # (n_points, D, 32)
+        inner_sum = xp.sum(inner, axis=2)  # (n_points, D)
+
+        # (i+1) factor for each dimension
+        i_plus_1 = xp.arange(1, D + 1, dtype=X.dtype)  # (D,)
+
+        # (1 + (i+1) * inner_sum) ** (10 / D^1.2)
+        terms = xp.power(1 + i_plus_1 * inner_sum, 10 / D**1.2)  # (n_points, D)
+        result = xp.prod(terms, axis=1)  # (n_points,)
+
+        result = 10 / D**2 * result - 10 / D**2
+        return result + batch_f_pen(X) + self.f_opt
 
 
 class LunacekBiRastrigin(BBOBFunction):
@@ -311,3 +428,32 @@ class LunacekBiRastrigin(BBOBFunction):
             return result + 1e4 * self.f_pen(x) + self.f_opt
 
         self.pure_objective_function = lunacek_bi_rastrigin
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        x_opt = xp.asarray(self.x_opt)
+        R = xp.asarray(self.R)
+        Q = xp.asarray(self.Q)
+        D = self.n_dim
+
+        mu0 = 2.5
+        s = 1 - 1 / (2 * math.sqrt(D + 20) - 8.2)
+        mu1 = -math.sqrt((mu0**2 - 1) / s)
+
+        # Transform x
+        X_hat = 2 * xp.sign(x_opt) * X  # (n_points, D)
+        X_tilde = X_hat - mu0  # (n_points, D)
+
+        # Sum terms
+        sum1 = xp.sum(X_tilde**2, axis=1)  # (n_points,)
+        sum2 = D + s * xp.sum((X_hat - mu1) ** 2, axis=1)  # (n_points,)
+
+        # Apply rotation for cosine term: z = Q @ Lambda @ R @ x_tilde
+        Z = X_tilde @ R.T
+        Z = batch_lambda_alpha(Z, 100, D)
+        Z = Z @ Q.T
+        sum3 = 10 * xp.sum(xp.cos(2 * math.pi * Z), axis=1)
+
+        result = xp.minimum(sum1, sum2) + 10 * (D - sum3 / D)
+        return result + 1e4 * batch_f_pen(X) + self.f_opt
