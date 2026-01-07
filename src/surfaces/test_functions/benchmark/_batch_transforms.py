@@ -13,9 +13,6 @@ The transformations follow the BBOB/COCO definitions from:
     benchmarking 2009: Noiseless functions definitions.
 """
 
-import math
-from typing import Any
-
 from surfaces._array_utils import ArrayLike, get_array_namespace
 
 
