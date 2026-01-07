@@ -5,6 +5,7 @@
 import math
 from typing import Any, Callable, Dict, List, Optional, Union
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
 from surfaces.modifiers import BaseModifier
 
 from ..._base_algebraic_function import AlgebraicFunction
@@ -97,6 +98,26 @@ class BukinFunctionN6(AlgebraicFunction):
             return 100 * math.sqrt(abs(y - 0.01 * x**2)) + 0.01 * abs(x + 10)
 
         self.pure_objective_function = bukin_function_n6
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Array of shape (n_points, 2).
+
+        Returns
+        -------
+        ArrayLike
+            Array of shape (n_points,).
+        """
+        xp = get_array_namespace(X)
+
+        x = X[:, 0]
+        y = X[:, 1]
+
+        return 100 * xp.sqrt(xp.abs(y - 0.01 * x**2)) + 0.01 * xp.abs(x + 10)
 
     def _search_space(
         self,

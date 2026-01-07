@@ -5,6 +5,7 @@
 import math
 from typing import Any, Callable, Dict, List, Optional, Union
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
 from surfaces.modifiers import BaseModifier
 
 from ..._base_algebraic_function import AlgebraicFunction
@@ -96,6 +97,26 @@ class DropWaveFunction(AlgebraicFunction):
             return -(1 + math.cos(12 * math.sqrt(x**2 + y**2))) / (0.5 * (x**2 + y**2) + 2)
 
         self.pure_objective_function = drop_wave_function
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Array of shape (n_points, 2).
+
+        Returns
+        -------
+        ArrayLike
+            Array of shape (n_points,).
+        """
+        xp = get_array_namespace(X)
+
+        x = X[:, 0]
+        y = X[:, 1]
+
+        return -(1 + xp.cos(12 * xp.sqrt(x**2 + y**2))) / (0.5 * (x**2 + y**2) + 2)
 
     def _search_space(
         self,

@@ -5,6 +5,7 @@
 import math
 from typing import Any, Callable, Dict, List, Optional, Union
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
 from surfaces.modifiers import BaseModifier
 
 from ..._base_algebraic_function import AlgebraicFunction
@@ -120,6 +121,29 @@ class CrossInTrayFunction(AlgebraicFunction):
             return self.A * (abs(term1 * term2) + 1) ** 0.1
 
         self.pure_objective_function = cross_in_tray_function
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Array of shape (n_points, 2).
+
+        Returns
+        -------
+        ArrayLike
+            Array of shape (n_points,).
+        """
+        xp = get_array_namespace(X)
+
+        x = X[:, 0]
+        y = X[:, 1]
+
+        term1 = xp.sin(self.angle * x) * xp.sin(self.angle * y)
+        term2 = xp.exp(xp.abs(self.B - xp.sqrt(x**2 + y**2) / math.pi))
+
+        return self.A * (xp.abs(term1 * term2) + 1) ** 0.1
 
     def _search_space(
         self,
