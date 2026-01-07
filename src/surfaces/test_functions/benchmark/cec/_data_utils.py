@@ -16,9 +16,9 @@ _DATA_PACKAGE = "surfaces_cec_data"
 
 def _get_local_data_path(dataset: str, filename: str) -> Optional[Path]:
     """Check if file exists in the local data package directory (for development)."""
-    # This file is at src/surfaces/test_functions/cec/_data_utils.py
-    # Need 5 parents to get to repo root
-    repo_root = Path(__file__).parent.parent.parent.parent.parent
+    # This file is at src/surfaces/test_functions/benchmark/cec/_data_utils.py
+    # Need 6 parents to get to repo root (cec -> benchmark -> test_functions -> surfaces -> src -> repo)
+    repo_root = Path(__file__).parent.parent.parent.parent.parent.parent
     local_path = (
         repo_root
         / "data-packages"
