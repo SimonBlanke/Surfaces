@@ -8,6 +8,9 @@ from typing import Any, Dict
 
 import numpy as np
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
+
+from .._batch_transforms import batch_lambda_alpha, batch_t_asy, batch_t_osz
 from ._base_bbob import BBOBFunction
 
 
@@ -42,6 +45,18 @@ class EllipsoidalRotated(BBOBFunction):
 
         self.pure_objective_function = ellipsoidal
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        x_opt = xp.asarray(self.x_opt)
+        R = xp.asarray(self.R)
+
+        i = xp.arange(self.n_dim, dtype=X.dtype)
+        coeffs = xp.power(1e6, i / (self.n_dim - 1)) if self.n_dim > 1 else xp.ones(1, dtype=X.dtype)
+
+        Z = batch_t_osz((X - x_opt) @ R.T)
+        return xp.sum(coeffs * Z**2, axis=1) + self.f_opt
+
 
 class Discus(BBOBFunction):
     """f11: Discus Function.
@@ -71,6 +86,15 @@ class Discus(BBOBFunction):
 
         self.pure_objective_function = discus
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        x_opt = xp.asarray(self.x_opt)
+        R = xp.asarray(self.R)
+
+        Z = batch_t_osz((X - x_opt) @ R.T)
+        return 1e6 * Z[:, 0] ** 2 + xp.sum(Z[:, 1:] ** 2, axis=1) + self.f_opt
+
 
 class BentCigar(BBOBFunction):
     """f12: Bent Cigar Function.
@@ -99,6 +123,19 @@ class BentCigar(BBOBFunction):
             return z[0] ** 2 + 1e6 * np.sum(z[1:] ** 2) + self.f_opt
 
         self.pure_objective_function = bent_cigar
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        x_opt = xp.asarray(self.x_opt)
+        R = xp.asarray(self.R)
+
+        # z = R @ t_asy(R @ (x - x_opt), 0.5)
+        Z1 = (X - x_opt) @ R.T
+        Z2 = batch_t_asy(Z1, 0.5, self.n_dim)
+        Z = Z2 @ R.T
+
+        return Z[:, 0] ** 2 + 1e6 * xp.sum(Z[:, 1:] ** 2, axis=1) + self.f_opt
 
 
 class SharpRidge(BBOBFunction):
@@ -130,6 +167,20 @@ class SharpRidge(BBOBFunction):
 
         self.pure_objective_function = sharp_ridge
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        x_opt = xp.asarray(self.x_opt)
+        R = xp.asarray(self.R)
+        Q = xp.asarray(self.Q)
+
+        # z = Q @ Lambda @ R @ (x - x_opt)
+        Z = (X - x_opt) @ R.T
+        Z = batch_lambda_alpha(Z, 10, self.n_dim)
+        Z = Z @ Q.T
+
+        return Z[:, 0] ** 2 + 100 * xp.sqrt(xp.sum(Z[:, 1:] ** 2, axis=1)) + self.f_opt
+
 
 class DifferentPowers(BBOBFunction):
     """f14: Different Powers Function.
@@ -160,3 +211,15 @@ class DifferentPowers(BBOBFunction):
             return np.sqrt(np.sum(np.abs(z) ** exponents)) + self.f_opt
 
         self.pure_objective_function = different_powers
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        x_opt = xp.asarray(self.x_opt)
+        R = xp.asarray(self.R)
+
+        i = xp.arange(self.n_dim, dtype=X.dtype)
+        exponents = 2 + 4 * i / (self.n_dim - 1) if self.n_dim > 1 else 2 * xp.ones(1, dtype=X.dtype)
+
+        Z = (X - x_opt) @ R.T
+        return xp.sqrt(xp.sum(xp.abs(Z) ** exponents, axis=1)) + self.f_opt
