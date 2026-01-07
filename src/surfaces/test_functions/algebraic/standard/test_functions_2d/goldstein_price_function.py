@@ -4,6 +4,7 @@
 
 from typing import Any, Callable, Dict, List, Optional, Union
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
 from surfaces.modifiers import BaseModifier
 
 from ..._base_algebraic_function import AlgebraicFunction
@@ -94,6 +95,33 @@ class GoldsteinPriceFunction(AlgebraicFunction):
             return loss1 * loss2
 
         self.pure_objective_function = goldstein_price_function
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Array of shape (n_points, 2).
+
+        Returns
+        -------
+        ArrayLike
+            Array of shape (n_points,).
+        """
+        xp = get_array_namespace(X)
+
+        x = X[:, 0]
+        y = X[:, 1]
+
+        loss1 = 1 + (x + y + 1) ** 2 * (
+            19 - 14 * x + 3 * x**2 - 14 * y + 6 * x * y + 3 * y**2
+        )
+        loss2 = 30 + (2 * x - 3 * y) ** 2 * (
+            18 - 32 * x + 12 * x**2 + 48 * y - 36 * x * y + 27 * y**2
+        )
+
+        return loss1 * loss2
 
     def _search_space(
         self,

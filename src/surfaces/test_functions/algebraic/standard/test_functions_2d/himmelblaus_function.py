@@ -4,6 +4,7 @@
 
 from typing import Any, Dict, List, Optional
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
 from surfaces.modifiers import BaseModifier
 
 from ..._base_algebraic_function import AlgebraicFunction
@@ -117,6 +118,29 @@ class HimmelblausFunction(AlgebraicFunction):
             return loss1 + loss2
 
         self.pure_objective_function = himmelblaus_function
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Array of shape (n_points, 2).
+
+        Returns
+        -------
+        ArrayLike
+            Array of shape (n_points,).
+        """
+        xp = get_array_namespace(X)
+
+        x = X[:, 0]
+        y = X[:, 1]
+
+        loss1 = (x**2 + y + self.A) ** 2
+        loss2 = (x + y**2 + self.B) ** 2
+
+        return loss1 + loss2
 
     def _search_space(
         self,

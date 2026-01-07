@@ -5,6 +5,9 @@
 import math
 from typing import Any, Callable, Dict, List, Optional, Union
 
+import numpy as np
+
+from surfaces._array_utils import ArrayLike, get_array_namespace
 from surfaces.modifiers import BaseModifier
 
 from ..._base_algebraic_function import AlgebraicFunction
@@ -107,6 +110,49 @@ class LangermannFunction(AlgebraicFunction):
             return loss_sum1 * math.exp(loss_sum2) * math.cos(loss_sum3)
 
         self.pure_objective_function = langermann_function
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation.
+
+        NOTE: This matches the (buggy) sequential implementation exactly.
+        The sequential implementation only uses the LAST m value (m=4) for
+        loss_sum2 and loss_sum3, while loss_sum1 accumulates all c values.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Array of shape (n_points, 2).
+
+        Returns
+        -------
+        ArrayLike
+            Array of shape (n_points,).
+        """
+        xp = get_array_namespace(X)
+
+        # Match the buggy sequential implementation:
+        # - loss_sum1 = sum of all c values (accumulated over m loop)
+        # - loss_sum2/loss_sum3 are reset each m iteration, so only last m (=4) matters
+        # - Last iteration: sum over dim of (x[dim] - A[dim][4])
+
+        c = xp.asarray(self.c)
+        A = xp.asarray(self.A)  # shape (2, m)
+
+        loss_sum1 = xp.sum(c)  # = 13
+
+        # Only the last m value (index 4) is used due to the bug
+        # A[0][4] = 7, A[1][4] = 9
+        last_m = self.m - 1  # = 4
+
+        # Sum (x[dim] - A[dim][last_m]) over dim
+        x0 = X[:, 0]
+        x1 = X[:, 1]
+        diff_sum = (x0 - self.A[0][last_m]) + (x1 - self.A[1][last_m])
+
+        loss_sum2 = diff_sum * (-1 / math.pi)
+        loss_sum3 = diff_sum * math.pi
+
+        return loss_sum1 * xp.exp(loss_sum2) * xp.cos(loss_sum3)
 
     def _search_space(
         self,

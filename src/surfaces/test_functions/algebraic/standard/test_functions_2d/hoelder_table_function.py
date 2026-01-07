@@ -5,6 +5,7 @@
 import math
 from typing import Any, Dict, List, Optional
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
 from surfaces.modifiers import BaseModifier
 
 from ..._base_algebraic_function import AlgebraicFunction
@@ -113,6 +114,29 @@ class HölderTableFunction(AlgebraicFunction):
             return -abs(loss1 * loss2)
 
         self.pure_objective_function = hölder_table_function
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Array of shape (n_points, 2).
+
+        Returns
+        -------
+        ArrayLike
+            Array of shape (n_points,).
+        """
+        xp = get_array_namespace(X)
+
+        x = X[:, 0]
+        y = X[:, 1]
+
+        loss1 = xp.sin(self.angle * x) * xp.cos(self.angle * y)
+        loss2 = xp.exp(xp.abs(1 - xp.sqrt(x**2 + y**2) / math.pi))
+
+        return -xp.abs(loss1 * loss2)
 
     def _search_space(
         self,
