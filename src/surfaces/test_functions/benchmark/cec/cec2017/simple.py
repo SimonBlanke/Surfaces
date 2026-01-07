@@ -4,9 +4,12 @@
 
 """CEC 2017 Simple Benchmark Functions (F1-F10)."""
 
+import math
 from typing import Any, Dict
 
 import numpy as np
+
+from surfaces._array_utils import ArrayLike, get_array_namespace
 
 from ._base_cec2017 import CEC2017Function
 
@@ -47,6 +50,12 @@ class ShiftedRotatedBentCigar(CEC2017Function):
 
         self.pure_objective_function = bent_cigar
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        Z = self._batch_shift_rotate(X)
+        return Z[:, 0] ** 2 + 1e6 * xp.sum(Z[:, 1:] ** 2, axis=1) + self.f_global
+
 
 class ShiftedRotatedSumDiffPow(CEC2017Function):
     """F2: Shifted and Rotated Sum of Different Power Function (DEPRECATED).
@@ -77,6 +86,17 @@ class ShiftedRotatedSumDiffPow(CEC2017Function):
 
         self.pure_objective_function = sum_diff_pow
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        D = self.n_dim
+        Z = self._batch_shift_rotate(X)
+
+        # exponents: i+1 for i = 0 to D-1
+        exponents = xp.arange(1, D + 1, dtype=X.dtype)
+        result = xp.sum(xp.abs(Z) ** exponents, axis=1)
+        return result + self.f_global
+
 
 class ShiftedRotatedZakharov(CEC2017Function):
     """F3: Shifted and Rotated Zakharov Function.
@@ -105,6 +125,19 @@ class ShiftedRotatedZakharov(CEC2017Function):
             return sum1 + sum2**2 + sum2**4 + self.f_global
 
         self.pure_objective_function = zakharov
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        D = self.n_dim
+        Z = self._batch_shift_rotate(X)
+
+        # i = 1 to D
+        i = xp.arange(1, D + 1, dtype=X.dtype)
+
+        sum1 = xp.sum(Z**2, axis=1)
+        sum2 = xp.sum(0.5 * i * Z, axis=1)
+        return sum1 + sum2**2 + sum2**4 + self.f_global
 
 
 class ShiftedRotatedRosenbrock(CEC2017Function):
@@ -137,6 +170,16 @@ class ShiftedRotatedRosenbrock(CEC2017Function):
 
         self.pure_objective_function = rosenbrock
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        Z = self._batch_shift_rotate(X)
+        Z = 0.02048 * Z + 1.0
+
+        # Rosenbrock: sum of 100*(z[i]^2 - z[i+1])^2 + (z[i] - 1)^2
+        result = xp.sum(100 * (Z[:, :-1] ** 2 - Z[:, 1:]) ** 2 + (Z[:, :-1] - 1) ** 2, axis=1)
+        return result + self.f_global
+
 
 class ShiftedRotatedRastrigin(CEC2017Function):
     """F5: Shifted and Rotated Rastrigin's Function.
@@ -166,6 +209,16 @@ class ShiftedRotatedRastrigin(CEC2017Function):
             return result + self.f_global
 
         self.pure_objective_function = rastrigin
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        D = self.n_dim
+        Z = self._batch_shift_rotate(X)
+        Z = 0.0512 * Z
+
+        result = 10 * D + xp.sum(Z**2 - 10 * xp.cos(2 * math.pi * Z), axis=1)
+        return result + self.f_global
 
 
 class ShiftedRotatedSchafferF7(CEC2017Function):
@@ -198,6 +251,20 @@ class ShiftedRotatedSchafferF7(CEC2017Function):
             return result + self.f_global
 
         self.pure_objective_function = schaffers_f7
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        D = self.n_dim
+        Z = self._batch_shift_rotate(X)
+
+        # s[i] = sqrt(z[i]^2 + z[i+1]^2)
+        S = xp.sqrt(Z[:, :-1] ** 2 + Z[:, 1:] ** 2)
+        tmp = xp.sin(50 * (S**0.2))
+        sm = xp.sum(xp.sqrt(S) * (tmp**2 + 1), axis=1)
+        result = (sm**2) / ((D - 1) ** 2)
+
+        return result + self.f_global
 
 
 class ShiftedRotatedLunacekBiRastrigin(CEC2017Function):
@@ -245,6 +312,39 @@ class ShiftedRotatedLunacekBiRastrigin(CEC2017Function):
 
         self.pure_objective_function = lunacek_bi_rastrigin
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        D = self.n_dim
+
+        shift = xp.asarray(self._get_shift_vector())
+        M = xp.asarray(self._get_rotation_matrix())
+
+        mu0 = 2.5
+        s = 1 - 1 / (2 * math.sqrt(D + 20) - 8.2)
+        mu1 = -math.sqrt((mu0**2 - 1) / s)
+
+        Y = 0.1 * (X - shift)
+        TMPX = 2 * Y
+
+        # tmpx[shift < 0] *= -1
+        sign_mask = xp.where(shift < 0, -1.0, 1.0)
+        TMPX = TMPX * sign_mask
+
+        Z = TMPX.copy()
+        TMPX = TMPX + mu0
+
+        t1 = xp.sum((TMPX - mu0) ** 2, axis=1)
+        t2 = s * xp.sum((TMPX - mu1) ** 2, axis=1) + D
+
+        # y = M @ z for each point
+        Y_rot = Z @ M.T
+        t = xp.sum(xp.cos(2 * math.pi * Y_rot), axis=1)
+
+        result = xp.minimum(t1, t2) + 10 * (D - t)
+
+        return result + self.f_global
+
 
 class ShiftedRotatedNonContRastrigin(CEC2017Function):
     """F8: Shifted and Rotated Non-Continuous Rastrigin's Function.
@@ -283,6 +383,21 @@ class ShiftedRotatedNonContRastrigin(CEC2017Function):
 
         self.pure_objective_function = non_cont_rastrigin
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+
+        shift = xp.asarray(self._get_shift_vector())
+        M = xp.asarray(self._get_rotation_matrix())
+
+        shifted = X - shift
+        Z = 0.0512 * shifted
+        Z = Z @ M.T
+
+        result = xp.sum(Z**2 - 10 * xp.cos(2 * math.pi * Z) + 10, axis=1)
+
+        return result + self.f_global
+
 
 class ShiftedRotatedLevy(CEC2017Function):
     """F9: Shifted and Rotated Levy Function.
@@ -313,6 +428,22 @@ class ShiftedRotatedLevy(CEC2017Function):
             return term1 + sm + term3 + self.f_global
 
         self.pure_objective_function = levy
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        Z = self._batch_shift_rotate(X)
+
+        W = 1.0 + 0.25 * (Z - 1.0)
+
+        term1 = xp.sin(math.pi * W[:, 0]) ** 2
+        term3 = (W[:, -1] - 1) ** 2 * (1 + xp.sin(2 * math.pi * W[:, -1]) ** 2)
+        sm = xp.sum(
+            (W[:, :-1] - 1) ** 2 * (1 + 10 * xp.sin(math.pi * W[:, :-1] + 1) ** 2),
+            axis=1,
+        )
+
+        return term1 + sm + term3 + self.f_global
 
 
 class ShiftedRotatedSchwefel(CEC2017Function):
@@ -355,3 +486,30 @@ class ShiftedRotatedSchwefel(CEC2017Function):
             return 418.9829 * D - result + self.f_global
 
         self.pure_objective_function = schwefel
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        D = self.n_dim
+
+        Z = self._batch_shift_rotate(X)
+        Z = 10.0 * Z + 420.9687462275036
+
+        # Case 1: abs(z) <= 500
+        case1 = xp.abs(Z) <= 500
+        term1 = Z * xp.sin(xp.sqrt(xp.abs(Z)))
+
+        # Case 2: z > 500
+        case2 = Z > 500
+        zm2 = 500 - Z % 500
+        term2 = zm2 * xp.sin(xp.sqrt(xp.abs(zm2))) - (Z - 500) ** 2 / (10000 * D)
+
+        # Case 3: z < -500
+        case3 = Z < -500
+        zm3 = xp.abs(Z) % 500 - 500
+        term3 = zm3 * xp.sin(xp.sqrt(xp.abs(zm3))) - (Z + 500) ** 2 / (10000 * D)
+
+        contrib = xp.where(case1, term1, xp.where(case2, term2, term3))
+        result = 418.9829 * D - xp.sum(contrib, axis=1)
+
+        return result + self.f_global
