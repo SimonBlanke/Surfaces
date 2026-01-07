@@ -96,9 +96,7 @@ class SphereFunction(AlgebraicFunction):
         callbacks: Optional[Union[Callable, List[Callable]]] = None,
         catch_errors: Optional[Dict[type, float]] = None,
     ) -> None:
-        super().__init__(
-            objective, modifiers, memory, collect_data, callbacks, catch_errors
-        )
+        super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = n_dim
         self.A = A
         self.x_global = tuple(0.0 for _ in range(n_dim))
@@ -139,6 +137,4 @@ class SphereFunction(AlgebraicFunction):
         size: int = 10000,
         value_types: str = "array",
     ) -> Dict[str, Any]:
-        return super()._create_n_dim_search_space(
-            min, max, size=size, value_types=value_types
-        )
+        return super()._create_n_dim_search_space(min, max, size=size, value_types=value_types)

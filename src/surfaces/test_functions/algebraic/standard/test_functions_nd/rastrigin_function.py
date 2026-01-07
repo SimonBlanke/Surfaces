@@ -72,10 +72,10 @@ class RastriginFunction(AlgebraicFunction):
 
     default_bounds = (-5.0, 5.0)
 
-    latex_formula = (
-        r"f(\vec{x}) = 10n + \sum_{i=1}^{n} \left[x_i^2 - 10\cos(2\pi x_i)\right]"
+    latex_formula = r"f(\vec{x}) = 10n + \sum_{i=1}^{n} \left[x_i^2 - 10\cos(2\pi x_i)\right]"
+    pgfmath_formula = (
+        "20 + #1^2 - 10*cos(deg(2*pi*#1)) + #2^2 - 10*cos(deg(2*pi*#2))"  # 2D specialization
     )
-    pgfmath_formula = "20 + #1^2 - 10*cos(deg(2*pi*#1)) + #2^2 - 10*cos(deg(2*pi*#2))"  # 2D specialization
 
     # Function sheet attributes
     tagline = (
@@ -99,9 +99,7 @@ class RastriginFunction(AlgebraicFunction):
         callbacks: Optional[Union[Callable, List[Callable]]] = None,
         catch_errors: Optional[Dict[type, float]] = None,
     ) -> None:
-        super().__init__(
-            objective, modifiers, memory, collect_data, callbacks, catch_errors
-        )
+        super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
 
         self.n_dim = n_dim
         self.A = A
@@ -146,6 +144,4 @@ class RastriginFunction(AlgebraicFunction):
         size: int = 10000,
         value_types: str = "array",
     ) -> Dict[str, Any]:
-        return super()._create_n_dim_search_space(
-            min, max, size=size, value_types=value_types
-        )
+        return super()._create_n_dim_search_space(min, max, size=size, value_types=value_types)

@@ -101,9 +101,7 @@ class AckleyFunction(AlgebraicFunction):
         callbacks: Optional[Union[Callable, List[Callable]]] = None,
         catch_errors: Optional[Dict[type, float]] = None,
     ) -> None:
-        super().__init__(
-            objective, modifiers, memory, collect_data, callbacks, catch_errors
-        )
+        super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
 
         self.n_dim = 2
 
@@ -116,9 +114,7 @@ class AckleyFunction(AlgebraicFunction):
             y = params["x1"]
 
             term1 = -self.A * math.exp(-0.2 * math.sqrt(0.5 * (x * x + y * y)))
-            term2 = -math.exp(
-                0.5 * (math.cos(self.angle * x) + math.cos(self.angle * y))
-            )
+            term2 = -math.exp(0.5 * (math.cos(self.angle * x) + math.cos(self.angle * y)))
 
             return term1 + term2 + math.e + self.A
 
