@@ -4,6 +4,8 @@
 
 """Base class for CEC 2017 benchmark functions."""
 
+from surfaces._array_utils import ArrayLike
+
 from .._base_cec import CECFunction
 
 
@@ -57,3 +59,18 @@ class CEC2017Function(CECFunction):
     def _shift_rotate(self, x):
         """Apply shift then rotation: z = M @ (x - o)."""
         return self._rotate(self._shift(x))
+
+    def _batch_shift_rotate(self, X: ArrayLike) -> ArrayLike:
+        """Apply shift then rotation to batch: Z = (X - o) @ M.T.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Input batch of shape (n_points, n_dim).
+
+        Returns
+        -------
+        ArrayLike
+            Transformed batch of shape (n_points, n_dim).
+        """
+        return self._batch_rotate(self._batch_shift(X))
