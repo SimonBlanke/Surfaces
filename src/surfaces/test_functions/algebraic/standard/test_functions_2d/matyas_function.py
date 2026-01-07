@@ -4,6 +4,7 @@
 
 from typing import Any, Callable, Dict, List, Optional, Union
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
 from surfaces.modifiers import BaseModifier
 
 from ..._base_algebraic_function import AlgebraicFunction
@@ -94,6 +95,26 @@ class MatyasFunction(AlgebraicFunction):
             return 0.26 * (x**2 + y**2) - 0.48 * x * y
 
         self.pure_objective_function = matyas_function
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Array of shape (n_points, 2).
+
+        Returns
+        -------
+        ArrayLike
+            Array of shape (n_points,).
+        """
+        xp = get_array_namespace(X)
+
+        x = X[:, 0]
+        y = X[:, 1]
+
+        return 0.26 * (x**2 + y**2) - 0.48 * x * y
 
     def _search_space(
         self,

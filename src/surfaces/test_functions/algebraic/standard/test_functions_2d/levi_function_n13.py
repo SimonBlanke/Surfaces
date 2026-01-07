@@ -5,6 +5,7 @@
 import math
 from typing import Any, Callable, Dict, List, Optional, Union
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
 from surfaces.modifiers import BaseModifier
 
 from ..._base_algebraic_function import AlgebraicFunction
@@ -100,6 +101,31 @@ class LeviFunctionN13(AlgebraicFunction):
             )
 
         self.pure_objective_function = levi_function_n13
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Array of shape (n_points, 2).
+
+        Returns
+        -------
+        ArrayLike
+            Array of shape (n_points,).
+        """
+        xp = get_array_namespace(X)
+
+        x = X[:, 0]
+        y = X[:, 1]
+
+        # Match the sequential implementation exactly
+        return (
+            xp.sin(3 * math.pi * x) ** 2
+            + (x + 1) ** 2 * (1 + xp.sin(3 * math.pi * y) ** 2)
+            + (y - 1) ** 2 * (1 + xp.sin(3 * math.pi * y) ** 2)
+        )
 
     def _search_space(
         self,
