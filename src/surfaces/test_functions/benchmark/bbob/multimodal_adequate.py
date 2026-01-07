@@ -139,8 +139,8 @@ class Weierstrass(BBOBFunction):
         # Shape: Z is (n_points, D), we need (n_points, D, k_max) then sum over D and k_max
 
         # Expand k for broadcasting
-        b_pow_k = b ** k  # shape (k_max,)
-        a_pow_k = a ** k  # shape (k_max,)
+        b_pow_k = b**k  # shape (k_max,)
+        a_pow_k = a**k  # shape (k_max,)
 
         # Z[:, :, None] has shape (n_points, D, 1)
         # (Z + 0.5)[:, :, None] * b_pow_k[None, None, :] has shape (n_points, D, k_max)

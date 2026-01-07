@@ -52,7 +52,9 @@ class EllipsoidalRotated(BBOBFunction):
         R = xp.asarray(self.R)
 
         i = xp.arange(self.n_dim, dtype=X.dtype)
-        coeffs = xp.power(1e6, i / (self.n_dim - 1)) if self.n_dim > 1 else xp.ones(1, dtype=X.dtype)
+        coeffs = (
+            xp.power(1e6, i / (self.n_dim - 1)) if self.n_dim > 1 else xp.ones(1, dtype=X.dtype)
+        )
 
         Z = batch_t_osz((X - x_opt) @ R.T)
         return xp.sum(coeffs * Z**2, axis=1) + self.f_opt
@@ -219,7 +221,9 @@ class DifferentPowers(BBOBFunction):
         R = xp.asarray(self.R)
 
         i = xp.arange(self.n_dim, dtype=X.dtype)
-        exponents = 2 + 4 * i / (self.n_dim - 1) if self.n_dim > 1 else 2 * xp.ones(1, dtype=X.dtype)
+        exponents = (
+            2 + 4 * i / (self.n_dim - 1) if self.n_dim > 1 else 2 * xp.ones(1, dtype=X.dtype)
+        )
 
         Z = (X - x_opt) @ R.T
         return xp.sqrt(xp.sum(xp.abs(Z) ** exponents, axis=1)) + self.f_opt
