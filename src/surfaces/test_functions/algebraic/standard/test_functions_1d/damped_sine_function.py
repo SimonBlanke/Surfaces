@@ -5,6 +5,7 @@
 import math
 from typing import Any, Callable, Dict, List, Optional, Union
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
 from surfaces.modifiers import BaseModifier
 
 from ..._base_algebraic_function import AlgebraicFunction
@@ -104,6 +105,24 @@ class DampedSineFunction(AlgebraicFunction):
             return -(x + math.sin(x)) * math.exp(-(x**2))
 
         self.pure_objective_function = damped_sine_function
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Array of shape (n_points, 1).
+
+        Returns
+        -------
+        ArrayLike
+            Array of shape (n_points,).
+        """
+        xp = get_array_namespace(X)
+
+        x = X[:, 0]
+        return -(x + xp.sin(x)) * xp.exp(-(x**2))
 
     def _search_space(
         self,
