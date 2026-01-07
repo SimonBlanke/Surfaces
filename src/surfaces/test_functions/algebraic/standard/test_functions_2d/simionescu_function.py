@@ -5,6 +5,7 @@
 import math
 from typing import Any, Dict, List, Optional
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
 from surfaces.modifiers import BaseModifier
 
 from ..._base_algebraic_function import AlgebraicFunction
@@ -132,6 +133,34 @@ class SimionescuFunction(AlgebraicFunction):
             return float("nan")
 
         self.pure_objective_function = simionescu_function
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Array of shape (n_points, 2).
+
+        Returns
+        -------
+        ArrayLike
+            Array of shape (n_points,). Points outside the constraint
+            boundary return NaN.
+        """
+        xp = get_array_namespace(X)
+
+        x = X[:, 0]
+        y = X[:, 1]
+
+        # Use atan2 for safe handling of y=0 case
+        constraint_radius = self.r_T + self.r_S * xp.cos(self.n * xp.arctan2(x, y))
+        in_bounds = x**2 + y**2 <= constraint_radius**2
+
+        # Return A*x*y where in bounds, NaN otherwise
+        result = xp.where(in_bounds, self.A * x * y, xp.nan)
+
+        return result
 
     def _search_space(
         self,
