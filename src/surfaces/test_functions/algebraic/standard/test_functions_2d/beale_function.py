@@ -4,6 +4,7 @@
 
 from typing import Any, Callable, Dict, List, Optional, Union
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
 from surfaces.modifiers import BaseModifier
 
 from ..._base_algebraic_function import AlgebraicFunction
@@ -119,6 +120,30 @@ class BealeFunction(AlgebraicFunction):
             return loss1 + loss2 + loss3
 
         self.pure_objective_function = beale_function
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Array of shape (n_points, 2).
+
+        Returns
+        -------
+        ArrayLike
+            Array of shape (n_points,).
+        """
+        xp = get_array_namespace(X)
+
+        x = X[:, 0]
+        y = X[:, 1]
+
+        loss1 = (self.A - x + x * y) ** 2
+        loss2 = (self.B - x + x * y**2) ** 2
+        loss3 = (self.C - x + x * y**3) ** 2
+
+        return loss1 + loss2 + loss3
 
     def _search_space(
         self,

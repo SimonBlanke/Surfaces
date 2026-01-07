@@ -4,6 +4,7 @@
 
 from typing import Any, Callable, Dict, List, Optional, Union
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
 from surfaces.modifiers import BaseModifier
 
 from ..._base_algebraic_function import AlgebraicFunction
@@ -100,6 +101,26 @@ class BoothFunction(AlgebraicFunction):
             return loss1 + loss2
 
         self.pure_objective_function = booth_function
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Array of shape (n_points, 2).
+
+        Returns
+        -------
+        ArrayLike
+            Array of shape (n_points,).
+        """
+        xp = get_array_namespace(X)
+
+        x = X[:, 0]
+        y = X[:, 1]
+
+        return (x + 2 * y - 7) ** 2 + (2 * x + y - 5) ** 2
 
     def _search_space(
         self,
