@@ -284,7 +284,9 @@ class BaseTestFunction:
     # =========================================================================
 
     def __call__(
-        self, params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None, **kwargs
+        self,
+        params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None,
+        **kwargs,
     ) -> float:
         """
         Evaluate the objective function.
@@ -326,7 +328,9 @@ class BaseTestFunction:
         return result
 
     def _normalize_input(
-        self, params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None, **kwargs
+        self,
+        params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None,
+        **kwargs,
     ) -> Dict[str, Any]:
         """Convert any input format to dict."""
         if isinstance(params, (np.ndarray, list, tuple)):
@@ -434,7 +438,9 @@ class BaseTestFunction:
     # =========================================================================
 
     def true_value(
-        self, params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None, **kwargs
+        self,
+        params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None,
+        **kwargs,
     ) -> float:
         """Evaluate the function without modifiers.
 
@@ -597,9 +603,7 @@ class BaseTestFunction:
             )
 
         if X.ndim != 2:
-            raise ValueError(
-                f"Expected 2D array with shape (n_points, n_dim), got {X.ndim}D array"
-            )
+            raise ValueError(f"Expected 2D array with shape (n_points, n_dim), got {X.ndim}D array")
 
         if X.shape[1] != self.n_dim:
             raise ValueError(f"Expected {self.n_dim} dimensions, got {X.shape[1]}")
