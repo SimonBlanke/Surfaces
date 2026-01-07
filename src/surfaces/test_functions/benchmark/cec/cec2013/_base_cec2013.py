@@ -8,6 +8,8 @@ from typing import Optional
 
 import numpy as np
 
+from surfaces._array_utils import ArrayLike
+
 from .._base_cec import CECFunction
 
 
@@ -92,4 +94,24 @@ class CEC2013Function(CECFunction):
         shifted = self._shift(x, self.shift_index)
         if self.uses_rotation:
             return self._rotate(shifted, self.shift_index)
+        return shifted
+
+    def _batch_shift_rotate(self, X: ArrayLike) -> ArrayLike:
+        """Apply shift then rotation to batch: Z = (X - o) @ M.T.
+
+        CEC 2013 functions may optionally skip rotation based on uses_rotation.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Input batch of shape (n_points, n_dim).
+
+        Returns
+        -------
+        ArrayLike
+            Transformed batch of shape (n_points, n_dim).
+        """
+        shifted = self._batch_shift(X, self.shift_index)
+        if self.uses_rotation:
+            return self._batch_rotate(shifted, self.shift_index)
         return shifted
