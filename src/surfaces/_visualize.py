@@ -45,7 +45,8 @@ def _create_grid(objective_function: Any, search_space: Dict[str, np.ndarray]) -
     """Create a 2D grid for visualization from a search space and objective function.
 
     Args:
-        objective_function: Function that takes a dict of parameters and returns a scalar
+        objective_function: Function that takes a dict of parameters and returns a scalar,
+            or a test function object with a batch() method for vectorized evaluation.
         search_space: Dictionary with exactly 2 keys, each mapping to numpy arrays
 
     Returns:
@@ -53,15 +54,24 @@ def _create_grid(objective_function: Any, search_space: Dict[str, np.ndarray]) -
     """
     _check_viz_deps()
 
-    def objective_function_np(*args: Any) -> float:
-        para = {}
-        for arg, key in zip(args, search_space.keys()):
-            para[key] = arg
-        return objective_function(para)
-
     (x_all, y_all) = search_space.values()
     xi, yi = np.meshgrid(x_all, y_all)
-    zi = objective_function_np(xi, yi)
+
+    # Use batch method if available for efficient vectorized evaluation
+    if hasattr(objective_function, "batch"):
+        # Flatten meshgrid to (n_points, 2) array
+        X = np.column_stack([xi.ravel(), yi.ravel()])
+        # Call batch method and reshape back to grid
+        zi = objective_function.batch(X).reshape(xi.shape)
+    else:
+        # Fallback: try direct vectorized call (works for simple arithmetic functions)
+        def objective_function_np(*args: Any) -> float:
+            para = {}
+            for arg, key in zip(args, search_space.keys()):
+                para[key] = arg
+            return objective_function(para)
+
+        zi = objective_function_np(xi, yi)
 
     return xi, yi, zi
 
