@@ -287,6 +287,17 @@ class GriewankRosenbrock(BBOBFunction):
         "separable": False,
     }
 
+    def _generate_x_opt(self) -> np.ndarray:
+        """Compute x_opt such that z = 1 at optimum.
+
+        Like f9 (RosenbrockRotated), the Rosenbrock part has optimum at z = 1.
+        With z = c * R @ x + 0.5, we need c * R @ x_opt = 0.5.
+        Therefore x_opt = R^(-1) @ (0.5/c * ones) = R^T @ (0.5/c * ones).
+        """
+        c = max(1, np.sqrt(self.n_dim) / 8)
+        ones = np.ones(self.n_dim)
+        return self.R.T @ (0.5 / c * ones)
+
     def _create_objective_function(self) -> None:
         c = max(1, np.sqrt(self.n_dim) / 8)
 
@@ -301,10 +312,11 @@ class GriewankRosenbrock(BBOBFunction):
             # Wrap-around for last element
             s[-1] = 100 * (z[-1] ** 2 - z[0]) ** 2 + (z[-1] - 1) ** 2
 
-            # Apply Griewank transformation
-            result = np.sum(s / 4000 - np.cos(s)) + 1
+            # Apply Griewank transformation: 10/D * sum(s/4000 - cos(s)) + 10
+            # At s=0: 10/D * D*(-1) + 10 = -10 + 10 = 0 (correct minimum)
+            result = np.sum(s / 4000 - np.cos(s))
 
-            return 10 * result / self.n_dim + self.f_opt
+            return 10 * (result / self.n_dim + 1) + self.f_opt
 
         self.pure_objective_function = griewank_rosenbrock
 
@@ -315,7 +327,7 @@ class GriewankRosenbrock(BBOBFunction):
         D = self.n_dim
         c = max(1, math.sqrt(D) / 8)
 
-        # z = c * R @ x + 0.5
+        # z = c * R @ x + 0.5 (x_opt is computed to give z = 1 at optimum)
         Z = c * (X @ R.T) + 0.5
 
         # Rosenbrock-like terms with wrap-around
@@ -324,7 +336,7 @@ class GriewankRosenbrock(BBOBFunction):
         Z_next = xp.roll(Z, -1, axis=1)
         S = 100 * (Z**2 - Z_next) ** 2 + (Z - 1) ** 2
 
-        # Apply Griewank transformation: sum(s/4000 - cos(s)) + 1
-        result = xp.sum(S / 4000 - xp.cos(S), axis=1) + 1
+        # Apply Griewank transformation: 10/D * sum(s/4000 - cos(s)) + 10
+        result = xp.sum(S / 4000 - xp.cos(S), axis=1)
 
-        return 10 * result / D + self.f_opt
+        return 10 * (result / D + 1) + self.f_opt

@@ -35,23 +35,37 @@ class Schwefel(BBOBFunction):
     }
 
     def _generate_x_opt(self) -> np.ndarray:
-        """Generate x_opt with special structure for Schwefel."""
-        x = self._rng.uniform(-4, 4, self.n_dim)
-        # Make half of the components have same sign
-        x[::2] = np.abs(x[::2])
-        x[1::2] = -np.abs(x[1::2])
-        return 0.5 * 4.2096874633 * x
+        """Generate x_opt with special structure for Schwefel.
+
+        Per COCO: x_opt = 4.2096874633/2 * sign_vector
+        where sign_vector is randomly +1 or -1 per dimension.
+        """
+        sign_vector = np.where(self._rng.rand(self.n_dim) > 0.5, 1, -1)
+        return 4.2096874633 / 2 * sign_vector
 
     def _create_objective_function(self) -> None:
         Lambda = self.lambda_alpha(10)
+        abs_x_opt = np.abs(self.x_opt)  # = 4.2096874633/2 for all dimensions
 
         def schwefel(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
-            z = 2 * np.sign(self.x_opt) * (x - self.x_opt)
-            z = Lambda @ (z - 2 * np.abs(self.x_opt)) + 2 * np.abs(self.x_opt)
-            z = 100 * (z + 4.2096874633 * np.abs(self.x_opt) / 2)
-
             D = self.n_dim
+
+            # Step 1: x_hat = 2 * sign(x_opt) * x
+            x_hat = 2 * np.sign(self.x_opt) * x
+
+            # Step 2: Sequential coupling (makes function non-separable)
+            # z_hat[0] = x_hat[0]
+            # z_hat[i+1] = x_hat[i+1] + 0.25 * (x_hat[i] - 2*|x_opt[i]|)
+            z_hat = np.zeros(D)
+            z_hat[0] = x_hat[0]
+            for i in range(D - 1):
+                z_hat[i + 1] = x_hat[i + 1] + 0.25 * (x_hat[i] - 2 * abs_x_opt[i])
+
+            # Step 3: z = 100 * (Lambda @ (z_hat - 2*|x_opt|) + 2*|x_opt|)
+            z = 100 * (Lambda @ (z_hat - 2 * abs_x_opt) + 2 * abs_x_opt)
+
+            # Schwefel function: -1/(100*D) * sum(z * sin(sqrt(|z|)))
             result = 0.0
             for i in range(D):
                 zi = z[i]
@@ -65,7 +79,8 @@ class Schwefel(BBOBFunction):
                     result -= (zi - 500) ** 2 / (10000 * D) * np.sign(zi)
 
             result = -result / (100 * D)
-            return result + 4.189828872724339 + self.f_pen(x) + self.f_opt
+            # Penalty applies to z/100 per COCO, but simplified here
+            return result + 4.189828872724339 + 100 * self.f_pen(z / 100) + self.f_opt
 
         self.pure_objective_function = schwefel
 
@@ -74,12 +89,22 @@ class Schwefel(BBOBFunction):
         xp = get_array_namespace(X)
         x_opt = xp.asarray(self.x_opt)
         D = self.n_dim
-
-        # z transformations
-        Z = 2 * xp.sign(x_opt) * (X - x_opt)
         abs_x_opt = xp.abs(x_opt)
-        Z = batch_lambda_alpha(Z - 2 * abs_x_opt, 10, D) + 2 * abs_x_opt
-        Z = 100 * (Z + 4.2096874633 * abs_x_opt / 2)
+
+        # Step 1: x_hat = 2 * sign(x_opt) * x
+        X_hat = 2 * xp.sign(x_opt) * X  # (n_points, D)
+
+        # Step 2: Sequential coupling (vectorized)
+        # z_hat[0] = x_hat[0]
+        # z_hat[i+1] = x_hat[i+1] + 0.25 * (x_hat[i] - 2*|x_opt[i]|)
+        Z_hat = xp.zeros_like(X_hat)
+        Z_hat[:, 0] = X_hat[:, 0]
+        for i in range(D - 1):
+            Z_hat[:, i + 1] = X_hat[:, i + 1] + 0.25 * (X_hat[:, i] - 2 * abs_x_opt[i])
+
+        # Step 3: z = 100 * (Lambda @ (z_hat - 2*|x_opt|) + 2*|x_opt|)
+        Z = batch_lambda_alpha(Z_hat - 2 * abs_x_opt, 10, D) + 2 * abs_x_opt
+        Z = 100 * Z
 
         # Conditional computation vectorized
         abs_Z = xp.abs(Z)
@@ -97,7 +122,8 @@ class Schwefel(BBOBFunction):
         terms = xp.where(in_bounds, term_in, term_out)
         result = -xp.sum(terms, axis=1) / (100 * D)
 
-        return result + 4.189828872724339 + batch_f_pen(X) + self.f_opt
+        # Penalty applies to z/100 per COCO
+        return result + 4.189828872724339 + 100 * batch_f_pen(Z / 100) + self.f_opt
 
 
 class Gallagher101(BBOBFunction):
@@ -422,9 +448,9 @@ class LunacekBiRastrigin(BBOBFunction):
 
             # Apply rotation for cosine term
             z = self.Q @ Lambda @ self.R @ x_tilde
-            sum3 = 10 * np.sum(np.cos(2 * np.pi * z))
+            sum3 = np.sum(np.cos(2 * np.pi * z))
 
-            result = min(sum1, sum2) + 10 * (D - sum3 / D)
+            result = min(sum1, sum2) + 10 * (D - sum3)
             return result + 1e4 * self.f_pen(x) + self.f_opt
 
         self.pure_objective_function = lunacek_bi_rastrigin
@@ -453,7 +479,7 @@ class LunacekBiRastrigin(BBOBFunction):
         Z = X_tilde @ R.T
         Z = batch_lambda_alpha(Z, 100, D)
         Z = Z @ Q.T
-        sum3 = 10 * xp.sum(xp.cos(2 * math.pi * Z), axis=1)
+        sum3 = xp.sum(xp.cos(2 * math.pi * Z), axis=1)
 
-        result = xp.minimum(sum1, sum2) + 10 * (D - sum3 / D)
+        result = xp.minimum(sum1, sum2) + 10 * (D - sum3)
         return result + 1e4 * batch_f_pen(X) + self.f_opt

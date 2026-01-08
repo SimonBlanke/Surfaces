@@ -218,11 +218,24 @@ class RosenbrockRotated(BBOBFunction):
         "separable": False,
     }
 
+    def _generate_x_opt(self) -> np.ndarray:
+        """Compute x_opt such that z = 1 at optimum.
+
+        For Rosenbrock, optimal z = 1 (all ones).
+        With z = c * R @ x + 0.5, we need c * R @ x_opt = 0.5.
+        Therefore x_opt = R^(-1) @ (0.5/c * ones).
+        """
+        c = max(1, np.sqrt(self.n_dim) / 8)
+        ones = np.ones(self.n_dim)
+        # x_opt = R^T @ (0.5/c * ones) since R is orthogonal (R^(-1) = R^T)
+        return self.R.T @ (0.5 / c * ones)
+
     def _create_objective_function(self) -> None:
         c = max(1, np.sqrt(self.n_dim) / 8)
 
         def rosenbrock_rotated(params: Dict[str, Any]) -> float:
             x = self._params_to_array(params)
+            # At x = x_opt: z = c * R @ x_opt + 0.5 = 0.5 + 0.5 = 1 (optimum for Rosenbrock)
             z = c * self.R @ x + 0.5
 
             result = 0.0
@@ -239,6 +252,7 @@ class RosenbrockRotated(BBOBFunction):
         R = xp.asarray(self.R)
         c = max(1, xp.sqrt(self.n_dim) / 8)
 
+        # z = c * R @ x + 0.5 (x_opt is computed to give z = 1 at optimum)
         Z = c * (X @ R.T) + 0.5
 
         # Rosenbrock: sum(100*(z_i^2 - z_{i+1})^2 + (z_i - 1)^2)
