@@ -210,7 +210,6 @@ class CantileverBeamFunction(EngineeringFunction):
 
     def _batch_constraints(self, X: ArrayLike) -> ArrayLike:
         """Vectorized deflection constraint."""
-        xp = get_array_namespace(X)
         x1 = X[:, 0]
         x2 = X[:, 1]
         x3 = X[:, 2]

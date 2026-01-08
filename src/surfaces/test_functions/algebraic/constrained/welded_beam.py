@@ -262,7 +262,6 @@ class WeldedBeamFunction(EngineeringFunction):
 
     def _batch_raw_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized raw objective: fabrication cost."""
-        xp = get_array_namespace(X)
         h = X[:, 0]
         weld_len = X[:, 1]
         t = X[:, 2]

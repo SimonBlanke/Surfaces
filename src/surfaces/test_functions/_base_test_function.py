@@ -7,7 +7,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
 
 import numpy as np
 
-from surfaces._array_utils import ArrayLike, get_array_namespace, is_array_like
+from surfaces._array_utils import ArrayLike, is_array_like
 from surfaces.modifiers import BaseModifier
 
 
@@ -613,7 +613,6 @@ class BaseTestFunction:
 
         # Apply objective transformation
         if self.objective == "maximize":
-            xp = get_array_namespace(X)
             result = -result
 
         return result

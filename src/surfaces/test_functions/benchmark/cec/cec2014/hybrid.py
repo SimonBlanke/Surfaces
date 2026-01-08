@@ -314,7 +314,6 @@ def _batch_katsuura(Z: ArrayLike) -> ArrayLike:
     """Vectorized Katsuura function."""
     xp = get_array_namespace(Z)
     D = Z.shape[1]
-    n_points = Z.shape[0]
 
     # j values: 1 to 32
     j = xp.arange(1, 33, dtype=Z.dtype)
@@ -356,7 +355,6 @@ def _batch_hgbat(Z: ArrayLike) -> ArrayLike:
 def _batch_expanded_griewank_rosenbrock(Z: ArrayLike) -> ArrayLike:
     """Vectorized Expanded Griewank-Rosenbrock function."""
     xp = get_array_namespace(Z)
-    D = Z.shape[1]
     Z_shifted = Z + 1
 
     # Pairs (z_i, z_{i+1}) for i = 0..D-2, plus (z_{D-1}, z_0)
@@ -377,7 +375,6 @@ def _batch_expanded_griewank_rosenbrock(Z: ArrayLike) -> ArrayLike:
 def _batch_expanded_scaffer(Z: ArrayLike) -> ArrayLike:
     """Vectorized Expanded Scaffer F6 function."""
     xp = get_array_namespace(Z)
-    D = Z.shape[1]
 
     # Pairs (z_i, z_{i+1}) for i = 0..D-2
     z_i = Z[:, :-1]

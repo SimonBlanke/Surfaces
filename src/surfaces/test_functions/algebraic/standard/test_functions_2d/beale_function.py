@@ -4,7 +4,7 @@
 
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from surfaces._array_utils import ArrayLike, get_array_namespace
+from surfaces._array_utils import ArrayLike
 from surfaces.modifiers import BaseModifier
 
 from ..._base_algebraic_function import AlgebraicFunction
@@ -134,8 +134,6 @@ class BealeFunction(AlgebraicFunction):
         ArrayLike
             Array of shape (n_points,).
         """
-        xp = get_array_namespace(X)
-
         x = X[:, 0]
         y = X[:, 1]
 

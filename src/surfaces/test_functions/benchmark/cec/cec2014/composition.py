@@ -82,7 +82,6 @@ class _CompositionBase(CEC2014Function):
             Weights of shape (n_points, n_functions).
         """
         xp = get_array_namespace(X)
-        n_points = X.shape[0]
 
         # X has shape (n_points, n_dim)
         # optima has shape (n_functions, n_dim)

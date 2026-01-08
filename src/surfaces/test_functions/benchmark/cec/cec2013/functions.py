@@ -730,8 +730,7 @@ class Schwefel(CEC2013Function):
         zm2 = 500 - Z % 500
         term2 = zm2 * xp.sin(xp.sqrt(xp.abs(zm2))) - (Z - 500) ** 2 / (10000 * D)
 
-        # Case 3: z < -500
-        case3 = Z < -500
+        # Case 3: z < -500 (else branch)
         zm3 = xp.abs(Z) % 500 - 500
         term3 = zm3 * xp.sin(xp.sqrt(xp.abs(zm3))) - (Z + 500) ** 2 / (10000 * D)
 
@@ -802,8 +801,7 @@ class RotatedSchwefel(CEC2013Function):
         zm2 = 500 - Z % 500
         term2 = zm2 * xp.sin(xp.sqrt(xp.abs(zm2))) - (Z - 500) ** 2 / (10000 * D)
 
-        # Case 3: z < -500
-        case3 = Z < -500
+        # Case 3: z < -500 (else branch)
         zm3 = xp.abs(Z) % 500 - 500
         term3 = zm3 * xp.sin(xp.sqrt(xp.abs(zm3))) - (Z + 500) ** 2 / (10000 * D)
 

@@ -218,7 +218,6 @@ class PressureVesselFunction(EngineeringFunction):
 
     def _batch_raw_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized raw objective: total manufacturing cost."""
-        xp = get_array_namespace(X)
         Ts = X[:, 0]
         Th = X[:, 1]
         R = X[:, 2]

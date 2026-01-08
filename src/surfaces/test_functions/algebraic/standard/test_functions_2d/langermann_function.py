@@ -134,7 +134,6 @@ class LangermannFunction(AlgebraicFunction):
         # - Last iteration: sum over dim of (x[dim] - A[dim][4])
 
         c = xp.asarray(self.c)
-        A = xp.asarray(self.A)  # shape (2, m)
 
         loss_sum1 = xp.sum(c)  # = 13
 
