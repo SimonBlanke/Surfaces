@@ -7,9 +7,12 @@
 These functions have multiple local optima in addition to the global optimum.
 """
 
+import math
 from typing import Any, Dict
 
 import numpy as np
+
+from surfaces._array_utils import ArrayLike, get_array_namespace
 
 from ._base_cec2014 import CEC2014Function
 
@@ -53,6 +56,17 @@ class ShiftedRotatedRosenbrock(CEC2014Function):
 
         self.pure_objective_function = rosenbrock
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        Z = self._batch_shift_rotate(X)
+        Z = Z * 2.048 / 100 + 1  # Scale
+
+        z_i = Z[:, :-1]
+        z_i1 = Z[:, 1:]
+        result = xp.sum(100 * (z_i**2 - z_i1) ** 2 + (z_i - 1) ** 2, axis=1)
+        return result + self.f_global
+
 
 class ShiftedRotatedAckley(CEC2014Function):
     """F5: Shifted and Rotated Ackley's Function.
@@ -93,6 +107,18 @@ class ShiftedRotatedAckley(CEC2014Function):
             return result + self.f_global
 
         self.pure_objective_function = ackley
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        D = self.n_dim
+        Z = self._batch_shift_rotate(X)
+
+        sum1 = xp.sum(Z**2, axis=1)
+        sum2 = xp.sum(xp.cos(2 * math.pi * Z), axis=1)
+
+        result = -20 * xp.exp(-0.2 * xp.sqrt(sum1 / D)) - xp.exp(sum2 / D) + 20 + math.e
+        return result + self.f_global
 
 
 class ShiftedRotatedWeierstrass(CEC2014Function):
@@ -147,6 +173,28 @@ class ShiftedRotatedWeierstrass(CEC2014Function):
 
         self.pure_objective_function = weierstrass
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        a, b, k_max = 0.5, 3, 20
+        D = self.n_dim
+
+        Z = self._batch_shift_rotate(X)
+        Z = Z * 0.5 / 100  # Scale
+
+        # Precompute offset
+        k = xp.arange(k_max + 1, dtype=X.dtype)
+        a_pow_k = a**k
+        offset = xp.sum(a_pow_k * xp.cos(2 * math.pi * (b**k) * 0.5))
+
+        # Vectorize double loop using 3D broadcasting
+        b_pow_k = b**k  # (k_max+1,)
+        cos_args = 2 * math.pi * (Z[:, :, None] + 0.5) * b_pow_k  # (n_points, D, k_max+1)
+        cos_terms = a_pow_k * xp.cos(cos_args)  # (n_points, D, k_max+1)
+        result = xp.sum(cos_terms, axis=(1, 2)) - D * offset
+
+        return result + self.f_global
+
 
 class ShiftedRotatedGriewank(CEC2014Function):
     """F7: Shifted and Rotated Griewank's Function.
@@ -185,6 +233,19 @@ class ShiftedRotatedGriewank(CEC2014Function):
 
         self.pure_objective_function = griewank
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        D = self.n_dim
+        Z = self._batch_shift_rotate(X)
+        Z = Z * 600 / 100  # Scale
+
+        sum_sq = xp.sum(Z**2, axis=1) / 4000
+        idx = xp.sqrt(xp.arange(1, D + 1, dtype=X.dtype))
+        prod_cos = xp.prod(xp.cos(Z / idx), axis=1)
+
+        return sum_sq - prod_cos + 1 + self.f_global
+
 
 class ShiftedRastrigin(CEC2014Function):
     """F8: Shifted Rastrigin's Function.
@@ -222,6 +283,16 @@ class ShiftedRastrigin(CEC2014Function):
 
         self.pure_objective_function = rastrigin
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        D = self.n_dim
+        Z = self._batch_shift(X)  # Only shift
+        Z = Z * 5.12 / 100  # Scale
+
+        result = 10 * D + xp.sum(Z**2 - 10 * xp.cos(2 * math.pi * Z), axis=1)
+        return result + self.f_global
+
 
 class ShiftedRotatedRastrigin(CEC2014Function):
     """F9: Shifted and Rotated Rastrigin's Function.
@@ -257,6 +328,16 @@ class ShiftedRotatedRastrigin(CEC2014Function):
             return result + self.f_global
 
         self.pure_objective_function = rastrigin
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        D = self.n_dim
+        Z = self._batch_shift_rotate(X)
+        Z = Z * 5.12 / 100  # Scale
+
+        result = 10 * D + xp.sum(Z**2 - 10 * xp.cos(2 * math.pi * Z), axis=1)
+        return result + self.f_global
 
 
 class ShiftedSchwefel(CEC2014Function):
@@ -310,6 +391,33 @@ class ShiftedSchwefel(CEC2014Function):
 
         self.pure_objective_function = schwefel
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        D = self.n_dim
+        Z = self._batch_shift(X)  # Only shift
+        Z = Z * 1000 / 100 + 4.209687462275036e2  # Scale and shift
+
+        abs_Z = xp.abs(Z)
+        in_bounds = abs_Z <= 500
+        is_positive = Z > 500
+
+        # Case 1: |z| <= 500
+        term1 = Z * xp.sin(xp.sqrt(abs_Z))
+
+        # Case 2: z > 500
+        mod_term2 = 500 - Z % 500
+        term2 = mod_term2 * xp.sin(xp.sqrt(xp.abs(mod_term2))) - (Z - 500) ** 2 / (10000 * D)
+
+        # Case 3: z < -500
+        mod_term3 = abs_Z % 500 - 500
+        term3 = mod_term3 * xp.sin(xp.sqrt(xp.abs(mod_term3))) - (Z + 500) ** 2 / (10000 * D)
+
+        terms = xp.where(in_bounds, term1, xp.where(is_positive, term2, term3))
+        result = 418.9829 * D - xp.sum(terms, axis=1)
+
+        return result + self.f_global
+
 
 class ShiftedRotatedSchwefel(CEC2014Function):
     """F11: Shifted and Rotated Schwefel's Function.
@@ -361,6 +469,33 @@ class ShiftedRotatedSchwefel(CEC2014Function):
 
         self.pure_objective_function = schwefel
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        D = self.n_dim
+        Z = self._batch_shift_rotate(X)
+        Z = Z * 1000 / 100 + 4.209687462275036e2
+
+        abs_Z = xp.abs(Z)
+        in_bounds = abs_Z <= 500
+        is_positive = Z > 500
+
+        # Case 1: |z| <= 500
+        term1 = Z * xp.sin(xp.sqrt(abs_Z))
+
+        # Case 2: z > 500
+        mod_term2 = 500 - Z % 500
+        term2 = mod_term2 * xp.sin(xp.sqrt(xp.abs(mod_term2))) - (Z - 500) ** 2 / (10000 * D)
+
+        # Case 3: z < -500
+        mod_term3 = abs_Z % 500 - 500
+        term3 = mod_term3 * xp.sin(xp.sqrt(xp.abs(mod_term3))) - (Z + 500) ** 2 / (10000 * D)
+
+        terms = xp.where(in_bounds, term1, xp.where(is_positive, term2, term3))
+        result = 418.9829 * D - xp.sum(terms, axis=1)
+
+        return result + self.f_global
+
 
 class ShiftedRotatedKatsuura(CEC2014Function):
     """F12: Shifted and Rotated Katsuura Function.
@@ -407,6 +542,32 @@ class ShiftedRotatedKatsuura(CEC2014Function):
 
         self.pure_objective_function = katsuura
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        D = self.n_dim
+        Z = self._batch_shift_rotate(X)
+        Z = Z * 5 / 100  # Scale
+
+        # Vectorize double loop using 3D broadcasting
+        j = xp.arange(1, 33, dtype=X.dtype)  # (32,)
+        pow2j = xp.power(2.0, j)  # (32,)
+
+        # Z[:, :, None] has shape (n_points, D, 1)
+        scaled = Z[:, :, None] * pow2j  # (n_points, D, 32)
+        inner = xp.abs(scaled - xp.round(scaled)) / pow2j  # (n_points, D, 32)
+        inner_sum = xp.sum(inner, axis=2)  # (n_points, D)
+
+        # (i+1) factor for each dimension
+        i_plus_1 = xp.arange(1, D + 1, dtype=X.dtype)  # (D,)
+
+        # (1 + (i+1) * inner_sum) ** (10 / D^1.2)
+        terms = xp.power(1 + i_plus_1 * inner_sum, 10 / D**1.2)  # (n_points, D)
+        result = xp.prod(terms, axis=1)  # (n_points,)
+
+        result = (10 / D**2) * result - (10 / D**2)
+        return result + self.f_global
+
 
 class ShiftedRotatedHappyCat(CEC2014Function):
     """F13: Shifted and Rotated HappyCat Function.
@@ -449,6 +610,20 @@ class ShiftedRotatedHappyCat(CEC2014Function):
 
         self.pure_objective_function = happycat
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        alpha = 1.0 / 8.0
+        D = self.n_dim
+        Z = self._batch_shift_rotate(X)
+        Z = Z * 5 / 100 - 1  # Scale and shift
+
+        sum_sq = xp.sum(Z**2, axis=1)
+        sum_z = xp.sum(Z, axis=1)
+
+        result = xp.abs(sum_sq - D) ** (2 * alpha) + (0.5 * sum_sq + sum_z) / D + 0.5
+        return result + self.f_global
+
 
 class ShiftedRotatedHGBat(CEC2014Function):
     """F14: Shifted and Rotated HGBat Function.
@@ -488,6 +663,19 @@ class ShiftedRotatedHGBat(CEC2014Function):
             return result + self.f_global
 
         self.pure_objective_function = hgbat
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        D = self.n_dim
+        Z = self._batch_shift_rotate(X)
+        Z = Z * 5 / 100 - 1  # Scale and shift
+
+        sum_sq = xp.sum(Z**2, axis=1)
+        sum_z = xp.sum(Z, axis=1)
+
+        result = xp.abs(sum_sq**2 - sum_z**2) ** 0.5 + (0.5 * sum_sq + sum_z) / D + 0.5
+        return result + self.f_global
 
 
 class ShiftedRotatedExpandedGriewankRosenbrock(CEC2014Function):
@@ -534,6 +722,22 @@ class ShiftedRotatedExpandedGriewankRosenbrock(CEC2014Function):
 
         self.pure_objective_function = griewank_rosenbrock
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        Z = self._batch_shift_rotate(X)
+        Z = Z * 5 / 100 + 1  # Scale
+
+        # Wrap-around: z_next = roll(Z, -1)
+        Z_next = xp.roll(Z, -1, axis=1)
+
+        # Rosenbrock term: t = 100*(z^2 - z_next)^2 + (z - 1)^2
+        T = 100 * (Z**2 - Z_next) ** 2 + (Z - 1) ** 2
+
+        # Griewank of Rosenbrock: t^2/4000 - cos(t) + 1
+        result = xp.sum(T**2 / 4000 - xp.cos(T) + 1, axis=1)
+        return result + self.f_global
+
 
 class ShiftedRotatedExpandedScafferF6(CEC2014Function):
     """F16: Shifted and Rotated Expanded Scaffer's F6 Function.
@@ -575,3 +779,17 @@ class ShiftedRotatedExpandedScafferF6(CEC2014Function):
             return result + self.f_global
 
         self.pure_objective_function = expanded_schaffer
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        Z = self._batch_shift_rotate(X)
+
+        # Wrap-around: z_next = roll(Z, -1)
+        Z_next = xp.roll(Z, -1, axis=1)
+
+        # schaffer_f6(z, z_next) for all pairs
+        T = Z**2 + Z_next**2
+        terms = 0.5 + (xp.sin(xp.sqrt(T)) ** 2 - 0.5) / (1 + 0.001 * T) ** 2
+
+        return xp.sum(terms, axis=1) + self.f_global
