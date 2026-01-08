@@ -11,6 +11,8 @@ from typing import Any, Dict
 
 import numpy as np
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
+
 from ._base_cec2014 import CEC2014Function
 
 
@@ -58,6 +60,19 @@ class RotatedHighConditionedElliptic(CEC2014Function):
 
         self.pure_objective_function = elliptic
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        D = self.n_dim
+
+        Z = self._batch_shift_rotate(X)
+
+        # coeffs = 10^6^(i/(D-1))
+        i = xp.arange(D, dtype=X.dtype)
+        coeffs = xp.power(1e6, i / (D - 1)) if D > 1 else xp.ones(1, dtype=X.dtype)
+
+        return xp.sum(coeffs * Z**2, axis=1) + self.f_global
+
 
 class RotatedBentCigar(CEC2014Function):
     """F2: Rotated Bent Cigar Function.
@@ -98,6 +113,12 @@ class RotatedBentCigar(CEC2014Function):
             return result + self.f_global
 
         self.pure_objective_function = bent_cigar
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        Z = self._batch_shift_rotate(X)
+        return Z[:, 0] ** 2 + 1e6 * xp.sum(Z[:, 1:] ** 2, axis=1) + self.f_global
 
 
 class RotatedDiscus(CEC2014Function):
@@ -140,3 +161,9 @@ class RotatedDiscus(CEC2014Function):
             return result + self.f_global
 
         self.pure_objective_function = discus
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized batch evaluation."""
+        xp = get_array_namespace(X)
+        Z = self._batch_shift_rotate(X)
+        return 1e6 * Z[:, 0] ** 2 + xp.sum(Z[:, 1:] ** 2, axis=1) + self.f_global
