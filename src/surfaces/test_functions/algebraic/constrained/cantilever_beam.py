@@ -8,6 +8,7 @@ from typing import Any, Dict, List, Optional
 
 import numpy as np
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
 from surfaces.modifiers import BaseModifier
 
 from ._base_engineering_function import EngineeringFunction
@@ -197,3 +198,34 @@ class CantileverBeamFunction(EngineeringFunction):
         g = deflection - 1
 
         return [g]
+
+    # =====================================================================
+    # Batch evaluation methods
+    # =====================================================================
+
+    def _batch_raw_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized raw objective: weight = 0.0624 * sum(x_i)."""
+        xp = get_array_namespace(X)
+        return 0.0624 * xp.sum(X, axis=1)
+
+    def _batch_constraints(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized deflection constraint."""
+        xp = get_array_namespace(X)
+        x1 = X[:, 0]
+        x2 = X[:, 1]
+        x3 = X[:, 2]
+        x4 = X[:, 3]
+        x5 = X[:, 4]
+        eps = 1e-10
+
+        # Deflection constraint: sum of contributions
+        deflection = (
+            61 / (x1**3 + eps)
+            + 37 / (x2**3 + eps)
+            + 19 / (x3**3 + eps)
+            + 7 / (x4**3 + eps)
+            + 1 / (x5**3 + eps)
+        )
+        g = deflection - 1
+
+        return g.reshape(-1, 1)  # Shape: (n_points, 1)

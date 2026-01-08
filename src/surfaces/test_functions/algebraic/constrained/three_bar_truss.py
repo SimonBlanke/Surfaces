@@ -8,6 +8,7 @@ from typing import Any, Dict, List, Optional
 
 import numpy as np
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
 from surfaces.modifiers import BaseModifier
 
 from ._base_engineering_function import EngineeringFunction
@@ -188,3 +189,34 @@ class ThreeBarTrussFunction(EngineeringFunction):
         g3 = (1 / denom2) * P - sigma_max
 
         return [g1, g2, g3]
+
+    # =====================================================================
+    # Batch evaluation methods
+    # =====================================================================
+
+    def _batch_raw_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized raw objective: weight = L * (2*sqrt(2)*A1 + A2)."""
+        xp = get_array_namespace(X)
+        A1 = X[:, 0]
+        A2 = X[:, 1]
+        L = 100.0
+        return L * (2 * xp.sqrt(2.0) * A1 + A2)
+
+    def _batch_constraints(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized stress constraints."""
+        xp = get_array_namespace(X)
+        A1 = X[:, 0]
+        A2 = X[:, 1]
+        P = self.P
+        sigma_max = self.sigma_max
+        eps = 1e-10
+
+        sqrt2 = xp.sqrt(2.0)
+        denom1 = sqrt2 * A1**2 + 2 * A1 * A2 + eps
+        denom2 = A1 + sqrt2 * A2 + eps
+
+        g1 = ((sqrt2 * A1 + A2) / denom1) * P - sigma_max
+        g2 = (A2 / denom1) * P - sigma_max
+        g3 = (1 / denom2) * P - sigma_max
+
+        return xp.stack([g1, g2, g3], axis=1)

@@ -8,6 +8,7 @@ from typing import Any, Dict, List, Optional
 
 import numpy as np
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
 from surfaces.modifiers import BaseModifier
 
 from ._base_engineering_function import EngineeringFunction
@@ -210,3 +211,40 @@ class PressureVesselFunction(EngineeringFunction):
         g3 = self.min_volume - volume_ft3  # Negative when volume is sufficient
 
         return [g1, g2, g3]
+
+    # =====================================================================
+    # Batch evaluation methods
+    # =====================================================================
+
+    def _batch_raw_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized raw objective: total manufacturing cost."""
+        xp = get_array_namespace(X)
+        Ts = X[:, 0]
+        Th = X[:, 1]
+        R = X[:, 2]
+        L = X[:, 3]
+
+        cost = 0.6224 * Ts * R * L + 1.7781 * Th * R**2 + 3.1661 * Ts**2 * L + 19.84 * Ts**2 * R
+        return cost
+
+    def _batch_constraints(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized design constraints."""
+        xp = get_array_namespace(X)
+        Ts = X[:, 0]
+        Th = X[:, 1]
+        R = X[:, 2]
+        L = X[:, 3]
+        pi = xp.asarray(np.pi)
+
+        # g1: Shell thickness constraint (hoop stress)
+        g1 = -Ts + 0.0193 * R
+
+        # g2: Head thickness constraint
+        g2 = -Th + 0.00954 * R
+
+        # g3: Volume constraint
+        volume_in3 = pi * R**2 * L + (4 / 3) * pi * R**3
+        volume_ft3 = volume_in3 / (12**3)
+        g3 = self.min_volume - volume_ft3
+
+        return xp.stack([g1, g2, g3], axis=1)

@@ -8,6 +8,7 @@ from typing import Any, Dict, List, Optional
 
 import numpy as np
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
 from surfaces.modifiers import BaseModifier
 
 from ._base_engineering_function import EngineeringFunction
@@ -254,3 +255,84 @@ class WeldedBeamFunction(EngineeringFunction):
         g5 = delta - self.delta_max
 
         return [g1, g2, g3, g4, g5]
+
+    # =====================================================================
+    # Batch evaluation methods
+    # =====================================================================
+
+    def _batch_raw_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized raw objective: fabrication cost."""
+        xp = get_array_namespace(X)
+        h = X[:, 0]
+        weld_len = X[:, 1]
+        t = X[:, 2]
+        b = X[:, 3]
+
+        # Weld cost + beam material cost
+        cost = 1.10471 * h**2 * weld_len + 0.04811 * t * b * (14.0 + weld_len)
+        return cost
+
+    def _batch_calculate_stresses(self, X: ArrayLike) -> tuple:
+        """Vectorized stress calculations."""
+        xp = get_array_namespace(X)
+        h = X[:, 0]
+        weld_len = X[:, 1]
+        t = X[:, 2]
+        b = X[:, 3]
+        P = self.P
+        L = self.L
+
+        sqrt2 = xp.sqrt(2.0)
+
+        # Primary shear stress
+        tau_prime = P / (sqrt2 * h * weld_len)
+
+        # Secondary shear stress (due to moment)
+        M = P * (L + weld_len / 2)
+        R = xp.sqrt(weld_len**2 / 4 + ((h + t) / 2) ** 2)
+        J = 2 * (sqrt2 * h * weld_len * (weld_len**2 / 12 + ((h + t) / 2) ** 2))
+
+        tau_double_prime = M * R / J
+
+        # Combined shear stress (using resultant)
+        cos_theta = weld_len / (2 * R)
+        tau = xp.sqrt(
+            tau_prime**2 + 2 * tau_prime * tau_double_prime * cos_theta + tau_double_prime**2
+        )
+
+        # Bending stress in beam
+        sigma = 6 * P * L / (t * b**2)
+
+        return tau, sigma
+
+    def _batch_constraints(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized design constraints."""
+        xp = get_array_namespace(X)
+        h = X[:, 0]
+        t = X[:, 2]
+        b = X[:, 3]
+        P = self.P
+        L = self.L
+        E = self.E
+
+        tau, sigma = self._batch_calculate_stresses(X)
+
+        # g1: Shear stress constraint
+        g1 = tau - self.tau_max
+
+        # g2: Bending stress constraint
+        g2 = sigma - self.sigma_max
+
+        # g3: Beam thickness vs weld height
+        g3 = h - t
+
+        # g4: Buckling constraint
+        sqrt_term = xp.sqrt(E / (4 * self.G))
+        P_c = 4.013 * E * xp.sqrt(t**2 * b**6 / 36) / L**2 * (1 - t / (2 * L) * sqrt_term)
+        g4 = P - P_c
+
+        # g5: Deflection constraint
+        delta = 4 * P * L**3 / (E * t * b**3)
+        g5 = delta - self.delta_max
+
+        return xp.stack([g1, g2, g3, g4, g5], axis=1)

@@ -8,6 +8,7 @@ from typing import Any, Dict, List, Optional
 
 import numpy as np
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
 from surfaces.modifiers import BaseModifier
 
 from ._base_engineering_function import EngineeringFunction
@@ -193,3 +194,40 @@ class TensionCompressionSpringFunction(EngineeringFunction):
         g4 = (D + d) / 1.5 - 1
 
         return [g1, g2, g3, g4]
+
+    # =====================================================================
+    # Batch evaluation methods
+    # =====================================================================
+
+    def _batch_raw_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized raw objective: weight = (N + 2) * D * d^2."""
+        xp = get_array_namespace(X)
+        d = X[:, 0]
+        D = X[:, 1]
+        N = X[:, 2]
+        return (N + 2) * D * d**2
+
+    def _batch_constraints(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized spring design constraints."""
+        xp = get_array_namespace(X)
+        d = X[:, 0]
+        D = X[:, 1]
+        N = X[:, 2]
+        eps = 1e-10
+
+        # Spring index C = D/d
+        C = D / (d + eps)
+
+        # g1: Minimum deflection constraint
+        g1 = 1 - (D**3 * N) / (71785 * d**4 + eps)
+
+        # g2: Shear stress constraint
+        g2 = (4 * C**2 - C) / (12566 * (C - 1) * d**3 + eps) + 1 / (5108 * d**2 + eps) - 1
+
+        # g3: Surge frequency constraint
+        g3 = 1 - (140.45 * d) / (D**2 * N + eps)
+
+        # g4: Outer diameter constraint
+        g4 = (D + d) / 1.5 - 1
+
+        return xp.stack([g1, g2, g3, g4], axis=1)

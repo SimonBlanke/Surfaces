@@ -8,6 +8,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
 from surfaces.modifiers import BaseModifier
 
 from ..._base_test_function import BaseTestFunction
@@ -194,3 +195,78 @@ class EngineeringFunction(BaseTestFunction):
             return self.raw_objective(params) + self.penalty(params)
 
         self.pure_objective_function = penalized_objective
+
+    # =====================================================================
+    # Batch evaluation methods
+    # =====================================================================
+
+    def _batch_raw_objective(self, X: ArrayLike) -> ArrayLike:
+        """Compute raw objective for batch of points.
+
+        Override in subclasses to provide vectorized implementation.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Input batch of shape (n_points, n_dim).
+
+        Returns
+        -------
+        ArrayLike
+            Raw objective values of shape (n_points,).
+        """
+        raise NotImplementedError("Subclasses must implement _batch_raw_objective")
+
+    def _batch_constraints(self, X: ArrayLike) -> ArrayLike:
+        """Compute constraint values for batch of points.
+
+        Override in subclasses to provide vectorized implementation.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Input batch of shape (n_points, n_dim).
+
+        Returns
+        -------
+        ArrayLike
+            Constraint values of shape (n_points, n_constraints).
+            Each row contains constraint values for one point.
+            Negative or zero values indicate feasibility.
+        """
+        raise NotImplementedError("Subclasses must implement _batch_constraints")
+
+    def _batch_penalty(self, X: ArrayLike) -> ArrayLike:
+        """Compute penalty for batch of points using exterior penalty method.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Input batch of shape (n_points, n_dim).
+
+        Returns
+        -------
+        ArrayLike
+            Penalty values of shape (n_points,).
+        """
+        xp = get_array_namespace(X)
+        G = self._batch_constraints(X)  # Shape: (n_points, n_constraints)
+        # Violations: max(0, g)^2
+        violations = xp.maximum(G, 0.0) ** 2
+        # Sum over constraints
+        return self.penalty_coefficient * xp.sum(violations, axis=1)
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Compute penalized objective for batch of points.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Input batch of shape (n_points, n_dim).
+
+        Returns
+        -------
+        ArrayLike
+            Penalized objective values of shape (n_points,).
+        """
+        return self._batch_raw_objective(X) + self._batch_penalty(X)
