@@ -8,6 +8,8 @@ from typing import Any, Dict
 
 import numpy as np
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
+
 from ._base_multi_objective import MultiObjectiveFunction
 
 
@@ -133,3 +135,34 @@ class FonsecaFleming(MultiObjectiveFunction):
         x = np.tile(t[:, np.newaxis], (1, n))
 
         return x
+
+    # =========================================================================
+    # Batch Evaluation
+    # =========================================================================
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized Fonseca-Fleming evaluation.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Input array of shape (n_points, n_dim).
+
+        Returns
+        -------
+        ArrayLike
+            Output array of shape (n_points, 2).
+        """
+        xp = get_array_namespace(X)
+        n = self.n_dim
+        offset = 1.0 / xp.sqrt(float(n))
+
+        # sum1 = sum((x - offset)^2)
+        sum1 = xp.sum((X - offset) ** 2, axis=1)
+        # sum2 = sum((x + offset)^2)
+        sum2 = xp.sum((X + offset) ** 2, axis=1)
+
+        f1 = 1 - xp.exp(-sum1)
+        f2 = 1 - xp.exp(-sum2)
+
+        return xp.stack([f1, f2], axis=1)

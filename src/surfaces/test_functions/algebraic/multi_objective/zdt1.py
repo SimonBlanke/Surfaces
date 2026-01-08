@@ -8,6 +8,8 @@ from typing import Any, Dict
 
 import numpy as np
 
+from surfaces._array_utils import ArrayLike, get_array_namespace
+
 from ._base_multi_objective import MultiObjectiveFunction
 
 
@@ -125,3 +127,33 @@ class ZDT1(MultiObjectiveFunction):
         x = np.zeros((n_points, self.n_dim))
         x[:, 0] = np.linspace(0, 1, n_points)
         return x
+
+    # =========================================================================
+    # Batch Evaluation
+    # =========================================================================
+
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Vectorized ZDT1 evaluation.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Input array of shape (n_points, n_dim).
+
+        Returns
+        -------
+        ArrayLike
+            Output array of shape (n_points, 2).
+        """
+        xp = get_array_namespace(X)
+
+        # f1 = x1
+        f1 = X[:, 0]
+
+        # g = 1 + 9 * sum(x[1:]) / (n_dim - 1)
+        g = 1 + 9 * xp.sum(X[:, 1:], axis=1) / (self.n_dim - 1)
+
+        # f2 = g * (1 - sqrt(f1 / g))
+        f2 = g * (1 - xp.sqrt(f1 / g))
+
+        return xp.stack([f1, f2], axis=1)
