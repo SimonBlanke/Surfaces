@@ -6,7 +6,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple
 
 import numpy as np
 
@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     import plotly.graph_objects as go
 
     from ..test_functions._base_test_function import BaseTestFunction
+    from ._param_resolver import ResolvedParams
 
 from ._compatibility import _get_function_dimensions
 from ._utils import check_plotly, go, validate_plot
@@ -28,6 +29,8 @@ def plot_fitness_distribution(
     height: int = 500,
     n_bins: int = 50,
     show_stats: bool = True,
+    resolved: Optional["ResolvedParams"] = None,
+    **kwargs: Any,
 ) -> "go.Figure":
     """Create a histogram of objective values from random sampling.
 
@@ -36,12 +39,15 @@ def plot_fitness_distribution(
     Args:
         func: A test function of any dimension.
         n_samples: Number of random samples to evaluate (default: 10000).
-        bounds: Optional custom bounds per dimension.
+        bounds: Optional custom bounds per dimension. Ignored if resolved is provided.
         title: Plot title. Defaults to function name.
         width: Plot width in pixels.
         height: Plot height in pixels.
         n_bins: Number of histogram bins.
         show_stats: Whether to show mean, std, min, max annotations.
+        resolved: Pre-resolved parameter configuration from PlotAccessor.
+            If provided, bounds are ignored.
+        **kwargs: Additional keyword arguments for future compatibility.
 
     Returns:
         Plotly Figure object.
@@ -56,19 +62,35 @@ def plot_fitness_distribution(
     check_plotly()
     validate_plot(func, "fitness_distribution")
 
-    n_dim = _get_function_dimensions(func)
+    # Extract bounds and fixed values from resolved params or use legacy path
+    if resolved is not None:
+        # Use resolved params from accessor
+        sample_bounds = {}
+        fixed_params = {}
 
-    # Determine bounds
-    if bounds is None:
-        default_bounds = getattr(func, "default_bounds", (-5.0, 5.0))
-        bounds = {f"x{i}": default_bounds for i in range(n_dim)}
+        # Plotted dimensions get sampled
+        for dim_config in resolved.plot_dims:
+            sample_bounds[dim_config.name] = dim_config.bounds
+
+        # Fixed dimensions use their fixed value
+        for dim_config in resolved.fixed_dims:
+            fixed_params[dim_config.name] = dim_config.values[0]
+    else:
+        # Legacy path
+        n_dim = _get_function_dimensions(func)
+        if bounds is None:
+            default_bounds = getattr(func, "default_bounds", (-5.0, 5.0))
+            sample_bounds = {f"x{i}": default_bounds for i in range(n_dim)}
+        else:
+            sample_bounds = bounds
+        fixed_params = {}
 
     # Generate random samples
     np.random.seed(42)  # Reproducibility
     samples = []
     for _ in range(n_samples):
-        params = {}
-        for name, (low, high) in bounds.items():
+        params = dict(fixed_params)  # Start with fixed params
+        for name, (low, high) in sample_bounds.items():
             params[name] = np.random.uniform(low, high)
         samples.append(func(params))
 
