@@ -28,6 +28,11 @@ class DimensionConfig:
     is_plotted: bool  # True if this dimension is being plotted, False if fixed
     bounds: Tuple[float, float]  # (min, max) of the values
 
+    @property
+    def center(self) -> float:
+        """Center value of the dimension (midpoint of bounds)."""
+        return (self.bounds[0] + self.bounds[1]) / 2
+
 
 @dataclass
 class ResolvedParams:
@@ -73,6 +78,7 @@ def resolve_params(
     params: Optional[Dict[str, Any]] = None,
     required_plot_dims: Optional[int] = None,
     resolution: int = 50,
+    plot_all_by_default: bool = False,
 ) -> ResolvedParams:
     """Resolve params dict to a complete plot configuration.
 
@@ -86,6 +92,9 @@ def resolve_params(
         If specified, validate that exactly this many dimensions are plotted.
     resolution : int, default=50
         Default number of points when generating ranges from tuples.
+    plot_all_by_default : bool, default=False
+        If True and no params specified, plot all dimensions instead of
+        default_plot_dims. Useful for multi_slice which shows all dimensions.
 
     Returns
     -------
@@ -112,7 +121,7 @@ def resolve_params(
 
     # Determine which dimensions to plot
     plot_dim_names = _determine_plot_dims(
-        params, all_dim_names, default_plot_dims, required_plot_dims
+        params, all_dim_names, default_plot_dims, required_plot_dims, plot_all_by_default
     )
 
     # Build resolved configuration
@@ -267,6 +276,7 @@ def _determine_plot_dims(
     all_dims: List[str],
     default_plot_dims: List[str],
     required_plot_dims: Optional[int],
+    plot_all_by_default: bool = False,
 ) -> List[str]:
     """Determine which dimensions should be plotted based on params."""
     # Find dimensions explicitly marked for plotting
@@ -298,6 +308,10 @@ def _determine_plot_dims(
         return remaining
 
     # No params specified, use defaults
+    # If plot_all_by_default is True, use all dims (for multi_slice)
+    if plot_all_by_default:
+        return all_dims
+
     if required_plot_dims is not None:
         return default_plot_dims[:required_plot_dims]
     return default_plot_dims

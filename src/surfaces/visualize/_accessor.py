@@ -141,7 +141,9 @@ class PlotAccessor:
         from ._param_resolver import resolve_params
         from ._surface import plot_surface
 
-        resolved = resolve_params(self._func, params, required_plot_dims=2)
+        resolved = resolve_params(
+            self._func, params, required_plot_dims=2, resolution=resolution
+        )
         return plot_surface(
             self._func,
             resolved=resolved,
@@ -186,7 +188,9 @@ class PlotAccessor:
         from ._param_resolver import resolve_params
         from ._contour import plot_contour
 
-        resolved = resolve_params(self._func, params, required_plot_dims=2)
+        resolved = resolve_params(
+            self._func, params, required_plot_dims=2, resolution=resolution
+        )
         return plot_contour(
             self._func,
             resolved=resolved,
@@ -229,7 +233,9 @@ class PlotAccessor:
         from ._param_resolver import resolve_params
         from ._contour import plot_heatmap
 
-        resolved = resolve_params(self._func, params, required_plot_dims=2)
+        resolved = resolve_params(
+            self._func, params, required_plot_dims=2, resolution=resolution
+        )
         return plot_heatmap(
             self._func,
             resolved=resolved,
@@ -257,10 +263,11 @@ class PlotAccessor:
         params : dict, optional
             Dimension configuration. For slice plots:
             - Tuple (min, max): Range for this dimension's slice
-            - Single value: Center point for other dimensions
-            - Ellipsis (...): Use defaults
+            - Single value: Fix this dimension (not shown in plots)
+            - Ellipsis (...): Use defaults for this dimension
 
-            All dimensions are sliced by default.
+            All dimensions are sliced by default. To exclude a dimension
+            from the plots, fix it with a single value.
 
         resolution : int, default=50
             Number of points per slice.
@@ -276,13 +283,21 @@ class PlotAccessor:
         Examples
         --------
         >>> func = SphereFunction(n_dim=5)
-        >>> fig = func.plot.multi_slice()
-        >>> fig = func.plot.multi_slice(params={"x0": (-2, 2)})
+        >>> fig = func.plot.multi_slice()  # Shows all 5 dimensions
+        >>> fig = func.plot.multi_slice(params={"x0": (-2, 2)})  # Custom range for x0
+        >>> fig = func.plot.multi_slice(params={"x2": 0.0})  # Fix x2, show only 4 dims
         """
         from ._param_resolver import resolve_params
         from ._slices import plot_multi_slice
 
-        resolved = resolve_params(self._func, params, required_plot_dims=None)
+        # Use plot_all_by_default=True so all dimensions are shown by default
+        resolved = resolve_params(
+            self._func,
+            params,
+            required_plot_dims=None,
+            resolution=resolution,
+            plot_all_by_default=True,
+        )
         return plot_multi_slice(
             self._func,
             resolved=resolved,
