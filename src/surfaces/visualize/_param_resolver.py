@@ -11,7 +11,7 @@ resolving defaults and validating dimension requirements.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
 
 import numpy as np
 
@@ -187,9 +187,7 @@ def _get_dimension_names(func: "BaseTestFunction") -> List[str]:
     raise ValueError(f"Cannot determine dimensions for {type(func).__name__}")
 
 
-def _get_default_plot_dims(
-    func: "BaseTestFunction", all_dims: List[str]
-) -> List[str]:
+def _get_default_plot_dims(func: "BaseTestFunction", all_dims: List[str]) -> List[str]:
     """Get default dimensions to plot."""
     if hasattr(func, "default_plot_dims"):
         return func.default_plot_dims
@@ -285,10 +283,7 @@ def _determine_plot_dims(
 
     for dim_name, value in params.items():
         if dim_name not in all_dims:
-            raise ValueError(
-                f"Unknown dimension '{dim_name}'. "
-                f"Available: {all_dims}"
-            )
+            raise ValueError(f"Unknown dimension '{dim_name}'. " f"Available: {all_dims}")
 
         if _is_plot_marker(value):
             explicit_plot_dims.append(dim_name)
@@ -371,10 +366,7 @@ def _resolve_plot_dimension(
     if isinstance(user_value, (list, np.ndarray)):
         values = np.array(user_value)
         # Filter to numeric values only (including numpy types)
-        numeric_mask = [
-            isinstance(v, (int, float, np.integer, np.floating))
-            for v in user_value
-        ]
+        numeric_mask = [isinstance(v, (int, float, np.integer, np.floating)) for v in user_value]
         if not all(numeric_mask):
             # For categorical, we might need different handling
             # For now, use indices

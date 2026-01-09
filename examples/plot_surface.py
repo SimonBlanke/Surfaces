@@ -1,6 +1,6 @@
 import os
 
-from surfaces.test_functions.algebraic import AckleyFunction, SphereFunction
+from surfaces.test_functions.algebraic import AckleyFunction
 
 # 2D function - simple case
 func = AckleyFunction()

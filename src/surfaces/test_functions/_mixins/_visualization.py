@@ -183,18 +183,13 @@ class VisualizationMixin:
             result[dim_name] = self._infer_step_for_dimension(values)
         return result
 
-    def _infer_bounds_for_dimension(
-        self, values: Any
-    ) -> Tuple[float, float]:
+    def _infer_bounds_for_dimension(self, values: Any) -> Tuple[float, float]:
         """Infer bounds for a single dimension based on its values."""
         if values is None or (hasattr(values, "__len__") and len(values) == 0):
             return (0.0, 1.0)
 
         # Filter to numeric values (including numpy types)
-        numeric_values = [
-            v for v in values
-            if isinstance(v, (int, float, np.integer, np.floating))
-        ]
+        numeric_values = [v for v in values if isinstance(v, (int, float, np.integer, np.floating))]
 
         if numeric_values:
             return (float(min(numeric_values)), float(max(numeric_values)))
@@ -230,18 +225,12 @@ class VisualizationMixin:
             return float((values.max() - values.min()) / 100)
 
         # Filter to numeric values
-        numeric_values = [
-            v for v in values
-            if isinstance(v, (int, float, np.integer, np.floating))
-        ]
+        numeric_values = [v for v in values if isinstance(v, (int, float, np.integer, np.floating))]
 
         if len(numeric_values) >= 2:
             # Discrete numeric: infer step from consecutive differences
             sorted_vals = sorted(numeric_values)
-            steps = [
-                sorted_vals[i + 1] - sorted_vals[i]
-                for i in range(len(sorted_vals) - 1)
-            ]
+            steps = [sorted_vals[i + 1] - sorted_vals[i] for i in range(len(sorted_vals) - 1)]
             return float(min(steps)) if steps else None
 
         # Categorical: no step concept

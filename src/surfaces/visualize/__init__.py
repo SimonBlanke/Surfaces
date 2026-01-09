@@ -55,7 +55,6 @@ from ._compatibility import (
     list_all_plots,
     plot_info,
 )
-from ._param_resolver import DimensionConfig, ResolvedParams, resolve_params
 from ._contour import plot_contour, plot_heatmap
 from ._convergence import plot_convergence
 from ._distribution import plot_fitness_distribution
@@ -66,6 +65,7 @@ from ._errors import (
     VisualizationError,
 )
 from ._latex import plot_latex
+from ._param_resolver import DimensionConfig, ResolvedParams, resolve_params
 from ._slices import plot_multi_slice
 from ._surface import plot_surface
 

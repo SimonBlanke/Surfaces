@@ -10,7 +10,7 @@ This module provides the PlotAccessor class that enables the fluent
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 if TYPE_CHECKING:
     from ..test_functions._base_test_function import BaseTestFunction
@@ -141,9 +141,7 @@ class PlotAccessor:
         from ._param_resolver import resolve_params
         from ._surface import plot_surface
 
-        resolved = resolve_params(
-            self._func, params, required_plot_dims=2, resolution=resolution
-        )
+        resolved = resolve_params(self._func, params, required_plot_dims=2, resolution=resolution)
         return plot_surface(
             self._func,
             resolved=resolved,
@@ -185,12 +183,10 @@ class PlotAccessor:
         >>> fig = func.plot.contour()
         >>> fig = func.plot.contour(params={"x0": (-2, 2), "x1": (-2, 2)})
         """
-        from ._param_resolver import resolve_params
         from ._contour import plot_contour
+        from ._param_resolver import resolve_params
 
-        resolved = resolve_params(
-            self._func, params, required_plot_dims=2, resolution=resolution
-        )
+        resolved = resolve_params(self._func, params, required_plot_dims=2, resolution=resolution)
         return plot_contour(
             self._func,
             resolved=resolved,
@@ -230,12 +226,10 @@ class PlotAccessor:
         >>> func = AckleyFunction()
         >>> fig = func.plot.heatmap()
         """
-        from ._param_resolver import resolve_params
         from ._contour import plot_heatmap
+        from ._param_resolver import resolve_params
 
-        resolved = resolve_params(
-            self._func, params, required_plot_dims=2, resolution=resolution
-        )
+        resolved = resolve_params(self._func, params, required_plot_dims=2, resolution=resolution)
         return plot_heatmap(
             self._func,
             resolved=resolved,
@@ -337,8 +331,8 @@ class PlotAccessor:
         >>> func = SphereFunction(n_dim=5)
         >>> fig = func.plot.fitness_distribution()
         """
-        from ._param_resolver import resolve_params
         from ._distribution import plot_fitness_distribution
+        from ._param_resolver import resolve_params
 
         resolved = resolve_params(self._func, params, required_plot_dims=None)
         return plot_fitness_distribution(
@@ -455,8 +449,8 @@ class PlotAccessor:
         >>> pdf_path = func.plot.latex()
         >>> pdf_path = func.plot.latex(output_path="my_plot.pdf")
         """
-        from ._param_resolver import resolve_params
         from ._latex import plot_latex
+        from ._param_resolver import resolve_params
 
         # Check for latex_formula
         if not hasattr(self._func, "latex_formula"):
@@ -497,8 +491,6 @@ class PlotAccessor:
         """
         from ._compatibility import available_plots
 
-        has_history = bool(self._history) or bool(
-            getattr(self._func, "search_data", None)
-        )
+        has_history = bool(self._history) or bool(getattr(self._func, "search_data", None))
         plots = available_plots(self._func, has_history=has_history)
         return [p["name"] for p in plots]

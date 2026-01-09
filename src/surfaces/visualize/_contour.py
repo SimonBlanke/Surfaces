@@ -144,9 +144,7 @@ def _plot_contour_from_resolved(
     fixed_params = resolved.fixed_values
 
     # Evaluate
-    z_values = evaluate_grid_2d(
-        func, x_values, y_values, x_dim.name, y_dim.name, fixed_params
-    )
+    z_values = evaluate_grid_2d(func, x_values, y_values, x_dim.name, y_dim.name, fixed_params)
 
     # Create figure
     fig = go.Figure(
@@ -226,9 +224,7 @@ def plot_heatmap(
 
     # Use resolved params if provided (from accessor)
     if resolved is not None:
-        return _plot_heatmap_from_resolved(
-            func, resolved, title, width, height, colorscale
-        )
+        return _plot_heatmap_from_resolved(func, resolved, title, width, height, colorscale)
 
     # Legacy path
     validate_plot(func, "heatmap")
@@ -289,9 +285,7 @@ def _plot_heatmap_from_resolved(
     fixed_params = resolved.fixed_values
 
     # Evaluate
-    z_values = evaluate_grid_2d(
-        func, x_values, y_values, x_dim.name, y_dim.name, fixed_params
-    )
+    z_values = evaluate_grid_2d(func, x_values, y_values, x_dim.name, y_dim.name, fixed_params)
 
     # Create figure
     fig = go.Figure(

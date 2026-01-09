@@ -43,35 +43,37 @@ from surfaces.test_functions.algebraic import (
     standard_functions_nd,
 )
 from surfaces.test_functions.benchmark.bbob import (
-    # Separable (f1-f5)
-    BuecheRastrigin,
-    EllipsoidalSeparable,
-    LinearSlope,
-    RastriginSeparable,
-    Sphere as BBOBSphere,
     # Low/Moderate Conditioning (f6-f9)
     AttractiveSector,
-    StepEllipsoidal,
-    RosenbrockOriginal,
-    RosenbrockRotated,
+    BentCigar,
+    # Separable (f1-f5)
+    BuecheRastrigin,
+    DifferentPowers,
+    Discus,
     # High Conditioning (f10-f14)
     EllipsoidalRotated,
-    Discus,
-    BentCigar,
-    SharpRidge,
-    DifferentPowers,
+    EllipsoidalSeparable,
+    Gallagher21,
+    Gallagher101,
+    GriewankRosenbrock,
+    Katsuura,
+    LinearSlope,
+    LunacekBiRastrigin,
     # Multimodal Adequate (f15-f19)
     RastriginRotated,
-    Weierstrass,
+    RastriginSeparable,
+    RosenbrockOriginal,
+    RosenbrockRotated,
     SchaffersF7,
     SchaffersF7Ill,
-    GriewankRosenbrock,
     # Multimodal Weak (f20-f24)
     Schwefel,
-    Gallagher101,
-    Gallagher21,
-    Katsuura,
-    LunacekBiRastrigin,
+    SharpRidge,
+    StepEllipsoidal,
+    Weierstrass,
+)
+from surfaces.test_functions.benchmark.bbob import (
+    Sphere as BBOBSphere,
 )
 
 
@@ -133,12 +135,14 @@ class TestBatchEvaluationCorrectness:
     def test_sphere_batch_matches_sequential(self):
         """Batch results match sequential __call__ results."""
         func = SphereFunction(n_dim=3)
-        X = np.array([
-            [0.0, 0.0, 0.0],
-            [1.0, 1.0, 1.0],
-            [2.0, 3.0, 4.0],
-            [-1.0, -2.0, -3.0],
-        ])
+        X = np.array(
+            [
+                [0.0, 0.0, 0.0],
+                [1.0, 1.0, 1.0],
+                [2.0, 3.0, 4.0],
+                [-1.0, -2.0, -3.0],
+            ]
+        )
 
         batch_results = func.batch(X)
 
@@ -152,12 +156,14 @@ class TestBatchEvaluationCorrectness:
     def test_rastrigin_batch_matches_sequential(self):
         """Batch results match sequential __call__ results."""
         func = RastriginFunction(n_dim=2)
-        X = np.array([
-            [0.0, 0.0],
-            [1.0, 1.0],
-            [0.5, -0.5],
-            [-2.0, 2.0],
-        ])
+        X = np.array(
+            [
+                [0.0, 0.0],
+                [1.0, 1.0],
+                [0.5, -0.5],
+                [-2.0, 2.0],
+            ]
+        )
 
         batch_results = func.batch(X)
 
@@ -171,12 +177,14 @@ class TestBatchEvaluationCorrectness:
     def test_ackley_batch_matches_sequential(self):
         """Batch results match sequential __call__ results."""
         func = AckleyFunction()
-        X = np.array([
-            [0.0, 0.0],
-            [1.0, 1.0],
-            [-1.0, 2.0],
-            [3.0, -3.0],
-        ])
+        X = np.array(
+            [
+                [0.0, 0.0],
+                [1.0, 1.0],
+                [-1.0, 2.0],
+                [3.0, -3.0],
+            ]
+        )
 
         batch_results = func.batch(X)
 
@@ -190,12 +198,14 @@ class TestBatchEvaluationCorrectness:
     def test_rosenbrock_batch_matches_sequential(self):
         """Batch results match sequential __call__ results."""
         func = RosenbrockFunction(n_dim=3)
-        X = np.array([
-            [1.0, 1.0, 1.0],
-            [0.0, 0.0, 0.0],
-            [2.0, 4.0, 8.0],
-            [-1.0, 1.0, -1.0],
-        ])
+        X = np.array(
+            [
+                [1.0, 1.0, 1.0],
+                [0.0, 0.0, 0.0],
+                [2.0, 4.0, 8.0],
+                [-1.0, 1.0, -1.0],
+            ]
+        )
 
         batch_results = func.batch(X)
 
@@ -209,12 +219,14 @@ class TestBatchEvaluationCorrectness:
     def test_griewank_batch_matches_sequential(self):
         """Batch results match sequential __call__ results."""
         func = GriewankFunction(n_dim=3)
-        X = np.array([
-            [0.0, 0.0, 0.0],
-            [1.0, 1.0, 1.0],
-            [10.0, -10.0, 5.0],
-            [-5.0, 5.0, -5.0],
-        ])
+        X = np.array(
+            [
+                [0.0, 0.0, 0.0],
+                [1.0, 1.0, 1.0],
+                [10.0, -10.0, 5.0],
+                [-5.0, 5.0, -5.0],
+            ]
+        )
 
         batch_results = func.batch(X)
 
@@ -228,12 +240,14 @@ class TestBatchEvaluationCorrectness:
     def test_styblinski_tang_batch_matches_sequential(self):
         """Batch results match sequential __call__ results."""
         func = StyblinskiTangFunction(n_dim=2)
-        X = np.array([
-            [-2.903534, -2.903534],
-            [0.0, 0.0],
-            [1.0, -1.0],
-            [-3.0, 3.0],
-        ])
+        X = np.array(
+            [
+                [-2.903534, -2.903534],
+                [0.0, 0.0],
+                [1.0, -1.0],
+                [-3.0, 3.0],
+            ]
+        )
 
         batch_results = func.batch(X)
 
@@ -437,11 +451,13 @@ class TestBatch2DFunctions:
         """Simionescu with constraint handling."""
         func = SimionescuFunction()
         # Points inside constraint
-        X = np.array([
-            [0.5, 0.5],
-            [-0.5, 0.5],
-            [0.0, 0.0],
-        ])
+        X = np.array(
+            [
+                [0.5, 0.5],
+                [-0.5, 0.5],
+                [0.0, 0.0],
+            ]
+        )
 
         batch_results = func.batch(X)
 
@@ -805,13 +821,27 @@ class TestBatchBBOBMultimodalWeak:
 class TestBatchBBOBAllFunctions:
     """Comprehensive tests covering all 24 BBOB functions."""
 
-    BBOB_SEPARABLE = [BBOBSphere, EllipsoidalSeparable, RastriginSeparable, BuecheRastrigin, LinearSlope]
+    BBOB_SEPARABLE = [
+        BBOBSphere,
+        EllipsoidalSeparable,
+        RastriginSeparable,
+        BuecheRastrigin,
+        LinearSlope,
+    ]
     BBOB_LOW_COND = [AttractiveSector, StepEllipsoidal, RosenbrockOriginal, RosenbrockRotated]
     BBOB_HIGH_COND = [EllipsoidalRotated, Discus, BentCigar, SharpRidge, DifferentPowers]
-    BBOB_MULTIMODAL_ADQ = [RastriginRotated, Weierstrass, SchaffersF7, SchaffersF7Ill, GriewankRosenbrock]
+    BBOB_MULTIMODAL_ADQ = [
+        RastriginRotated,
+        Weierstrass,
+        SchaffersF7,
+        SchaffersF7Ill,
+        GriewankRosenbrock,
+    ]
     BBOB_MULTIMODAL_WEAK = [Schwefel, Gallagher101, Gallagher21, Katsuura, LunacekBiRastrigin]
 
-    ALL_BBOB = BBOB_SEPARABLE + BBOB_LOW_COND + BBOB_HIGH_COND + BBOB_MULTIMODAL_ADQ + BBOB_MULTIMODAL_WEAK
+    ALL_BBOB = (
+        BBOB_SEPARABLE + BBOB_LOW_COND + BBOB_HIGH_COND + BBOB_MULTIMODAL_ADQ + BBOB_MULTIMODAL_WEAK
+    )
 
     @pytest.mark.parametrize("func_class", ALL_BBOB)
     @pytest.mark.parametrize("n_dim", [2, 5, 10])
@@ -847,8 +877,10 @@ class TestBatchBBOBAllFunctions:
         results = func.batch(X)
 
         np.testing.assert_allclose(
-            results[0], func.f_global, rtol=1e-6,
-            err_msg=f"{func_class.__name__} instance {instance} failed at optimum"
+            results[0],
+            func.f_global,
+            rtol=1e-6,
+            err_msg=f"{func_class.__name__} instance {instance} failed at optimum",
         )
 
 
@@ -887,7 +919,9 @@ class TestBatchEvaluationComprehensive:
         X = np.random.uniform(-1, 1, (50, n_dim))
         results = func.batch(X)
 
-        assert results.shape == (50,), f"{func_class.__name__} returned wrong shape for n_dim={n_dim}"
+        assert results.shape == (
+            50,
+        ), f"{func_class.__name__} returned wrong shape for n_dim={n_dim}"
         assert np.all(np.isfinite(results)), f"{func_class.__name__} produced non-finite values"
 
     @pytest.mark.parametrize("func_class", constrained_functions)

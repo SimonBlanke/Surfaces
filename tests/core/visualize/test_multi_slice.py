@@ -7,7 +7,6 @@
 These tests verify the multi_slice functionality through the accessor pattern.
 """
 
-import numpy as np
 import pytest
 
 from surfaces.test_functions.algebraic.standard.test_functions_nd import SphereFunction

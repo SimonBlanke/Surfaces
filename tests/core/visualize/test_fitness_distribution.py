@@ -7,15 +7,11 @@
 These tests verify the fitness_distribution functionality through the accessor pattern.
 """
 
-import numpy as np
-import pytest
-
 from surfaces.test_functions.algebraic.standard.test_functions_1d import (
     ForresterFunction,
 )
 from surfaces.test_functions.algebraic.standard.test_functions_2d import AckleyFunction
 from surfaces.test_functions.algebraic.standard.test_functions_nd import (
-    RastriginFunction,
     SphereFunction,
 )
 from surfaces.visualize._param_resolver import resolve_params

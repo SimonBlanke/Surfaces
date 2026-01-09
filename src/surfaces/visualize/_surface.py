@@ -149,9 +149,7 @@ def _plot_surface_from_resolved(
     fixed_params = resolved.fixed_values
 
     # Evaluate
-    z_values = evaluate_grid_2d(
-        func, x_values, y_values, x_dim.name, y_dim.name, fixed_params
-    )
+    z_values = evaluate_grid_2d(func, x_values, y_values, x_dim.name, y_dim.name, fixed_params)
 
     # Create figure
     fig = go.Figure(

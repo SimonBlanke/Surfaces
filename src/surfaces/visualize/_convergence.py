@@ -62,6 +62,11 @@ def plot_convergence(
     if history is None or (hasattr(history, "__len__") and len(history) == 0):
         raise MissingDataError("convergence", "optimization history")
 
+    # Handle search_data format (list of dicts with 'score' key)
+    if isinstance(history, list) and len(history) > 0 and isinstance(history[0], dict):
+        # Extract scores from search_data format
+        history = [record.get("score", record) for record in history]
+
     # Normalize history to dict format
     if isinstance(history, (list, np.ndarray)):
         if isinstance(history, np.ndarray) and history.ndim == 2:

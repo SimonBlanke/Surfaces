@@ -11,8 +11,8 @@ through a concrete test function (SphereFunction).
 import numpy as np
 import pytest
 
-from surfaces.test_functions.algebraic import SphereFunction
 from surfaces.modifiers import GaussianNoise
+from surfaces.test_functions.algebraic import SphereFunction
 
 
 class TestCallbackMixin:
@@ -43,7 +43,7 @@ class TestCallbackMixin:
             callbacks=[
                 lambda r: records1.append(r),
                 lambda r: records2.append(r),
-            ]
+            ],
         )
 
         func([1.0, 2.0])
@@ -196,11 +196,7 @@ class TestDataCollectionMixin:
     def test_callbacks_still_work_with_collect_data_false(self):
         """Test that callbacks work even when collect_data is False."""
         records = []
-        func = SphereFunction(
-            n_dim=2,
-            collect_data=False,
-            callbacks=lambda r: records.append(r)
-        )
+        func = SphereFunction(n_dim=2, collect_data=False, callbacks=lambda r: records.append(r))
 
         func([1.0, 2.0])
 
@@ -228,10 +224,7 @@ class TestModifierMixin:
     def test_modifiers_affect_evaluation(self):
         """Test that modifiers affect the evaluation result."""
         func_clean = SphereFunction(n_dim=2)
-        func_noisy = SphereFunction(
-            n_dim=2,
-            modifiers=[GaussianNoise(sigma=1.0, seed=42)]
-        )
+        func_noisy = SphereFunction(n_dim=2, modifiers=[GaussianNoise(sigma=1.0, seed=42)])
 
         clean_result = func_clean([1.0, 2.0])
         noisy_result = func_noisy([1.0, 2.0])
@@ -241,10 +234,7 @@ class TestModifierMixin:
 
     def test_true_value_bypasses_modifiers(self):
         """Test that true_value returns result without modifiers."""
-        func = SphereFunction(
-            n_dim=2,
-            modifiers=[GaussianNoise(sigma=1.0, seed=42)]
-        )
+        func = SphereFunction(n_dim=2, modifiers=[GaussianNoise(sigma=1.0, seed=42)])
 
         true_result = func.true_value([1.0, 2.0])
         expected = 1.0**2 + 2.0**2  # Sphere function: sum of squares
