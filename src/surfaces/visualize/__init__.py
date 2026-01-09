@@ -47,6 +47,7 @@ Discovery Functions
 - auto_plot(func): Automatically select best visualization
 """
 
+from ._accessor import PlotAccessor
 from ._auto import auto_plot
 from ._compatibility import (
     available_plots,
@@ -54,6 +55,7 @@ from ._compatibility import (
     list_all_plots,
     plot_info,
 )
+from ._param_resolver import DimensionConfig, ResolvedParams, resolve_params
 from ._contour import plot_contour
 from ._convergence import plot_convergence
 from ._distribution import plot_fitness_distribution
@@ -68,6 +70,12 @@ from ._slices import plot_multi_slice
 from ._surface import plot_surface
 
 __all__ = [
+    # Accessor
+    "PlotAccessor",
+    # Parameter resolution
+    "DimensionConfig",
+    "ResolvedParams",
+    "resolve_params",
     # Discovery functions
     "available_plots",
     "check_compatibility",
