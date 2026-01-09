@@ -177,9 +177,9 @@ class BaseTestFunction(
                     self._record_evaluation(params, result, from_cache=True)
                 return result
 
-        start_time = time.time()
+        start_time = time.perf_counter()
         result = self._evaluate(params)
-        elapsed_time = time.time() - start_time
+        elapsed_time = time.perf_counter() - start_time
 
         if self.memory:
             cache_key = self._params_to_cache_key(params)
