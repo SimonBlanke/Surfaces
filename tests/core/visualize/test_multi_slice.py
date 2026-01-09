@@ -2,7 +2,7 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-"""Tests for multi_slice plot via PlotAccessor (Phase 2).
+"""Tests for multi_slice plot via PlotAccessor.
 
 These tests verify the multi_slice functionality through the accessor pattern.
 """

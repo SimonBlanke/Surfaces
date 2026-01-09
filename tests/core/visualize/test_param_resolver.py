@@ -2,7 +2,7 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-"""Tests for parameter resolution (Phase 1).
+"""Tests for parameter resolution.
 
 These tests verify the params dict interpretation logic.
 """

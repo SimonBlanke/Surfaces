@@ -2,7 +2,7 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-"""Tests for 2D plots (surface, contour, heatmap) via PlotAccessor (Phase 3).
+"""Tests for 2D plots (surface, contour, heatmap) via PlotAccessor.
 
 These tests verify the 2D plot functionality through the accessor pattern.
 """
