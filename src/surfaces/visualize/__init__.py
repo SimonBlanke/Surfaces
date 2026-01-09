@@ -56,7 +56,7 @@ from ._compatibility import (
     plot_info,
 )
 from ._param_resolver import DimensionConfig, ResolvedParams, resolve_params
-from ._contour import plot_contour
+from ._contour import plot_contour, plot_heatmap
 from ._convergence import plot_convergence
 from ._distribution import plot_fitness_distribution
 from ._errors import (
@@ -84,6 +84,7 @@ __all__ = [
     # Plot functions
     "plot_surface",
     "plot_contour",
+    "plot_heatmap",
     "plot_multi_slice",
     "plot_convergence",
     "plot_fitness_distribution",
