@@ -19,9 +19,18 @@ Test functions for benchmarking optimization algorithms in Python.
   <a href="https://codecov.io/gh/SimonBlanke/Surfaces"><img src="https://img.shields.io/codecov/c/github/SimonBlanke/Surfaces?style=flat-square" alt="Coverage"></a>
 </p>
 
-| **Documentation** ▸ | [Homepage](https://github.com/SimonBlanke/Surfaces) · [User Guide](https://github.com/SimonBlanke/Surfaces#usage) · [API Reference](https://github.com/SimonBlanke/Surfaces#function-categories) · [Tutorials](https://github.com/SimonBlanke/Surfaces#examples) |
-| ---: | :--- |
-| **On this page** ▸ | [Features](#key-features) · [Examples](#examples) · [Concepts](#core-concepts) · [Citation](#citation) |
+<table align="center">
+  <tr>
+    <th align="right">Documentation</th>
+    <th align="center">▸</th>
+    <th align="left"><a href="https://github.com/SimonBlanke/Surfaces">Homepage</a> · <a href="https://github.com/SimonBlanke/Surfaces#usage">User Guide</a> · <a href="https://github.com/SimonBlanke/Surfaces#function-categories">API Reference</a> · <a href="https://github.com/SimonBlanke/Surfaces#examples">Tutorials</a></th>
+  </tr>
+  <tr>
+    <td align="right"><b>On this page</b></td>
+    <td align="center">▸</td>
+    <td align="left"><a href="#key-features">Features</a> · <a href="#examples">Examples</a> · <a href="#core-concepts">Concepts</a> · <a href="#citation">Citation</a></td>
+  </tr>
+</table>
 
 <br>
 
