@@ -1,15 +1,61 @@
-# Surfaces
+<p align="center">
+  <a href="https://github.com/SimonBlanke/Surfaces">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./docs/source/_static/surfaces_logo_dark.svg">
+      <source media="(prefers-color-scheme: light)" srcset="./docs/source/_static/surfaces_logo.svg">
+      <img src="./docs/source/_static/surfaces_logo.svg" width="400" alt="Surfaces Logo">
+    </picture>
+  </a>
+</p>
 
-[![PyPI version](https://img.shields.io/pypi/v/surfaces.svg)](https://pypi.org/project/surfaces/)
-[![Python versions](https://img.shields.io/pypi/pyversions/surfaces.svg)](https://pypi.org/project/surfaces/)
-[![License](https://img.shields.io/pypi/l/surfaces.svg)](https://github.com/SimonBlanke/Surfaces/blob/main/LICENSE)
-[![Downloads](https://static.pepy.tech/badge/surfaces/month)](https://pepy.tech/project/surfaces)
+---
 
-A collection of objective functions for optimization algorithm benchmarking.
+<h3 align="center">
+Test functions for benchmarking optimization algorithms in Python.
+</h3>
 
-## Overview
+<p align="center">
+  <a href="https://github.com/SimonBlanke/Surfaces/actions"><img src="https://img.shields.io/github/actions/workflow/status/SimonBlanke/Surfaces/tests.yml?style=flat-square&label=tests" alt="Tests"></a>
+  <a href="https://codecov.io/gh/SimonBlanke/Surfaces"><img src="https://img.shields.io/codecov/c/github/SimonBlanke/Surfaces?style=flat-square" alt="Coverage"></a>
+</p>
 
-Surfaces provides standardized test functions for evaluating and comparing optimization algorithms. The library includes algebraic test functions (mathematical benchmark problems), machine learning test functions (hyperparameter optimization scenarios), and engineering design problems.
+<table align="center">
+  <tr>
+    <td align="right"><b>Documentation</b></td>
+    <td align="center">▸</td>
+    <td>
+      <a href="https://github.com/SimonBlanke/Surfaces">Homepage</a> ·
+      <a href="https://github.com/SimonBlanke/Surfaces#usage">User Guide</a> ·
+      <a href="https://github.com/SimonBlanke/Surfaces#function-categories">API Reference</a> ·
+      <a href="https://github.com/SimonBlanke/Surfaces#examples">Tutorials</a>
+    </td>
+  </tr>
+  <tr>
+    <td align="right"><b>On this page</b></td>
+    <td align="center">▸</td>
+    <td>
+      <a href="#key-features">Features</a> ·
+      <a href="#examples">Examples</a> ·
+      <a href="#core-concepts">Concepts</a> ·
+      <a href="#citation">Citation</a>
+    </td>
+  </tr>
+</table>
+
+<br>
+
+---
+
+**Surfaces** is a Python library providing standardized test functions for evaluating and comparing optimization algorithms. It includes algebraic benchmark functions from optimization literature, machine learning hyperparameter optimization problems, and constrained engineering design problems.
+
+Designed for researchers benchmarking new optimization algorithms, practitioners comparing optimizer performance, and educators teaching optimization concepts. All functions provide a consistent interface: callable with dictionary parameters and automatic search space generation.
+
+<p>
+  <a href="https://linkedin.com/in/simon-blanke"><img src="https://img.shields.io/badge/LinkedIn-Follow-0A66C2?style=flat-square&logo=linkedin" alt="LinkedIn"></a>
+  <a href="https://github.com/sponsors/SimonBlanke"><img src="https://img.shields.io/badge/Sponsor-EA4AAA?style=flat-square&logo=githubsponsors&logoColor=white" alt="Sponsor"></a>
+</p>
+
+---
 
 ## Installation
 
@@ -17,155 +63,211 @@ Surfaces provides standardized test functions for evaluating and comparing optim
 pip install surfaces
 ```
 
-For machine learning test functions (requires scikit-learn):
+<p>
+  <a href="https://pypi.org/project/surfaces/"><img src="https://img.shields.io/pypi/v/surfaces?style=flat-square&color=blue" alt="PyPI"></a>
+  <a href="https://pypi.org/project/surfaces/"><img src="https://img.shields.io/pypi/pyversions/surfaces?style=flat-square" alt="Python"></a>
+</p>
+
+<details>
+<summary>Optional dependencies</summary>
 
 ```bash
-pip install surfaces[ml]
+pip install surfaces[ml]          # Machine learning test functions (scikit-learn)
+pip install surfaces[viz]         # Visualization tools (matplotlib, plotly)
+pip install surfaces[cec]         # CEC competition benchmarks
+pip install surfaces[timeseries]  # Time series functions (sktime)
+pip install surfaces[full]        # All optional features
 ```
 
-## Function Categories
+</details>
 
-### Algebraic Functions
+---
 
-Algebraic benchmark functions from optimization literature. These functions have known optima and well-characterized difficulty properties.
+## Key Features
 
-**1D Functions:**
-- `GramacyAndLeeFunction`
+<table>
+  <tr>
+    <td width="33%">
+      <a href="#algebraic-functions"><b>30+ Algebraic Functions</b></a><br>
+      <sub>Classic benchmarks from optimization literature: Sphere, Rastrigin, Ackley, Rosenbrock, and more. 1D, 2D, and N-dimensional variants.</sub>
+    </td>
+    <td width="33%">
+      <a href="#machine-learning-functions"><b>ML Hyperparameter Surfaces</b></a><br>
+      <sub>Real hyperparameter optimization landscapes using scikit-learn models with cross-validation on built-in datasets.</sub>
+    </td>
+    <td width="33%">
+      <a href="#engineering-functions"><b>Engineering Problems</b></a><br>
+      <sub>Constrained optimization from engineering literature: welded beams, pressure vessels, spring design, and truss structures.</sub>
+    </td>
+  </tr>
+  <tr>
+    <td width="33%">
+      <a href="#using-modifiers"><b>Function Modifiers</b></a><br>
+      <sub>Add noise, delays, or transformations to any function. Simulate real-world conditions for robust algorithm testing.</sub>
+    </td>
+    <td width="33%">
+      <a href="#benchmark-suites"><b>BBOB and CEC Suites</b></a><br>
+      <sub>Industry-standard benchmark suites used in optimization competitions. COCO/BBOB and CEC 2013/2014/2017.</sub>
+    </td>
+    <td width="33%">
+      <a href="#integration-with-optimizers"><b>Optimizer Integration</b></a><br>
+      <sub>Works with any optimizer that accepts a callable and search space. Native support for Hyperactive and Gradient-Free-Optimizers.</sub>
+    </td>
+  </tr>
+</table>
 
-**2D Functions:**
-- `AckleyFunction`, `BealeFunction`, `BoothFunction`, `BukinFunctionN6`
-- `CrossInTrayFunction`, `DropWaveFunction`, `EasomFunction`, `EggholderFunction`
-- `GoldsteinPriceFunction`, `HimmelblausFunction`, `HoelderTableFunction`
-- `LangermannFunction`, `LeviFunctionN13`, `MatyasFunction`, `McCormickFunction`
-- `SchafferFunctionN2`, `SimionescuFunction`, `ThreeHumpCamelFunction`
+---
 
-**N-Dimensional Functions:**
-- `GriewankFunction`, `RastriginFunction`, `RosenbrockFunction`
-- `SphereFunction`, `StyblinskiTangFunction`
-
-### Machine Learning Functions
-
-Hyperparameter optimization problems based on scikit-learn models. Each function evaluates model performance via cross-validation on built-in datasets.
-
-**Classification (5 models x 5 datasets):**
-
-| Model | Hyperparameters |
-|-------|-----------------|
-| `KNeighborsClassifierFunction` | n_neighbors, algorithm |
-| `DecisionTreeClassifierFunction` | max_depth, min_samples_split, min_samples_leaf |
-| `RandomForestClassifierFunction` | n_estimators, max_depth, min_samples_split |
-| `GradientBoostingClassifierFunction` | n_estimators, max_depth, learning_rate |
-| `SVMClassifierFunction` | C, kernel, gamma |
-
-**Regression (5 models x 5 datasets):**
-
-| Model | Hyperparameters |
-|-------|-----------------|
-| `KNeighborsRegressorFunction` | n_neighbors, algorithm |
-| `DecisionTreeRegressorFunction` | max_depth, min_samples_split, min_samples_leaf |
-| `RandomForestRegressorFunction` | n_estimators, max_depth, min_samples_split |
-| `GradientBoostingRegressorFunction` | n_estimators, max_depth |
-| `SVMRegressorFunction` | C, kernel, gamma |
-
-**Datasets:**
-- Classification: digits, iris, wine, breast_cancer, covtype
-- Regression: diabetes, california, friedman1, friedman2, linear
-
-### Engineering Functions
-
-Constrained engineering design optimization problems with penalty-based constraint handling.
-
-- `CantileverBeamFunction` - Cantilever beam weight minimization
-- `PressureVesselFunction` - Cylindrical pressure vessel cost minimization
-- `TensionCompressionSpringFunction` - Spring weight minimization
-- `ThreeBarTrussFunction` - Truss structure weight minimization
-- `WeldedBeamFunction` - Welded beam fabrication cost minimization
-
-## Usage
-
-### Algebraic Function
+## Quick Start
 
 ```python
-from surfaces.test_functions import SphereFunction
+from surfaces.test_functions.algebraic import SphereFunction
 
-# Create function
-sphere = SphereFunction(n_dim=3, objective="minimize")
+# Create a 3-dimensional Sphere function
+sphere = SphereFunction(n_dim=3)
 
-# Get search space
+# Get the search space (NumPy arrays for each dimension)
 print(sphere.search_space)
 # {'x0': array([-5.12, ..., 5.12]), 'x1': array([...]), 'x2': array([...])}
 
-# Evaluate
+# Evaluate at a point
 result = sphere({"x0": 0.5, "x1": -0.3, "x2": 0.1})
-print(result)  # 0.35
+print(f"Value: {result}")  # Value: -0.35 (negated for maximization)
+
+# Access the global optimum
+print(f"Optimum: {sphere.global_optimum}")  # Optimum at origin
 ```
 
-### Machine Learning Function
+**Output:**
+```
+{'x0': array([-5.12, ..., 5.12]), 'x1': array([...]), 'x2': array([...])}
+Value: -0.35
+Optimum: {'x0': 0.0, 'x1': 0.0, 'x2': 0.0}
+```
+
+---
+
+## Core Concepts
+
+```
+                     SURFACES ARCHITECTURE
+
+    ┌──────────────────┐    ┌──────────────────┐
+    │   Test Function  │───>│   Search Space   │
+    │   (Algebraic/    │    │   (NumPy arrays  │
+    │    ML/Engineer)  │    │    per param)    │
+    └──────────────────┘    └──────────────────┘
+            │                       │
+            v                       v
+    ┌─────────────────────────────────────────┐
+    │             Modifiers (optional)         │
+    │    (Noise, Delay, Transformations)       │
+    └─────────────────────────────────────────┘
+            │
+            v
+    ┌─────────────────────────────────────────┐
+    │              Optimizer                   │
+    │    (Hyperactive, GFO, or any other)      │
+    └─────────────────────────────────────────┘
+```
+
+**Test Function**: Callable object that evaluates parameter combinations. Returns a score (maximization by default).
+
+**Search Space**: Dictionary mapping parameter names to valid values as NumPy arrays. Generated automatically from function bounds.
+
+**Modifiers**: Optional pipeline of transformations (noise, delay) applied to function evaluations.
+
+**Optimizer**: Any algorithm that can call the function with parameters from the search space.
+
+---
+
+## Examples
+
+<details open>
+<summary><b>Algebraic Functions</b></summary>
 
 ```python
-from surfaces.test_functions import KNeighborsClassifierFunction
+from surfaces.test_functions.algebraic import (
+    SphereFunction,
+    RastriginFunction,
+    AckleyFunction,
+)
 
-# Create function with fixed dataset and cv
+# Simple unimodal function
+sphere = SphereFunction(n_dim=5)
+print(sphere({"x0": 0, "x1": 0, "x2": 0, "x3": 0, "x4": 0}))  # Optimum: 0
+
+# Highly multimodal function with many local optima
+rastrigin = RastriginFunction(n_dim=3)
+print(f"Search space bounds: {rastrigin.bounds}")
+
+# Challenging function with a narrow global basin
+ackley = AckleyFunction()  # 2D by default
+print(f"Global optimum at: {ackley.global_optimum}")
+```
+
+</details>
+
+<br>
+
+<details>
+<summary><b>Machine Learning Functions</b></summary>
+
+```python
+from surfaces.test_functions.machine_learning.tabular import (
+    KNeighborsClassifierFunction,
+    RandomForestClassifierFunction,
+)
+
+# KNN hyperparameter optimization on iris dataset
 knn = KNeighborsClassifierFunction(dataset="iris", cv=5)
-
-# Search space contains only hyperparameters
 print(knn.search_space)
-# {'n_neighbors': [3, 8, 13, ...], 'algorithm': ['auto', 'ball_tree', ...]}
+# {'n_neighbors': [3, 5, 7, ...], 'algorithm': ['auto', 'ball_tree', ...]}
 
-# Evaluate
 accuracy = knn({"n_neighbors": 5, "algorithm": "auto"})
-print(f"Accuracy: {accuracy:.4f}")
+print(f"CV Accuracy: {accuracy:.4f}")
+
+# Random Forest on wine dataset
+rf = RandomForestClassifierFunction(dataset="wine", cv=3)
+score = rf({"n_estimators": 100, "max_depth": 5, "min_samples_split": 2})
 ```
 
-### Engineering Function
+</details>
+
+<br>
+
+<details>
+<summary><b>Engineering Functions</b></summary>
 
 ```python
-from surfaces.test_functions import WeldedBeamFunction
+from surfaces.test_functions.algebraic.constrained import (
+    WeldedBeamFunction,
+    PressureVesselFunction,
+)
 
-# Create function
-beam = WeldedBeamFunction(objective="minimize")
-
-# Evaluate with constraint penalties
+# Welded beam design optimization
+beam = WeldedBeamFunction()
 cost = beam({"h": 0.2, "l": 6.0, "t": 8.0, "b": 0.3})
+print(f"Fabrication cost: {cost}")
+
+# Pressure vessel design
+vessel = PressureVesselFunction()
+print(f"Design variables: {list(vessel.search_space.keys())}")
 ```
 
-### Integration with Optimizers
+</details>
 
-```python
-from surfaces.test_functions import AckleyFunction
+<br>
 
-# Works with any optimizer that accepts callable + search space
-func = AckleyFunction(objective="minimize")
-
-# Example with Hyperactive
-from hyperactive import Hyperactive
-
-hyper = Hyperactive()
-hyper.add_search(func, func.search_space, n_iter=100)
-hyper.run()
-```
-
-## Common Parameters
-
-All test functions support:
-
-| Parameter | Description |
-|-----------|-------------|
-| `objective` | "minimize" or "maximize" |
-| `modifiers` | List of modifiers (noise, delay, etc.) |
-| `memory` | Cache repeated evaluations |
-| `collect_data` | Store evaluation history |
-| `callbacks` | List of callback functions |
-
-### Using Modifiers
-
-Modifiers allow you to augment test functions with effects like noise, delays, or transformations. They are applied in the order specified:
+<details>
+<summary><b>Using Modifiers</b></summary>
 
 ```python
 from surfaces.test_functions.algebraic import SphereFunction
 from surfaces.modifiers import DelayModifier, GaussianNoise
 
-func = SphereFunction(
+# Add realistic conditions to any function
+sphere = SphereFunction(
     n_dim=2,
     modifiers=[
         DelayModifier(delay=0.01),         # Simulate expensive evaluation
@@ -173,64 +275,140 @@ func = SphereFunction(
     ]
 )
 
-# Evaluate with modifiers
-result = func([1.0, 2.0])
+# Evaluate with modifiers applied
+noisy_result = sphere({"x0": 1.0, "x1": 2.0})
 
-# Get true value without modifiers
-true_value = func.true_value([1.0, 2.0])
+# Get the true value without modifiers
+true_value = sphere.true_value({"x0": 1.0, "x1": 2.0})
+print(f"Noisy: {noisy_result:.4f}, True: {true_value:.4f}")
 ```
 
-N-dimensional functions additionally support:
-| Parameter | Description |
-|-----------|-------------|
-| `n_dim` | Number of dimensions |
+</details>
 
-ML functions additionally support:
-| Parameter | Description |
-|-----------|-------------|
-| `dataset` | Dataset name (e.g., "iris", "diabetes") |
-| `cv` | Cross-validation folds (2, 3, 5, or 10) |
+<br>
 
-## Visualizations
+<details>
+<summary><b>Benchmark Suites</b></summary>
 
-<table>
-  <tr>
-    <th>Function</th>
-    <th>Heatmap</th>
-    <th>Surface</th>
-  </tr>
-  <tr>
-    <td><b>Sphere</b></td>
-    <td><img src="./doc/images/mathematical/sphere_function_heatmap.jpg" width="90%"></td>
-    <td><img src="./doc/images/mathematical/sphere_function_surface.jpg" width="100%"></td>
-  </tr>
-  <tr>
-    <td><b>Rastrigin</b></td>
-    <td><img src="./doc/images/mathematical/rastrigin_function_heatmap.jpg" width="90%"></td>
-    <td><img src="./doc/images/mathematical/rastrigin_function_surface.jpg" width="100%"></td>
-  </tr>
-  <tr>
-    <td><b>Ackley</b></td>
-    <td><img src="./doc/images/mathematical/ackley_function_heatmap.jpg" width="90%"></td>
-    <td><img src="./doc/images/mathematical/ackley_function_surface.jpg" width="100%"></td>
-  </tr>
-  <tr>
-    <td><b>Rosenbrock</b></td>
-    <td><img src="./doc/images/mathematical/rosenbrock_function_heatmap.jpg" width="90%"></td>
-    <td><img src="./doc/images/mathematical/rosenbrock_function_surface.jpg" width="100%"></td>
-  </tr>
-</table>
+```python
+from surfaces.test_functions.benchmark.bbob import (
+    SphereFunction as BBOBSphere,
+    RosenbrockFunction as BBOBRosenbrock,
+)
 
-## Roadmap
+# BBOB (Black-Box Optimization Benchmarking) functions
+# Used in COCO platform for algorithm comparison
+bbob_sphere = BBOBSphere(n_dim=10)
+bbob_rosenbrock = BBOBRosenbrock(n_dim=10)
 
-Planned additions:
+print(f"BBOB Sphere optimum: {bbob_sphere.optimal_value}")
+```
 
-- **BBOB Functions**: Black-Box Optimization Benchmarking suite (24 functions)
-- **CEC Functions**: Competition on Evolutionary Computation benchmark suites
-- **Surrogate Models**: Pre-trained ONNX models for fast ML function approximation
-- **Additional ML Models**: Neural networks, XGBoost, LightGBM
-- **Multi-objective Functions**: Test functions with multiple objectives
+</details>
+
+<br>
+
+<details>
+<summary><b>Multi-Objective Functions</b></summary>
+
+```python
+from surfaces.test_functions.algebraic.multi_objective import (
+    ZDT1,
+    Kursawe,
+)
+
+# ZDT1: Two-objective problem with convex Pareto front
+zdt1 = ZDT1(n_dim=30)
+objectives = zdt1({"x0": 0.5, "x1": 0.0, "x2": 0.0})  # Returns tuple of objectives
+
+# Kursawe: Non-convex Pareto front
+kursawe = Kursawe()
+f1, f2 = kursawe({"x0": 0.0, "x1": 0.0, "x2": 0.0})
+```
+
+</details>
+
+<br>
+
+<details>
+<summary><b>Integration with Optimizers</b></summary>
+
+```python
+from surfaces.test_functions.algebraic import AckleyFunction
+
+# Surfaces works with any optimizer accepting callable + search space
+func = AckleyFunction()
+
+# Example with Hyperactive
+from hyperactive import Hyperactive
+
+hyper = Hyperactive()
+hyper.add_search(func, func.search_space, n_iter=100)
+hyper.run()
+
+print(f"Best score: {hyper.best_score(func)}")
+print(f"Best params: {hyper.best_para(func)}")
+
+# Example with Gradient-Free-Optimizers
+from gradient_free_optimizers import BayesianOptimizer
+
+opt = BayesianOptimizer(func.search_space)
+opt.search(func, n_iter=50)
+```
+
+</details>
+
+---
+
+## Ecosystem
+
+This library is part of a suite of optimization tools. For updates, [follow on GitHub](https://github.com/SimonBlanke).
+
+| Package | Description |
+|---------|-------------|
+| [Hyperactive](https://github.com/SimonBlanke/Hyperactive) | Hyperparameter optimization framework with experiment abstraction and ML integrations |
+| [Gradient-Free-Optimizers](https://github.com/SimonBlanke/Gradient-Free-Optimizers) | Core optimization algorithms for black-box function optimization |
+| [Surfaces](https://github.com/SimonBlanke/Surfaces) | Test functions and benchmark surfaces for optimization algorithm evaluation |
+
+---
+
+## Documentation
+
+| Resource | Description |
+|----------|-------------|
+| [User Guide](https://github.com/SimonBlanke/Surfaces#usage) | Installation and basic usage examples |
+| [API Reference](https://github.com/SimonBlanke/Surfaces#function-categories) | Complete list of available test functions |
+| [Examples](https://github.com/SimonBlanke/Surfaces#examples) | Code examples for common use cases |
+| [GitHub Issues](https://github.com/SimonBlanke/Surfaces/issues) | Bug reports and feature requests |
+
+---
+
+## Contributing
+
+Contributions welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+
+- **Bug reports**: [GitHub Issues](https://github.com/SimonBlanke/Surfaces/issues)
+- **Feature requests**: [GitHub Discussions](https://github.com/SimonBlanke/Surfaces/discussions)
+- **Questions**: [GitHub Issues](https://github.com/SimonBlanke/Surfaces/issues)
+
+---
+
+## Citation
+
+If you use this software in your research, please cite:
+
+```bibtex
+@software{surfaces2024,
+  author = {Simon Blanke},
+  title = {Surfaces: Test functions for optimization algorithm benchmarking},
+  year = {2024},
+  url = {https://github.com/SimonBlanke/Surfaces},
+  version = {0.6.1}
+}
+```
+
+---
 
 ## License
 
-MIT License
+[MIT License](./LICENSE) - Free for commercial and academic use.
