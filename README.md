@@ -15,10 +15,11 @@ Test functions for benchmarking optimization algorithms in Python.
 </h3>
 
 <p align="center">
-  <a href="https://github.com/SimonBlanke/Surfaces/actions"><img src="https://img.shields.io/github/actions/workflow/status/SimonBlanke/Surfaces/tests.yml?style=flat-square&label=tests" alt="Tests"></a>
-  <a href="https://codecov.io/gh/SimonBlanke/Surfaces"><img src="https://img.shields.io/codecov/c/github/SimonBlanke/Surfaces?style=flat-square" alt="Coverage"></a>
+  <a href="https://github.com/SimonBlanke/Surfaces/actions"><img src="https://img.shields.io/github/actions/workflow/status/SimonBlanke/Surfaces/tests.yml?style=for-the-badge&logo=githubactions&logoColor=white&label=tests" alt="Tests"></a>
+  <a href="https://codecov.io/gh/SimonBlanke/Surfaces"><img src="https://img.shields.io/codecov/c/github/SimonBlanke/Surfaces?style=for-the-badge&logo=codecov&logoColor=white" alt="Coverage"></a>
 </p>
 
+<br>
 
 <table align="center">
   <tr>
