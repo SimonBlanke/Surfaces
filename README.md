@@ -19,28 +19,9 @@ Test functions for benchmarking optimization algorithms in Python.
   <a href="https://codecov.io/gh/SimonBlanke/Surfaces"><img src="https://img.shields.io/codecov/c/github/SimonBlanke/Surfaces?style=flat-square" alt="Coverage"></a>
 </p>
 
-<table align="center">
-  <tr>
-    <td align="right"><b>Documentation</b></td>
-    <td align="center">▸</td>
-    <td>
-      <a href="https://github.com/SimonBlanke/Surfaces">Homepage</a> ·
-      <a href="https://github.com/SimonBlanke/Surfaces#usage">User Guide</a> ·
-      <a href="https://github.com/SimonBlanke/Surfaces#function-categories">API Reference</a> ·
-      <a href="https://github.com/SimonBlanke/Surfaces#examples">Tutorials</a>
-    </td>
-  </tr>
-  <tr>
-    <td align="right"><b>On this page</b></td>
-    <td align="center">▸</td>
-    <td>
-      <a href="#key-features">Features</a> ·
-      <a href="#examples">Examples</a> ·
-      <a href="#core-concepts">Concepts</a> ·
-      <a href="#citation">Citation</a>
-    </td>
-  </tr>
-</table>
+| **Documentation** ▸ | [Homepage](https://github.com/SimonBlanke/Surfaces) · [User Guide](https://github.com/SimonBlanke/Surfaces#usage) · [API Reference](https://github.com/SimonBlanke/Surfaces#function-categories) · [Tutorials](https://github.com/SimonBlanke/Surfaces#examples) |
+| ---: | :--- |
+| **On this page** ▸ | [Features](#key-features) · [Examples](#examples) · [Concepts](#core-concepts) · [Citation](#citation) |
 
 <br>
 
@@ -85,36 +66,9 @@ pip install surfaces[full]        # All optional features
 
 ## Key Features
 
-<table>
-  <tr>
-    <td width="33%">
-      <a href="#algebraic-functions"><b>30+ Algebraic Functions</b></a><br>
-      <sub>Classic benchmarks from optimization literature: Sphere, Rastrigin, Ackley, Rosenbrock, and more. 1D, 2D, and N-dimensional variants.</sub>
-    </td>
-    <td width="33%">
-      <a href="#machine-learning-functions"><b>ML Hyperparameter Surfaces</b></a><br>
-      <sub>Real hyperparameter optimization landscapes using scikit-learn models with cross-validation on built-in datasets.</sub>
-    </td>
-    <td width="33%">
-      <a href="#engineering-functions"><b>Engineering Problems</b></a><br>
-      <sub>Constrained optimization from engineering literature: welded beams, pressure vessels, spring design, and truss structures.</sub>
-    </td>
-  </tr>
-  <tr>
-    <td width="33%">
-      <a href="#using-modifiers"><b>Function Modifiers</b></a><br>
-      <sub>Add noise, delays, or transformations to any function. Simulate real-world conditions for robust algorithm testing.</sub>
-    </td>
-    <td width="33%">
-      <a href="#benchmark-suites"><b>BBOB and CEC Suites</b></a><br>
-      <sub>Industry-standard benchmark suites used in optimization competitions. COCO/BBOB and CEC 2013/2014/2017.</sub>
-    </td>
-    <td width="33%">
-      <a href="#integration-with-optimizers"><b>Optimizer Integration</b></a><br>
-      <sub>Works with any optimizer that accepts a callable and search space. Native support for Hyperactive and Gradient-Free-Optimizers.</sub>
-    </td>
-  </tr>
-</table>
+| [**30+ Algebraic Functions**](#algebraic-functions)<br><sub>Classic benchmarks from optimization literature: Sphere, Rastrigin, Ackley, Rosenbrock, and more.</sub> | [**ML Hyperparameter Surfaces**](#machine-learning-functions)<br><sub>Real hyperparameter optimization landscapes using scikit-learn models with cross-validation.</sub> | [**Engineering Problems**](#engineering-functions)<br><sub>Constrained optimization from engineering literature: welded beams, pressure vessels, spring design.</sub> |
+| :--- | :--- | :--- |
+| [**Function Modifiers**](#using-modifiers)<br><sub>Add noise, delays, or transformations to any function. Simulate real-world conditions.</sub> | [**BBOB and CEC Suites**](#benchmark-suites)<br><sub>Industry-standard benchmark suites used in optimization competitions.</sub> | [**Optimizer Integration**](#integration-with-optimizers)<br><sub>Works with any optimizer that accepts a callable and search space.</sub> |
 
 ---
 
