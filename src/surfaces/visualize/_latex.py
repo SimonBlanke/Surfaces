@@ -7,10 +7,11 @@
 from __future__ import annotations
 
 import os
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 if TYPE_CHECKING:
     from ..test_functions._base_test_function import BaseTestFunction
+    from ._param_resolver import ResolvedParams
 
 from ._errors import MissingDependencyError, PlotCompatibilityError
 from ._utils import validate_plot
@@ -101,6 +102,8 @@ def plot_latex(
     zmin: Optional[float] = None,
     zmax: Optional[float] = None,
     title: Optional[str] = None,
+    resolved: Optional["ResolvedParams"] = None,
+    **kwargs: Any,
 ) -> str:
     """Generate a publication-quality LaTeX file with pgfplots 3D surface.
 
@@ -121,6 +124,9 @@ def plot_latex(
         zmin: Optional minimum z-axis value. Auto-scaled if None.
         zmax: Optional maximum z-axis value. Auto-scaled if None.
         title: Plot title. Defaults to function name.
+        resolved: Pre-resolved parameter configuration from PlotAccessor.
+            If provided, bounds are extracted from resolved params.
+        **kwargs: Additional keyword arguments for future compatibility.
 
     Returns:
         Path to the generated .tex file (or .pdf if compile_pdf=True).
@@ -168,9 +174,21 @@ def plot_latex(
     # Get function metadata
     func_name = getattr(func, "name", type(func).__name__)
     func_id = getattr(func, "_name_", type(func).__name__.lower())
-    default_bounds = getattr(func, "default_bounds", (-5.0, 5.0))
     f_global = getattr(func, "f_global", None)
     x_global = getattr(func, "x_global", None)
+
+    # Get bounds from resolved params or default_bounds
+    if resolved is not None and len(resolved.plot_dims) >= 2:
+        # Use bounds from the first plotted dimension (assuming symmetric bounds)
+        dim0_bounds = resolved.plot_dims[0].bounds
+        dim1_bounds = resolved.plot_dims[1].bounds
+        # Use the wider range of both dimensions
+        domain_min = min(dim0_bounds[0], dim1_bounds[0])
+        domain_max = max(dim0_bounds[1], dim1_bounds[1])
+    else:
+        default_bounds = getattr(func, "default_bounds", (-5.0, 5.0))
+        domain_min = default_bounds[0]
+        domain_max = default_bounds[1]
 
     # Build global minimum text
     if f_global is not None and x_global is not None:
@@ -195,8 +213,8 @@ def plot_latex(
         func_id=func_id,
         pgfmath_formula=pgfmath_formula,
         title=title or func_name,
-        domain_min=default_bounds[0],
-        domain_max=default_bounds[1],
+        domain_min=domain_min,
+        domain_max=domain_max,
         samples=samples,
         view_azimuth=view_azimuth,
         view_elevation=view_elevation,
@@ -224,10 +242,7 @@ def plot_latex(
         import subprocess
 
         if shutil.which("pdflatex") is None:
-            raise MissingDependencyError(
-                ["pdflatex"],
-                "PDF compilation requires pdflatex. Install TeX Live or MiKTeX.",
-            )
+            raise MissingDependencyError(["pdflatex"])
 
         # Get directory and filename
         tex_dir = os.path.dirname(output_path) or "."
