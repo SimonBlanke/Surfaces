@@ -395,7 +395,7 @@ class PlotAccessor:
         if history is None and hasattr(self._func, "search_data"):
             history = self._func.search_data
 
-        if not history:
+        if history is None or (hasattr(history, "__len__") and len(history) == 0):
             raise ValueError(
                 "No history data available. Either:\n"
                 "  1. Run some evaluations first (func.search_data)\n"
