@@ -66,11 +66,13 @@ class TestConvergenceBasic:
     def test_with_history_numpy_2d(self):
         """Test convergence with 2D numpy array (multiple runs)."""
         func = SphereFunction(n_dim=2)
-        history = np.array([
-            [10, 8, 5, 3, 1],
-            [12, 9, 6, 4, 2],
-            [15, 10, 7, 5, 3],
-        ])
+        history = np.array(
+            [
+                [10, 8, 5, 3, 1],
+                [12, 9, 6, 4, 2],
+                [15, 10, 7, 5, 3],
+            ]
+        )
 
         fig = func.plot.convergence(history=history)
 
