@@ -260,6 +260,10 @@ html_theme = "pydata_sphinx_theme"
 # documentation.
 
 html_theme_options = {
+    "announcement": (
+        "This documentation is under active development. "
+        "Some sections may be incomplete or subject to change."
+    ),
     "logo": {
         "text": "Surfaces",
     },
