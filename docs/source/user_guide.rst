@@ -99,6 +99,13 @@ Guide Sections
       Plot function surfaces, contours,
       and optimization trajectories.
 
+   .. grid-item-card:: Surrogates
+      :link: user_guide/surrogates
+      :link-type: doc
+
+      Pre-trained models for fast evaluation
+      of expensive ML test functions.
+
 ----
 
 Quick Example
@@ -129,4 +136,5 @@ Quick Example
    user_guide/presets
    user_guide/integrations/index
    user_guide/visualization
+   user_guide/surrogates
    /_generated/plots/gallery

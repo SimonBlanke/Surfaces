@@ -25,6 +25,7 @@ API_DIR = GENERATED_DIR / "api"
 CATALOGS_DIR = GENERATED_DIR / "catalogs"
 PLOTS_DIR = GENERATED_DIR / "plots"
 DIAGRAMS_DIR = GENERATED_DIR / "diagrams"
+SURROGATES_DIR = GENERATED_DIR / "surrogates"
 
 # Source code directory
 SRC_DIR = PROJECT_ROOT / "src"
@@ -95,7 +96,7 @@ CATEGORY_DESCRIPTIONS = {
 
 def ensure_directories():
     """Create all output directories if they don't exist."""
-    for directory in [API_DIR, CATALOGS_DIR, PLOTS_DIR, DIAGRAMS_DIR]:
+    for directory in [API_DIR, CATALOGS_DIR, PLOTS_DIR, DIAGRAMS_DIR, SURROGATES_DIR]:
         directory.mkdir(parents=True, exist_ok=True)
 
 

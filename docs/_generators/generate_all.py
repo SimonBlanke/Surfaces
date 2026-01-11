@@ -93,6 +93,24 @@ def run_diagram_generator():
         raise
 
 
+def run_surrogate_generator():
+    """Run the surrogate coverage generator."""
+    print("\n" + "=" * 60)
+    print("Generating Surrogate Coverage")
+    print("=" * 60)
+
+    try:
+        from docs._generators import generate_surrogates
+
+        generate_surrogates.main()
+    except ImportError as e:
+        print(f"Warning: Could not import surrogate generator: {e}")
+        print("  (This may be expected if sklearn is not installed)")
+    except Exception as e:
+        print(f"Error generating surrogate docs: {e}")
+        # Don't raise - surrogates are optional
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -117,6 +135,11 @@ def main():
         help="Generate architecture diagrams",
     )
     parser.add_argument(
+        "--surrogates",
+        action="store_true",
+        help="Generate surrogate model coverage docs",
+    )
+    parser.add_argument(
         "--all",
         action="store_true",
         help="Generate all assets (default if no specific flags)",
@@ -135,7 +158,7 @@ def main():
     args = parser.parse_args()
 
     # Default to all if nothing specified
-    if not any([args.catalogs, args.plots, args.diagrams, args.all]):
+    if not any([args.catalogs, args.plots, args.diagrams, args.surrogates, args.all]):
         args.all = True
 
     if args.dry_run:
@@ -146,6 +169,8 @@ def main():
             print("  - Visualization assets (PNG plots)")
         if args.all or args.diagrams:
             print("  - Architecture diagrams (Mermaid/RST)")
+        if args.all or args.surrogates:
+            print("  - Surrogate model coverage (RST tables)")
         return 0
 
     if args.clean:
@@ -163,6 +188,9 @@ def main():
 
     if args.all or args.diagrams:
         run_diagram_generator()
+
+    if args.all or args.surrogates:
+        run_surrogate_generator()
 
     print("\n" + "=" * 60)
     print("Generation Complete")
