@@ -3,7 +3,7 @@ Surfaces
 </h1>
 
 <p align="center">
-  <a href="https://github.com/SimonBlanke/Surfaces">
+  <a href="https://surfaces.readthedocs.io/en/latest/">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="./docs/source/_static/surfaces_logo_dark.svg">
       <source media="(prefers-color-scheme: light)" srcset="./docs/source/_static/surfaces_logo.svg">
@@ -29,11 +29,12 @@ Test functions for benchmarking optimization algorithms in Python.
   <tr>
     <td align="right"><b>Documentation</b></td>
     <td>
-      <a href="https://github.com/SimonBlanke/Surfaces">Homepage</a> ·
-      <a href="https://github.com/SimonBlanke/Surfaces">Getting Started</a> ·
-      <a href="https://github.com/SimonBlanke/Surfaces#usage">User Guide</a> ·
-      <a href="https://github.com/SimonBlanke/Surfaces#function-categories">API Reference</a> ·
-      <a href="https://github.com/SimonBlanke/Surfaces#examples">Tutorials</a>
+      <a href="https://surfaces.readthedocs.io/en/latest/">Homepage</a> ·
+      <a href="https://surfaces.readthedocs.io/en/latest/get_started.html">Getting Started</a> ·
+      <a href="https://surfaces.readthedocs.io/en/latest/installation.html">Installation</a> ·
+      <a href="https://surfaces.readthedocs.io/en/latest/user_guide.html">User Guide</a> ·
+      <a href="https://surfaces.readthedocs.io/en/latest/api_reference.html">API Reference</a> ·
+      <a href="https://surfaces.readthedocs.io/en/latest/examples.html">Tutorials</a>
     </td>
   </tr>
   <tr>
@@ -53,7 +54,7 @@ Test functions for benchmarking optimization algorithms in Python.
 
 ---
 
-<a href="surface plot">
+<a href="https://surfaces.readthedocs.io/en/latest/">
   <img src="./docs/source/_static/drop_wave_surface.svg" width="240" align="right" alt="Bayesian Optimization on Ackley Function">
 </a>
 
@@ -96,9 +97,9 @@ pip install surfaces[full]        # All optional features
 
 ## Key Features
 
-| [**30+ Algebraic Test Functions**](#algebraic-functions)<br><sub>Classic benchmarks from optimization literature: Sphere, Rastrigin, Ackley, Rosenbrock, and more.</sub> | [**ML Hyperparameter Test Functions**](#machine-learning-functions)<br><sub>Real hyperparameter optimization problems using scikit-learn models with cross-validation.</sub> | [**Constrained Engineering Test Functions**](#engineering-functions)<br><sub>Constrained optimization from engineering literature: welded beams, pressure vessels, spring design.</sub> |
+| [**30+ Algebraic Test Functions**](https://surfaces.readthedocs.io/en/latest/user_guide/test_functions/algebraic/index.html)<br><sub>Classic benchmarks from optimization literature: Sphere, Rastrigin, Ackley, Rosenbrock, and more.</sub> | [**ML Hyperparameter Test Functions**](https://surfaces.readthedocs.io/en/latest/user_guide/test_functions/machine_learning.html)<br><sub>Real hyperparameter optimization problems using scikit-learn models with cross-validation.</sub> | [**Constrained Engineering Test Functions**](https://surfaces.readthedocs.io/en/latest/user_guide/test_functions/engineering.html)<br><sub>Constrained optimization from engineering literature: welded beams, pressure vessels, spring design.</sub> |
 | :--- | :--- | :--- |
-| [**Surrogate Models**](#surrogate-models)<br><sub>Pre-trained neural networks for fast ML test function evaluation. 100-1000x faster with realistic characteristics.</sub> | [**BBOB and CEC Suites**](#benchmark-suites)<br><sub>Standard academic benchmark suites used in optimization competitions.</sub> | [**Optimizer Integration**](#integration-with-optimizers)<br><sub>Works with Optuna, Ray Tune, scipy, Gradient-Free-Optimizers and any optimizer that accepts a callable.</sub> |
+| [**Surrogate Models**](https://surfaces.readthedocs.io/en/latest/user_guide/surrogates.html)<br><sub>Pre-trained neural networks for fast ML test function evaluation. 100-1000x faster with realistic characteristics.</sub> | [**BBOB and CEC Suites**](https://surfaces.readthedocs.io/en/latest/user_guide/test_functions/bbob.html)<br><sub>Standard academic benchmark suites used in optimization competitions.</sub> | [**Optimizer Integration**](https://surfaces.readthedocs.io/en/latest/user_guide/integrations/index.html)<br><sub>Works with Optuna, Ray Tune, scipy, Gradient-Free-Optimizers and any optimizer that accepts a callable.</sub> |
 
 <br>
 
