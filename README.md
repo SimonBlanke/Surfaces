@@ -49,6 +49,10 @@ Test functions for benchmarking optimization algorithms in Python.
 
 ---
 
+<a href="surface plot">
+  <img src="./docs/source/_static/rastrigin_surface.svg" width="240" align="right" alt="Bayesian Optimization on Ackley Function">
+</a>
+
 **Surfaces** is a Python library providing standardized test functions for evaluating and comparing optimization algorithms. It includes algebraic benchmark functions from optimization literature, machine learning hyperparameter optimization problems, and constrained engineering design problems.
 
 Designed for researchers benchmarking new optimization algorithms, practitioners comparing optimizer performance, and educators teaching optimization concepts. All functions provide a consistent interface: callable with dictionary parameters and automatic search space generation.
