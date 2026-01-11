@@ -269,7 +269,8 @@ print(f"Noisy: {noisy_result:.4f}, True: {true_value:.4f}")
 
 </details>
 
-<br>
+
+
 
 <details>
 <summary><b>Surrogate Models</b></summary>
@@ -293,7 +294,7 @@ result_fast = func_fast({"n_neighbors": 5, "algorithm": "auto"})  # ~0.1ms
 
 </details>
 
-<br>
+
 
 <details>
 <summary><b>Benchmark Suites</b></summary>
