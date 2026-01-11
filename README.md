@@ -183,11 +183,11 @@ print(sphere({"x0": 0, "x1": 0, "x2": 0, "x3": 0, "x4": 0}))  # Optimum: 0
 
 # Highly multimodal function with many local optima
 rastrigin = RastriginFunction(n_dim=3)
-print(f"Search space bounds: {rastrigin.bounds}")
+print(f"Search space bounds: {rastrigin.default_bounds}")
 
 # Challenging function with a narrow global basin
 ackley = AckleyFunction()  # 2D by default
-print(f"Global optimum at: {ackley.global_optimum}")
+print(f"Global optimum at: {ackley.x_global}")
 ```
 
 </details>
@@ -301,8 +301,8 @@ result_fast = func_fast({"n_neighbors": 5, "algorithm": "auto"})  # ~0.1ms
 
 ```python
 from surfaces.test_functions.benchmark.bbob import (
-    SphereFunction as BBOBSphere,
-    RosenbrockFunction as BBOBRosenbrock,
+    Sphere as BBOBSphere,
+    RosenbrockOriginal as BBOBRosenbrock,
 )
 
 # BBOB (Black-Box Optimization Benchmarking) functions
@@ -310,7 +310,7 @@ from surfaces.test_functions.benchmark.bbob import (
 bbob_sphere = BBOBSphere(n_dim=10)
 bbob_rosenbrock = BBOBRosenbrock(n_dim=10)
 
-print(f"BBOB Sphere optimum: {bbob_sphere.optimal_value}")
+print(f"BBOB Sphere f_global: {bbob_sphere.f_global}")
 ```
 
 </details>
@@ -327,12 +327,15 @@ from surfaces.test_functions.algebraic.multi_objective import (
 )
 
 # ZDT1: Two-objective problem with convex Pareto front
-zdt1 = ZDT1(n_dim=30)
-objectives = zdt1({"x0": 0.5, "x1": 0.0, "x2": 0.0})  # Returns tuple of objectives
+zdt1 = ZDT1(n_dim=3)
+params = {f"x{i}": 0.5 for i in range(3)}
+objectives = zdt1(params)  # Returns tuple of objectives
+print(f"ZDT1 objectives: {objectives}")
 
 # Kursawe: Non-convex Pareto front
 kursawe = Kursawe()
 f1, f2 = kursawe({"x0": 0.0, "x1": 0.0, "x2": 0.0})
+print(f"Kursawe objectives: f1={f1:.4f}, f2={f2:.4f}")
 ```
 
 </details>
