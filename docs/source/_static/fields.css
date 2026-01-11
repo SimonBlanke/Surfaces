@@ -1,9 +1,0 @@
-/* Better styling for parameter fields in API docs */
-.field-list dt {
-    font-weight: bold;
-}
-
-.field-list dd {
-    margin-left: 1.5rem;
-    margin-bottom: 0.5rem;
-}
