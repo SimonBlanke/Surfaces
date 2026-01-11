@@ -22,16 +22,7 @@ Usage
 
 import argparse
 import json
-import sys
-from pathlib import Path
 from typing import Any, Dict, List, Optional
-
-# Ensure we can import from the project
-GENERATORS_DIR = Path(__file__).parent
-PROJECT_ROOT = GENERATORS_DIR.parent.parent
-
-if str(PROJECT_ROOT / "src") not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from .config import SURROGATES_DIR
 
@@ -179,34 +170,40 @@ def generate_coverage_table(
     regressors = {k: v for k, v in status.items() if v["category"] == "regression"}
 
     # Classification table
-    lines.extend(_generate_category_table(
-        "Classification Functions",
-        classifiers,
-        validation_results,
-    ))
+    lines.extend(
+        _generate_category_table(
+            "Classification Functions",
+            classifiers,
+            validation_results,
+        )
+    )
 
     lines.append("")
 
     # Regression table
-    lines.extend(_generate_category_table(
-        "Regression Functions",
-        regressors,
-        validation_results,
-    ))
+    lines.extend(
+        _generate_category_table(
+            "Regression Functions",
+            regressors,
+            validation_results,
+        )
+    )
 
     # Add legend
-    lines.extend([
-        "",
-        "**Legend:**",
-        "",
-        "- **Status**: Available = pre-trained model exists, Missing = not yet trained",
-        "- **R²**: Coefficient of determination (higher is better, 1.0 = perfect)",
-        "- **Speedup**: How many times faster than real evaluation",
-        "- **Samples**: Number of training samples used",
-        "",
-        "Metrics are from model metadata or live validation. Missing values indicate",
-        "the metric was not available.",
-    ])
+    lines.extend(
+        [
+            "",
+            "**Legend:**",
+            "",
+            "- **Status**: Available = pre-trained model exists, Missing = not yet trained",
+            "- **R²**: Coefficient of determination (higher is better, 1.0 = perfect)",
+            "- **Speedup**: How many times faster than real evaluation",
+            "- **Samples**: Number of training samples used",
+            "",
+            "Metrics are from model metadata or live validation. Missing values indicate",
+            "the metric was not available.",
+        ]
+    )
 
     return "\n".join(lines)
 
@@ -278,14 +275,16 @@ def _generate_category_table(
         # Class reference
         class_ref = f":class:`~surfaces.test_functions.machine_learning.{info['class_name']}`"
 
-        lines.extend([
-            f"   * - {class_ref}",
-            f"     - {status}",
-            f"     - {r2}",
-            f"     - {speedup}",
-            f"     - {n_samples}",
-            f"     - {notes}",
-        ])
+        lines.extend(
+            [
+                f"   * - {class_ref}",
+                f"     - {status}",
+                f"     - {r2}",
+                f"     - {speedup}",
+                f"     - {n_samples}",
+                f"     - {notes}",
+            ]
+        )
 
     return lines
 
