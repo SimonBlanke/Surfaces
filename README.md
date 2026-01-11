@@ -192,7 +192,7 @@ print(f"Global optimum at: {ackley.global_optimum}")
 
 </details>
 
-<br>
+
 
 <details>
 <summary><b>Machine Learning Functions</b></summary>
@@ -218,7 +218,7 @@ score = rf({"n_estimators": 100, "max_depth": 5, "min_samples_split": 2})
 
 </details>
 
-<br>
+
 
 <details>
 <summary><b>Engineering Functions</b></summary>
@@ -241,7 +241,7 @@ print(f"Design variables: {list(vessel.search_space.keys())}")
 
 </details>
 
-<br>
+
 
 <details>
 <summary><b>Using Modifiers</b></summary>
@@ -315,7 +315,7 @@ print(f"BBOB Sphere optimum: {bbob_sphere.optimal_value}")
 
 </details>
 
-<br>
+
 
 <details>
 <summary><b>Multi-Objective Functions</b></summary>
@@ -337,7 +337,7 @@ f1, f2 = kursawe({"x0": 0.0, "x1": 0.0, "x2": 0.0})
 
 </details>
 
-<br>
+
 
 <details>
 <summary><b>Integration with Optimizers</b></summary>
