@@ -1,3 +1,7 @@
+<h1 align="center">
+Surfaces
+</h1>
+
 <p align="center">
   <a href="https://github.com/SimonBlanke/Surfaces">
     <picture>
@@ -140,14 +144,14 @@ Optimum: {'x0': 0.0, 'x1': 0.0, 'x2': 0.0}
             │                       │
             v                       v
     ┌─────────────────────────────────────────┐
-    │             Modifiers (optional)         │
-    │    (Noise, Delay, Transformations)       │
+    │             Modifiers (optional)        │
+    │    (Noise, Delay, Transformations)      │
     └─────────────────────────────────────────┘
             │
             v
     ┌─────────────────────────────────────────┐
-    │              Optimizer                   │
-    │    (Hyperactive, GFO, or any other)      │
+    │              Optimizer                  │
+    │    (Hyperactive, GFO, or any other)     │
     └─────────────────────────────────────────┘
 ```
 
