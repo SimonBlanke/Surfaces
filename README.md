@@ -58,7 +58,7 @@ Designed for researchers benchmarking new optimization algorithms, practitioners
   <a href="https://github.com/sponsors/SimonBlanke"><img src="https://img.shields.io/badge/Sponsor-EA4AAA?style=flat-square&logo=githubsponsors&logoColor=white" alt="Sponsor"></a>
 </p>
 
----
+<br>
 
 ## Installation
 
@@ -84,15 +84,15 @@ pip install surfaces[full]        # All optional features
 
 </details>
 
----
+<br>
 
 ## Key Features
 
-| [**30+ Algebraic Functions**](#algebraic-functions)<br><sub>Classic benchmarks from optimization literature: Sphere, Rastrigin, Ackley, Rosenbrock, and more.</sub> | [**ML Hyperparameter Surfaces**](#machine-learning-functions)<br><sub>Real hyperparameter optimization landscapes using scikit-learn models with cross-validation.</sub> | [**Engineering Problems**](#engineering-functions)<br><sub>Constrained optimization from engineering literature: welded beams, pressure vessels, spring design.</sub> |
+| [**30+ Algebraic Test Functions**](#algebraic-functions)<br><sub>Classic benchmarks from optimization literature: Sphere, Rastrigin, Ackley, Rosenbrock, and more.</sub> | [**ML Hyperparameter Test Functions**](#machine-learning-functions)<br><sub>Real hyperparameter optimization problems using scikit-learn models with cross-validation.</sub> | [**Constrained Engineering Test Functions**](#engineering-functions)<br><sub>Constrained optimization from engineering literature: welded beams, pressure vessels, spring design.</sub> |
 | :--- | :--- | :--- |
-| [**Function Modifiers**](#using-modifiers)<br><sub>Add noise, delays, or transformations to any function. Simulate real-world conditions.</sub> | [**BBOB and CEC Suites**](#benchmark-suites)<br><sub>Industry-standard benchmark suites used in optimization competitions.</sub> | [**Optimizer Integration**](#integration-with-optimizers)<br><sub>Works with any optimizer that accepts a callable and search space.</sub> |
+| [**Surrogate Models**](#surrogate-models)<br><sub>Pre-trained neural networks for fast ML test function evaluation. 100-1000x faster with realistic characteristics.</sub> | [**BBOB and CEC Suites**](#benchmark-suites)<br><sub>Standard academic benchmark suites used in optimization competitions.</sub> | [**Optimizer Integration**](#integration-with-optimizers)<br><sub>Works with Optuna, Ray Tune, scipy, Gradient-Free-Optimizers and any optimizer that accepts a callable.</sub> |
 
----
+<br>
 
 ## Quick Start
 
@@ -121,7 +121,7 @@ Value: -0.35
 Optimum: {'x0': 0.0, 'x1': 0.0, 'x2': 0.0}
 ```
 
----
+<br>
 
 ## Core Concepts
 
@@ -155,7 +155,7 @@ Optimum: {'x0': 0.0, 'x1': 0.0, 'x2': 0.0}
 
 **Optimizer**: Any algorithm that can call the function with parameters from the search space.
 
----
+<br>
 
 ## Examples
 
@@ -264,6 +264,30 @@ print(f"Noisy: {noisy_result:.4f}, True: {true_value:.4f}")
 <br>
 
 <details>
+<summary><b>Surrogate Models</b></summary>
+
+```python
+from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
+
+# Real evaluation (slow but accurate)
+func_real = KNeighborsClassifierFunction(dataset="digits", cv=5, use_surrogate=False)
+
+# Surrogate evaluation (1000x faster)
+func_fast = KNeighborsClassifierFunction(dataset="digits", cv=5, use_surrogate=True)
+
+# Same interface, dramatically different speed
+result_real = func_real({"n_neighbors": 5, "algorithm": "auto"})  # ~100ms
+result_fast = func_fast({"n_neighbors": 5, "algorithm": "auto"})  # ~0.1ms
+
+# Surrogates capture realistic ML landscape characteristics:
+# multi-modality, hyperparameter interactions, plateaus
+```
+
+</details>
+
+<br>
+
+<details>
 <summary><b>Benchmark Suites</b></summary>
 
 ```python
@@ -334,7 +358,7 @@ opt.search(func, n_iter=50)
 
 </details>
 
----
+<br>
 
 ## Ecosystem
 
@@ -346,7 +370,7 @@ This library is part of a suite of optimization tools. For updates, [follow on G
 | [Gradient-Free-Optimizers](https://github.com/SimonBlanke/Gradient-Free-Optimizers) | Core optimization algorithms for black-box function optimization |
 | [Surfaces](https://github.com/SimonBlanke/Surfaces) | Test functions and benchmark surfaces for optimization algorithm evaluation |
 
----
+<br>
 
 ## Documentation
 
@@ -357,7 +381,7 @@ This library is part of a suite of optimization tools. For updates, [follow on G
 | [Examples](https://github.com/SimonBlanke/Surfaces#examples) | Code examples for common use cases |
 | [GitHub Issues](https://github.com/SimonBlanke/Surfaces/issues) | Bug reports and feature requests |
 
----
+<br>
 
 ## Contributing
 
@@ -367,7 +391,7 @@ Contributions welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 - **Feature requests**: [GitHub Discussions](https://github.com/SimonBlanke/Surfaces/discussions)
 - **Questions**: [GitHub Issues](https://github.com/SimonBlanke/Surfaces/issues)
 
----
+<br>
 
 ## Citation
 
@@ -383,7 +407,7 @@ If you use this software in your research, please cite:
 }
 ```
 
----
+<br>
 
 ## License
 
