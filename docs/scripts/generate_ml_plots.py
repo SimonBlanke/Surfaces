@@ -17,12 +17,17 @@ pio.kaleido.scope.mathjax = None  # Disable MathJax for faster rendering
 # Add src to path to import surfaces
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-from surfaces._visualize import (
+from surfaces._visualize import (  # noqa: E402
     plotly_dataset_hyperparameter_analysis,
     plotly_ml_hyperparameter_heatmap,
 )
-from surfaces.test_functions.machine_learning.tabular.classification.test_functions import *
-from surfaces.test_functions.machine_learning.tabular.regression.test_functions import *
+from surfaces.test_functions.machine_learning.tabular.classification.test_functions import (  # noqa: E402
+    KNeighborsClassifierFunction,
+)
+from surfaces.test_functions.machine_learning.tabular.regression.test_functions import (  # noqa: E402
+    GradientBoostingRegressorFunction,
+    KNeighborsRegressorFunction,
+)
 
 # Ensure output directories exist
 script_dir = os.path.dirname(os.path.abspath(__file__))

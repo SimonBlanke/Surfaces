@@ -18,7 +18,7 @@ def extract_python_blocks(readme_path: Path) -> list[tuple[str, str]]:
     content = readme_path.read_text()
 
     # Pattern: <summary><b>Name</b></summary> or ### Name followed by ```python
-    pattern = r'(?:<summary><b>([^<]+)</b></summary>|### ([^\n]+))\s*\n+```python\n(.*?)```'
+    pattern = r"(?:<summary><b>([^<]+)</b></summary>|### ([^\n]+))\s*\n+```python\n(.*?)```"
 
     examples = []
     for match in re.finditer(pattern, content, re.DOTALL):
@@ -58,9 +58,7 @@ def test_readme_example(name: str, code: str):
         )
 
         assert result.returncode == 0, (
-            f"Example '{name}' failed:\n"
-            f"stdout: {result.stdout}\n"
-            f"stderr: {result.stderr}"
+            f"Example '{name}' failed:\n" f"stdout: {result.stdout}\n" f"stderr: {result.stderr}"
         )
     finally:
         temp_path.unlink()

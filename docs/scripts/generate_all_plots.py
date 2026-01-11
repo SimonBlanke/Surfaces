@@ -16,8 +16,33 @@ matplotlib.use("Agg")  # Use non-interactive backend
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from surfaces._visualize import matplotlib_heatmap, matplotlib_surface
-from surfaces.test_functions.mathematical.test_functions_2d import *
-from surfaces.test_functions.mathematical.test_functions_nd import *
+from surfaces.test_functions.algebraic import (
+    # 2D functions
+    AckleyFunction,
+    BealeFunction,
+    BoothFunction,
+    BukinFunctionN6,
+    CrossInTrayFunction,
+    DropWaveFunction,
+    EasomFunction,
+    EggholderFunction,
+    GoldsteinPriceFunction,
+    GriewankFunction,
+    HimmelblausFunction,
+    HölderTableFunction,
+    LangermannFunction,
+    LeviFunctionN13,
+    MatyasFunction,
+    McCormickFunction,
+    # ND functions
+    RastriginFunction,
+    RosenbrockFunction,
+    SchafferFunctionN2,
+    SimionescuFunction,
+    SphereFunction,
+    StyblinskiTangFunction,
+    ThreeHumpCamelFunction,
+)
 
 # Ensure output directories exist
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -30,120 +55,135 @@ os.makedirs(mathematical_output_dir, exist_ok=True)
 FUNCTION_CONFIGS = {
     # 2D Functions
     "AckleyFunction": {
+        "class": AckleyFunction,
         "search_space": {"x0": np.arange(-5, 5, 0.1), "x1": np.arange(-5, 5, 0.1)},
         "norm": None,
     },
     "BealeFunction": {
+        "class": BealeFunction,
         "search_space": {"x0": np.arange(-4.5, 4.5, 0.1), "x1": np.arange(-4.5, 4.5, 0.1)},
         "norm": "color_log",
     },
     "BoothFunction": {
+        "class": BoothFunction,
         "search_space": {"x0": np.arange(-10, 10, 0.2), "x1": np.arange(-10, 10, 0.2)},
         "norm": "color_log",
     },
     "BukinFunctionN6": {
+        "class": BukinFunctionN6,
         "search_space": {"x0": np.arange(-15, -5, 0.2), "x1": np.arange(-3, 3, 0.1)},
         "norm": "color_log",
     },
     "CrossInTrayFunction": {
+        "class": CrossInTrayFunction,
         "search_space": {"x0": np.arange(-10, 10, 0.2), "x1": np.arange(-10, 10, 0.2)},
         "norm": None,
     },
     "DropWaveFunction": {
+        "class": DropWaveFunction,
         "search_space": {"x0": np.arange(-5.2, 5.2, 0.1), "x1": np.arange(-5.2, 5.2, 0.1)},
         "norm": None,
     },
     "EasomFunction": {
+        "class": EasomFunction,
         "search_space": {"x0": np.arange(-5, 5, 0.1), "x1": np.arange(-5, 5, 0.1)},
         "norm": None,
     },
     "EggholderFunction": {
+        "class": EggholderFunction,
         "search_space": {"x0": np.arange(-512, 512, 10), "x1": np.arange(-512, 512, 10)},
         "norm": None,
     },
     "GoldsteinPriceFunction": {
+        "class": GoldsteinPriceFunction,
         "search_space": {"x0": np.arange(-2, 2, 0.05), "x1": np.arange(-2, 2, 0.05)},
         "norm": "color_log",
     },
     "HimmelblausFunction": {
+        "class": HimmelblausFunction,
         "search_space": {"x0": np.arange(-5, 5, 0.1), "x1": np.arange(-5, 5, 0.1)},
         "norm": "color_log",
     },
     "HölderTableFunction": {
+        "class": HölderTableFunction,
         "search_space": {"x0": np.arange(-10, 10, 0.2), "x1": np.arange(-10, 10, 0.2)},
         "norm": None,
     },
     "LangermannFunction": {
+        "class": LangermannFunction,
         "search_space": {"x0": np.arange(0, 10, 0.1), "x1": np.arange(0, 10, 0.1)},
         "norm": None,
     },
     "LeviFunctionN13": {
+        "class": LeviFunctionN13,
         "search_space": {"x0": np.arange(-10, 10, 0.2), "x1": np.arange(-10, 10, 0.2)},
         "norm": "color_log",
     },
     "MatyasFunction": {
+        "class": MatyasFunction,
         "search_space": {"x0": np.arange(-10, 10, 0.2), "x1": np.arange(-10, 10, 0.2)},
         "norm": None,
     },
     "McCormickFunction": {
+        "class": McCormickFunction,
         "search_space": {"x0": np.arange(-1.5, 4, 0.1), "x1": np.arange(-3, 4, 0.1)},
         "norm": None,
     },
     "SchafferFunctionN2": {
+        "class": SchafferFunctionN2,
         "search_space": {"x0": np.arange(-100, 100, 2), "x1": np.arange(-100, 100, 2)},
         "norm": None,
     },
     "SimionescuFunction": {
+        "class": SimionescuFunction,
         "search_space": {"x0": np.arange(-1.25, 1.25, 0.05), "x1": np.arange(-1.25, 1.25, 0.05)},
         "norm": None,
     },
     "ThreeHumpCamelFunction": {
+        "class": ThreeHumpCamelFunction,
         "search_space": {"x0": np.arange(-5, 5, 0.1), "x1": np.arange(-5, 5, 0.1)},
         "norm": None,
     },
     # ND Functions (using 2D slices)
     "SphereFunction": {
+        "class": SphereFunction,
         "search_space": {"x0": np.arange(-5, 5, 0.1), "x1": np.arange(-5, 5, 0.1)},
         "norm": None,
+        "is_nd": True,
     },
     "RastriginFunction": {
+        "class": RastriginFunction,
         "search_space": {"x0": np.arange(-5, 5, 0.1), "x1": np.arange(-5, 5, 0.1)},
         "norm": None,
+        "is_nd": True,
     },
     "RosenbrockFunction": {
+        "class": RosenbrockFunction,
         "search_space": {"x0": np.arange(-5, 5, 0.1), "x1": np.arange(-5, 5, 0.1)},
         "norm": "color_log",
+        "is_nd": True,
     },
     "StyblinskiTangFunction": {
+        "class": StyblinskiTangFunction,
         "search_space": {"x0": np.arange(-5, 5, 0.1), "x1": np.arange(-5, 5, 0.1)},
         "norm": None,
+        "is_nd": True,
     },
     "GriewankFunction": {
+        "class": GriewankFunction,
         "search_space": {"x0": np.arange(-10, 10, 0.2), "x1": np.arange(-10, 10, 0.2)},
         "norm": None,
+        "is_nd": True,
     },
 }
 
 
-def get_function_instance(class_name):
-    """Get an instance of the function class by name."""
-    try:
-        func_class = globals()[class_name]
-        if class_name in [
-            "SphereFunction",
-            "RastriginFunction",
-            "RosenbrockFunction",
-            "StyblinskiTangFunction",
-            "GriewankFunction",
-        ]:
-            # ND functions need n_dim parameter
-            return func_class(n_dim=2, metric="loss")
-        else:
-            # 2D functions
-            return func_class(metric="loss")
-    except Exception as e:
-        print(f"Error creating {class_name}: {e}")
-        return None
+def get_function_instance(config):
+    """Get an instance of the function class from config."""
+    func_class = config["class"]
+    if config.get("is_nd", False):
+        return func_class(n_dim=2, metric="loss")
+    return func_class(metric="loss")
 
 
 def generate_plots():
@@ -155,9 +195,7 @@ def generate_plots():
 
         try:
             # Get function instance
-            func_instance = get_function_instance(func_name)
-            if func_instance is None:
-                continue
+            func_instance = get_function_instance(config)
 
             search_space = config["search_space"]
             norm = config["norm"]

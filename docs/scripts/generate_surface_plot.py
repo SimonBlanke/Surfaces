@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 """Generate surface plots for the README."""
 
+import re
+
 import numpy as np
 import plotly.graph_objects as go
 from PIL import Image
-import re
 
 from surfaces.test_functions.algebraic import (
     AckleyFunction,
-    HimmelblausFunction,
+    CrossInTrayFunction,
     DropWaveFunction,
     EggholderFunction,
-    CrossInTrayFunction,
+    HimmelblausFunction,
     RastriginFunction,
 )
 
@@ -115,9 +116,7 @@ def generate_surface_plot(name, func, bounds, resolution=150):
     new_h = ((bottom - top) / orig_height) * svg_height
 
     svg_content = re.sub(r'width="[^"]*"', f'width="{new_w:.0f}"', svg_content, count=1)
-    svg_content = re.sub(
-        r'height="[^"]*"', f'height="{new_h:.0f}"', svg_content, count=1
-    )
+    svg_content = re.sub(r'height="[^"]*"', f'height="{new_h:.0f}"', svg_content, count=1)
     svg_content = re.sub(
         r'viewBox="[^"]*"',
         f'viewBox="{new_x:.1f} {new_y:.1f} {new_w:.1f} {new_h:.1f}"',
