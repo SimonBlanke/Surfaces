@@ -270,6 +270,83 @@ class TestSurrogateValidator:
                 pytest.skip("No surrogate model available")
             raise
 
+    @requires_onnxruntime
+    def test_validator_copies_fixed_params(self):
+        """Validator copies fixed parameters from real function to surrogate.
+
+        This test verifies the fix for the bug where the validator would create
+        a surrogate function with default parameters instead of copying them from
+        the real function, leading to invalid comparisons.
+        """
+        from surfaces._surrogates import SurrogateValidator, get_surrogate_path
+        from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
+
+        # Check if surrogate exists
+        path = get_surrogate_path("k_neighbors_classifier")
+        if path is None:
+            pytest.skip("No surrogate model installed")
+
+        # Create function with non-default fixed parameters
+        func = KNeighborsClassifierFunction(
+            dataset="wine",  # Non-default (default is "digits")
+            cv=10,  # Non-default (default is 5)
+            use_surrogate=False,
+        )
+
+        try:
+            validator = SurrogateValidator(func)
+        except ValueError as e:
+            if "No surrogate model available" in str(e):
+                pytest.skip("No surrogate model available")
+            raise
+
+        # Verify surrogate function has same fixed parameters
+        assert (
+            validator._surrogate_func.dataset == "wine"
+        ), "Surrogate should have dataset='wine' copied from real function"
+        assert (
+            validator._surrogate_func.cv == 10
+        ), "Surrogate should have cv=10 copied from real function"
+
+        # Verify surrogate is enabled
+        assert validator._surrogate_func.use_surrogate is True
+
+    @requires_onnxruntime
+    def test_validator_copies_all_init_params(self):
+        """Validator copies all initialization parameters including common ones."""
+        from surfaces._surrogates import SurrogateValidator, get_surrogate_path
+        from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
+
+        # Check if surrogate exists
+        path = get_surrogate_path("k_neighbors_classifier")
+        if path is None:
+            pytest.skip("No surrogate model installed")
+
+        # Create function with various parameters
+        func = KNeighborsClassifierFunction(
+            dataset="iris",
+            cv=5,
+            objective="minimize",  # Non-default (default is "maximize")
+            memory=True,  # Non-default (default is False)
+            collect_data=False,  # Non-default (default is True)
+            use_surrogate=False,
+        )
+
+        try:
+            validator = SurrogateValidator(func)
+        except ValueError as e:
+            if "No surrogate model available" in str(e):
+                pytest.skip("No surrogate model available")
+            raise
+
+        # Verify all parameters are copied
+        assert validator._surrogate_func.dataset == "iris"
+        assert validator._surrogate_func.cv == 5
+        assert validator._surrogate_func.objective == "minimize"
+        assert validator._surrogate_func.memory is True
+        assert validator._surrogate_func.collect_data is False
+        assert validator._surrogate_func.use_surrogate is True  # Override
+
 
 # =============================================================================
 # Surrogate Prediction Tests

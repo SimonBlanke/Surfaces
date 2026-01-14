@@ -56,19 +56,13 @@ Key Interactions
   override this to add their fixed parameters (dataset, cv) to the
   hyperparameter dict before calling the surrogate.
 
-Known Issues
-------------
+Implementation Notes
+--------------------
 
-**BUG**: The validator constructor creates the surrogate function without
-copying fixed parameters from the real function. This means:
-
-    func = KNeighborsClassifierFunction(dataset="wine", cv=10)
-    validator = SurrogateValidator(func)
-    # validator._surrogate_func has dataset="digits", cv=5 (DEFAULTS!)
-
-This causes validation to compare real evaluation on one dataset/cv with
-surrogate predictions for a DIFFERENT dataset/cv, leading to artificially
-low R² scores. To fix, the constructor should extract and pass fixed params.
+The validator constructor creates a surrogate function instance by copying
+all initialization parameters from the real function (dataset, cv, objective,
+modifiers, memory, etc.) and setting use_surrogate=True. This ensures both
+functions are configured identically except for evaluation mode.
 
 See Also
 --------
@@ -76,6 +70,7 @@ See Also
 - surfaces.test_functions.machine_learning._base_machine_learning.MachineLearningFunction
 """
 
+import inspect
 import time
 from itertools import product
 from typing import Any, Dict, List, Optional
@@ -187,12 +182,10 @@ class SurrogateValidator:
         Notes
         -----
         The surrogate function is created by instantiating the same class
-        with ``use_surrogate=True``. Currently, fixed parameters (dataset, cv)
-        are not copied from the input function, which means the surrogate
-        may use different fixed parameters than the real function.
-
-        This is a known bug that can cause artificially low validation
-        scores when the input function uses non-default fixed parameters.
+        with all initialization parameters copied from the input function,
+        except ``use_surrogate`` which is set to True. This ensures both
+        functions use the same fixed parameters (dataset, cv) and configuration
+        (objective, modifiers, memory, etc.) for valid comparison.
         """
         self.function = function
 
@@ -203,18 +196,61 @@ class SurrogateValidator:
                 "The validator will create its own surrogate instance."
             )
 
-        # Create surrogate version
-        # BUG: This doesn't copy fixed params (dataset, cv) from the input function.
-        # The surrogate function will use default values, which may differ from
-        # the real function's values, leading to invalid comparisons.
+        # Create surrogate version with same parameters as real function
         func_class = type(function)
-        self._surrogate_func = func_class(
-            objective=function.objective,
-            use_surrogate=True,
-        )
+        init_params = self._extract_init_params(function)
+        init_params["use_surrogate"] = True  # Override to enable surrogate
+
+        self._surrogate_func = func_class(**init_params)
 
         if not self._surrogate_func.use_surrogate:
             raise ValueError(f"No surrogate model available for {func_class.__name__}")
+
+    def _extract_init_params(self, function) -> Dict[str, Any]:
+        """Extract initialization parameters from a function instance.
+
+        Inspects the function's __init__ signature and extracts all parameters
+        that have corresponding instance attributes, enabling recreation of
+        the function with identical configuration.
+
+        Parameters
+        ----------
+        function : MachineLearningFunction
+            The function instance to extract parameters from.
+
+        Returns
+        -------
+        dict
+            Mapping of parameter names to values, suitable for passing
+            to the function's __init__ as **kwargs.
+
+        Notes
+        -----
+        This method handles:
+
+        - Common parameters: objective, modifiers, memory, collect_data,
+          callbacks, catch_errors
+        - Function-specific fixed parameters: dataset, cv (tabular),
+          epochs, batch_size (image), etc.
+        - Skips: self, use_surrogate (will be overridden)
+
+        The extraction is robust to different ML function types (tabular,
+        image, timeseries) by using introspection rather than hardcoded lists.
+        """
+        func_class = type(function)
+        sig = inspect.signature(func_class.__init__)
+
+        init_params = {}
+        for param_name in sig.parameters:
+            # Skip 'self' and 'use_surrogate' (will be overridden)
+            if param_name in ("self", "use_surrogate"):
+                continue
+
+            # Check if the instance has this attribute
+            if hasattr(function, param_name):
+                init_params[param_name] = getattr(function, param_name)
+
+        return init_params
 
     def _get_search_space_values(self) -> Dict[str, List]:
         """Get the search space as a dict of parameter value lists.
