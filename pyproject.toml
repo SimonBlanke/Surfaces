@@ -10,7 +10,7 @@ surfaces = ["py.typed"]
 
 [project]
 name = "surfaces"
-version = "0.6.1"
+version = "0.7.0"
 description = "A collection and visualization of black-box objective functions"
 readme = "README.md"
 requires-python = ">=3.10"
