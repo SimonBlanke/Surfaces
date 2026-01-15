@@ -357,7 +357,13 @@ class TestSQLiteStorage:
         evaluations = storage.load_evaluations()
         assert len(evaluations) == 50  # 5 threads * 10 evaluations
 
+        # Ensure connection is fully closed and all threads are done
         storage.close()
+
+        # Give Windows time to release file handles
+        import time
+
+        time.sleep(0.1)
 
     def test_context_manager(self, temp_db_path):
         """SQLiteStorage works as context manager."""
