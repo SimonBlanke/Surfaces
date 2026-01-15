@@ -39,20 +39,17 @@ def search_space():
 @pytest.fixture
 def temp_db_path():
     """Temporary database file path."""
-    import time
-
     with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as f:
         path = Path(f.name)
     yield path
-    # Cleanup - give Windows time to release file handles
-    time.sleep(0.1)
-    if path.exists():
-        try:
+    # Cleanup - ignore errors on Windows where SQLite connections
+    # from other threads may still hold file locks (thread-local storage
+    # isn't immediately garbage collected). The OS will clean temp dir.
+    try:
+        if path.exists():
             path.unlink()
-        except PermissionError:
-            # On Windows, file may still be locked - try again after a bit
-            time.sleep(0.2)
-            path.unlink(missing_ok=True)
+    except (PermissionError, OSError):
+        pass  # Let OS clean up temp directory later
 
 
 # =============================================================================
