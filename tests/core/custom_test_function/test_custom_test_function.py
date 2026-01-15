@@ -230,12 +230,6 @@ class TestNamespaces:
 
         assert isinstance(sphere_func.plot, PlotNamespace)
 
-    def test_surrogate_namespace_type(self, sphere_func):
-        """Test surrogate namespace is correct type."""
-        from surfaces.custom_test_function._namespaces import SurrogateNamespace
-
-        assert isinstance(sphere_func.surrogate, SurrogateNamespace)
-
     def test_namespace_lazy_loading(self):
         """Test that namespaces are lazily loaded."""
         func = CustomTestFunction(
@@ -246,7 +240,6 @@ class TestNamespaces:
         # Namespaces should not be initialized yet
         assert func._analysis is None
         assert func._plot is None
-        assert func._surrogate is None
 
         # Access triggers initialization
         _ = func.analysis
@@ -302,60 +295,6 @@ class TestAnalysisNamespace:
         """Test error when insufficient data."""
         with pytest.raises(ValueError, match="requires at least"):
             sphere_func.analysis.parameter_importance()
-
-
-# =============================================================================
-# Surrogate Namespace Tests
-# =============================================================================
-
-
-class TestSurrogateNamespace:
-    """Test surrogate namespace methods."""
-
-    def test_fit_random_forest(self, sphere_func_with_data):
-        """Test Random Forest surrogate fitting."""
-        sphere_func_with_data.surrogate.fit(method="random_forest")
-
-        assert sphere_func_with_data.surrogate.is_fitted
-        assert sphere_func_with_data.surrogate.method == "random_forest"
-
-    def test_predict(self, sphere_func_with_data):
-        """Test surrogate prediction."""
-        sphere_func_with_data.surrogate.fit(method="random_forest")
-
-        # Predict at origin (should be near 0)
-        pred = sphere_func_with_data.surrogate.predict({"x": 0, "y": 0})
-        assert pred < 5  # Should be small
-
-    def test_predict_array(self, sphere_func_with_data):
-        """Test surrogate prediction with array input."""
-        sphere_func_with_data.surrogate.fit(method="random_forest")
-
-        X = np.array([[0, 0], [1, 1], [2, 2]])
-        preds = sphere_func_with_data.surrogate.predict(X)
-
-        assert len(preds) == 3
-
-    def test_suggest_next(self, sphere_func_with_data):
-        """Test next point suggestion."""
-        sphere_func_with_data.surrogate.fit(method="random_forest")
-
-        suggestions = sphere_func_with_data.surrogate.suggest_next(n_suggestions=3)
-
-        assert len(suggestions) == 3
-        assert all("x" in s and "y" in s for s in suggestions)
-
-    def test_score(self, sphere_func_with_data):
-        """Test surrogate R^2 score."""
-        sphere_func_with_data.surrogate.fit(method="random_forest")
-
-        score = sphere_func_with_data.surrogate.score()
-        assert 0 < score <= 1  # R^2 should be positive for good fit
-
-    def test_not_fitted_error(self, sphere_func_with_data):
-        """Test error when predicting without fitting."""
-        with pytest.raises(RuntimeError, match="No surrogate model fitted"):
-            sphere_func_with_data.surrogate.predict({"x": 0, "y": 0})
 
 
 # =============================================================================
