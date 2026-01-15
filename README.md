@@ -133,26 +133,21 @@ Optimum: {'x0': 0.0, 'x1': 0.0, 'x2': 0.0}
 
 ## Core Concepts
 
-```
-                     SURFACES ARCHITECTURE
+```mermaid
+flowchart TB
+    subgraph Input["Test Function"]
+        TF[Algebraic / ML / Engineering]
+        SS[Search Space<br/>NumPy arrays per param]
+    end
 
-    ┌──────────────────┐    ┌──────────────────┐
-    │   Test Function  │───>│   Search Space   │
-    │   (Algebraic/    │    │   (NumPy arrays  │
-    │    ML/Engineer)  │    │    per param)    │
-    └──────────────────┘    └──────────────────┘
-            │                       │
-            v                       v
-    ┌─────────────────────────────────────────┐
-    │             Modifiers (optional)        │
-    │    (Noise, Delay, Transformations)      │
-    └─────────────────────────────────────────┘
-            │
-            v
-    ┌─────────────────────────────────────────┐
-    │              Optimizer                  │
-    │    (Hyperactive, GFO, or any other)     │
-    └─────────────────────────────────────────┘
+    TF --> MOD
+    SS --> OPT
+
+    MOD[Modifiers<br/>Noise, Delay, Transforms]
+    OPT[Optimizer<br/>Hyperactive, GFO, Optuna, ...]
+
+    MOD --> OPT
+    OPT -->|params dict| TF
 ```
 
 **Test Function**: Callable object that evaluates parameter combinations. Returns a score (maximization by default).
