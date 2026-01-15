@@ -20,35 +20,28 @@ def _check_sklearn():
 
 
 if _HAS_SKLEARN:
-    # Tabular functions
-    # Image functions (sklearn-based)
-    from .image import (
-        RandomForestImageClassifierFunction,
-        SVMImageClassifierFunction,
-    )
-    from .tabular import (
-        # Classification
+    # Import from new hyperparameter_optimization module
+    from .hyperparameter_optimization import (
+        # Tabular - Classification
         DecisionTreeClassifierFunction,
-        # Regression
+        # Tabular - Regression
         DecisionTreeRegressorFunction,
         GradientBoostingClassifierFunction,
+        # Time-series
+        GradientBoostingForecasterFunction,
         GradientBoostingRegressorFunction,
         KNeighborsClassifierFunction,
         KNeighborsRegressorFunction,
-        RandomForestClassifierFunction,
-        RandomForestRegressorFunction,
-        SVMClassifierFunction,
-        SVMRegressorFunction,
-    )
-
-    # Time-series functions (sklearn-based)
-    from .timeseries import (
-        # Forecasting
-        GradientBoostingForecasterFunction,
         KNNTSClassifierFunction,
+        RandomForestClassifierFunction,
         RandomForestForecasterFunction,
-        # Classification
+        # Image
+        RandomForestImageClassifierFunction,
+        RandomForestRegressorFunction,
         RandomForestTSClassifierFunction,
+        SVMClassifierFunction,
+        SVMImageClassifierFunction,
+        SVMRegressorFunction,
     )
 
     __all__ = [
@@ -101,7 +94,10 @@ if _HAS_SKLEARN:
 
     # sktime-based time-series functions (require sktime)
     try:
-        from .timeseries import ExpSmoothingForecasterFunction, TSForestClassifierFunction
+        from .hyperparameter_optimization.timeseries import (
+            ExpSmoothingForecasterFunction,
+            TSForestClassifierFunction,
+        )
 
         __all__.extend(
             [
@@ -121,7 +117,10 @@ if _HAS_SKLEARN:
 
     # CNN image classifiers (require tensorflow)
     try:
-        from .image import DeepCNNClassifierFunction, SimpleCNNClassifierFunction
+        from .hyperparameter_optimization.image import (
+            DeepCNNClassifierFunction,
+            SimpleCNNClassifierFunction,
+        )
 
         __all__.extend(
             [
@@ -141,7 +140,7 @@ if _HAS_SKLEARN:
 
     # XGBoost image classifier (requires xgboost)
     try:
-        from .image import XGBoostImageClassifierFunction
+        from .hyperparameter_optimization.image import XGBoostImageClassifierFunction
 
         __all__.append("XGBoostImageClassifierFunction")
         machine_learning_functions.append(XGBoostImageClassifierFunction)

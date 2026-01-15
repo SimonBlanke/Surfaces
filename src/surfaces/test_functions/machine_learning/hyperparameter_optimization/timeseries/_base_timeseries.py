@@ -4,7 +4,7 @@
 
 from typing import Any
 
-from .._base_machine_learning import MachineLearningFunction
+from ..._base_machine_learning import MachineLearningFunction
 
 
 class BaseTimeSeries(MachineLearningFunction):

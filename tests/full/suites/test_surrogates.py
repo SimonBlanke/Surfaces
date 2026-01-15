@@ -473,7 +473,7 @@ class TestSurrogateIntegration:
         # 4. Make prediction with all required params
         # Surrogate expects fixed params (cv, dataset) plus hyperparams
         from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
-        from surfaces.test_functions.machine_learning.tabular.classification.datasets import (
+        from surfaces.test_functions.machine_learning.hyperparameter_optimization.tabular.classification.datasets import (
             iris_data,
         )
 
@@ -504,7 +504,7 @@ class TestSurrogateIntegration:
         assert callable(objective_func)
 
         from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
-        from surfaces.test_functions.machine_learning.tabular.classification.datasets import (
+        from surfaces.test_functions.machine_learning.hyperparameter_optimization.tabular.classification.datasets import (
             iris_data,
         )
 

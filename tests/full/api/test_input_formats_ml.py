@@ -9,7 +9,9 @@ import numbers
 import pytest
 
 from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
-from surfaces.test_functions.machine_learning.tabular.classification.datasets import iris_data
+from surfaces.test_functions.machine_learning.hyperparameter_optimization.tabular.classification.datasets import (
+    iris_data,
+)
 
 
 def is_numeric(value):

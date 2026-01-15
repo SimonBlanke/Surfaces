@@ -28,3 +28,14 @@ repos:
       - id: nbqa-ruff
         args: [--fix]
       - id: nbqa-check-ast
+
+  # Validate test dependencies
+  - repo: local
+    hooks:
+      - id: validate-test-dependencies
+        name: Validate test dependencies
+        entry: python scripts/validate_test_dependencies.py
+        language: system
+        pass_filenames: false
+        always_run: false
+        files: ^tests/core/.*\.py$

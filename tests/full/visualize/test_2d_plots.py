@@ -228,7 +228,7 @@ class TestMLFunctionWith2DPlots:
     def ml_func(self):
         """Create an ML function for testing."""
         try:
-            from surfaces.test_functions.machine_learning.tabular.regression import (
+            from surfaces.test_functions.machine_learning.hyperparameter_optimization.tabular.regression import (
                 RandomForestRegressorFunction,
             )
 

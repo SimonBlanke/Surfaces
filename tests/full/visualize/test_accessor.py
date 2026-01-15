@@ -176,7 +176,7 @@ class TestMachineLearningFunctionDefaults:
         """Create an ML function for testing."""
         # Import here to avoid issues if ML deps not installed
         try:
-            from surfaces.test_functions.machine_learning.tabular.regression import (
+            from surfaces.test_functions.machine_learning.hyperparameter_optimization.tabular.regression import (
                 RandomForestRegressorFunction,
             )
 

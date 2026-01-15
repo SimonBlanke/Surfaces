@@ -67,7 +67,7 @@ def quick_ml_params():
 
     Uses small cv=2 to speed up cross-validation in tests.
     """
-    from surfaces.test_functions.machine_learning.tabular.classification.datasets import (
+    from surfaces.test_functions.machine_learning.hyperparameter_optimization.tabular.classification.datasets import (
         iris_data,
     )
 
@@ -83,7 +83,7 @@ def quick_regression_params():
 
     Uses small cv=2 to speed up cross-validation in tests.
     """
-    from surfaces.test_functions.machine_learning.tabular.regression.datasets import (
+    from surfaces.test_functions.machine_learning.hyperparameter_optimization.tabular.regression.datasets import (
         diabetes_data,
     )
 
