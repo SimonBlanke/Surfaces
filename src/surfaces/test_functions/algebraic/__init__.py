@@ -69,6 +69,7 @@ from .standard import (
     standard_functions_1d,
     standard_functions_2d,
     standard_functions_nd,
+    ShekelFunction,
 )
 
 __all__ = [
@@ -108,6 +109,7 @@ __all__ = [
     "RosenbrockFunction",
     "SphereFunction",
     "StyblinskiTangFunction",
+    "ShekelFunction"
     # Constrained
     "CantileverBeamFunction",
     "PressureVesselFunction",
