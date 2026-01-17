@@ -9,9 +9,10 @@ from surfaces.modifiers import BaseModifier
 from .._base_regression import BaseRegression
 from ..datasets import DATASETS
 
+
 class LightGBMRegressorFunction(BaseRegression):
     """LightGBM Regressor test function with surrogate support.
-    
+
     Parameters
     ----------
     dataset : str, default="diabetes"
@@ -21,15 +22,15 @@ class LightGBMRegressorFunction(BaseRegression):
     use_surrogate : bool, default=False
         If True, use pre-trained surrogate for fast evaluation.
     """
-    
+
     name = "LightGBM Regressor Function"
-    _name_ ="lightgbm_regressor"
+    _name_ = "lightgbm_regressor"
     __name__ = "LightGBMRegressorFunction"
-    
+
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]
-    
-    para_names =[
+
+    para_names = [
         "n_estimators",
         "learning_rate",
         "num_leaves",
@@ -38,42 +39,41 @@ class LightGBMRegressorFunction(BaseRegression):
         "subsample",
         "colsample_bytree",
         "reg_alpha",
-        "reg_lambda"
+        "reg_lambda",
     ]
-    
+
     # Hp search space defaults
-    n_estimators_default = list(np.arange(10,300,10))
+    n_estimators_default = list(np.arange(10, 300, 10))
     learning_rate_default = [1e-3, 1e-1, 0.5, 1.0]
-    num_leaves_default = list(range(10,100,5))
-    max_depth_default = list(range(2,20,1))
+    num_leaves_default = list(range(10, 100, 5))
+    max_depth_default = list(range(2, 20, 1))
     min_child_samples_default = list(range(5, 100, 5))
     subsample_default = list(np.arange(0.1, 1.01, 0.1))
     colsample_bytree_default = list(np.arange(0.1, 1.01, 0.1))
     reg_alpha_default = [0, 0.001, 0.01, 0.1, 1, 10]
     reg_lambda_default = [0, 0.001, 0.01, 0.1, 10]
-    
-    
+
     def __init__(
         self,
         dataset: str = "diabetes",
         cv: int = 5,
-        objective:str = 'maximize',
+        objective: str = "maximize",
         modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
         collect_data: bool = True,
-        callbacks = None,
-        catch_errors = None,
+        callbacks=None,
+        catch_errors=None,
         use_surrogate: bool = False,
     ):
         if dataset not in DATASETS:
             raise ValueError(f"Unknown dataset '{dataset}'. Available: {self.available_datasets}")
         if cv not in self.available_cv:
             raise ValueError(f"Invalid cv ={cv}. Available: {self.available_cv}")
-        
+
         self.dataset = dataset
         self.cv = cv
         self._dataset_loader = DATASETS[dataset]
-        
+
         super().__init__(
             objective=objective,
             modifiers=modifiers,
@@ -83,7 +83,7 @@ class LightGBMRegressorFunction(BaseRegression):
             catch_errors=catch_errors,
             use_surrogate=use_surrogate,
         )
-        
+
     @property
     def search_space(self) -> Dict[str, Any]:
         return {
@@ -97,15 +97,15 @@ class LightGBMRegressorFunction(BaseRegression):
             "reg_alpha": self.reg_alpha_default,
             "reg_lambda": self.reg_lambda_default,
         }
-    
+
     def _create_objective_function(self) -> None:
         """
         Creates the objective function closure with fixed data.
         """
-        
+
         X, y = self._dataset_loader()
         cv = self.cv
-        
+
         def objective(params: Dict[str, Any]) -> float:
             reg = LGBMRegressor(
                 n_estimators=params["n_estimators"],
@@ -119,14 +119,13 @@ class LightGBMRegressorFunction(BaseRegression):
                 reg_lambda=params["reg_lambda"],
                 random_state=42,
                 n_jobs=-1,
-                verbose=-1
+                verbose=-1,
             )
-            
+
             scores = cross_val_score(reg, X, y, cv=cv, scoring="r2")
             return scores.mean()
-        
+
         self.pure_objective_function = objective
-    
+
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         return {**params, "dataset": self.dataset, "cv": self.cv}
-        

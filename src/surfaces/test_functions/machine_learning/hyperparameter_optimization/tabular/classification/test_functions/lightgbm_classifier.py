@@ -41,11 +41,11 @@ class LightGBMClassifierFunction(BaseClassification):
         "subsample",
         "colsample_bytree",
         "reg_alpha",
-        "reg_lambda"
+        "reg_lambda",
     ]
 
     # Hp search space defaults
-    
+
     n_estimators_default = list(np.arange(10, 300, 10))
     learning_rate_default = [1e-3, 1e-1, 0.5, 1.0]
     num_leaves_default = list(range(10, 100, 5))
@@ -62,7 +62,7 @@ class LightGBMClassifierFunction(BaseClassification):
         "Cross-validated accuracy of a LightGBM classifier. "
         "Gradient boosting with tree-based learning."
     )
-    
+
     def __init__(
         self,
         dataset: str = "digits",
@@ -128,7 +128,7 @@ class LightGBMClassifierFunction(BaseClassification):
                 reg_lambda=params["reg_lambda"],
                 random_state=42,
                 n_jobs=-1,
-                verbose=-1
+                verbose=-1,
             )
             scores = cross_val_score(clf, X, y, cv=cv, scoring="accuracy")
             return scores.mean()

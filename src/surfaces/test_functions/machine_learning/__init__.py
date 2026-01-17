@@ -33,6 +33,9 @@ if _HAS_SKLEARN:
         KNeighborsClassifierFunction,
         KNeighborsRegressorFunction,
         KNNTSClassifierFunction,
+        # LightGBM
+        LightGBMClassifierFunction,
+        LightGBMRegressorFunction,
         RandomForestClassifierFunction,
         RandomForestForecasterFunction,
         # Image
@@ -42,9 +45,6 @@ if _HAS_SKLEARN:
         SVMClassifierFunction,
         SVMImageClassifierFunction,
         SVMRegressorFunction,
-        # LightGBM
-        LightGBMClassifierFunction,
-        LightGBMRegressorFunction
     )
 
     __all__ = [

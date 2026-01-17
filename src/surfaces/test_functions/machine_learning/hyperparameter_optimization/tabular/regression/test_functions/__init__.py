@@ -6,9 +6,9 @@
 from .decision_tree_regressor import DecisionTreeRegressorFunction
 from .gradient_boosting_regressor import GradientBoostingRegressorFunction
 from .k_neighbors_regressor import KNeighborsRegressorFunction
+from .lightgbm_regressor import LightGBMRegressorFunction
 from .random_forest_regressor import RandomForestRegressorFunction
 from .svm_regressor import SVMRegressorFunction
-from .lightgbm_regressor import LightGBMRegressorFunction
 
 __all__ = [
     "DecisionTreeRegressorFunction",
@@ -16,5 +16,5 @@ __all__ = [
     "KNeighborsRegressorFunction",
     "RandomForestRegressorFunction",
     "SVMRegressorFunction",
-    "LightGBMRegressorFunction"
+    "LightGBMRegressorFunction",
 ]
