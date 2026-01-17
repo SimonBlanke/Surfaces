@@ -243,56 +243,71 @@
       "n_estimators": {
          "type": "numeric", 
          "default_count": 29, 
+         "default_values": ["10", "50", "100", "200", "500"],
          "is_truncated": true
          },
       "learning_rate": {
          "type": "numeric",
          "default_count": 4,
+         "default_values": ["0.01", "0.05", "0.1", "0.3"],
          "is_truncated": false 
          },
       "num_leaves": {
          "type": "numeric",
          "default_count": 18,
+         "default_values": ["20", "31", "40", "50"],
          "is_truncated": true 
          },
       "max_depth": {
          "type": "numeric", 
          "default_count": 18, 
+         "default_values": ["-1", "5", "10", "15"],
          "is_truncated": true 
          },
       "min_child_samples": { 
         "type": "numeric", 
         "default_count": 19, 
+        "default_values": ["10", "20", "30"],
         "is_truncated": true 
          },
       "subsample": { 
         "type": "numeric", 
         "default_count": 10, 
+        "default_values": ["0.8", "0.9", "1.0"],
         "is_truncated": false 
          },
       "colsample_bytree": { 
         "type": "numeric", 
         "default_count": 10, 
+        "default_values": ["0.8", "0.9", "1.0"],
         "is_truncated": false 
          },
       "reg_alpha": { 
         "type": "numeric", 
         "default_count": 6, 
+        "default_values": ["0.0", "0.1", "0.5"],
         "is_truncated": false 
          },
       "reg_lambda": { 
         "type": "numeric", 
         "default_count": 5, 
+        "default_values": ["0.0", "0.1", "0.5"],
         "is_truncated": false 
          },
       "dataset": {
          "type": "categorical", 
-         "default_count": 5, 
+         "default_count": 5,
+         "default_values": [
+          "<function digits_data at 0x77efe95d23e0>",
+          "<function wine_data at 0x77efe95d22a0>",
+          "<function iris_data at 0x77efe9257d80>"
+        ], 
          "is_truncated": false 
          },
       "cv": { 
         "type": "numeric", 
         "default_count": 4, 
+        "default_values": [2, 3, 4, 5],
         "is_truncated": false 
          }
     },
@@ -306,56 +321,68 @@
       "n_estimators": { 
         "type": "numeric", 
         "default_count": 29, 
+        "default_values": ["10", "50", "100", "200", "500"],
         "is_truncated": true 
       },
       "learning_rate": { 
         "type": "numeric", 
         "default_count": 4, 
+        "default_values": ["0.01", "0.05", "0.1", "0.3"],
         "is_truncated": false 
       },
       "num_leaves": {
          "type": "numeric", 
          "default_count": 18, 
+         "default_values": ["20", "31", "40", "50"],
          "is_truncated": true 
       },
       "max_depth": {
          "type": "numeric", 
          "default_count": 18, 
+         "default_values": ["-1", "5", "10", "15"],
          "is_truncated": true 
       },
       "min_child_samples": {
          "type": "numeric", 
          "default_count": 19, 
+         "default_values": ["10", "20", "30"],
          "is_truncated": true 
       },
       "subsample": {
          "type": "numeric", 
-         "default_count": 10, 
+         "default_values": ["0.8", "0.9", "1.0"],
          "is_truncated": false 
       },
       "colsample_bytree": { 
         "type": "numeric", 
         "default_count": 10, 
+        "default_values": ["0.8", "0.9", "1.0"],
         "is_truncated": false 
       },
       "reg_alpha": { 
         "type": "numeric", 
         "default_count": 6, 
+        "default_values": ["0.0", "0.1", "0.5"],
         "is_truncated": false 
       },
       "reg_lambda": { 
         "type": "numeric", 
         "default_count": 5, 
+        "default_values": ["0.0", "0.1", "0.5"],
         "is_truncated": false 
       },
       "dataset": {
          "type": "categorical", 
          "default_count": 5, 
+         "default_values": [
+           "<function diabetes_data at 0x77efe92c8680>"
+        ],
          "is_truncated": false 
       },
       "cv": { 
         "type": "numeric", 
         "default_count": 4, 
+        "default_values": [2, 3, 4, 5],
         "is_truncated": false 
       }
     },
