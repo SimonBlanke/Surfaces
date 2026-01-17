@@ -8,6 +8,7 @@ from .test_functions import (
     KNeighborsClassifierFunction,
     RandomForestClassifierFunction,
     SVMClassifierFunction,
+    LightGBMClassifierFunction
 )
 
 __all__ = [
@@ -16,4 +17,5 @@ __all__ = [
     "KNeighborsClassifierFunction",
     "RandomForestClassifierFunction",
     "SVMClassifierFunction",
+    "LightGBMClassifierFunction"
 ]

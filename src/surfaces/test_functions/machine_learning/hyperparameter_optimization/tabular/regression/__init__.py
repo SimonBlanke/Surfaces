@@ -8,6 +8,7 @@ from .test_functions import (
     KNeighborsRegressorFunction,
     RandomForestRegressorFunction,
     SVMRegressorFunction,
+    LightGBMRegressorFunction,
 )
 
 __all__ = [
@@ -16,4 +17,5 @@ __all__ = [
     "KNeighborsRegressorFunction",
     "RandomForestRegressorFunction",
     "SVMRegressorFunction",
+    "LightGBMRegressorFunction",
 ]

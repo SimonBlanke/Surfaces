@@ -28,9 +28,13 @@ if _HAS_SKLEARN:
     from .tabular import (
         # Classification
         DecisionTreeClassifierFunction,
+        GradientBoostingClassifierFunction,
+        KNeighborsClassifierFunction,
+        RandomForestClassifierFunction,
+        SVMClassifierFunction,
+        LightGBMClassifierFunction,
         # Regression
         DecisionTreeRegressorFunction,
-        GradientBoostingClassifierFunction,
         GradientBoostingRegressorFunction,
         KNeighborsClassifierFunction,
         KNeighborsRegressorFunction,
@@ -38,6 +42,7 @@ if _HAS_SKLEARN:
         RandomForestRegressorFunction,
         SVMClassifierFunction,
         SVMRegressorFunction,
+        LightGBMRegressorFunction
     )
 
     # Time-series functions (sklearn-based)
@@ -57,12 +62,14 @@ if _HAS_SKLEARN:
         "KNeighborsClassifierFunction",
         "RandomForestClassifierFunction",
         "SVMClassifierFunction",
+        "LightGBMClassifierFunction",
         # Tabular - Regression
         "DecisionTreeRegressorFunction",
         "GradientBoostingRegressorFunction",
         "KNeighborsRegressorFunction",
         "RandomForestRegressorFunction",
         "SVMRegressorFunction",
+        "LightGBMRegressorFunction",
         # Time-series - Forecasting
         "GradientBoostingForecasterFunction",
         "RandomForestForecasterFunction",

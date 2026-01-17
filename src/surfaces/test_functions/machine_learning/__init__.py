@@ -42,6 +42,9 @@ if _HAS_SKLEARN:
         SVMClassifierFunction,
         SVMImageClassifierFunction,
         SVMRegressorFunction,
+        # LightGBM
+        LightGBMClassifierFunction,
+        LightGBMRegressorFunction
     )
 
     __all__ = [
@@ -51,12 +54,14 @@ if _HAS_SKLEARN:
         "KNeighborsClassifierFunction",
         "RandomForestClassifierFunction",
         "SVMClassifierFunction",
+        "LightGBMClassifierFunction",
         # Tabular - Regression
         "DecisionTreeRegressorFunction",
         "GradientBoostingRegressorFunction",
         "KNeighborsRegressorFunction",
         "RandomForestRegressorFunction",
         "SVMRegressorFunction",
+        "LightGBMRegressorFunction",
         # Time-series - Forecasting
         "GradientBoostingForecasterFunction",
         "RandomForestForecasterFunction",
@@ -75,12 +80,14 @@ if _HAS_SKLEARN:
         KNeighborsClassifierFunction,
         RandomForestClassifierFunction,
         SVMClassifierFunction,
+        LightGBMClassifierFunction,
         # Tabular - Regression
         DecisionTreeRegressorFunction,
         GradientBoostingRegressorFunction,
         KNeighborsRegressorFunction,
         RandomForestRegressorFunction,
         SVMRegressorFunction,
+        LightGBMRegressorFunction,
         # Time-series - Forecasting
         GradientBoostingForecasterFunction,
         RandomForestForecasterFunction,

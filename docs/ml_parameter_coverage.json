@@ -235,6 +235,133 @@
           ]
         }
       }
+}
+  }
+  ,
+"lightgbm_classifier": {
+    "default_ranges": {
+      "n_estimators": {
+         "type": "numeric", 
+         "default_count": 29, 
+         "is_truncated": true
+         },
+      "learning_rate": {
+         "type": "numeric",
+         "default_count": 4,
+         "is_truncated": false 
+         },
+      "num_leaves": {
+         "type": "numeric",
+         "default_count": 18,
+         "is_truncated": true 
+         },
+      "max_depth": {
+         "type": "numeric", 
+         "default_count": 18, 
+         "is_truncated": true 
+         },
+      "min_child_samples": { 
+        "type": "numeric", 
+        "default_count": 19, 
+        "is_truncated": true 
+         },
+      "subsample": { 
+        "type": "numeric", 
+        "default_count": 10, 
+        "is_truncated": false 
+         },
+      "colsample_bytree": { 
+        "type": "numeric", 
+        "default_count": 10, 
+        "is_truncated": false 
+         },
+      "reg_alpha": { 
+        "type": "numeric", 
+        "default_count": 6, 
+        "is_truncated": false 
+         },
+      "reg_lambda": { 
+        "type": "numeric", 
+        "default_count": 5, 
+        "is_truncated": false 
+         },
+      "dataset": {
+         "type": "categorical", 
+         "default_count": 5, 
+         "is_truncated": false 
+         },
+      "cv": { 
+        "type": "numeric", 
+        "default_count": 4, 
+        "is_truncated": false 
+         }
+    },
+    "stored_ranges": {
+      "exists": true,
+      "message": "Database exists but contains no data"
+    }
+  },
+  "lightgbm_regressor": {
+    "default_ranges": {
+      "n_estimators": { 
+        "type": "numeric", 
+        "default_count": 29, 
+        "is_truncated": true 
+      },
+      "learning_rate": { 
+        "type": "numeric", 
+        "default_count": 4, 
+        "is_truncated": false 
+      },
+      "num_leaves": {
+         "type": "numeric", 
+         "default_count": 18, 
+         "is_truncated": true 
+      },
+      "max_depth": {
+         "type": "numeric", 
+         "default_count": 18, 
+         "is_truncated": true 
+      },
+      "min_child_samples": {
+         "type": "numeric", 
+         "default_count": 19, 
+         "is_truncated": true 
+      },
+      "subsample": {
+         "type": "numeric", 
+         "default_count": 10, 
+         "is_truncated": false 
+      },
+      "colsample_bytree": { 
+        "type": "numeric", 
+        "default_count": 10, 
+        "is_truncated": false 
+      },
+      "reg_alpha": { 
+        "type": "numeric", 
+        "default_count": 6, 
+        "is_truncated": false 
+      },
+      "reg_lambda": { 
+        "type": "numeric", 
+        "default_count": 5, 
+        "is_truncated": false 
+      },
+      "dataset": {
+         "type": "categorical", 
+         "default_count": 5, 
+         "is_truncated": false 
+      },
+      "cv": { 
+        "type": "numeric", 
+        "default_count": 4, 
+        "is_truncated": false 
+      }
+    },
+    "stored_ranges": {
+      "exists": true,
+      "message": "Database exists but contains no data"
     }
   }
 }
