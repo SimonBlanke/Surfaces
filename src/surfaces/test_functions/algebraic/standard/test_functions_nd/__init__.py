@@ -8,6 +8,7 @@ from .rastrigin_function import RastriginFunction
 from .rosenbrock_function import RosenbrockFunction
 from .sphere_function import SphereFunction
 from .styblinski_tang_function import StyblinskiTangFunction
+from .shekel_function import ShekelFunction
 
 __all__ = [
     "RastriginFunction",
@@ -15,4 +16,5 @@ __all__ = [
     "SphereFunction",
     "StyblinskiTangFunction",
     "GriewankFunction",
+    "ShekelFunction",
 ]
