@@ -70,6 +70,11 @@ xgboost = [
     "surfaces[ml]",
     "xgboost>=1.7.0",
 ]
+# LightGBM-based functions
+lightgbm=[
+    "surfaces[ml]",
+    "lightgbm>=4.0.0",
+]
 # Pre-trained ONNX surrogate models
 surrogates = [
     "surfaces-onnx-files==0.0.1",
@@ -77,7 +82,7 @@ surrogates = [
 ]
 # All optional features
 full = [
-    "surfaces[viz,ml,cec,timeseries,images,xgboost,surrogates]",
+    "surfaces[viz,ml,cec,timeseries,images,xgboost,lightgbm,surrogates]",
 ]
 # Development
 dev = [
