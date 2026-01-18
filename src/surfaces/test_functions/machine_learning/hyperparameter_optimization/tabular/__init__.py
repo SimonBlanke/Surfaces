@@ -6,6 +6,7 @@ from .classification import (
     DecisionTreeClassifierFunction,
     GradientBoostingClassifierFunction,
     KNeighborsClassifierFunction,
+    LightGBMClassifierFunction,
     RandomForestClassifierFunction,
     SVMClassifierFunction,
 )
@@ -13,6 +14,7 @@ from .regression import (
     DecisionTreeRegressorFunction,
     GradientBoostingRegressorFunction,
     KNeighborsRegressorFunction,
+    LightGBMRegressorFunction,
     RandomForestRegressorFunction,
     SVMRegressorFunction,
 )
@@ -24,10 +26,12 @@ __all__ = [
     "KNeighborsClassifierFunction",
     "RandomForestClassifierFunction",
     "SVMClassifierFunction",
+    "LightGBMClassifierFunction",
     # Regression
     "DecisionTreeRegressorFunction",
     "GradientBoostingRegressorFunction",
     "KNeighborsRegressorFunction",
     "RandomForestRegressorFunction",
     "SVMRegressorFunction",
+    "LightGBMRegressorFunction",
 ]
