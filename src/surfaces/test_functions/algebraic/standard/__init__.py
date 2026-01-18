@@ -42,6 +42,7 @@ from .test_functions_nd import (
     RosenbrockFunction,
     SphereFunction,
     StyblinskiTangFunction,
+    ShekelFunction,
 )
 
 __all__ = [
@@ -76,6 +77,7 @@ __all__ = [
     "RosenbrockFunction",
     "SphereFunction",
     "StyblinskiTangFunction",
+    "ShekelFunction"
 ]
 
 standard_functions = [
@@ -110,6 +112,7 @@ standard_functions = [
     RosenbrockFunction,
     SphereFunction,
     StyblinskiTangFunction,
+    ShekelFunction,
 ]
 
 standard_functions_1d = [
@@ -147,4 +150,5 @@ standard_functions_nd = [
     RosenbrockFunction,
     SphereFunction,
     StyblinskiTangFunction,
+    ShekelFunction,
 ]
