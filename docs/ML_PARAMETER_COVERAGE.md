@@ -66,4 +66,18 @@ python collect_ml_search_data.py --list
 
 ---
 
+---
+
+## LightGBM Classifier Function
+
+**Function ID:** `lightgbm_classifier`
+
+ℹ️ **Status:** Database exists but contains no data
+
+## LightGBM Regressor Function
+
+**Function ID:** `lightgbm_regressor`
+
+ℹ️ **Status:** Database exists but contains no data
+
 *Generated on 2025-08-09 14:19:51*

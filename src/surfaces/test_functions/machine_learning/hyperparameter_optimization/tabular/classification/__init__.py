@@ -6,6 +6,7 @@ from .test_functions import (
     DecisionTreeClassifierFunction,
     GradientBoostingClassifierFunction,
     KNeighborsClassifierFunction,
+    LightGBMClassifierFunction,
     RandomForestClassifierFunction,
     SVMClassifierFunction,
 )
@@ -16,4 +17,5 @@ __all__ = [
     "KNeighborsClassifierFunction",
     "RandomForestClassifierFunction",
     "SVMClassifierFunction",
+    "LightGBMClassifierFunction",
 ]
