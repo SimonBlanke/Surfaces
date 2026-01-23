@@ -1,6 +1,6 @@
 import pytest
 
-from surfaces.test_functions.machine_learning.tabular import (
+from surfaces.test_functions.machine_learning.hyperparameter_optimization.tabular import (
     LightGBMClassifierFunction,
     LightGBMRegressorFunction,
 )
@@ -10,31 +10,30 @@ from surfaces.test_functions.machine_learning.tabular import (
 @pytest.mark.ml
 def test_lightgbm_classifier_init():
     """Test that LightGBM Classifier instantiates and has a valid search space."""
-    try:
-        func = LightGBMClassifierFunction()
-    except ImportError:
-        pytest.skip("LightGBM not installed")
 
+    func = LightGBMClassifierFunction(dataset="digits", cv=2)
+    func._create_objective_function()
+    space = func.search_space
+    config = {k: v[0] if isinstance(v, list) else v for k, v in space.items()}
+    score = func.pure_objective_function(config)
+
+    # verify output
     assert func is not None
-    space = func.search_space()
-
-    # key params
-    assert "n_estimators" in space
-    assert "learning_rate" in space
-    assert "num_leaves" in space
+    assert isinstance(score, float)
+    assert 0.0 <= score <= 1.0
 
 
 @pytest.mark.smoke
 @pytest.mark.ml
 def test_lightgbm_regressor_init():
     """Test that LightGBM regressor instantiates and has a valid search space."""
-    try:
-        func = LightGBMRegressorFunction()
-    except ImportError:
-        pytest.skip("LightGBM not installed")
-    assert func is not None
-    space = func.search_space()
-    # Key params
-    assert "n_estimators" in space
-    assert "learning_rate" in space
-    assert "num_leaves" in space
+
+    func = LightGBMRegressorFunction(dataset="diabetes", cv=2)
+    func._create_objective_function()
+
+    space = func.search_space
+    config = {k: v[0] if isinstance(v, list) else v for k, v in space.items()}
+
+    score = func.pure_objective_function(config)
+
+    assert isinstance(score, float)

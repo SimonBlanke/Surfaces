@@ -53,6 +53,12 @@ class LightGBMRegressorFunction(BaseRegression):
     reg_alpha_default = [0, 0.001, 0.01, 0.1, 1, 10]
     reg_lambda_default = [0, 0.001, 0.01, 0.1, 10]
 
+    latex_formula = r"\text{CV-R2-Score} = f(\text{n\_estimators}, \text{learning\_rate}, \dots)"
+    tagline = (
+        "Cross-validated R2 score of a LightGBM regressor. "
+        "Gradient boosting with tree-based learning."
+    )
+
     def __init__(
         self,
         dataset: str = "diabetes",
