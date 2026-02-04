@@ -70,6 +70,8 @@ class LotkaVolterraFunction(ODESimulationFunction):
            in specie animali conviventi.
     """
 
+    name = "Lotka-Volterra Function"
+
     _spec = {
         "simulation_based": True,
         "expensive": False,

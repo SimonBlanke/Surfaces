@@ -68,6 +68,8 @@ class RLCCircuitFunction(ODESimulationFunction):
     .. [1] Horowitz, P. & Hill, W. (2015). The Art of Electronics, 3rd ed.
     """
 
+    name = "RLC Circuit Function"
+
     _spec = {
         "simulation_based": True,
         "expensive": False,
@@ -238,6 +240,8 @@ class RCFilterFunction(ODESimulationFunction):
     ----------
     .. [1] Sedra, A.S. & Smith, K.C. (2014). Microelectronic Circuits, 7th ed.
     """
+
+    name = "RC Filter Function"
 
     _spec = {
         "simulation_based": True,
