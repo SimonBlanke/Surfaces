@@ -8,18 +8,100 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Ensemble test functions: StackingEnsembleFunction, VotingEnsembleFunction, WeightedAveragingFunction
+- BaseTabularEnsemble base class for ensemble methods
+- MutualInfoFeatureSelectionFunction for feature selection optimization
+- PolynomialFeatureTransformationFunction for polynomial feature engineering
+- FeatureScalingPipelineFunction for scaling pipeline optimization
+- CONTRIBUTING.md with contribution guidelines
+- `name` attribute to test functions
+
+## [0.7.1] - 2026-01-15
+
+### Fixed
+- Windows-specific path handling error
+- Bug in surrogate models
+- Storage test issues
+
+### Changed
+- Restructured ML test function directory layout
+- Updated pre-commit configuration
+
+## [0.7.0] - 2026-01-14
+
+### Added
+- Custom test function prototype for user-defined objectives
+- Batch evaluation feature for all test function categories:
+  - Algebraic functions (1D, 2D, ND)
+  - BBOB benchmark functions
+  - CEC benchmark functions (2013, 2014, 2017)
+  - Multi-objective and constrained optimization functions
+- Simulation-based test functions module:
+  - ODESimulationFunction base class
+  - DampedOscillatorFunction
+  - LotkaVolterraFunction
+  - ConsecutiveReactionFunction
+  - RLCCircuitFunction
+  - RCFilterFunction
+- VisualizationMixin and PlotAccessor classes for fluent plotting API
+- Collection feature for test function grouping
+- Modifiers module (moved sleep and noise functionality)
+- ReadTheDocs integration with .readthedocs.yaml
+- Extensive documentation with examples
+- Visualization tests (2D plots, multi-slice, contour, surface, convergence, LaTeX)
+- Integration test expansion for Optuna and Ray
+
+### Changed
+- Moved BBOB and CEC functions into benchmarking module
+- Refactored algebraic functions to use math module instead of numpy
+- Unified naming of test function lists
+
+## [0.6.1] - 2026-01-04
+
+### Fixed
+- Data package version requirements
+- Eggholder function implementation
+- XGBoost error on macOS
+- Import paths in test files
+- Hyperopt pkg_resources compatibility error
+
+### Changed
+- Restructured tests into core, full, and integration directories
+- Added PR template
+
+## [0.6.0] - 2026-01-04
+
+### Added
+- BBOB (Black-Box Optimization Benchmarking) test functions
+- CEC benchmark functions (2013, 2014, 2017)
+- Engineering design test functions:
+  - CantileverBeam, PressureVessel, TensionCompressionSpring, ThreeBarTruss, WeldedBeam
+- Surrogate model support via sklearn and ONNX
+- Multi-objective test functions prototype
+- Time series ML test functions using sktime (TimeSeriesForestClassifier)
+- Image-based ML test functions (XGBoostImageClassifier)
+- LaTeX-based visualization plots
+- Noise feature for test functions
+- Memory caching for repeated evaluations
+- Callback system for custom logging
+- Data collection functionality with grid search
 - README badges for PyPI, Python versions, license, and downloads
 - CITATION.cff for academic citations
 - py.typed marker for PEP 561 type checking support
-- Type annotations with 84% coverage (682 of 813 functions):
-  - Base test function classes
-  - All algebraic functions (1D, 2D, ND)
-  - BBOB benchmark functions
-  - CEC benchmark functions (2013, 2014, 2017)
-  - Machine learning functions (tabular, image, timeseries)
-  - Engineering design functions
-  - Noise module
-  - Visualization utilities
+- Type annotations for algebraic test functions
+- `latex_formula` and `pgfmath_formula` attributes for algebraic functions
+- Optional dependencies for time-series, CEC, and XGBoost
+- Surrogate model dashboard for training and overview
+
+### Changed
+- Complete test suite rework
+- Moved CEC data to separate data package
+- Restructured visualization module into separate files
+- ML test functions API changes
+
+### Removed
+- Python 3.7 and 3.8 support
+- Docker container workflow
 
 ## [0.5.1] - 2024-05-27
 
@@ -136,7 +218,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Engineering Functions
 - CantileverBeam, PressureVessel, TensionCompressionSpring, ThreeBarTruss, WeldedBeam
 
-[Unreleased]: https://github.com/SimonBlanke/Surfaces/compare/v0.5.1...HEAD
+[Unreleased]: https://github.com/SimonBlanke/Surfaces/compare/v0.7.1...HEAD
+[0.7.1]: https://github.com/SimonBlanke/Surfaces/compare/v0.7.0...v0.7.1
+[0.7.0]: https://github.com/SimonBlanke/Surfaces/compare/v0.6.1...v0.7.0
+[0.6.1]: https://github.com/SimonBlanke/Surfaces/compare/v0.6.0...v0.6.1
+[0.6.0]: https://github.com/SimonBlanke/Surfaces/compare/v0.5.1...v0.6.0
 [0.5.1]: https://github.com/SimonBlanke/Surfaces/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/SimonBlanke/Surfaces/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/SimonBlanke/Surfaces/compare/v0.3.0...v0.4.0
