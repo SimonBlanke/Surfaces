@@ -32,6 +32,7 @@ class MachineLearningFunction(BaseTestFunction):
         "continuous": False,
         "differentiable": False,
         "stochastic": True,
+        "initialization_cost": "low",
     }
 
     para_names: list = []
