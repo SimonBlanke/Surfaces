@@ -89,7 +89,7 @@ class RastriginFunction(AlgebraicFunction):
 
     def __init__(
         self,
-        n_dim: int,
+        n_dim: int = 2,
         A: float = 10,
         angle: float = 2 * math.pi,
         objective: str = "minimize",

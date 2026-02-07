@@ -75,7 +75,7 @@ class StyblinskiTangFunction(AlgebraicFunction):
 
     def __init__(
         self,
-        n_dim: int,
+        n_dim: int = 2,
         objective: str = "minimize",
         modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,

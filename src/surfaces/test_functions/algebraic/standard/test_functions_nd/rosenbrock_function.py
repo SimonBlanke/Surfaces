@@ -94,7 +94,7 @@ class RosenbrockFunction(AlgebraicFunction):
 
     def __init__(
         self,
-        n_dim: int,
+        n_dim: int = 2,
         A: float = 1,
         B: float = 100,
         objective: str = "minimize",
