@@ -32,7 +32,7 @@ from .multi_objective import (
     multi_objective_functions,
 )
 
-# Standard functions (1D, 2D, ND)
+# Standard functions (1D, 2D, 4D, ND)
 from .standard import (
     # 2D
     AckleyFunction,
@@ -60,6 +60,8 @@ from .standard import (
     RastriginFunction,
     RosenbrockFunction,
     SchafferFunctionN2,
+    # 4D
+    ShekelFunction,
     SimionescuFunction,
     SineProductFunction,
     SphereFunction,
@@ -68,8 +70,8 @@ from .standard import (
     standard_functions,
     standard_functions_1d,
     standard_functions_2d,
+    standard_functions_4d,
     standard_functions_nd,
-    ShekelFunction,
 )
 
 __all__ = [
@@ -103,13 +105,14 @@ __all__ = [
     "SchafferFunctionN2",
     "SimionescuFunction",
     "ThreeHumpCamelFunction",
+    # Standard 4D
+    "ShekelFunction",
     # Standard ND
     "GriewankFunction",
     "RastriginFunction",
     "RosenbrockFunction",
     "SphereFunction",
     "StyblinskiTangFunction",
-    "ShekelFunction",
     # Constrained
     "CantileverBeamFunction",
     "PressureVesselFunction",
@@ -135,7 +138,9 @@ algebraic_functions = standard_functions
 mathematical_functions = algebraic_functions
 algebraic_functions_1d = standard_functions_1d
 algebraic_functions_2d = standard_functions_2d
+algebraic_functions_4d = standard_functions_4d
 algebraic_functions_nd = standard_functions_nd
 mathematical_functions_1d = standard_functions_1d
 mathematical_functions_2d = standard_functions_2d
+mathematical_functions_4d = standard_functions_4d
 mathematical_functions_nd = standard_functions_nd
