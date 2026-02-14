@@ -24,14 +24,62 @@ CONFIG = {
     "border_width": 1.5,
     "layers": [
         # Secondary layers (background web, 36 boundary points)
-        {"n_points": 36, "offset": 5, "stroke": "#a0c4f0", "width": 0.4, "opacity": 0.30},
-        {"n_points": 36, "offset": 11, "stroke": "#a0c4f0", "width": 0.4, "opacity": 0.25},
-        {"n_points": 36, "offset": 17, "stroke": "#a0c4f0", "width": 0.4, "opacity": 0.20},
+        {
+            "n_points": 36,
+            "offset": 5,
+            "stroke": "#a0c4f0",
+            "width": 0.4,
+            "opacity": 0.30,
+        },
+        {
+            "n_points": 36,
+            "offset": 11,
+            "stroke": "#a0c4f0",
+            "width": 0.4,
+            "opacity": 0.25,
+        },
+        {
+            "n_points": 36,
+            "offset": 17,
+            "stroke": "#a0c4f0",
+            "width": 0.4,
+            "opacity": 0.20,
+        },
         # Primary layers (structural, 24 boundary points)
-        {"n_points": 24, "offset": 3, "stroke": "#88b8e8", "width": 1.0, "opacity": 0.80},
-        {"n_points": 24, "offset": 5, "stroke": "#88b8e8", "width": 0.85, "opacity": 0.65},
-        {"n_points": 24, "offset": 7, "stroke": "#90c0f0", "width": 0.7, "opacity": 0.50},
-        {"n_points": 24, "offset": 11, "stroke": "#90c0f0", "width": 0.55, "opacity": 0.38},
+        {
+            "n_points": 24,
+            "offset": 3,
+            "stroke": "#88b8e8",
+            "width": 1.0,
+            "opacity": 0.70,
+        },
+        {
+            "n_points": 24,
+            "offset": 5,
+            "stroke": "#88b8e8",
+            "width": 0.85,
+            "opacity": 0.65,
+        },
+        {
+            "n_points": 24,
+            "offset": 7,
+            "stroke": "#90c0f0",
+            "width": 0.7,
+            "opacity": 0.50,
+        },
+        {
+            "n_points": 24,
+            "offset": 11,
+            "stroke": "#90c0f0",
+            "width": 0.55,
+            "opacity": 0.38,
+        },
+    ],
+    # Emphasis rings (solid circles like the border, drawn on top)
+    "rings": [
+        # {"radius": 182, "stroke": "#70a8e0", "width": 1.5},
+        {"radius": 55, "stroke": "#70a8e0", "width": 1.5},
+        {"radius": 12, "stroke": "#70a8e0", "width": 1.5},
     ],
     "output_file": "concept_6_hyperbolic_generated.svg",
 }
@@ -56,8 +104,10 @@ def boundary_points(n, radius, center):
     """
     cx, cy = center
     return [
-        (cx + radius * math.cos(i * 2 * math.pi / n),
-         cy + radius * math.sin(i * 2 * math.pi / n))
+        (
+            cx + radius * math.cos(i * 2 * math.pi / n),
+            cy + radius * math.sin(i * 2 * math.pi / n),
+        )
         for i in range(n)
     ]
 
@@ -189,6 +239,14 @@ def generate_svg(config):
 
     lines.append("  </g>")
     lines.append("")
+
+    # Emphasis rings (solid circles to pronounce natural ring patterns)
+    for ring in config.get("rings", []):
+        lines.append(
+            f'  <circle cx="{cx:.0f}" cy="{cy:.0f}" r="{ring["radius"]}" '
+            f'fill="none" stroke="{ring["stroke"]}" '
+            f'stroke-width="{ring["width"]}"/>'
+        )
 
     # Border ring
     lines.append(
