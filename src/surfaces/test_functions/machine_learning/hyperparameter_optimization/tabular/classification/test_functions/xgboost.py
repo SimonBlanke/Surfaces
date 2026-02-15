@@ -3,8 +3,8 @@
 from typing import Any, Dict, List, Optional
 
 import numpy as np
-from xgboost import XGBClassifier
 from sklearn.model_selection import cross_val_score
+from xgboost import XGBClassifier
 
 from surfaces.modifiers import BaseModifier
 

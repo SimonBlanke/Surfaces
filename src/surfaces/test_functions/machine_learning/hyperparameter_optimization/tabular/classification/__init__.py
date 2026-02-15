@@ -2,7 +2,6 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-from .test_functions.xgboost import XGBoostClassifierFunction
 from .test_functions import (
     DecisionTreeClassifierFunction,
     GradientBoostingClassifierFunction,
@@ -10,6 +9,7 @@ from .test_functions import (
     RandomForestClassifierFunction,
     SVMClassifierFunction,
 )
+from .test_functions.xgboost import XGBoostClassifierFunction
 
 __all__ = [
     "DecisionTreeClassifierFunction",
@@ -18,5 +18,4 @@ __all__ = [
     "RandomForestClassifierFunction",
     "SVMClassifierFunction",
     "XGBoostClassifierFunction",
-
 ]
