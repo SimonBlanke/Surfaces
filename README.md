@@ -1,12 +1,8 @@
-<h1 align="center">
-Surfaces
-</h1>
-
 <p align="center">
   <a href="https://surfaces.readthedocs.io/en/latest/">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="./docs/source/_static/surfaces_logo_dark.svg">
-      <source media="(prefers-color-scheme: light)" srcset="./docs/source/_static/surfaces_logo.svg">
+      <source media="(prefers-color-scheme: dark)" srcset="./logo_concepts/concept_6_hyperbolic_generated.svg">
+      <source media="(prefers-color-scheme: light)" srcset="./logo_concepts/concept_6_hyperbolic_generated.svg">
       <img src="./docs/source/_static/surfaces_logo.svg" width="400" alt="Surfaces Logo">
     </picture>
   </a>
