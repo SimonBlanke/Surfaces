@@ -9,6 +9,7 @@ from .test_functions import (
     RandomForestClassifierFunction,
     SVMClassifierFunction,
 )
+from .test_functions.xgboost import XGBoostClassifierFunction
 
 __all__ = [
     "DecisionTreeClassifierFunction",
@@ -16,4 +17,5 @@ __all__ = [
     "KNeighborsClassifierFunction",
     "RandomForestClassifierFunction",
     "SVMClassifierFunction",
+    "XGBoostClassifierFunction",
 ]
