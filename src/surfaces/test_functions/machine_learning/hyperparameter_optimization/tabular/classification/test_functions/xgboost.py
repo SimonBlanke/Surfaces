@@ -82,8 +82,8 @@ class XGBoostClassifierFunction(BaseClassification):
         cv = self.cv
 
         def objective(params: Dict[str, Any]) -> float:
-            n_estimators = int(round(params["n_estimators"]))
-            max_depth = int(round(params["max_depth"]))
+            n_estimators = int(round(float(params["n_estimators"])))
+            max_depth = int(round(float(params["max_depth"])))
             learning_rate = float(params["learning_rate"])
 
             clf = XGBClassifier(
