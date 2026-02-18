@@ -11,22 +11,6 @@ The database stores evaluation results for specific parameter combinations to en
 - 🔴 **Limited coverage**: <50% of default combinations stored
 - ❌ **Not found**: Parameter not found in stored data
 
-## Usage
-
-To collect data for any function, use:
-```bash
-# Collect for all functions
-python collect_ml_search_data.py --all
-
-# Collect for specific function
-python collect_ml_search_data.py <function_name>
-
-# Check current status
-python collect_ml_search_data.py --list
-```
-
----
-
 ## Gradient Boosting Regressor Function
 
 **Function ID:** `gradient_boosting_regressor`
@@ -67,17 +51,5 @@ python collect_ml_search_data.py --list
 ---
 
 ---
-
-## LightGBM Classifier Function
-
-**Function ID:** `lightgbm_classifier`
-
-ℹ️ **Status:** Database exists but contains no data
-
-## LightGBM Regressor Function
-
-**Function ID:** `lightgbm_regressor`
-
-ℹ️ **Status:** Database exists but contains no data
 
 *Generated on 2025-08-09 14:19:51*
