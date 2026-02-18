@@ -50,7 +50,9 @@ viz = [
 # Machine learning test functions
 ml = [
     "scikit-learn",
+    "xgboost>=1.7.0",
 ]
+
 # CEC benchmark data files
 cec = [
     "surfaces-cec-data==0.0.1",
