@@ -82,18 +82,20 @@ class XGBoostClassifierFunction(BaseClassification):
         cv = self.cv
 
         def objective(params: Dict[str, Any]) -> float:
+            n_estimators = int(round(params["n_estimators"]))
+            max_depth = int(round(params["max_depth"]))
+            learning_rate = float(params["learning_rate"])
+
             clf = XGBClassifier(
-                n_estimators=params["n_estimators"],
-                max_depth=params["max_depth"],
-                learning_rate=params["learning_rate"],
+                n_estimators=n_estimators,
+                max_depth=max_depth,
+                learning_rate=learning_rate,
                 random_state=42,
                 use_label_encoder=False,
                 eval_metric="logloss",
             )
+
             scores = cross_val_score(clf, X, y, cv=cv, scoring="accuracy")
-            return scores.mean()
+            return float(scores.mean())
 
         self.pure_objective_function = objective
-
-    def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
-        return {**params, "dataset": self.dataset, "cv": self.cv}
