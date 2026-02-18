@@ -22,13 +22,14 @@ class ShekelFunction(AlgebraicFunction):
 
     where :math:`m` is the number of maxima (typically 5, 7, or 10).
 
-    The global minimum is located at :math:`x \\approx (4, 4, 4, 4)` and
+    The global minimum is located at :math:`x = (4, 4, 4, 4)` and
     the value depends on :math:`m`.
 
     Parameters
     ----------
     m : int, default=10
         Number of maxima. Standard values are 5, 7, or 10.
+        Must be between 1 and 10.
     objective : str, default="minimize"
         Either "minimize" or "maximize".
     modifiers : list of BaseModifier, optional
@@ -53,8 +54,8 @@ class ShekelFunction(AlgebraicFunction):
     --------
     >>> from surfaces.test_functions import ShekelFunction
     >>> func = ShekelFunction(m=10)
-    >>> result = func({"x0": 4.0, "x1": 4.0, "x2": 4.0, "x3": 4.0})
-    >>> float(result) < -10.0
+    >>> result = func({"x0": 4.00004, "x1": 4.00013, "x2": 4.00004, "x3": 4.00013})
+    >>> abs(float(result) + 10.5364) < 1e-4
     True
     """
 
@@ -69,7 +70,8 @@ class ShekelFunction(AlgebraicFunction):
         "scalable": False,
     }
 
-    f_global = -10.536
+    # Placeholder; instance variable set in __init__
+    f_global = None
     default_bounds = (0.0, 10.0)
 
     latex_formula = (
@@ -95,7 +97,8 @@ class ShekelFunction(AlgebraicFunction):
         callbacks: Optional[Union[Callable, List[Callable]]] = None,
         catch_errors: Optional[Dict[type, float]] = None,
     ) -> None:
-        super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
+        if not 1 <= m <= 10:
+            raise ValueError(f"m must be between 1 and 10, got {m}")
 
         self.n_dim = 4
         self.m = m
@@ -123,9 +126,14 @@ class ShekelFunction(AlgebraicFunction):
 
         self.x_global = (4.0, 4.0, 4.0, 4.0)
 
+        super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
+
+        self.f_global = self.pure_objective_function({"x0": 4.0, "x1": 4.0, "x2": 4.0, "x3": 4.0})
+
     def _create_objective_function(self) -> None:
         def shekel_function(params: Dict[str, Any]) -> float:
-            x_input = np.array([params[f"x{i}"] for i in range(self.n_dim)])
+            # Unpack for 4D
+            x_input = np.array([params["x0"], params["x1"], params["x2"], params["x3"]])
 
             result = 0.0
             for i in range(self.m):
@@ -161,4 +169,10 @@ class ShekelFunction(AlgebraicFunction):
         size: int = 10000,
         value_types: str = "array",
     ) -> Dict[str, Any]:
-        return super()._create_n_dim_search_space(min, max, size=size, value_types=value_types)
+        # Generate the base 1D space
+        space_1d = super()._create_n_dim_search_space(min, max, size=size, value_types=value_types)[
+            "x0"
+        ]
+
+        # Create the 4D space
+        return {f"x{i}": space_1d.copy() for i in range(4)}
