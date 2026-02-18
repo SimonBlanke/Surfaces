@@ -157,5 +157,4 @@ standard_functions_nd = [
     RosenbrockFunction,
     SphereFunction,
     StyblinskiTangFunction,
-    ShekelFunction,
 ]
