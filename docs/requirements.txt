@@ -18,6 +18,7 @@ numpy
 pandas
 scikit-learn
 matplotlib
+lightgbm
 
 # For plot generation
 plotly>=5.0

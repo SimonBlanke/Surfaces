@@ -50,6 +50,7 @@ viz = [
 # Machine learning test functions
 ml = [
     "scikit-learn",
+    "lightgbm>=4.0.0",
 ]
 # CEC benchmark data files
 cec = [
@@ -70,6 +71,7 @@ xgboost = [
     "surfaces[ml]",
     "xgboost>=1.7.0",
 ]
+
 # Pre-trained ONNX surrogate models
 surrogates = [
     "surfaces-onnx-files==0.0.1",

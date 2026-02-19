@@ -34,6 +34,8 @@ if _HAS_SKLEARN:
         GradientBoostingRegressorFunction,
         KNeighborsClassifierFunction,
         KNeighborsRegressorFunction,
+        LightGBMClassifierFunction,
+        LightGBMRegressorFunction,
         RandomForestClassifierFunction,
         RandomForestRegressorFunction,
         SVMClassifierFunction,
@@ -57,12 +59,14 @@ if _HAS_SKLEARN:
         "KNeighborsClassifierFunction",
         "RandomForestClassifierFunction",
         "SVMClassifierFunction",
+        "LightGBMClassifierFunction",
         # Tabular - Regression
         "DecisionTreeRegressorFunction",
         "GradientBoostingRegressorFunction",
         "KNeighborsRegressorFunction",
         "RandomForestRegressorFunction",
         "SVMRegressorFunction",
+        "LightGBMRegressorFunction",
         # Time-series - Forecasting
         "GradientBoostingForecasterFunction",
         "RandomForestForecasterFunction",
