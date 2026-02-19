@@ -640,7 +640,7 @@ def main():
     for filename, generator in generators.items():
         content = generator()
         output_path = DIAGRAMS_DIR / filename
-        output_path.write_text(content, encoding="utf-8")
+        output_path.write_text(content)
         print(f"  Generated: {filename}")
 
 

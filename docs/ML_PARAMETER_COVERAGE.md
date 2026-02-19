@@ -11,6 +11,22 @@ The database stores evaluation results for specific parameter combinations to en
 - 🔴 **Limited coverage**: <50% of default combinations stored
 - ❌ **Not found**: Parameter not found in stored data
 
+## Usage
+
+To collect data for any function, use:
+```bash
+# Collect for all functions
+python collect_ml_search_data.py --all
+
+# Collect for specific function
+python collect_ml_search_data.py <function_name>
+
+# Check current status
+python collect_ml_search_data.py --list
+```
+
+---
+
 ## Gradient Boosting Regressor Function
 
 **Function ID:** `gradient_boosting_regressor`
@@ -47,8 +63,6 @@ The database stores evaluation results for specific parameter combinations to en
 | cv | numeric | 1 | 2.0 - 2.0 | 2 - 10 | 🔴 16.7% |
 | dataset | numeric | 1 | ['iris_data'] | N/A | 🔴 33.3% |
 
-
----
 
 ---
 
