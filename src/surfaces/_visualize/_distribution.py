@@ -54,7 +54,7 @@ def plot_fitness_distribution(
 
     Examples:
         >>> from surfaces.test_functions import RastriginFunction
-        >>> from surfaces.visualize import plot_fitness_distribution
+        >>> from surfaces._visualize import plot_fitness_distribution
         >>> func = RastriginFunction(n_dim=10)
         >>> fig = plot_fitness_distribution(func, n_samples=5000)
         >>> fig.show()

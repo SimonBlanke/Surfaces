@@ -13,9 +13,9 @@ They focus on:
 
 import pytest
 
+from surfaces._visualize._accessor import PlotAccessor
 from surfaces.test_functions.algebraic.standard.test_functions_2d import AckleyFunction
 from surfaces.test_functions.algebraic.standard.test_functions_nd import SphereFunction
-from surfaces.visualize._accessor import PlotAccessor
 
 
 class TestPlotAccessorAvailability:

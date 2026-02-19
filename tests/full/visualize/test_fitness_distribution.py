@@ -7,6 +7,7 @@
 These tests verify the fitness_distribution functionality through the accessor pattern.
 """
 
+from surfaces._visualize._param_resolver import resolve_params
 from surfaces.test_functions.algebraic.standard.test_functions_1d import (
     ForresterFunction,
 )
@@ -14,7 +15,6 @@ from surfaces.test_functions.algebraic.standard.test_functions_2d import AckleyF
 from surfaces.test_functions.algebraic.standard.test_functions_nd import (
     SphereFunction,
 )
-from surfaces.visualize._param_resolver import resolve_params
 
 
 class TestFitnessDistributionBasic:

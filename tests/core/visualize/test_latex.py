@@ -10,13 +10,13 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from surfaces._visualize._errors import MissingDependencyError, PlotCompatibilityError
 from surfaces.test_functions.algebraic import (
     AckleyFunction,
     RastriginFunction,
     RosenbrockFunction,
     SphereFunction,
 )
-from surfaces.visualize._errors import MissingDependencyError, PlotCompatibilityError
 
 
 class TestLatexBasic:

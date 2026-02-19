@@ -62,7 +62,7 @@ class VisualizationMixin:
         >>> func.plot.available()
         ['surface', 'contour', 'heatmap', 'multi_slice', ...]
         """
-        from surfaces.visualize._accessor import PlotAccessor
+        from surfaces._visualize._accessor import PlotAccessor
 
         return PlotAccessor(self)
 

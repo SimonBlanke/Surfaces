@@ -45,7 +45,7 @@ def auto_plot(
 
     Examples:
         >>> from surfaces.test_functions import SphereFunction
-        >>> from surfaces.visualize import auto_plot
+        >>> from surfaces._visualize import auto_plot
         >>> func = SphereFunction(n_dim=2)
         >>> fig = auto_plot(func)  # Returns surface plot
         >>> fig.show()

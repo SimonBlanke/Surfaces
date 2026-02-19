@@ -50,7 +50,7 @@ def plot_convergence(
 
     Examples:
         >>> from surfaces.test_functions import SphereFunction
-        >>> from surfaces.visualize import plot_convergence
+        >>> from surfaces._visualize import plot_convergence
         >>> func = SphereFunction(n_dim=2)
         >>> # Simulated optimization history
         >>> history = [10.0, 8.0, 5.0, 3.0, 1.0, 0.5, 0.1]

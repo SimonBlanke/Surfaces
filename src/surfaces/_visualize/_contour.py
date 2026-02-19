@@ -62,7 +62,7 @@ def plot_contour(
 
     Examples:
         >>> from surfaces.test_functions import RosenbrockFunction
-        >>> from surfaces.visualize import plot_contour
+        >>> from surfaces._visualize import plot_contour
         >>> func = RosenbrockFunction(n_dim=2)
         >>> fig = plot_contour(func)
         >>> fig.show()
@@ -212,7 +212,7 @@ def plot_heatmap(
 
     Examples:
         >>> from surfaces.test_functions import AckleyFunction
-        >>> from surfaces.visualize import plot_heatmap
+        >>> from surfaces._visualize import plot_heatmap
         >>> func = AckleyFunction()
         >>> fig = plot_heatmap(func)
         >>> fig.show()

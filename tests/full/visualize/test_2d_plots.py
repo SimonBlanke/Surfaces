@@ -9,9 +9,9 @@ These tests verify the 2D plot functionality through the accessor pattern.
 
 import pytest
 
+from surfaces._visualize._param_resolver import resolve_params
 from surfaces.test_functions.algebraic.standard.test_functions_2d import AckleyFunction
 from surfaces.test_functions.algebraic.standard.test_functions_nd import SphereFunction
-from surfaces.visualize._param_resolver import resolve_params
 
 
 class TestSurfacePlotParamResolution:

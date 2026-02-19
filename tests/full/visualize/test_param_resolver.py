@@ -10,12 +10,12 @@ These tests verify the params dict interpretation logic.
 import numpy as np
 import pytest
 
-from surfaces.test_functions.algebraic.standard.test_functions_nd import SphereFunction
-from surfaces.visualize._param_resolver import (
+from surfaces._visualize._param_resolver import (
     DimensionConfig,
     ResolvedParams,
     resolve_params,
 )
+from surfaces.test_functions.algebraic.standard.test_functions_nd import SphereFunction
 
 
 class TestResolvedParamsDataclass:

@@ -138,7 +138,7 @@ def plot_latex(
 
     Examples:
         >>> from surfaces.test_functions import AckleyFunction
-        >>> from surfaces.visualize import plot_latex
+        >>> from surfaces._visualize import plot_latex
         >>> func = AckleyFunction()
         >>> tex_path = plot_latex(func)
         >>> print(f"Generated: {tex_path}")

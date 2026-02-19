@@ -19,7 +19,7 @@ Basic Contour Plot
 
     import os
     from surfaces.test_functions.algebraic import RastriginFunction
-    from surfaces.visualize import plot_contour
+    from surfaces._visualize import plot_contour
 
     func = RastriginFunction(n_dim=2)
 
@@ -38,7 +38,7 @@ Customizing Contours
 
     import os
     from surfaces.test_functions.algebraic import RosenbrockFunction
-    from surfaces.visualize import plot_contour
+    from surfaces._visualize import plot_contour
 
     func = RosenbrockFunction(n_dim=2)
 
@@ -64,7 +64,7 @@ Comparing Landscapes
         RastriginFunction,
         HimmelblausFunction,
     )
-    from surfaces.visualize import plot_contour
+    from surfaces._visualize import plot_contour
 
     functions = [
         ("Sphere (unimodal)", SphereFunction(n_dim=2)),

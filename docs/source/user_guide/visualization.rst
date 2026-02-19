@@ -26,13 +26,13 @@ Basic Surface Plot
 .. code-block:: python
 
     from surfaces.test_functions.algebraic import AckleyFunction
-    from surfaces import visualize
+    from surfaces import _visualize
 
     # Create a 2D function
     func = AckleyFunction()
 
     # Create a surface plot
-    fig = visualize.surface_plot(func)
+    fig = _visualize.surface_plot(func)
     fig.show()
 
 This creates an interactive 3D surface plot using Plotly.
@@ -45,12 +45,12 @@ For a top-down view:
 .. code-block:: python
 
     from surfaces.test_functions.algebraic import RosenbrockFunction
-    from surfaces import visualize
+    from surfaces import _visualize
 
     func = RosenbrockFunction(n_dim=2)
 
     # Create a heatmap
-    fig = visualize.heatmap(func)
+    fig = _visualize.heatmap(func)
     fig.show()
 
 Customizing Plots
@@ -64,10 +64,10 @@ Control the grid resolution:
 .. code-block:: python
 
     # Higher resolution (slower)
-    fig = visualize.surface_plot(func, resolution=200)
+    fig = _visualize.surface_plot(func, resolution=200)
 
     # Lower resolution (faster)
-    fig = visualize.surface_plot(func, resolution=50)
+    fig = _visualize.surface_plot(func, resolution=50)
 
 Custom Bounds
 -------------
@@ -76,7 +76,7 @@ Zoom in on specific regions:
 
 .. code-block:: python
 
-    fig = visualize.surface_plot(
+    fig = _visualize.surface_plot(
         func,
         x_range=(-2, 2),
         y_range=(-2, 2)
@@ -89,8 +89,8 @@ Change the color scheme:
 
 .. code-block:: python
 
-    fig = visualize.surface_plot(func, colorscale='Viridis')
-    fig = visualize.heatmap(func, colorscale='RdBu')
+    fig = _visualize.surface_plot(func, colorscale='Viridis')
+    fig = _visualize.heatmap(func, colorscale='RdBu')
 
 Available colorscales include: 'Viridis', 'Plasma', 'Inferno', 'Magma',
 'Cividis', 'RdBu', 'Blues', 'Greens', etc.
@@ -108,7 +108,7 @@ For N-dimensional functions, visualization shows a 2D slice:
     func = SphereFunction(n_dim=5)
 
     # Visualize x0 vs x1 (other dimensions fixed at 0)
-    fig = visualize.surface_plot(
+    fig = _visualize.surface_plot(
         func,
         dims=('x0', 'x1'),
         fixed_values={'x2': 0, 'x3': 0, 'x4': 0}
@@ -126,7 +126,7 @@ Visualize multiple functions side by side:
         AckleyFunction,
         RastriginFunction
     )
-    from surfaces import visualize
+    from surfaces import _visualize
     import plotly.graph_objects as go
     from plotly.subplots import make_subplots
 
@@ -143,7 +143,7 @@ Visualize multiple functions side by side:
     )
 
     for i, (name, func) in enumerate(functions, 1):
-        surface = visualize.get_surface_data(func)
+        surface = _visualize.get_surface_data(func)
         fig.add_trace(surface, row=1, col=i)
 
     fig.update_layout(height=400, width=1200)

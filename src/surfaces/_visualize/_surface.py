@@ -60,7 +60,7 @@ def plot_surface(
 
     Examples:
         >>> from surfaces.test_functions import AckleyFunction
-        >>> from surfaces.visualize import plot_surface
+        >>> from surfaces._visualize import plot_surface
         >>> func = AckleyFunction()
         >>> fig = plot_surface(func, resolution=100)
         >>> fig.show()

@@ -73,7 +73,7 @@ class MissingDataError(VisualizationError):
             "",
             "To collect optimization history, use TrackedFunction:",
             "",
-            "    from surfaces.visualize import TrackedFunction",
+            "    from surfaces._visualize import TrackedFunction",
             "    tracked = TrackedFunction(func)",
             "    # ... run optimization with tracked ...",
             f"    plot_{self.plot_name}(func, history=tracked.history)",

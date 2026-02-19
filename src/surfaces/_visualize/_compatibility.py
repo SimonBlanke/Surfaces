@@ -158,7 +158,7 @@ def available_plots(func: "BaseTestFunction", has_history: bool = False) -> List
 
     Examples:
         >>> from surfaces.test_functions import SphereFunction
-        >>> from surfaces.visualize import available_plots
+        >>> from surfaces._visualize import available_plots
         >>> func = SphereFunction(n_dim=2)
         >>> plots = available_plots(func)
         >>> [p['name'] for p in plots]
@@ -194,7 +194,7 @@ def check_compatibility(
 
     Examples:
         >>> from surfaces.test_functions import SphereFunction
-        >>> from surfaces.visualize import check_compatibility
+        >>> from surfaces._visualize import check_compatibility
         >>> func = SphereFunction(n_dim=5)
         >>> compatible, reason = check_compatibility(func, 'surface')
         >>> compatible
@@ -218,7 +218,7 @@ def plot_info(plot_name: str) -> Optional[Dict[str, Any]]:
         Dict with plot information, or None if plot not found.
 
     Examples:
-        >>> from surfaces.visualize import plot_info
+        >>> from surfaces._visualize import plot_info
         >>> info = plot_info('surface')
         >>> info['description']
         '3D surface plot showing the objective landscape'

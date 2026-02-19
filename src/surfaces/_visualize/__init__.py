@@ -12,7 +12,7 @@ that helps users discover which plots work with their specific functions.
 Quick Start
 -----------
 >>> from surfaces.test_functions import SphereFunction, AckleyFunction
->>> from surfaces.visualize import auto_plot, available_plots
+>>> from surfaces._visualize import auto_plot, available_plots
 
 # See what plots work with your function
 >>> func = SphereFunction(n_dim=5)
