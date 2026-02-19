@@ -9,8 +9,8 @@ from .test_functions import (
     LightGBMClassifierFunction,
     RandomForestClassifierFunction,
     SVMClassifierFunction,
+    XGBoostClassifierFunction,
 )
-from .test_functions.xgboost import XGBoostClassifierFunction
 
 __all__ = [
     "DecisionTreeClassifierFunction",
