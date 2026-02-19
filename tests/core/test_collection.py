@@ -141,7 +141,7 @@ class TestCollectionFilter:
         from surfaces import collection
 
         result = collection.filter(category="algebraic")
-        assert len(result) == 28  # standard algebraic functions only
+        assert len(result) == 29  # standard algebraic functions only
         assert all("algebraic" in f.__module__ for f in result)
 
     def test_filter_by_category_bbob(self):

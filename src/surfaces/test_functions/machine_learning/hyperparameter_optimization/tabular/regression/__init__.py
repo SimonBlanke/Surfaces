@@ -6,6 +6,7 @@ from .test_functions import (
     DecisionTreeRegressorFunction,
     GradientBoostingRegressorFunction,
     KNeighborsRegressorFunction,
+    LightGBMRegressorFunction,
     RandomForestRegressorFunction,
     SVMRegressorFunction,
 )
@@ -16,4 +17,5 @@ __all__ = [
     "KNeighborsRegressorFunction",
     "RandomForestRegressorFunction",
     "SVMRegressorFunction",
+    "LightGBMRegressorFunction",
 ]
