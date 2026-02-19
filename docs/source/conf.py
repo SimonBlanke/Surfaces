@@ -260,10 +260,6 @@ html_theme = "pydata_sphinx_theme"
 # documentation.
 
 html_theme_options = {
-    "announcement": (
-        "This documentation is under active development. "
-        "Some sections may be incomplete or subject to change."
-    ),
     "logo": {
         "text": "Surfaces",
     },
@@ -422,7 +418,11 @@ if str(_generators_path.parent) not in sys.path:
     sys.path.insert(0, str(_generators_path.parent))
 
 try:
-    from docs._generators import count_by_category, get_all_test_functions, get_total_count
+    from docs._generators import (
+        count_by_category,
+        get_all_test_functions,
+        get_total_count,
+    )
 
     _categories = get_all_test_functions()
     _counts = count_by_category(_categories)
