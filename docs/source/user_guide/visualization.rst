@@ -4,213 +4,190 @@
 Visualization
 =============
 
-Surfaces provides built-in visualization tools for exploring test function
-landscapes using Plotly.
-
-Overview
-========
-
-Visualization helps you understand:
-
-- Function topology (valleys, peaks, plateaus)
-- Global and local optima locations
-- Search space characteristics
-- Algorithm behavior
-
-The visualization module provides surface plots and heatmaps for
-2D functions.
-
-Basic Surface Plot
-==================
+Surfaces provides built-in visualization through the ``.plot`` accessor
+on every test function. All plots use Plotly and return interactive
+``plotly.graph_objects.Figure`` objects.
 
 .. code-block:: python
 
     from surfaces.test_functions.algebraic import AckleyFunction
-    from surfaces import _visualize
 
-    # Create a 2D function
     func = AckleyFunction()
-
-    # Create a surface plot
-    fig = _visualize.surface_plot(func)
+    fig = func.plot.surface()
     fig.show()
 
-This creates an interactive 3D surface plot using Plotly.
 
-Heatmap Plot
-============
+Plot Compatibility
+==================
 
-For a top-down view:
+Not every plot type works with every function. Availability depends
+primarily on the number of dimensions. The table below is
+auto-generated from the actual ``func.plot.available()`` output.
 
-.. code-block:: python
+.. include:: /_generated/diagrams/plot_compatibility.rst
 
-    from surfaces.test_functions.algebraic import RosenbrockFunction
-    from surfaces import _visualize
 
-    func = RosenbrockFunction(n_dim=2)
+Available Plot Types
+====================
 
-    # Create a heatmap
-    fig = _visualize.heatmap(func)
-    fig.show()
+Surface
+-------
 
-Customizing Plots
-=================
-
-Resolution
-----------
-
-Control the grid resolution:
+Interactive 3D surface showing the objective landscape.
+Requires exactly 2 plotted dimensions.
 
 .. code-block:: python
 
-    # Higher resolution (slower)
-    fig = _visualize.surface_plot(func, resolution=200)
+    func = AckleyFunction()
+    fig = func.plot.surface()
 
-    # Lower resolution (faster)
-    fig = _visualize.surface_plot(func, resolution=50)
+Contour
+-------
 
-Custom Bounds
--------------
-
-Zoom in on specific regions:
+2D contour plot with isolines of equal objective value.
+Requires exactly 2 plotted dimensions.
 
 .. code-block:: python
 
-    fig = _visualize.surface_plot(
-        func,
-        x_range=(-2, 2),
-        y_range=(-2, 2)
-    )
+    fig = func.plot.contour()
 
-Color Scales
-------------
+Heatmap
+-------
 
-Change the color scheme:
+Color-coded grid of objective values. Requires exactly 2 plotted
+dimensions.
 
 .. code-block:: python
 
-    fig = _visualize.surface_plot(func, colorscale='Viridis')
-    fig = _visualize.heatmap(func, colorscale='RdBu')
+    fig = func.plot.heatmap()
 
-Available colorscales include: 'Viridis', 'Plasma', 'Inferno', 'Magma',
-'Cividis', 'RdBu', 'Blues', 'Greens', etc.
+Multi-Slice
+-----------
 
-Visualizing N-D Functions
-=========================
-
-For N-dimensional functions, visualization shows a 2D slice:
+1D slices through each dimension while all others are fixed.
+Works with any number of dimensions.
 
 .. code-block:: python
 
     from surfaces.test_functions.algebraic import SphereFunction
 
-    # Create a 5D function
     func = SphereFunction(n_dim=5)
+    fig = func.plot.multi_slice()
 
-    # Visualize x0 vs x1 (other dimensions fixed at 0)
-    fig = _visualize.surface_plot(
-        func,
-        dims=('x0', 'x1'),
-        fixed_values={'x2': 0, 'x3': 0, 'x4': 0}
-    )
-
-Comparing Functions
-===================
-
-Visualize multiple functions side by side:
-
-.. code-block:: python
-
-    from surfaces.test_functions.algebraic import (
-        SphereFunction,
-        AckleyFunction,
-        RastriginFunction
-    )
-    from surfaces import _visualize
-    import plotly.graph_objects as go
-    from plotly.subplots import make_subplots
-
-    functions = [
-        ('Sphere', SphereFunction(n_dim=2)),
-        ('Ackley', AckleyFunction()),
-        ('Rastrigin', RastriginFunction(n_dim=2))
-    ]
-
-    fig = make_subplots(
-        rows=1, cols=3,
-        subplot_titles=[name for name, _ in functions],
-        specs=[[{'type': 'surface'}] * 3]
-    )
-
-    for i, (name, func) in enumerate(functions, 1):
-        surface = _visualize.get_surface_data(func)
-        fig.add_trace(surface, row=1, col=i)
-
-    fig.update_layout(height=400, width=1200)
-    fig.show()
-
-Saving Plots
-============
-
-Save visualizations to files:
-
-.. code-block:: python
-
-    # Save as HTML (interactive)
-    fig.write_html("function_surface.html")
-
-    # Save as PNG (static)
-    fig.write_image("function_surface.png")
-
-    # Save as SVG (vector)
-    fig.write_image("function_surface.svg")
-
-Note: Saving to image formats requires the kaleido package:
-
-.. code-block:: bash
-
-    pip install kaleido
-
-Understanding Function Landscapes
-=================================
-
-Different functions have different characteristics visible in plots:
-
-Unimodal Functions
-------------------
-
-Single global minimum, smooth gradients:
-
-- Sphere: Simple bowl shape
-- Matyas: Elliptical bowl
-
-Multimodal Functions
+Fitness Distribution
 --------------------
 
-Multiple local minima:
+Histogram of objective values from random sampling across the
+search space. Works with any number of dimensions.
 
-- Ackley: Central funnel with flat outer region
-- Rastrigin: Regular grid of local minima
-- Himmelblau: Four symmetric minima
+.. code-block:: python
 
-Valley Functions
-----------------
+    fig = func.plot.fitness_distribution()
 
-Narrow valleys leading to optimum:
+Convergence
+-----------
 
-- Rosenbrock: Banana-shaped valley
-- Beale: Curved valley
+Best-so-far objective value vs. evaluation number. Requires
+evaluation history (either from ``func.search_data`` or passed
+explicitly).
 
-Tips for Interpretation
-=======================
+.. code-block:: python
 
-1. **Color intensity**: Darker colors typically indicate lower values
-   (better for minimization)
+    # After running evaluations:
+    fig = func.plot.convergence()
 
-2. **Surface smoothness**: Rough surfaces indicate multimodality
+    # Or with explicit history:
+    fig = func.plot.convergence(history=my_history)
 
-3. **Valley width**: Narrow valleys are harder for optimizers
+    # Or via chaining:
+    fig = func.plot.with_history(my_history).convergence()
 
-4. **Plateau regions**: Flat areas provide no gradient information
+LaTeX/PDF
+---------
 
-5. **Scale**: Pay attention to the z-axis scale when comparing functions
+Publication-quality output with pgfplots surface and formula.
+Only available for 2D algebraic functions that have a
+``latex_formula`` attribute.
+
+.. code-block:: python
+
+    pdf_path = func.plot.latex()
+    pdf_path = func.plot.latex(output_path="my_plot.pdf")
+
+
+Discovering Available Plots
+===========================
+
+Use ``func.plot.available()`` to check which plots work for a
+given function instance:
+
+.. code-block:: python
+
+    func = SphereFunction(n_dim=2)
+    func.plot.available()
+    # ['surface', 'contour', 'heatmap', 'multi_slice', 'fitness_distribution', 'latex']
+
+    func = SphereFunction(n_dim=5)
+    func.plot.available()
+    # ['multi_slice', 'fitness_distribution']
+
+
+N-D Functions: Selecting Dimensions
+====================================
+
+For functions with more than 2 dimensions, use the ``params`` dict
+to select which dimensions to plot and fix the rest:
+
+.. code-block:: python
+
+    func = SphereFunction(n_dim=5)
+
+    # Plot x0 vs x2, fix others at defaults
+    fig = func.plot.surface(params={"x0": ..., "x2": ...})
+
+    # Custom ranges and fixed values
+    fig = func.plot.surface(params={
+        "x0": (-2, 2),
+        "x2": (-1, 1),
+        "x1": 0.0,
+        "x3": 0.5,
+        "x4": -1.0,
+    })
+
+
+Customization
+=============
+
+Resolution
+----------
+
+Control the grid resolution (higher = more detail, slower):
+
+.. code-block:: python
+
+    fig = func.plot.surface(resolution=200)
+    fig = func.plot.contour(resolution=30)
+
+Plotly kwargs
+-------------
+
+Additional keyword arguments are forwarded to the underlying Plotly
+calls:
+
+.. code-block:: python
+
+    fig = func.plot.surface(colorscale="Plasma")
+    fig = func.plot.heatmap(colorscale="RdBu")
+
+
+Saving Plots
+=============
+
+.. code-block:: python
+
+    # Interactive HTML
+    fig.write_html("function_surface.html")
+
+    # Static image (requires kaleido)
+    fig.write_image("function_surface.png")
+    fig.write_image("function_surface.svg")

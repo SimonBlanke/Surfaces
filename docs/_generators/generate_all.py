@@ -111,6 +111,23 @@ def run_surrogate_generator():
         # Don't raise - surrogates are optional
 
 
+def run_compatibility_generator():
+    """Run the plot compatibility matrix generator."""
+    print("\n" + "=" * 60)
+    print("Generating Plot Compatibility Matrix")
+    print("=" * 60)
+
+    try:
+        from docs._generators import generate_compatibility
+
+        generate_compatibility.main()
+    except ImportError as e:
+        print(f"Warning: Could not import compatibility generator: {e}")
+    except Exception as e:
+        print(f"Error generating compatibility matrix: {e}")
+        raise
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -140,6 +157,11 @@ def main():
         help="Generate surrogate model coverage docs",
     )
     parser.add_argument(
+        "--compatibility",
+        action="store_true",
+        help="Generate plot compatibility matrix",
+    )
+    parser.add_argument(
         "--all",
         action="store_true",
         help="Generate all assets (default if no specific flags)",
@@ -158,7 +180,9 @@ def main():
     args = parser.parse_args()
 
     # Default to all if nothing specified
-    if not any([args.catalogs, args.plots, args.diagrams, args.surrogates, args.all]):
+    if not any(
+        [args.catalogs, args.plots, args.diagrams, args.surrogates, args.compatibility, args.all]
+    ):
         args.all = True
 
     if args.dry_run:
@@ -171,6 +195,8 @@ def main():
             print("  - Architecture diagrams (Mermaid/RST)")
         if args.all or args.surrogates:
             print("  - Surrogate model coverage (RST tables)")
+        if args.all or args.compatibility:
+            print("  - Plot compatibility matrix (RST table)")
         return 0
 
     if args.clean:
@@ -191,6 +217,9 @@ def main():
 
     if args.all or args.surrogates:
         run_surrogate_generator()
+
+    if args.all or args.compatibility:
+        run_compatibility_generator()
 
     print("\n" + "=" * 60)
     print("Generation Complete")

@@ -148,3 +148,7 @@ class HölderTableFunction(AlgebraicFunction):
         return super()._create_n_dim_search_space(
             min=min, max=max, size=size, value_types=value_types
         )
+
+
+# ASCII alias for Sphinx autosummary compatibility
+HoelderTableFunction = HölderTableFunction
