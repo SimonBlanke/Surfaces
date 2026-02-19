@@ -55,7 +55,10 @@ class TestSpecConsistency:
         """Spec doesn't change between calls."""
         func = instantiate_function(func_class)
         spec1 = func.spec
-        _ = func({"x0": 0.5} if len(func.search_space) == 1 else {"x0": 0.5, "x1": 0.5})
+
+        params = {key: 0.5 for key in func.search_space.keys()}
+        _ = func(params)
+
         spec2 = func.spec
         assert spec1 == spec2
 
