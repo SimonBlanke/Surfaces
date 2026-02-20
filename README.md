@@ -3,7 +3,7 @@
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="./logo_concepts/concept_6_hyperbolic_generated.svg">
       <source media="(prefers-color-scheme: light)" srcset="./logo_concepts/concept_6_hyperbolic_generated.svg">
-      <img src="./docs/source/_static/surfaces_logo.svg" width="140" alt="Surfaces Logo">
+      <img src="./docs/source/_static/surfaces_logo.svg" width="180" alt="Surfaces Logo">
     </picture>
   </a>
 </p>
@@ -13,7 +13,7 @@
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="./logo_concepts/logo.svg">
       <source media="(prefers-color-scheme: light)" srcset="./logo_concepts/logo.svg">
-      <img src="./docs/source/_static/surfaces_logo.svg" width="140" alt="Surfaces Logo">
+      <img src="./docs/source/_static/surfaces_logo.svg" width="180" alt="Surfaces Logo">
     </picture>
   </a>
 </p>
