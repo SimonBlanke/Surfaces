@@ -3,8 +3,6 @@
 from typing import Any, Dict, List, Optional
 
 import numpy as np
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import cross_val_score
 
 from surfaces.modifiers import BaseModifier
 
@@ -77,6 +75,9 @@ class RandomForestRegressorFunction(BaseRegression):
         }
 
     def _create_objective_function(self) -> None:
+        from sklearn.ensemble import RandomForestRegressor
+        from sklearn.model_selection import cross_val_score
+
         X, y = self._dataset_loader()
         cv = self.cv
 

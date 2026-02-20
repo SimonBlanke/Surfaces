@@ -2,12 +2,9 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-try:
-    from sklearn.neighbors import KNeighborsClassifier  # noqa: F401
+import importlib.util
 
-    _HAS_SKLEARN = True
-except ImportError:
-    _HAS_SKLEARN = False
+_HAS_SKLEARN = importlib.util.find_spec("sklearn") is not None
 
 
 def _check_sklearn():

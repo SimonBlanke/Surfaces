@@ -2,11 +2,6 @@
 
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
-from sklearn.feature_selection import SelectKBest, mutual_info_classif
-from sklearn.model_selection import cross_val_score
-from sklearn.tree import DecisionTreeClassifier
-
 from surfaces.modifiers import BaseModifier
 from surfaces.test_functions.machine_learning.hyperparameter_optimization.tabular.classification.datasets import (
     DATASETS,
@@ -101,6 +96,11 @@ class MutualInfoFeatureSelectionFunction(BaseTabularFeatureEngineering):
 
     def _create_objective_function(self) -> None:
         """Create objective function for feature selection."""
+        from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
+        from sklearn.feature_selection import SelectKBest, mutual_info_classif
+        from sklearn.model_selection import cross_val_score
+        from sklearn.tree import DecisionTreeClassifier
+
         X, y = self._dataset_loader()
         cv = self.cv
 

@@ -2,16 +2,6 @@
 
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from sklearn.ensemble import (
-    GradientBoostingClassifier,
-    RandomForestClassifier,
-    StackingClassifier,
-)
-from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import cross_val_score
-from sklearn.svm import SVC
-from sklearn.tree import DecisionTreeClassifier
-
 from surfaces.modifiers import BaseModifier
 from surfaces.test_functions.machine_learning.hyperparameter_optimization.tabular.classification.datasets import (
     DATASETS,
@@ -107,6 +97,16 @@ class StackingEnsembleFunction(BaseTabularEnsemble):
 
     def _create_objective_function(self) -> None:
         """Create objective function for stacking ensemble."""
+        from sklearn.ensemble import (
+            GradientBoostingClassifier,
+            RandomForestClassifier,
+            StackingClassifier,
+        )
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.model_selection import cross_val_score
+        from sklearn.svm import SVC
+        from sklearn.tree import DecisionTreeClassifier
+
         X, y = self._dataset_loader()
         cv = self.cv
 

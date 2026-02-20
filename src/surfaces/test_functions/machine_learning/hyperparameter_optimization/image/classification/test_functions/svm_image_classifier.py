@@ -2,11 +2,6 @@
 
 from typing import Any, Dict, List, Optional
 
-from sklearn.decomposition import PCA
-from sklearn.model_selection import cross_val_score
-from sklearn.preprocessing import StandardScaler
-from sklearn.svm import SVC
-
 from surfaces.modifiers import BaseModifier
 
 from .._base_image_classification import BaseImageClassification
@@ -103,6 +98,11 @@ class SVMImageClassifierFunction(BaseImageClassification):
 
     def _create_objective_function(self) -> None:
         """Create objective function with fixed dataset and cv."""
+        from sklearn.decomposition import PCA
+        from sklearn.model_selection import cross_val_score
+        from sklearn.preprocessing import StandardScaler
+        from sklearn.svm import SVC
+
         X_raw, y = self._dataset_loader()
 
         # Apply PCA for dimensionality reduction

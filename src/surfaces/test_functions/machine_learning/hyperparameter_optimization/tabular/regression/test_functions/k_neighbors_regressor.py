@@ -3,8 +3,6 @@
 from typing import Any, Dict, List, Optional
 
 import numpy as np
-from sklearn.model_selection import cross_val_score
-from sklearn.neighbors import KNeighborsRegressor
 
 from surfaces.modifiers import BaseModifier
 
@@ -119,6 +117,9 @@ class KNeighborsRegressorFunction(BaseRegression):
 
     def _create_objective_function(self) -> None:
         """Create objective function with fixed dataset and cv."""
+        from sklearn.model_selection import cross_val_score
+        from sklearn.neighbors import KNeighborsRegressor
+
         # Load dataset once
         X, y = self._dataset_loader()
         cv = self.cv

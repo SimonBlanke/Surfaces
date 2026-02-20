@@ -2,10 +2,6 @@
 
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from sklearn.linear_model import Ridge
-from sklearn.model_selection import cross_val_score
-from sklearn.preprocessing import PolynomialFeatures
-
 from surfaces.modifiers import BaseModifier
 from surfaces.test_functions.machine_learning.hyperparameter_optimization.tabular.regression.datasets import (
     DATASETS,
@@ -96,6 +92,10 @@ class PolynomialFeatureTransformationFunction(BaseTabularFeatureEngineering):
 
     def _create_objective_function(self) -> None:
         """Create objective function for polynomial feature transformation."""
+        from sklearn.linear_model import Ridge
+        from sklearn.model_selection import cross_val_score
+        from sklearn.preprocessing import PolynomialFeatures
+
         X, y = self._dataset_loader()
         cv = self.cv
 

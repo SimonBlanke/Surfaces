@@ -4,17 +4,8 @@
 
 """Regression datasets for ML test functions."""
 
-from sklearn.datasets import (
-    fetch_california_housing,
-    load_diabetes,
-    make_friedman1,
-    make_friedman2,
-    make_regression,
-)
-
-# Pre-load small datasets for fast access
-diabetes_dataset = load_diabetes()
-_california_dataset = None  # Lazy load (larger download)
+_diabetes_dataset = None
+_california_dataset = None
 
 # Generate synthetic datasets (deterministic)
 _friedman1_data = None
@@ -24,13 +15,20 @@ _linear_data = None
 
 def diabetes_data():
     """Load diabetes dataset (442 samples, 10 features)."""
-    return diabetes_dataset.data, diabetes_dataset.target
+    global _diabetes_dataset
+    if _diabetes_dataset is None:
+        from sklearn.datasets import load_diabetes
+
+        _diabetes_dataset = load_diabetes()
+    return _diabetes_dataset.data, _diabetes_dataset.target
 
 
 def california_data():
     """Load California housing dataset (20640 samples, 8 features)."""
     global _california_dataset
     if _california_dataset is None:
+        from sklearn.datasets import fetch_california_housing
+
         _california_dataset = fetch_california_housing()
     return _california_dataset.data, _california_dataset.target
 
@@ -42,6 +40,8 @@ def friedman1_data():
     """
     global _friedman1_data
     if _friedman1_data is None:
+        from sklearn.datasets import make_friedman1
+
         _friedman1_data = make_friedman1(n_samples=1000, n_features=10, random_state=42)
     return _friedman1_data
 
@@ -53,6 +53,8 @@ def friedman2_data():
     """
     global _friedman2_data
     if _friedman2_data is None:
+        from sklearn.datasets import make_friedman2
+
         _friedman2_data = make_friedman2(n_samples=1000, random_state=42)
     return _friedman2_data
 
@@ -64,6 +66,8 @@ def linear_data():
     """
     global _linear_data
     if _linear_data is None:
+        from sklearn.datasets import make_regression
+
         _linear_data = make_regression(
             n_samples=1000, n_features=20, n_informative=10, noise=10.0, random_state=42
         )

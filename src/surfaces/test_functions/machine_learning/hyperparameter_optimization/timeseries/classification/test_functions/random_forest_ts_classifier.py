@@ -3,8 +3,6 @@
 from typing import Any, Dict, List, Optional
 
 import numpy as np
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import cross_val_score
 
 from surfaces.modifiers import BaseModifier
 
@@ -131,6 +129,9 @@ class RandomForestTSClassifierFunction(BaseTSClassification):
 
     def _create_objective_function(self) -> None:
         """Create objective function with fixed dataset and cv."""
+        from sklearn.ensemble import RandomForestClassifier
+        from sklearn.model_selection import cross_val_score
+
         X_raw, y = self._dataset_loader()
         X = extract_ts_features(X_raw)
         cv = self.cv

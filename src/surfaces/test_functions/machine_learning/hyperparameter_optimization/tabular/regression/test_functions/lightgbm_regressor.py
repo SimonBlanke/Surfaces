@@ -1,7 +1,6 @@
 from typing import Any, Dict, List, Optional
 
 import numpy as np
-from sklearn.model_selection import cross_val_score
 
 from surfaces._dependencies import check_dependency
 from surfaces.modifiers import BaseModifier
@@ -108,6 +107,8 @@ class LightGBMRegressorFunction(BaseRegression):
         """
         Creates the objective function closure with fixed data.
         """
+        from sklearn.model_selection import cross_val_score
+
         check_dependency("lightgbm", "ml")
         from lightgbm import LGBMRegressor
 

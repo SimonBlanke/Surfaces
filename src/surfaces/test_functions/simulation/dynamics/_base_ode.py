@@ -8,7 +8,6 @@ from abc import abstractmethod
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
-from scipy.integrate import solve_ivp
 
 from .._base_simulation import SimulationFunction
 
@@ -135,6 +134,8 @@ class ODESimulationFunction(SimulationFunction):
 
     def _run_simulation(self, params: Dict[str, Any]) -> Any:
         """Integrate the ODE system."""
+        from scipy.integrate import solve_ivp
+
         y0 = self._get_initial_conditions()
 
         # Create wrapper that includes params

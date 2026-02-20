@@ -2,11 +2,6 @@
 
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.model_selection import cross_val_score
-from sklearn.preprocessing import MinMaxScaler, RobustScaler, StandardScaler
-from sklearn.svm import SVC
-
 from surfaces.modifiers import BaseModifier
 from surfaces.test_functions.machine_learning.hyperparameter_optimization.tabular.classification.datasets import (
     DATASETS,
@@ -95,6 +90,11 @@ class FeatureScalingPipelineFunction(BaseTabularFeatureEngineering):
 
     def _create_objective_function(self) -> None:
         """Create objective function for feature scaling pipeline."""
+        from sklearn.ensemble import GradientBoostingClassifier
+        from sklearn.model_selection import cross_val_score
+        from sklearn.preprocessing import MinMaxScaler, RobustScaler, StandardScaler
+        from sklearn.svm import SVC
+
         X, y = self._dataset_loader()
         cv = self.cv
 

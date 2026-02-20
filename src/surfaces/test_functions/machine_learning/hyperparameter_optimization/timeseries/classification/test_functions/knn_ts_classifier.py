@@ -3,9 +3,6 @@
 from typing import Any, Dict, List, Optional
 
 import numpy as np
-from sklearn.model_selection import cross_val_score
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.preprocessing import StandardScaler
 
 from surfaces.modifiers import BaseModifier
 
@@ -97,6 +94,10 @@ class KNNTSClassifierFunction(BaseTSClassification):
 
     def _create_objective_function(self) -> None:
         """Create objective function with fixed dataset and cv."""
+        from sklearn.model_selection import cross_val_score
+        from sklearn.neighbors import KNeighborsClassifier
+        from sklearn.preprocessing import StandardScaler
+
         X_raw, y = self._dataset_loader()
         # Normalize time-series for better distance computation
         scaler = StandardScaler()

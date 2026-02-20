@@ -2,9 +2,6 @@
 
 from typing import Any, Dict, List, Optional
 
-from sklearn.model_selection import cross_val_score
-from sklearn.svm import SVC
-
 from surfaces.modifiers import BaseModifier
 
 from .._base_classification import BaseClassification
@@ -76,6 +73,9 @@ class SVMClassifierFunction(BaseClassification):
         }
 
     def _create_objective_function(self) -> None:
+        from sklearn.model_selection import cross_val_score
+        from sklearn.svm import SVC
+
         X, y = self._dataset_loader()
         cv = self.cv
 

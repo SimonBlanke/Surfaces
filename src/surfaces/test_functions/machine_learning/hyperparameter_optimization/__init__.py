@@ -10,12 +10,9 @@ across different data types (tabular, image, time-series) and tasks (classificat
 regression, forecasting).
 """
 
-try:
-    from sklearn.neighbors import KNeighborsClassifier  # noqa: F401
+import importlib.util
 
-    _HAS_SKLEARN = True
-except ImportError:
-    _HAS_SKLEARN = False
+_HAS_SKLEARN = importlib.util.find_spec("sklearn") is not None
 
 
 if _HAS_SKLEARN:

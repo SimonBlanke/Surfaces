@@ -2,9 +2,6 @@
 
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
-from sklearn.tree import DecisionTreeRegressor
-
 from surfaces.modifiers import BaseModifier
 from surfaces.test_functions.machine_learning.hyperparameter_optimization.tabular.regression.datasets import (
     DATASETS,
@@ -95,12 +92,14 @@ class WeightedAveragingFunction(BaseTabularEnsemble):
 
     def _create_objective_function(self) -> None:
         """Create objective function for weighted averaging ensemble."""
+        from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
+        from sklearn.model_selection import cross_val_predict
+        from sklearn.tree import DecisionTreeRegressor
+
         X, y = self._dataset_loader()
         cv = self.cv
 
         # Pre-train base models and get cross-validated predictions
-        from sklearn.model_selection import cross_val_predict
-
         dt_model = DecisionTreeRegressor(random_state=42)
         rf_model = RandomForestRegressor(n_estimators=50, random_state=42)
         gb_model = GradientBoostingRegressor(n_estimators=50, random_state=42)
