@@ -62,7 +62,7 @@
    through a minimal, plug-and-play API.
    </p>
 
-   <div style="margin-bottom: 8rem;"></div>
+   <div style="margin-bottom: 7rem;"></div>
 
 .. _features:
 
