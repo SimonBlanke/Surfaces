@@ -1,6 +1,9 @@
 /* Custom CSS for Surfaces documentation */
 /* Pastel Sage Green theme */
 
+/* Cormorant Garamond for hero title */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300&display=swap');
+
 /* ============================================
    PyData Theme Color Overrides (muted sage green)
    ============================================ */
@@ -37,8 +40,8 @@ html[data-theme="dark"] {
     --surfaces-accent: #8FB89C;
     --surfaces-dark: #4A7558;
     --surfaces-light: #f8faf9;
-    --surfaces-gradient: linear-gradient(135deg, #4A7558 0%, #5A8F6A 100%);
-    --surfaces-gradient-dark: linear-gradient(135deg, #3A5F46 0%, #4A7558 100%);
+    --surfaces-gradient: linear-gradient(135deg, #42238a 0%, #2b7cc0 100%);
+    --surfaces-gradient-dark: linear-gradient(135deg, #341c6e 0%, #1f5f96 100%);
     --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --card-shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     /* Neutral separator color */
@@ -173,7 +176,7 @@ html[data-theme="dark"] .navbar-brand .logo__title {
 }
 
 .hero-title {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Cormorant Garamond', Georgia, serif;
     font-size: 3.5rem;
     font-weight: 300;
     color: #ffffff;
