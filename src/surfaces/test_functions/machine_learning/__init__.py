@@ -7,16 +7,17 @@ import importlib.util
 _HAS_SKLEARN = importlib.util.find_spec("sklearn") is not None
 
 
-def _check_sklearn():
-    """Check if scikit-learn is available."""
-    if not _HAS_SKLEARN:
-        raise ImportError(
-            "Machine learning functions require scikit-learn. "
-            "Install with: pip install surfaces[ml]"
-        )
-
-
 if _HAS_SKLEARN:
+    from .ensemble_optimization import (
+        StackingEnsembleFunction,
+        VotingEnsembleFunction,
+        WeightedAveragingFunction,
+    )
+    from .feature_engineering import (
+        FeatureScalingPipelineFunction,
+        MutualInfoFeatureSelectionFunction,
+        PolynomialFeatureTransformationFunction,
+    )
     from .hyperparameter_optimization import (
         # Tabular - Classification
         DecisionTreeClassifierFunction,
@@ -77,6 +78,14 @@ if _HAS_SKLEARN:
         "SimpleCNNClassifierFunction",
         "DeepCNNClassifierFunction",
         "XGBoostImageClassifierFunction",
+        # Ensemble Optimization
+        "StackingEnsembleFunction",
+        "VotingEnsembleFunction",
+        "WeightedAveragingFunction",
+        # Feature Engineering
+        "FeatureScalingPipelineFunction",
+        "MutualInfoFeatureSelectionFunction",
+        "PolynomialFeatureTransformationFunction",
     ]
 
     machine_learning_functions = [
@@ -108,6 +117,14 @@ if _HAS_SKLEARN:
         SimpleCNNClassifierFunction,
         DeepCNNClassifierFunction,
         XGBoostImageClassifierFunction,
+        # Ensemble Optimization
+        StackingEnsembleFunction,
+        VotingEnsembleFunction,
+        WeightedAveragingFunction,
+        # Feature Engineering
+        FeatureScalingPipelineFunction,
+        MutualInfoFeatureSelectionFunction,
+        PolynomialFeatureTransformationFunction,
     ]
 
 else:
