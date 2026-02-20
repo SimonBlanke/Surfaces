@@ -42,8 +42,8 @@ CONFIG = {
             "n_points": 36,
             "offset": 17,
             "stroke": "#2b8cdc",  # gfo
-            "width": 0.3,
-            "opacity": 0.70,
+            "width": 0.2,
+            "opacity": 0.80,
         },
         # Primary layers (structural, 24 boundary points)
         {
@@ -70,8 +70,8 @@ CONFIG = {
         {
             "n_points": 24,
             "offset": 11,
-            "stroke": "#33164f",  # hyperactive
-            "width": 0.3,
+            "stroke": "#542ba4",  # hyperactive
+            "width": 0.5,
             "opacity": 0.50,
         },
     ],
