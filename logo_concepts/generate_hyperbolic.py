@@ -169,8 +169,7 @@ def geodesic_arc_svg(p1, p2, center, disk_radius):
     sweep = 0 if cross > 0 else 1
 
     return (
-        f"M {x1:.2f},{y1:.2f} "
-        f"A {arc_radius:.2f},{arc_radius:.2f} 0 0,{sweep} {x2:.2f},{y2:.2f}"
+        f"M {x1:.2f},{y1:.2f} " f"A {arc_radius:.2f},{arc_radius:.2f} 0 0,{sweep} {x2:.2f},{y2:.2f}"
     )
 
 
@@ -261,9 +260,7 @@ def generate_svg(config):
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Generate a Poincare disk model SVG logo."
-    )
+    parser = argparse.ArgumentParser(description="Generate a Poincare disk model SVG logo.")
     parser.add_argument(
         "--output",
         default=None,

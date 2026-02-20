@@ -217,14 +217,23 @@ class TestAvailablePlots:
         names = [p["name"] for p in available_plots(func, has_history=True)]
         assert "convergence" in names
 
-    def test_latex_excluded_for_function_without_formula(self):
-        """Non-algebraic 2D function without latex_formula must not get latex."""
+    def test_latex_excluded_for_simulation_without_formula(self):
+        """Simulation 2D function without latex_formula must not get latex."""
         from surfaces.test_functions.simulation import DampedOscillatorFunction
 
         func = DampedOscillatorFunction()  # 2D but no latex_formula
         names = [p["name"] for p in available_plots(func)]
         assert "latex" not in names
         # But surface/contour should still work
+        assert "surface" in names
+
+    def test_latex_excluded_for_constrained_without_formula(self):
+        """Constrained 2D function without latex_formula must not get latex."""
+        from surfaces.test_functions.algebraic import ThreeBarTrussFunction
+
+        func = ThreeBarTrussFunction()  # 2D but no latex_formula
+        names = [p["name"] for p in available_plots(func)]
+        assert "latex" not in names
         assert "surface" in names
 
 
