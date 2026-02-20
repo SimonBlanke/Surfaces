@@ -2,7 +2,36 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-"""Compatibility system for matching plots with test functions."""
+"""Compatibility system for matching plots with test functions.
+
+This module decouples plot availability logic from the plot implementations
+themselves. Instead of each plot method doing its own validation, we declare
+requirements declaratively in PLOT_REGISTRY and check them uniformly.
+
+Architecture
+------------
+
+    PlotAccessor.available()
+        |
+        v
+    available_plots(func)          iterates PLOT_REGISTRY
+        |
+        v
+    PlotRequirements.check(func)   checks dimensions, history, attributes
+        |
+        v
+    (compatible, reason)           returned to caller
+
+The PlotAccessor (in _accessor.py) exposes func.plot.available() which
+delegates here. The same check is used by the documentation generator
+(generate_compatibility.py) to produce the compatibility matrix.
+
+Adding a new plot type
+----------------------
+1. Add a PlotRequirements entry to PLOT_REGISTRY
+2. Implement the plot function in its own module
+3. Add the corresponding method to PlotAccessor
+"""
 
 from __future__ import annotations
 
@@ -15,25 +44,86 @@ if TYPE_CHECKING:
 
 @dataclass
 class PlotRequirements:
-    """Requirements for a specific plot type."""
+    """Declarative specification of when a plot type is available.
+
+    Each plot type in PLOT_REGISTRY has one PlotRequirements instance that
+    describes the conditions under which it can be used. The ``check()``
+    method evaluates all conditions against a concrete function instance
+    and returns (True, None) or (False, "human-readable reason").
+
+    Parameters
+    ----------
+    name : str
+        Identifier matching the PlotAccessor method name (e.g. "surface").
+    description : str
+        One-line description shown in func.plot.available() output and docs.
+    dimensions : int or (min, max)
+        Dimensionality constraint on the test function.
+
+        - ``int``: function must have exactly this many dimensions.
+          Example: ``dimensions=2`` for surface/contour/heatmap.
+        - ``(min, max)`` tuple: function dimensions must fall in range.
+          Use ``None`` for unbounded. Example: ``(1, None)`` means 1D+.
+    requires_history : bool
+        If True, the plot needs evaluation history (func.search_data or
+        explicitly passed data). ``check()`` will reject when no history
+        is available.
+    requires_attribute : str or None
+        If set, the function instance must have this attribute.
+        Example: ``requires_attribute="latex_formula"`` ensures the plot
+        is only available for functions that define a LaTeX formula.
+
+    Examples
+    --------
+    Exact dimension match (2D only):
+
+        >>> req = PlotRequirements("surface", "3D surface", dimensions=2)
+        >>> req.check(SphereFunction(n_dim=2))
+        (True, None)
+        >>> req.check(SphereFunction(n_dim=5))
+        (False, 'requires exactly 2D function, got 5D')
+
+    Dimension range (1D and above):
+
+        >>> req = PlotRequirements("multi_slice", "Slices", dimensions=(1, None))
+        >>> req.check(ForresterFunction())  # 1D
+        (True, None)
+
+    Attribute gate:
+
+        >>> req = PlotRequirements("latex", "PDF", dimensions=2,
+        ...                        requires_attribute="latex_formula")
+        >>> req.check(AckleyFunction())       # has latex_formula
+        (True, None)
+        >>> req.check(BBOBSphere(n_dim=2))    # no latex_formula
+        (False, "requires 'latex_formula' attribute")
+    """
 
     name: str
     description: str
     dimensions: Union[int, Tuple[Optional[int], Optional[int]]]
     requires_history: bool = False
-    function_types: Tuple[str, ...] = ("algebraic", "ml", "cec", "bbob", "engineering")
+    requires_attribute: Optional[str] = None
 
     def check(
         self, func: "BaseTestFunction", has_history: bool = False
     ) -> Tuple[bool, Optional[str]]:
-        """Check if a function is compatible with this plot.
+        """Evaluate all requirements against a function instance.
 
-        Args:
-            func: The test function to check.
-            has_history: Whether optimization history data is available.
+        Checks are evaluated in order: dimensions, history, attribute.
+        Returns on the first failing check.
 
-        Returns:
-            Tuple of (is_compatible, reason_if_not).
+        Parameters
+        ----------
+        func : BaseTestFunction
+            The test function instance to check.
+        has_history : bool
+            Whether evaluation history data is available.
+
+        Returns
+        -------
+        (bool, str or None)
+            ``(True, None)`` if compatible, ``(False, reason)`` if not.
         """
         # Check dimensions
         func_dims = _get_function_dimensions(func)
@@ -61,10 +151,20 @@ class PlotRequirements:
         if self.requires_history and not has_history:
             return (False, "requires optimization history data")
 
+        # Check required attribute
+        if self.requires_attribute and not hasattr(func, self.requires_attribute):
+            return (
+                False,
+                f"requires '{self.requires_attribute}' attribute",
+            )
+
         return (True, None)
 
 
-# Registry of all available plots and their requirements
+# Central registry mapping plot name -> requirements.
+#
+# Keys must match the method names on PlotAccessor (in _accessor.py).
+# To add a new plot type, add an entry here and a method on PlotAccessor.
 PLOT_REGISTRY: Dict[str, PlotRequirements] = {
     "surface": PlotRequirements(
         name="surface",
@@ -101,7 +201,7 @@ PLOT_REGISTRY: Dict[str, PlotRequirements] = {
         name="latex",
         description="Publication-quality LaTeX/PDF with pgfplots 3D surface and formula",
         dimensions=2,
-        function_types=("algebraic",),  # Only algebraic functions have latex_formula
+        requires_attribute="latex_formula",
     ),
 }
 
@@ -126,24 +226,6 @@ def _get_function_dimensions(func: "BaseTestFunction") -> int:
             return spec["n_dim"]
 
     raise ValueError(f"Cannot determine dimensions for function: {type(func).__name__}")
-
-
-def _get_function_type(func: "BaseTestFunction") -> str:
-    """Determine the type category of a test function."""
-    module_name = type(func).__module__
-
-    if "algebraic" in module_name:
-        return "algebraic"
-    elif "machine_learning" in module_name or "ml" in module_name:
-        return "ml"
-    elif "cec" in module_name:
-        return "cec"
-    elif "bbob" in module_name:
-        return "bbob"
-    elif "engineering" in module_name:
-        return "engineering"
-    else:
-        return "unknown"
 
 
 def available_plots(func: "BaseTestFunction", has_history: bool = False) -> List[Dict[str, Any]]:
