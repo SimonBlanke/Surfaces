@@ -4,23 +4,11 @@ from typing import Any, Dict, List, Optional
 
 import numpy as np
 
+from surfaces._dependencies import check_dependency
 from surfaces.modifiers import BaseModifier
 
 from .._base_image_classification import BaseImageClassification
 from ..datasets import DATASETS
-
-
-def _check_tensorflow():
-    """Check if tensorflow is available."""
-    try:
-        import tensorflow  # noqa: F401
-
-        return True
-    except ImportError:
-        raise ImportError(
-            "CNN image classifiers require tensorflow. "
-            "Install with: pip install surfaces[images]"
-        )
 
 
 class DeepCNNClassifierFunction(BaseImageClassification):
@@ -78,7 +66,7 @@ class DeepCNNClassifierFunction(BaseImageClassification):
         catch_errors=None,
         use_surrogate: bool = False,
     ):
-        _check_tensorflow()
+        check_dependency("tensorflow", "images")
 
         if dataset not in DATASETS:
             raise ValueError(

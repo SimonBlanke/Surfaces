@@ -3,9 +3,9 @@
 from typing import Any, Dict, List, Optional
 
 import numpy as np
-from lightgbm import LGBMClassifier
 from sklearn.model_selection import cross_val_score
 
+from surfaces._dependencies import check_dependency
 from surfaces.modifiers import BaseModifier
 
 from .._base_classification import BaseClassification
@@ -112,6 +112,9 @@ class LightGBMClassifierFunction(BaseClassification):
         """
         Creates the objective function closure with fixed data
         """
+        check_dependency("lightgbm", "ml")
+        from lightgbm import LGBMClassifier
+
         X, y = self._dataset_loader()
         cv = self.cv
 

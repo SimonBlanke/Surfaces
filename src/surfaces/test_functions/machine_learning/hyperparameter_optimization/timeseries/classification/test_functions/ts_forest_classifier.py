@@ -2,23 +2,11 @@
 
 from typing import Any, Dict, List, Optional
 
+from surfaces._dependencies import check_dependency
 from surfaces.modifiers import BaseModifier
 
 from .._base_ts_classification import BaseTSClassification
 from ..datasets import DATASETS
-
-
-def _check_sktime():
-    """Check if sktime is available."""
-    try:
-        import sktime  # noqa: F401
-
-        return True
-    except ImportError:
-        raise ImportError(
-            "Time Series Forest classifier requires sktime. "
-            "Install with: pip install surfaces[timeseries]"
-        )
 
 
 class TSForestClassifierFunction(BaseTSClassification):
@@ -73,7 +61,7 @@ class TSForestClassifierFunction(BaseTSClassification):
         catch_errors=None,
         use_surrogate: bool = False,
     ):
-        _check_sktime()
+        check_dependency("sktime", "timeseries")
 
         if dataset not in DATASETS:
             raise ValueError(

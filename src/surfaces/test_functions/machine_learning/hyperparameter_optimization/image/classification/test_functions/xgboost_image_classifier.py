@@ -4,23 +4,11 @@ from typing import Any, Dict, List, Optional
 
 import numpy as np
 
+from surfaces._dependencies import check_dependency
 from surfaces.modifiers import BaseModifier
 
 from .._base_image_classification import BaseImageClassification
 from ..datasets import DATASETS
-
-
-def _check_xgboost():
-    """Check if xgboost is available."""
-    try:
-        import xgboost  # noqa: F401
-
-        return True
-    except ImportError:
-        raise ImportError(
-            "XGBoost image classifier requires xgboost. "
-            "Install with: pip install surfaces[xgboost]"
-        )
 
 
 class XGBoostImageClassifierFunction(BaseImageClassification):
@@ -79,7 +67,7 @@ class XGBoostImageClassifierFunction(BaseImageClassification):
         catch_errors=None,
         use_surrogate: bool = False,
     ):
-        _check_xgboost()
+        check_dependency("xgboost", "xgboost")
 
         if dataset not in DATASETS:
             raise ValueError(

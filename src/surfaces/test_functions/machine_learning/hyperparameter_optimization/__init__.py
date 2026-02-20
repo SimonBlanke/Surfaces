@@ -19,11 +19,12 @@ except ImportError:
 
 
 if _HAS_SKLEARN:
-    # Tabular functions
-    # Image functions (sklearn-based)
     from .image import (
+        DeepCNNClassifierFunction,
         RandomForestImageClassifierFunction,
+        SimpleCNNClassifierFunction,
         SVMImageClassifierFunction,
+        XGBoostImageClassifierFunction,
     )
     from .tabular import (
         # Classification
@@ -41,15 +42,13 @@ if _HAS_SKLEARN:
         SVMClassifierFunction,
         SVMRegressorFunction,
     )
-
-    # Time-series functions (sklearn-based)
     from .timeseries import (
-        # Forecasting
+        ExpSmoothingForecasterFunction,
         GradientBoostingForecasterFunction,
         KNNTSClassifierFunction,
         RandomForestForecasterFunction,
-        # Classification
         RandomForestTSClassifierFunction,
+        TSForestClassifierFunction,
     )
 
     __all__ = [
@@ -70,50 +69,18 @@ if _HAS_SKLEARN:
         # Time-series - Forecasting
         "GradientBoostingForecasterFunction",
         "RandomForestForecasterFunction",
+        "ExpSmoothingForecasterFunction",
         # Time-series - Classification
         "RandomForestTSClassifierFunction",
         "KNNTSClassifierFunction",
-        # Image - Classification (sklearn)
+        "TSForestClassifierFunction",
+        # Image - Classification
         "SVMImageClassifierFunction",
         "RandomForestImageClassifierFunction",
+        "SimpleCNNClassifierFunction",
+        "DeepCNNClassifierFunction",
+        "XGBoostImageClassifierFunction",
     ]
-
-    # sktime-based time-series functions (require sktime)
-    try:
-        from .timeseries import ExpSmoothingForecasterFunction, TSForestClassifierFunction
-
-        __all__.extend(
-            [
-                "ExpSmoothingForecasterFunction",
-                "TSForestClassifierFunction",
-            ]
-        )
-        _HAS_SKTIME = True
-    except ImportError:
-        _HAS_SKTIME = False
-
-    # CNN image classifiers (require tensorflow)
-    try:
-        from .image import DeepCNNClassifierFunction, SimpleCNNClassifierFunction
-
-        __all__.extend(
-            [
-                "SimpleCNNClassifierFunction",
-                "DeepCNNClassifierFunction",
-            ]
-        )
-        _HAS_TENSORFLOW = True
-    except ImportError:
-        _HAS_TENSORFLOW = False
-
-    # XGBoost image classifier (requires xgboost)
-    try:
-        from .image import XGBoostImageClassifierFunction
-
-        __all__.append("XGBoostImageClassifierFunction")
-        _HAS_XGBOOST = True
-    except ImportError:
-        _HAS_XGBOOST = False
 
 else:
     __all__ = []
