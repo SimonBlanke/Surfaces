@@ -20,8 +20,8 @@ CONFIG = {
     "viewbox_size": 400,
     "disk_radius": 180,
     "background_color": None,
-    "border_color": "#70a8e0",
-    "border_width": 1.5,
+    "border_color": "#9093bf",
+    "border_width": 2,
     "layers": [
         # Secondary layers (background web, 36 boundary points)
         {
@@ -29,21 +29,21 @@ CONFIG = {
             "offset": 5,
             "stroke": "#a0c4f0",
             "width": 0.4,
-            "opacity": 0.30,
+            "opacity": 0.3,
         },
         {
             "n_points": 36,
             "offset": 11,
             "stroke": "#a0c4f0",
             "width": 0.4,
-            "opacity": 0.25,
+            "opacity": 0.3,
         },
         {
             "n_points": 36,
             "offset": 17,
-            "stroke": "#a0c4f0",
-            "width": 0.4,
-            "opacity": 0.20,
+            "stroke": "#2b8cdc",  # gfo
+            "width": 0.3,
+            "opacity": 0.70,
         },
         # Primary layers (structural, 24 boundary points)
         {
@@ -51,7 +51,7 @@ CONFIG = {
             "offset": 3,
             "stroke": "#88b8e8",
             "width": 1.0,
-            "opacity": 0.70,
+            "opacity": 0.50,
         },
         {
             "n_points": 24,
@@ -70,18 +70,18 @@ CONFIG = {
         {
             "n_points": 24,
             "offset": 11,
-            "stroke": "#90c0f0",
-            "width": 0.55,
-            "opacity": 0.38,
+            "stroke": "#33164f",  # hyperactive
+            "width": 0.3,
+            "opacity": 0.50,
         },
     ],
     # Emphasis rings (solid circles like the border, drawn on top)
     "rings": [
         # {"radius": 182, "stroke": "#70a8e0", "width": 1.5},
-        {"radius": 55, "stroke": "#70a8e0", "width": 1.5},
-        {"radius": 12, "stroke": "#70a8e0", "width": 1.5},
+        {"radius": 55, "stroke": "#9093bf", "width": 1.5},
+        {"radius": 12, "stroke": "#9093bf", "width": 1},
     ],
-    "output_file": "concept_6_hyperbolic_generated.svg",
+    "output_file": "logo.svg",
 }
 
 
