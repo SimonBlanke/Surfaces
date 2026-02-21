@@ -43,6 +43,11 @@ class BaseTestFunction:
 
     pure_objective_function: callable
 
+    @property
+    def __name__(self):
+        """Make __name__ accessible on instances (external libs expect it)."""
+        return type(self).__name__
+
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
         # Auto-derive name if not explicitly defined
