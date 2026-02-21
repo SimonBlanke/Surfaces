@@ -4,9 +4,14 @@
 
 """Visualization mixin for test functions."""
 
-from typing import Any, Dict, List, Optional, Tuple
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
 
 import numpy as np
+
+if TYPE_CHECKING:
+    from surfaces._visualize._accessor import PlotAccessor
 
 
 class VisualizationMixin:
@@ -22,7 +27,7 @@ class VisualizationMixin:
     """
 
     @property
-    def plot(self):
+    def plot(self) -> "PlotAccessor":
         """Access plotting methods for this function.
 
         Returns a PlotAccessor that provides plot methods filtered
