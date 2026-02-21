@@ -254,8 +254,8 @@ sphere = SphereFunction(
 noisy_result = sphere({"x0": 1.0, "x1": 2.0})
 
 # Get the true value without modifiers
-true_value = sphere.true_value({"x0": 1.0, "x1": 2.0})
-print(f"Noisy: {noisy_result:.4f}, True: {true_value:.4f}")
+pure = sphere.pure({"x0": 1.0, "x1": 2.0})
+print(f"Noisy: {noisy_result:.4f}, True: {pure:.4f}")
 ```
 
 </details>
