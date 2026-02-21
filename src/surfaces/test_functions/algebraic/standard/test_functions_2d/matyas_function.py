@@ -46,10 +46,6 @@ class MatyasFunction(AlgebraicFunction):
     True
     """
 
-    name = "Matyas Function"
-    _name_ = "matyas_function"
-    __name__ = "MatyasFunction"
-
     _spec = {
         "convex": True,
         "unimodal": True,

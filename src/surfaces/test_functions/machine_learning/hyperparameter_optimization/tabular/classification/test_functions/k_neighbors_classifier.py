@@ -57,7 +57,6 @@ class KNeighborsClassifierFunction(BaseClassification):
 
     name = "KNeighbors Classifier Function"
     _name_ = "k_neighbors_classifier"
-    __name__ = "KNeighborsClassifierFunction"
 
     # Available options (for validation and documentation)
     available_datasets = list(DATASETS.keys())

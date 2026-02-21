@@ -125,10 +125,6 @@ class WeldedBeamFunction(EngineeringFunction):
     >>> violations = func.constraint_violations({"h": 0.2, "l": 3.5, "t": 9.0, "b": 0.2})
     """
 
-    name = "Welded Beam Function"
-    _name_ = "welded_beam_function"
-    __name__ = "WeldedBeamFunction"
-
     _spec = {
         "n_dim": 4,
         "convex": False,

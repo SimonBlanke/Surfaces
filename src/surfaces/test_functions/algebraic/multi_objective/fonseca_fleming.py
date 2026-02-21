@@ -56,6 +56,7 @@ class FonsecaFleming(MultiObjectiveFunction):
     """
 
     name = "Fonseca-Fleming"
+    _name_ = "fonseca_fleming"
     n_objectives = 2
     default_bounds = (-4.0, 4.0)
 

@@ -253,22 +253,10 @@ class TestClassAttributes:
     """
 
     def test_has_name(self, func_class: Type[BaseTestFunction]) -> None:
-        """Class must have a human-readable name.
-
-        Name can be either:
-        - Direct class attribute: `name = "Sphere Function"`
-        - In spec dict: `_spec = {"name": "Sphere Function"}`
-        """
-        has_name_attr = hasattr(func_class, "name") and isinstance(func_class.name, str)
-        has_name_in_spec = (
-            hasattr(func_class, "_spec")
-            and isinstance(func_class._spec, dict)
-            and "name" in func_class._spec
-            and isinstance(func_class._spec["name"], str)
-        )
-        assert (
-            has_name_attr or has_name_in_spec
-        ), f"{func_class.__name__}: Missing 'name' attribute or _spec['name']"
+        """Class must have a human-readable name."""
+        assert hasattr(func_class, "name") and isinstance(
+            func_class.name, str
+        ), f"{func_class.__name__}: Missing 'name' attribute"
 
     def test_has_spec_dict(self, func_class: Type[BaseTestFunction]) -> None:
         """Class must have _spec dict defining function characteristics."""

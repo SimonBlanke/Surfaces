@@ -57,10 +57,6 @@ class QuadraticExponentialFunction(AlgebraicFunction):
     1
     """
 
-    name = "Quadratic Exponential Function"
-    _name_ = "quadratic_exponential_function"
-    __name__ = "QuadraticExponentialFunction"
-
     _spec = {
         "convex": False,
         "unimodal": True,

@@ -58,7 +58,6 @@ class HimmelblausFunction(AlgebraicFunction):
 
     name = "Himmelblau's Function"
     _name_ = "himmelblaus_function"
-    __name__ = "HimmelblausFunction"
 
     _spec = {
         "convex": False,

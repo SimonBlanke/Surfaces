@@ -49,10 +49,6 @@ class BoothFunction(AlgebraicFunction):
     >>> result = func({"x0": 1.0, "x1": 3.0})
     """
 
-    name = "Booth Function"
-    _name_ = "booth_function"
-    __name__ = "BoothFunction"
-
     _spec = {
         "convex": False,
         "unimodal": True,

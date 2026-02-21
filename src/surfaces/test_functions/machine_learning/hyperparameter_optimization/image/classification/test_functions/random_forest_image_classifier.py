@@ -40,9 +40,7 @@ class RandomForestImageClassifierFunction(BaseImageClassification):
     >>> result = func({"n_estimators": 100, "max_depth": 10})
     """
 
-    name = "Random Forest Image Classifier Function"
     _name_ = "random_forest_image_classifier"
-    __name__ = "RandomForestImageClassifierFunction"
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5]

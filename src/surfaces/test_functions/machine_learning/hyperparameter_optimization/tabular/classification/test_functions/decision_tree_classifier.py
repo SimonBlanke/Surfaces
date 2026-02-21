@@ -21,9 +21,7 @@ class DecisionTreeClassifierFunction(BaseClassification):
         If True, use pre-trained surrogate for fast evaluation.
     """
 
-    name = "Decision Tree Classifier Function"
     _name_ = "decision_tree_classifier"
-    __name__ = "DecisionTreeClassifierFunction"
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]

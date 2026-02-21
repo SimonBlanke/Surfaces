@@ -71,8 +71,6 @@ class ConsecutiveReactionFunction(ODESimulationFunction):
     .. [1] Levenspiel, O. (1999). Chemical Reaction Engineering, 3rd ed.
     """
 
-    name = "Consecutive Reaction Function"
-
     _spec = {
         "simulation_based": True,
         "expensive": False,

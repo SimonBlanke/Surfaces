@@ -48,10 +48,6 @@ class DropWaveFunction(AlgebraicFunction):
     True
     """
 
-    name = "Drop Wave Function"
-    _name_ = "drop_wave_function"
-    __name__ = "DropWaveFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,

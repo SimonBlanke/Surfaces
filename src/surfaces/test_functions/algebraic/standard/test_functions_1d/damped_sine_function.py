@@ -57,10 +57,6 @@ class DampedSineFunction(AlgebraicFunction):
     1
     """
 
-    name = "Damped Sine Function"
-    _name_ = "damped_sine_function"
-    __name__ = "DampedSineFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,

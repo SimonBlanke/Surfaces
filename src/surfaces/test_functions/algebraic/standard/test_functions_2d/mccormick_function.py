@@ -46,9 +46,7 @@ class McCormickFunction(AlgebraicFunction):
     >>> result = func({"x0": -0.54719, "x1": -1.54719})
     """
 
-    name = "Mc Cormick Function"
     _name_ = "mccormick_function"
-    __name__ = "McCormickFunction"
 
     _spec = {
         "convex": False,

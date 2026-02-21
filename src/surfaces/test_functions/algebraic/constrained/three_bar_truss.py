@@ -118,7 +118,6 @@ class ThreeBarTrussFunction(EngineeringFunction):
 
     name = "Three-Bar Truss Function"
     _name_ = "three_bar_truss_function"
-    __name__ = "ThreeBarTrussFunction"
 
     _spec = {
         "n_dim": 2,

@@ -39,7 +39,6 @@ class ExpSmoothingForecasterFunction(BaseForecasting):
 
     name = "Exponential Smoothing Forecaster Function"
     _name_ = "exp_smoothing_forecaster"
-    __name__ = "ExpSmoothingForecasterFunction"
 
     available_datasets = list(DATASETS.keys())
 

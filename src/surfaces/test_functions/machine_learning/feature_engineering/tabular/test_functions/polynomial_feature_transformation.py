@@ -39,7 +39,6 @@ class PolynomialFeatureTransformationFunction(BaseTabularFeatureEngineering):
 
     name = "Polynomial Feature Transformation"
     _name_ = "polynomial_feature_transformation"
-    __name__ = "PolynomialFeatureTransformationFunction"
 
     available_datasets = ["diabetes", "california_housing"]
     available_cv = [2, 3, 5, 10]

@@ -76,9 +76,7 @@ class GradientBoostingForecasterFunction(BaseForecasting):
     >>> result = func({"n_estimators": 50, "max_depth": 5, "n_lags": 12})
     """
 
-    name = "Gradient Boosting Forecaster Function"
     _name_ = "gradient_boosting_forecaster"
-    __name__ = "GradientBoostingForecasterFunction"
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5]

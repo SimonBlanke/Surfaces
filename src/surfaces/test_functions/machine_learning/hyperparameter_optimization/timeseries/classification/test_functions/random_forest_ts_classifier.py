@@ -75,7 +75,6 @@ class RandomForestTSClassifierFunction(BaseTSClassification):
 
     name = "Random Forest Time-Series Classifier Function"
     _name_ = "random_forest_ts_classifier"
-    __name__ = "RandomForestTSClassifierFunction"
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]

@@ -57,7 +57,6 @@ class KNeighborsRegressorFunction(BaseRegression):
 
     name = "KNeighbors Regressor Function"
     _name_ = "k_neighbors_regressor"
-    __name__ = "KNeighborsRegressorFunction"
 
     # Available options (for validation and documentation)
     available_datasets = list(DATASETS.keys())

@@ -41,9 +41,7 @@ class DeepCNNClassifierFunction(BaseImageClassification):
     >>> result = func({"num_conv_layers": 3, "filters": 32, "dropout_rate": 0.3})
     """
 
-    name = "Deep CNN Classifier Function"
     _name_ = "deep_cnn_classifier"
-    __name__ = "DeepCNNClassifierFunction"
 
     available_datasets = list(DATASETS.keys())
 

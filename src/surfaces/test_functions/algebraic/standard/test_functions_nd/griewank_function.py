@@ -51,10 +51,6 @@ class GriewankFunction(AlgebraicFunction):
     True
     """
 
-    name = "Griewank Function"
-    _name_ = "griewank_function"
-    __name__ = "GriewankFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,

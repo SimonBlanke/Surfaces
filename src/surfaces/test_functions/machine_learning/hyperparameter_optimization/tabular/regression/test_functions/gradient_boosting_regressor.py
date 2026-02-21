@@ -55,9 +55,7 @@ class GradientBoostingRegressorFunction(BaseRegression):
     >>> result = func({"n_estimators": 50, "max_depth": 5})  # ~1ms
     """
 
-    name = "Gradient Boosting Regressor Function"
     _name_ = "gradient_boosting_regressor"
-    __name__ = "GradientBoostingRegressorFunction"
 
     # Available options (for validation and documentation)
     available_datasets = list(DATASETS.keys())

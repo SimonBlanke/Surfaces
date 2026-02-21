@@ -47,10 +47,6 @@ class StyblinskiTangFunction(AlgebraicFunction):
     >>> result = func({"x0": -2.903534, "x1": -2.903534})
     """
 
-    name = "Styblinski Tang Function"
-    _name_ = "styblinski_tang_function"
-    __name__ = "StyblinskiTangFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,

@@ -2,6 +2,7 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
+import re
 import time
 from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
 
@@ -41,6 +42,27 @@ class BaseTestFunction:
     """
 
     pure_objective_function: callable
+
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        # Auto-derive name if not explicitly defined
+        if "name" not in cls.__dict__:
+            spec = cls.__dict__.get("_spec", {})
+            if isinstance(spec, dict) and "name" in spec:
+                cls.name = spec["name"]
+            else:
+                raw = cls.__name__.removesuffix("Function")
+                cls.name = (
+                    re.sub(
+                        r"(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])",
+                        " ",
+                        raw,
+                    )
+                    + " Function"
+                )
+        # Auto-derive _name_ if not explicitly defined
+        if "_name_" not in cls.__dict__:
+            cls._name_ = cls.name.lower().replace(" ", "_")
 
     # =========================================================================
     # Spec: Function Characteristics (override in subclasses)

@@ -47,8 +47,6 @@ class LeviFunctionN13(AlgebraicFunction):
     """
 
     name = "Levi Function N13"
-    _name_ = "levi_function_n13"
-    __name__ = "LeviFunctionN13"
 
     _spec = {
         "convex": False,

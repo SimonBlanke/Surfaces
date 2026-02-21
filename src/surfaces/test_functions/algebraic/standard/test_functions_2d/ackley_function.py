@@ -61,10 +61,6 @@ class AckleyFunction(AlgebraicFunction):
     True
     """
 
-    name = "Ackley Function"
-    _name_ = "ackley_function"
-    __name__ = "AckleyFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,

@@ -46,10 +46,6 @@ class EggholderFunction(AlgebraicFunction):
     >>> result = func({"x0": 512.0, "x1": 404.2319})
     """
 
-    name = "Eggholder Function"
-    _name_ = "eggholder_function"
-    __name__ = "EggholderFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,

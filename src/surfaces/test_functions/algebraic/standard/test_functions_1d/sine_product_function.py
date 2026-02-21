@@ -57,10 +57,6 @@ class SineProductFunction(AlgebraicFunction):
     1
     """
 
-    name = "Sine Product Function"
-    _name_ = "sine_product_function"
-    __name__ = "SineProductFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,

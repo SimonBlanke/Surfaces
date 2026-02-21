@@ -62,10 +62,6 @@ class RosenbrockFunction(AlgebraicFunction):
     True
     """
 
-    name = "Rosenbrock Function"
-    _name_ = "rosenbrock_function"
-    __name__ = "RosenbrockFunction"
-
     _spec = {
         "convex": False,
         "unimodal": True,

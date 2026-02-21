@@ -55,10 +55,6 @@ class CrossInTrayFunction(AlgebraicFunction):
     >>> result = func({"x0": 1.34941, "x1": 1.34941})
     """
 
-    name = "Cross In Tray Function"
-    _name_ = "cross_in_tray_function"
-    __name__ = "CrossInTrayFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,

@@ -21,9 +21,7 @@ class SVMClassifierFunction(BaseClassification):
         If True, use pre-trained surrogate for fast evaluation.
     """
 
-    name = "SVM Classifier Function"
     _name_ = "svm_classifier"
-    __name__ = "SVMClassifierFunction"
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]

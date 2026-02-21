@@ -23,9 +23,7 @@ class RandomForestClassifierFunction(BaseClassification):
         If True, use pre-trained surrogate for fast evaluation.
     """
 
-    name = "Random Forest Classifier Function"
     _name_ = "random_forest_classifier"
-    __name__ = "RandomForestClassifierFunction"
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]

@@ -52,10 +52,6 @@ class HölderTableFunction(AlgebraicFunction):
     >>> result = func({"x0": 8.05502, "x1": 9.66459})
     """
 
-    name = "Hölder Table Function"
-    _name_ = "hölder_table_function"
-    __name__ = "HölderTableFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,

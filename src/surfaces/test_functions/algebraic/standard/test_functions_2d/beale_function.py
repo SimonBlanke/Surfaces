@@ -60,10 +60,6 @@ class BealeFunction(AlgebraicFunction):
     True
     """
 
-    name = "Beale Function"
-    _name_ = "beale_function"
-    __name__ = "BealeFunction"
-
     _spec = {
         "convex": False,
         "unimodal": True,

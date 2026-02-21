@@ -26,7 +26,6 @@ class LightGBMClassifierFunction(BaseClassification):
 
     name = "LightGBM Classifier Function"
     _name_ = "lightgbm_classifier"
-    __name__ = "LightGBMClassifierFunction"
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]

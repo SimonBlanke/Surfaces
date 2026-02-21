@@ -38,9 +38,7 @@ class SVMImageClassifierFunction(BaseImageClassification):
     >>> result = func({"C": 1.0, "kernel": "rbf", "gamma": "scale"})
     """
 
-    name = "SVM Image Classifier Function"
     _name_ = "svm_image_classifier"
-    __name__ = "SVMImageClassifierFunction"
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5]

@@ -58,10 +58,6 @@ class ForresterFunction(AlgebraicFunction):
     1
     """
 
-    name = "Forrester Function"
-    _name_ = "forrester_function"
-    __name__ = "ForresterFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,

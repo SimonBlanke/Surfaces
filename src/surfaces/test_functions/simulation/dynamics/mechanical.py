@@ -72,8 +72,6 @@ class DampedOscillatorFunction(ODESimulationFunction):
     .. [1] Thomson, W.T. (1993). Theory of Vibration with Applications.
     """
 
-    name = "Damped Oscillator Function"
-
     _spec = {
         "simulation_based": True,
         "expensive": False,

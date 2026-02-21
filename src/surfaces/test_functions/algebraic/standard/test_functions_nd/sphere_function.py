@@ -57,10 +57,6 @@ class SphereFunction(AlgebraicFunction):
     3
     """
 
-    name = "Sphere Function"
-    _name_ = "sphere_function"
-    __name__ = "SphereFunction"
-
     _spec = {
         "convex": True,
         "unimodal": True,

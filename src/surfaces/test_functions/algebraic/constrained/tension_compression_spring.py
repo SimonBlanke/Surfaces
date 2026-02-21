@@ -120,7 +120,6 @@ class TensionCompressionSpringFunction(EngineeringFunction):
 
     name = "Tension/Compression Spring Function"
     _name_ = "tension_compression_spring_function"
-    __name__ = "TensionCompressionSpringFunction"
 
     _spec = {
         "n_dim": 3,

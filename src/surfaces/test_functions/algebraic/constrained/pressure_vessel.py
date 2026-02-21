@@ -125,10 +125,6 @@ class PressureVesselFunction(EngineeringFunction):
     True
     """
 
-    name = "Pressure Vessel Function"
-    _name_ = "pressure_vessel_function"
-    __name__ = "PressureVesselFunction"
-
     _spec = {
         "n_dim": 4,
         "convex": False,

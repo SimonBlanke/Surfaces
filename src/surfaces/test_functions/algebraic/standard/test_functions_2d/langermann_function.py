@@ -41,10 +41,6 @@ class LangermannFunction(AlgebraicFunction):
     >>> result = func({"x0": 0.0, "x1": 0.0})
     """
 
-    name = "Langermann Function"
-    _name_ = "langermann_function"
-    __name__ = "LangermannFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,

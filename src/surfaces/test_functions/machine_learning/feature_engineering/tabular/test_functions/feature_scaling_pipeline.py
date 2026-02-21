@@ -39,7 +39,6 @@ class FeatureScalingPipelineFunction(BaseTabularFeatureEngineering):
 
     name = "Feature Scaling Pipeline"
     _name_ = "feature_scaling_pipeline"
-    __name__ = "FeatureScalingPipelineFunction"
 
     available_datasets = ["digits", "iris", "wine", "breast_cancer"]
     available_cv = [2, 3, 5, 10]

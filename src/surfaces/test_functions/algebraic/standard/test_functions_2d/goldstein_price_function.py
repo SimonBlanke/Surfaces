@@ -41,10 +41,6 @@ class GoldsteinPriceFunction(AlgebraicFunction):
     True
     """
 
-    name = "Goldstein Price Function"
-    _name_ = "goldstein_price_function"
-    __name__ = "GoldsteinPriceFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,

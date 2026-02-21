@@ -25,6 +25,10 @@ class MetaAccessor:
         return getattr(self._func, "name", None)
 
     @property
+    def _name_(self) -> Optional[str]:
+        return getattr(self._func, "_name_", None)
+
+    @property
     def latex_formula(self) -> Optional[str]:
         return getattr(self._func, "latex_formula", None)
 

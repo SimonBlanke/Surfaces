@@ -71,6 +71,7 @@ class LotkaVolterraFunction(ODESimulationFunction):
     """
 
     name = "Lotka-Volterra Function"
+    _name_ = "lotka_volterra_function"
 
     _spec = {
         "simulation_based": True,

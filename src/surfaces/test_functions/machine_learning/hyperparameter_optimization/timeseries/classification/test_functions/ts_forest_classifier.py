@@ -39,7 +39,6 @@ class TSForestClassifierFunction(BaseTSClassification):
 
     name = "Time Series Forest Classifier Function"
     _name_ = "ts_forest_classifier"
-    __name__ = "TSForestClassifierFunction"
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5]

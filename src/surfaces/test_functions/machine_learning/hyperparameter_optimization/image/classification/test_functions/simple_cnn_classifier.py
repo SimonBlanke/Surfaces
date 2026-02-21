@@ -41,9 +41,7 @@ class SimpleCNNClassifierFunction(BaseImageClassification):
     >>> result = func({"filters": 32, "kernel_size": 3, "dense_units": 64})
     """
 
-    name = "Simple CNN Classifier Function"
     _name_ = "simple_cnn_classifier"
-    __name__ = "SimpleCNNClassifierFunction"
 
     available_datasets = list(DATASETS.keys())
 

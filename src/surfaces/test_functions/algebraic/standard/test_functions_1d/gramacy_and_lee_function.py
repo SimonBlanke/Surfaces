@@ -54,10 +54,6 @@ class GramacyAndLeeFunction(AlgebraicFunction):
     1
     """
 
-    name = "Gramacy And Lee Function"
-    _name_ = "gramacy_and_lee_function"
-    __name__ = "GramacyAndLeeFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,

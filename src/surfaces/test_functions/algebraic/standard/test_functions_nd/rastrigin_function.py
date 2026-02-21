@@ -57,10 +57,6 @@ class RastriginFunction(AlgebraicFunction):
     True
     """
 
-    name = "Rastrigin Function"
-    _name_ = "rastrigin_function"
-    __name__ = "RastriginFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,

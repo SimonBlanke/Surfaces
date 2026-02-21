@@ -24,7 +24,6 @@ class LightGBMRegressorFunction(BaseRegression):
 
     name = "LightGBM Regressor Function"
     _name_ = "lightgbm_regressor"
-    __name__ = "LightGBMRegressorFunction"
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]

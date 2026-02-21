@@ -47,10 +47,6 @@ class ThreeHumpCamelFunction(AlgebraicFunction):
     True
     """
 
-    name = "Three Hump Camel Function"
-    _name_ = "three_hump_camel_function"
-    __name__ = "ThreeHumpCamelFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,

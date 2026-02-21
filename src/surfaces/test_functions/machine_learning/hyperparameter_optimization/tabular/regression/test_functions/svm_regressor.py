@@ -21,9 +21,7 @@ class SVMRegressorFunction(BaseRegression):
         If True, use pre-trained surrogate for fast evaluation.
     """
 
-    name = "SVM Regressor Function"
     _name_ = "svm_regressor"
-    __name__ = "SVMRegressorFunction"
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]

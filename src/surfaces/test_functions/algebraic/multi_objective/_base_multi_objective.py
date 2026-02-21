@@ -4,6 +4,7 @@
 
 """Base class for multi-objective optimization test functions."""
 
+import re
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
@@ -48,6 +49,22 @@ class MultiObjectiveFunction:
     n_objectives: int = 2
     default_bounds: Tuple[float, float] = (0.0, 1.0)
     default_size: int = 1000
+
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        if "name" not in cls.__dict__:
+            spec = cls.__dict__.get("_spec", {})
+            if isinstance(spec, dict) and "name" in spec:
+                cls.name = spec["name"]
+            else:
+                raw = cls.__name__.removesuffix("Function")
+                cls.name = re.sub(
+                    r"(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])",
+                    " ",
+                    raw,
+                )
+        if "_name_" not in cls.__dict__:
+            cls._name_ = cls.name.lower().replace(" ", "_")
 
     _spec: Dict[str, Any] = {
         "continuous": True,

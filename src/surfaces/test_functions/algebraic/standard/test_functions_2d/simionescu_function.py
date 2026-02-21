@@ -63,10 +63,6 @@ class SimionescuFunction(AlgebraicFunction):
     >>> result = func({"x0": 0.84852813, "x1": -0.84852813})
     """
 
-    name = "Simionescu Function"
-    _name_ = "simionescu_function"
-    __name__ = "SimionescuFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,

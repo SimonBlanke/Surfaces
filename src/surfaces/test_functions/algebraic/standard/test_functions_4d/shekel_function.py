@@ -59,10 +59,6 @@ class ShekelFunction(AlgebraicFunction):
     True
     """
 
-    name = "Shekel Function"
-    _name_ = "shekel_function"
-    __name__ = "ShekelFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,

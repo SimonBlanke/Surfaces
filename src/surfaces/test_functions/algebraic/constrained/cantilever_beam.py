@@ -124,10 +124,6 @@ class CantileverBeamFunction(EngineeringFunction):
     True
     """
 
-    name = "Cantilever Beam Function"
-    _name_ = "cantilever_beam_function"
-    __name__ = "CantileverBeamFunction"
-
     _spec = {
         "n_dim": 5,
         "convex": False,

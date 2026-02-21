@@ -59,10 +59,6 @@ class EasomFunction(AlgebraicFunction):
     True
     """
 
-    name = "Easom Function"
-    _name_ = "easom_function"
-    __name__ = "EasomFunction"
-
     _spec = {
         "convex": False,
         "unimodal": True,

@@ -40,7 +40,6 @@ class StackingEnsembleFunction(BaseTabularEnsemble):
 
     name = "Stacking Ensemble"
     _name_ = "stacking_ensemble"
-    __name__ = "StackingEnsembleFunction"
 
     available_datasets = ["digits", "iris", "wine", "breast_cancer"]
     available_cv = [2, 3, 5, 10]

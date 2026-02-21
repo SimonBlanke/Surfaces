@@ -47,8 +47,6 @@ class SchafferFunctionN2(AlgebraicFunction):
     """
 
     name = "Schaffer Function N2"
-    _name_ = "schaffer_function_n2"
-    __name__ = "SchafferFunctionN2"
 
     _spec = {
         "convex": False,

@@ -23,9 +23,7 @@ class RandomForestRegressorFunction(BaseRegression):
         If True, use pre-trained surrogate for fast evaluation.
     """
 
-    name = "Random Forest Regressor Function"
     _name_ = "random_forest_regressor"
-    __name__ = "RandomForestRegressorFunction"
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]

@@ -43,7 +43,6 @@ class XGBoostImageClassifierFunction(BaseImageClassification):
 
     name = "XGBoost Image Classifier Function"
     _name_ = "xgboost_image_classifier"
-    __name__ = "XGBoostImageClassifierFunction"
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5]

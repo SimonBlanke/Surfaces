@@ -49,8 +49,6 @@ class BukinFunctionN6(AlgebraicFunction):
     """
 
     name = "Bukin Function N6"
-    _name_ = "bukin_function_n6"
-    __name__ = "BukinFunctionN6"
 
     _spec = {
         "convex": False,
