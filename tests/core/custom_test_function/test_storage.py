@@ -157,6 +157,66 @@ class TestInMemoryStorage:
         assert "test" in repr_str
         assert "1" in repr_str
 
+    def test_query_default(self):
+        """InMemoryStorage.query() returns evaluations with default args."""
+        storage = InMemoryStorage()
+        storage.save_evaluation({"x": 1.0, "score": 5.0})
+        storage.save_evaluation({"x": 2.0, "score": 1.0})
+        storage.save_evaluation({"x": 3.0, "score": 10.0})
+
+        results = storage.query()
+        assert len(results) == 3
+
+    def test_query_order_by(self):
+        """InMemoryStorage.query() supports order_by."""
+        storage = InMemoryStorage()
+        storage.save_evaluation({"x": 1.0, "score": 5.0})
+        storage.save_evaluation({"x": 2.0, "score": 1.0})
+        storage.save_evaluation({"x": 3.0, "score": 10.0})
+
+        results = storage.query(order_by="score")
+        scores = [r["score"] for r in results]
+        assert scores == [1.0, 5.0, 10.0]
+
+        results = storage.query(order_by="-score")
+        scores = [r["score"] for r in results]
+        assert scores == [10.0, 5.0, 1.0]
+
+    def test_query_with_limit(self):
+        """InMemoryStorage.query() supports limit."""
+        storage = InMemoryStorage()
+        for i in range(10):
+            storage.save_evaluation({"x": float(i), "score": float(i)})
+
+        results = storage.query(limit=3)
+        assert len(results) == 3
+
+    def test_query_with_filter(self):
+        """InMemoryStorage.query() supports filter_fn."""
+        storage = InMemoryStorage()
+        for i in range(10):
+            storage.save_evaluation({"x": float(i), "score": float(i)})
+
+        results = storage.query(filter_fn=lambda e: e["x"] > 5)
+        assert len(results) == 4
+
+    def test_experiment_exists_true(self):
+        """experiment_exists returns True when data exists."""
+        storage = InMemoryStorage()
+        storage.save_evaluation({"x": 1.0, "score": 1.0})
+        assert storage.experiment_exists() is True
+
+    def test_experiment_exists_false(self):
+        """experiment_exists returns False when empty."""
+        storage = InMemoryStorage()
+        assert storage.experiment_exists() is False
+
+    def test_context_manager(self):
+        """InMemoryStorage works as context manager."""
+        with InMemoryStorage() as storage:
+            storage.save_evaluation({"x": 1.0, "score": 1.0})
+            assert len(storage.load_evaluations()) == 1
+
 
 # =============================================================================
 # SQLiteStorage Tests

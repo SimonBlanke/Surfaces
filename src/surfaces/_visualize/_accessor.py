@@ -392,8 +392,8 @@ class PlotAccessor:
         # Priority: explicit argument > with_history() > search_data
         if history is None:
             history = self._history
-        if history is None and hasattr(self._func, "search_data"):
-            history = self._func.search_data
+        if history is None and hasattr(self._func, "data"):
+            history = self._func.data.search_data
 
         if history is None or (hasattr(history, "__len__") and len(history) == 0):
             raise ValueError(
@@ -491,6 +491,8 @@ class PlotAccessor:
         """
         from ._compatibility import available_plots
 
-        has_history = bool(self._history) or bool(getattr(self._func, "search_data", None))
+        has_history = bool(self._history) or bool(
+            getattr(self._func, "data", None) and self._func.data.search_data
+        )
         plots = available_plots(self._func, has_history=has_history)
         return [p["name"] for p in plots]

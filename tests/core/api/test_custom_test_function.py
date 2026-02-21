@@ -197,7 +197,7 @@ class TestModifiers:
             modifiers=[GaussianNoise(sigma=1.0, seed=42)],
         )
 
-        true = func.true_value(x=0)
+        true = func.pure(x=0)
         assert true == 10.0
 
 
@@ -211,12 +211,12 @@ class TestDataCollection:
             search_space={"x": (-5, 5)},
         )
 
-        assert func.n_evaluations == 0
+        assert func.data.n_evaluations == 0
         func(x=1)
-        assert func.n_evaluations == 1
+        assert func.data.n_evaluations == 1
         func(x=2)
         func(x=3)
-        assert func.n_evaluations == 3
+        assert func.data.n_evaluations == 3
 
     def test_search_data(self):
         """Test search data collection."""
@@ -228,9 +228,9 @@ class TestDataCollection:
         func(x=2)
         func(x=3)
 
-        assert len(func.search_data) == 2
-        assert func.search_data[0] == {"x": 2, "score": 4}
-        assert func.search_data[1] == {"x": 3, "score": 9}
+        assert len(func.data.search_data) == 2
+        assert func.data.search_data[0] == {"x": 2, "score": 4}
+        assert func.data.search_data[1] == {"x": 3, "score": 9}
 
     def test_best_score_minimize(self):
         """Test best score tracking for minimization."""
@@ -241,11 +241,11 @@ class TestDataCollection:
         )
 
         func(x=3)
-        assert func.best_score == 9
+        assert func.data.best_score == 9
         func(x=1)
-        assert func.best_score == 1
+        assert func.data.best_score == 1
         func(x=5)
-        assert func.best_score == 1  # Still 1
+        assert func.data.best_score == 1  # Still 1
 
     def test_best_score_maximize(self):
         """Test best score tracking for maximization."""
@@ -261,7 +261,7 @@ class TestDataCollection:
 
         # For maximize, best_score tracks highest returned value
         # (scores are negated, so -1 > -9)
-        assert func.best_score == -1
+        assert func.data.best_score == -1
 
     def test_reset(self):
         """Test reset clears all data."""
@@ -274,9 +274,9 @@ class TestDataCollection:
         func(x=2)
         func.reset()
 
-        assert func.n_evaluations == 0
-        assert func.search_data == []
-        assert func.best_score is None
+        assert func.data.n_evaluations == 0
+        assert func.data.search_data == []
+        assert func.data.best_score is None
 
 
 class TestMemory:

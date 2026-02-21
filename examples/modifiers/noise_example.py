@@ -10,7 +10,7 @@ noisy_sphere = SphereFunction(n_dim=2, modifiers=[gaussian_noise])
 # Evaluate at the same point multiple times - results vary due to noise
 point = {"x0": 1.0, "x1": 1.0}
 print("Gaussian Noise (sigma=0.1):")
-print(f"  True value at {point}: {noisy_sphere.true_value(point)}")
+print(f"  True value at {point}: {noisy_sphere.pure(point)}")
 for i in range(5):
     result = noisy_sphere(point)
     print(f"  Evaluation {i+1}: {result:.4f}")
@@ -22,7 +22,7 @@ print(f"  Last noise added: {gaussian_noise.last_noise:.4f}")
 uniform_sphere = SphereFunction(n_dim=2, modifiers=[UniformNoise(low=-0.5, high=0.5, seed=42)])
 
 print("\nUniform Noise (low=-0.5, high=0.5):")
-print(f"  True value at {point}: {uniform_sphere.true_value(point)}")
+print(f"  True value at {point}: {uniform_sphere.pure(point)}")
 for i in range(5):
     result = uniform_sphere(point)
     print(f"  Evaluation {i+1}: {result:.4f}")
@@ -31,7 +31,7 @@ for i in range(5):
 mult_sphere = SphereFunction(n_dim=2, modifiers=[MultiplicativeNoise(sigma=0.1, seed=42)])
 
 print("\nMultiplicative Noise (sigma=0.1):")
-print(f"  True value at {point}: {mult_sphere.true_value(point)}")
+print(f"  True value at {point}: {mult_sphere.pure(point)}")
 for i in range(5):
     result = mult_sphere(point)
     print(f"  Evaluation {i+1}: {result:.4f}")

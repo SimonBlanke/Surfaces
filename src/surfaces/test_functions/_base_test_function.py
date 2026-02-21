@@ -10,20 +10,8 @@ import numpy as np
 from surfaces._array_utils import ArrayLike, is_array_like
 from surfaces.modifiers import BaseModifier
 
-from ._mixins import (
-    CallbackMixin,
-    DataCollectionMixin,
-    ModifierMixin,
-    VisualizationMixin,
-)
 
-
-class BaseTestFunction(
-    CallbackMixin,
-    DataCollectionMixin,
-    ModifierMixin,
-    VisualizationMixin,
-):
+class BaseTestFunction:
     """Base class for all test functions in the Surfaces library.
 
     Parameters
@@ -44,19 +32,6 @@ class BaseTestFunction(
         Dictionary mapping exception types to return values. Use ... (Ellipsis)
         as a catch-all key for any unmatched exceptions.
 
-    Attributes
-    ----------
-    n_evaluations : int
-        Number of function evaluations performed.
-    search_data : list of dict
-        History of all evaluations as list of dicts containing parameters and score.
-    best_score : float or None
-        Best score found (respects objective direction).
-    best_params : dict or None
-        Parameters that achieved the best score.
-    total_time : float
-        Cumulative time spent in function evaluations (seconds).
-
     Examples
     --------
     >>> func = SphereFunction(n_dim=2)
@@ -72,7 +47,6 @@ class BaseTestFunction(
     # =========================================================================
 
     _spec: Dict[str, Any] = {
-        "name": None,
         "n_dim": None,
         "n_objectives": 1,
         "default_bounds": (-5.0, 5.0),
@@ -84,20 +58,6 @@ class BaseTestFunction(
         "unimodal": False,
         "scalable": False,
     }
-
-    @property
-    def spec(self) -> Dict[str, Any]:
-        """Function characteristics merged from class hierarchy (read-only)."""
-        result = {}
-        for klass in reversed(type(self).__mro__):
-            if hasattr(klass, "_spec"):
-                result.update(klass._spec)
-        return result
-
-    @property
-    def default_bounds(self) -> Tuple[float, float]:
-        """Default parameter bounds for the search space."""
-        return self.spec.get("default_bounds", (-5.0, 5.0))
 
     # =========================================================================
     # Global Optimum Information (override in subclasses)
@@ -131,15 +91,41 @@ class BaseTestFunction(
         if objective not in ("minimize", "maximize"):
             raise ValueError(f"objective must be 'minimize' or 'maximize', got '{objective}'")
         self.objective = objective
-        self.memory = memory
         self.collect_data = collect_data
-        self.catch_errors: Optional[Dict[Type[Exception], float]] = catch_errors
+
+        # Private state: memory
+        self._memory_enabled: bool = memory
         self._memory_cache: Dict[Tuple, float] = {}
 
-        # Initialize mixins
-        self._init_callbacks(callbacks)
-        self._init_data_collection()
-        self._init_modifiers(modifiers)
+        # Private state: callbacks
+        if callbacks is None:
+            self._callbacks: List[Callable] = []
+        elif callable(callbacks):
+            self._callbacks = [callbacks]
+        else:
+            self._callbacks = list(callbacks)
+
+        # Private state: data collection
+        self._n_evaluations: int = 0
+        self._search_data: List[Dict[str, Any]] = []
+        self._best_score: Optional[float] = None
+        self._best_params: Optional[Dict[str, Any]] = None
+        self._total_time: float = 0.0
+
+        # Private state: modifiers
+        self._modifiers: List[BaseModifier] = modifiers if modifiers is not None else []
+
+        # Private state: error handlers
+        self._error_handlers: Optional[Dict[Type[Exception], float]] = catch_errors
+
+        # Accessor caches (lazy-loaded)
+        self._spec_accessor = None
+        self._data_accessor = None
+        self._callbacks_accessor = None
+        self._modifiers_accessor = None
+        self._memory_accessor = None
+        self._errors_accessor = None
+        self._meta_accessor = None
 
     def _create_objective_function(self):
         raise NotImplementedError("'_create_objective_function' must be implemented")
@@ -148,6 +134,90 @@ class BaseTestFunction(
     def search_space(self) -> Dict[str, Any]:
         """Search space for this function (override in subclasses)."""
         raise NotImplementedError("'search_space' must be implemented")
+
+    # =========================================================================
+    # Accessor Properties (lazy-cached)
+    # =========================================================================
+
+    @property
+    def spec(self):
+        """Function characteristics (SpecAccessor)."""
+        # Guard: spec may be accessed before __init__ completes (e.g., BBOB
+        # reads func_id in its __init__ before calling super().__init__).
+        try:
+            accessor = self._spec_accessor
+        except AttributeError:
+            accessor = None
+        if accessor is None:
+            from ._accessors import SpecAccessor
+
+            accessor = SpecAccessor(self)
+            try:
+                self._spec_accessor = accessor
+            except AttributeError:
+                pass  # __init__ hasn't set up slots yet
+        return accessor
+
+    @property
+    def data(self):
+        """Evaluation data (DataAccessor)."""
+        if self._data_accessor is None:
+            from ._accessors import DataAccessor
+
+            self._data_accessor = DataAccessor(self)
+        return self._data_accessor
+
+    @property
+    def callbacks(self):
+        """Callback management (CallbackAccessor)."""
+        if self._callbacks_accessor is None:
+            from ._accessors import CallbackAccessor
+
+            self._callbacks_accessor = CallbackAccessor(self)
+        return self._callbacks_accessor
+
+    @property
+    def modifiers(self):
+        """Modifier management (ModifierAccessor)."""
+        if self._modifiers_accessor is None:
+            from ._accessors import ModifierAccessor
+
+            self._modifiers_accessor = ModifierAccessor(self)
+        return self._modifiers_accessor
+
+    @property
+    def memory(self):
+        """Memory cache management (MemoryAccessor)."""
+        if self._memory_accessor is None:
+            from ._accessors import MemoryAccessor
+
+            self._memory_accessor = MemoryAccessor(self)
+        return self._memory_accessor
+
+    @property
+    def errors(self):
+        """Error handler management (ErrorAccessor)."""
+        if self._errors_accessor is None:
+            from ._accessors import ErrorAccessor
+
+            self._errors_accessor = ErrorAccessor(self)
+        return self._errors_accessor
+
+    @property
+    def meta(self):
+        """Function metadata (MetaAccessor)."""
+        if self._meta_accessor is None:
+            from ._accessors import MetaAccessor
+
+            self._meta_accessor = MetaAccessor(self)
+        return self._meta_accessor
+
+    @property
+    def plot(self):
+        """Access plotting methods for this function."""
+        from surfaces._visualize._accessor import PlotAccessor
+
+        return PlotAccessor(self)
 
     # =========================================================================
     # Primary Interface: __call__
@@ -169,7 +239,7 @@ class BaseTestFunction(
         """
         params = self._normalize_input(params, **kwargs)
 
-        if self.memory:
+        if self._memory_enabled:
             cache_key = self._params_to_cache_key(params)
             if cache_key in self._memory_cache:
                 result = self._memory_cache[cache_key]
@@ -181,7 +251,7 @@ class BaseTestFunction(
         result = self._evaluate(params)
         elapsed_time = time.perf_counter() - start_time
 
-        if self.memory:
+        if self._memory_enabled:
             cache_key = self._params_to_cache_key(params)
             self._memory_cache[cache_key] = result
 
@@ -215,8 +285,8 @@ class BaseTestFunction(
         try:
             raw_value = self.pure_objective_function(params)
         except Exception as e:
-            if self.catch_errors is not None:
-                for exc_type, return_value in self.catch_errors.items():
+            if self._error_handlers is not None:
+                for exc_type, return_value in self._error_handlers.items():
                     if exc_type is ... or isinstance(e, exc_type):
                         return return_value
             raise
@@ -224,9 +294,9 @@ class BaseTestFunction(
         # Apply modifiers if configured
         if self._modifiers:
             context = {
-                "evaluation_count": self.n_evaluations,
-                "best_score": self.best_score,
-                "search_data": self.search_data,
+                "evaluation_count": self._n_evaluations,
+                "best_score": self._best_score,
+                "search_data": self._search_data,
             }
             for modifier in self._modifiers:
                 raw_value = modifier.apply(raw_value, params, context)
@@ -236,17 +306,79 @@ class BaseTestFunction(
         return raw_value
 
     # =========================================================================
+    # Data Recording (inlined from DataCollectionMixin)
+    # =========================================================================
+
+    def _record_evaluation(
+        self,
+        params: Dict[str, Any],
+        score: float,
+        elapsed_time: float = 0.0,
+        from_cache: bool = False,
+    ) -> None:
+        """Record an evaluation and invoke callbacks."""
+        record = {**params, "score": score}
+
+        if self.collect_data:
+            self._n_evaluations += 1
+            self._search_data.append(record)
+
+            if not from_cache:
+                self._total_time += elapsed_time
+
+            is_better = (
+                self._best_score is None
+                or (self.objective == "minimize" and score < self._best_score)
+                or (self.objective == "maximize" and score > self._best_score)
+            )
+            if is_better:
+                self._best_score = score
+                self._best_params = params.copy()
+
+        for callback in self._callbacks:
+            callback(record)
+
+    # =========================================================================
+    # Evaluation Variants
+    # =========================================================================
+
+    def pure(
+        self,
+        params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None,
+        **kwargs,
+    ) -> float:
+        """Evaluate the function without modifiers.
+
+        Returns the true (deterministic) function value, bypassing any
+        configured modifiers. Does not update search_data, n_evaluations,
+        or callbacks. Ignores memory caching.
+
+        Parameters
+        ----------
+        params : dict, array, list, or tuple
+            Parameter values to evaluate.
+        **kwargs : dict
+            Parameters as keyword arguments.
+
+        Returns
+        -------
+        float
+            The true function value without modifiers.
+        """
+        params = self._normalize_input(params, **kwargs)
+        raw_value = self.pure_objective_function(params)
+        if self.objective == "maximize":
+            return -raw_value
+        return raw_value
+
+    # =========================================================================
     # Reset Methods
     # =========================================================================
 
-    def reset_memory(self) -> None:
-        """Clear the memory cache."""
-        self._memory_cache = {}
-
     def reset(self) -> None:
         """Reset all state including collected data and memory cache."""
-        self.reset_data()
-        self.reset_memory()
+        self.data.reset()
+        self.memory.reset()
 
     # =========================================================================
     # Batch Evaluation
@@ -296,3 +428,94 @@ class BaseTestFunction(
             result = -result
 
         return result
+
+    # =========================================================================
+    # Default Bounds (from spec, used by subclasses to build search_space)
+    # =========================================================================
+
+    @property
+    def default_bounds(self) -> Tuple[float, float]:
+        """Default parameter bounds for the search space."""
+        return self.spec.get("default_bounds", (-5.0, 5.0))
+
+    # =========================================================================
+    # Visualization Defaults (used by _param_resolver.py)
+    # =========================================================================
+
+    @property
+    def dimensions(self) -> list:
+        """List of dimension names for this function."""
+        return list(self.search_space.keys())
+
+    @property
+    def default_plot_dims(self) -> List[str]:
+        """Default dimensions to plot (first 2 dimensions)."""
+        dims = self.dimensions
+        return dims[:2] if len(dims) >= 2 else dims
+
+    @property
+    def default_bounds_per_dim(self) -> Dict[str, tuple]:
+        """Default bounds for each dimension."""
+        result = {}
+        for dim_name, values in self.search_space.items():
+            result[dim_name] = self._infer_bounds_for_dimension(values)
+        return result
+
+    @property
+    def default_fixed(self) -> Dict[str, Any]:
+        """Default values for fixed dimensions."""
+        result = {}
+        for dim_name, values in self.search_space.items():
+            result[dim_name] = self._infer_fixed_for_dimension(values)
+        return result
+
+    @property
+    def default_step(self) -> Dict[str, Optional[float]]:
+        """Default step size for each dimension."""
+        result = {}
+        for dim_name, values in self.search_space.items():
+            result[dim_name] = self._infer_step_for_dimension(values)
+        return result
+
+    @staticmethod
+    def _infer_bounds_for_dimension(values: Any) -> Tuple[float, float]:
+        """Infer bounds for a single dimension based on its values."""
+        if values is None or (hasattr(values, "__len__") and len(values) == 0):
+            return (0.0, 1.0)
+
+        numeric_values = [v for v in values if isinstance(v, (int, float, np.integer, np.floating))]
+
+        if numeric_values:
+            return (float(min(numeric_values)), float(max(numeric_values)))
+        else:
+            return (0.0, float(len(values) - 1))
+
+    @staticmethod
+    def _infer_fixed_for_dimension(values: Any) -> Any:
+        """Infer default fixed value for a single dimension."""
+        if values is None or (hasattr(values, "__len__") and len(values) == 0):
+            return 0.0
+
+        if hasattr(values, "__len__"):
+            mid_idx = len(values) // 2
+            return values[mid_idx]
+
+        return 0.0
+
+    @staticmethod
+    def _infer_step_for_dimension(values: Any) -> Optional[float]:
+        """Infer step size for a single dimension based on its type."""
+        if values is None or (hasattr(values, "__len__") and len(values) < 2):
+            return None
+
+        if isinstance(values, np.ndarray) and len(values) > 50:
+            return float((values.max() - values.min()) / 100)
+
+        numeric_values = [v for v in values if isinstance(v, (int, float, np.integer, np.floating))]
+
+        if len(numeric_values) >= 2:
+            sorted_vals = sorted(numeric_values)
+            steps = [sorted_vals[i + 1] - sorted_vals[i] for i in range(len(sorted_vals) - 1)]
+            return float(min(steps)) if steps else None
+
+        return None

@@ -87,7 +87,7 @@ class TestDelayIntegration:
         func = SphereFunction(n_dim=2, modifiers=[DelayModifier(delay=0.1)])
 
         start = time.perf_counter()
-        result = func.true_value({"x0": 1.0, "x1": 1.0})
+        result = func.pure({"x0": 1.0, "x1": 1.0})
         elapsed = time.perf_counter() - start
 
         assert result == 2.0

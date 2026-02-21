@@ -219,11 +219,11 @@ def _get_function_dimensions(func: "BaseTestFunction") -> int:
         except (TypeError, AttributeError):
             pass
 
-    # Try spec
+    # Try spec (SpecAccessor has .get() method)
     if hasattr(func, "spec"):
-        spec = func.spec
-        if "n_dim" in spec and spec["n_dim"] is not None:
-            return spec["n_dim"]
+        n_dim = func.spec.get("n_dim")
+        if n_dim is not None:
+            return n_dim
 
     raise ValueError(f"Cannot determine dimensions for function: {type(func).__name__}")
 

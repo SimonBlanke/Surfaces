@@ -16,16 +16,16 @@ class TestSearchDataCollection:
     def test_n_evaluations_tracked(self):
         """Test that n_evaluations increments correctly."""
         func = SphereFunction(n_dim=2)
-        assert func.n_evaluations == 0
+        assert func.data.n_evaluations == 0
 
         func([0.0, 0.0])
-        assert func.n_evaluations == 1
+        assert func.data.n_evaluations == 1
 
         func([1.0, 1.0])
-        assert func.n_evaluations == 2
+        assert func.data.n_evaluations == 2
 
         func([2.0, 2.0])
-        assert func.n_evaluations == 3
+        assert func.data.n_evaluations == 3
 
     def test_search_data_recorded(self):
         """Test that search_data contains evaluation records."""
@@ -34,55 +34,55 @@ class TestSearchDataCollection:
         func({"x0": 1.0, "x1": 2.0})
         func({"x0": 0.0, "x1": 0.0})
 
-        assert len(func.search_data) == 2
+        assert len(func.data.search_data) == 2
 
         # Check first record
-        assert func.search_data[0]["x0"] == 1.0
-        assert func.search_data[0]["x1"] == 2.0
-        assert "score" in func.search_data[0]
+        assert func.data.search_data[0]["x0"] == 1.0
+        assert func.data.search_data[0]["x1"] == 2.0
+        assert "score" in func.data.search_data[0]
 
         # Check second record
-        assert func.search_data[1]["x0"] == 0.0
-        assert func.search_data[1]["x1"] == 0.0
+        assert func.data.search_data[1]["x0"] == 0.0
+        assert func.data.search_data[1]["x1"] == 0.0
 
     def test_best_score_tracked_minimize(self):
         """Test that best_score is tracked for minimization."""
         func = SphereFunction(n_dim=2, objective="minimize")
 
         func([5.0, 5.0])  # score = 50
-        assert func.best_score == 50.0
+        assert func.data.best_score == 50.0
 
         func([1.0, 1.0])  # score = 2 (better)
-        assert func.best_score == 2.0
+        assert func.data.best_score == 2.0
 
         func([3.0, 3.0])  # score = 18 (worse, should not update)
-        assert func.best_score == 2.0
+        assert func.data.best_score == 2.0
 
     def test_best_score_tracked_maximize(self):
         """Test that best_score is tracked for maximization."""
         func = SphereFunction(n_dim=2, objective="maximize")
 
         func([1.0, 1.0])  # score = -2
-        assert func.best_score == -2.0
+        assert func.data.best_score == -2.0
 
         func([5.0, 5.0])  # score = -50 (worse for maximize)
-        assert func.best_score == -2.0
+        assert func.data.best_score == -2.0
 
         func([0.5, 0.5])  # score = -0.5 (better for maximize)
-        assert func.best_score == -0.5
+        assert func.data.best_score == -0.5
 
     def test_best_params_tracked(self):
         """Test that best_params is updated with best result."""
         func = SphereFunction(n_dim=2)
 
         func([5.0, 5.0])
-        assert func.best_params == {"x0": 5.0, "x1": 5.0}
+        assert func.data.best_params == {"x0": 5.0, "x1": 5.0}
 
         func([1.0, 2.0])  # better
-        assert func.best_params == {"x0": 1.0, "x1": 2.0}
+        assert func.data.best_params == {"x0": 1.0, "x1": 2.0}
 
         func([0.0, 0.0])  # best
-        assert func.best_params == {"x0": 0.0, "x1": 0.0}
+        assert func.data.best_params == {"x0": 0.0, "x1": 0.0}
 
     def test_total_time_tracked(self):
         """Test that total_time accumulates."""
@@ -91,10 +91,10 @@ class TestSearchDataCollection:
         func = SphereFunction(n_dim=2, modifiers=[DelayModifier(delay=0.01)])
 
         func([0.0, 0.0])
-        assert func.total_time >= 0.01
+        assert func.data.total_time >= 0.01
 
         func([1.0, 1.0])
-        assert func.total_time >= 0.02
+        assert func.data.total_time >= 0.02
 
 
 class TestCollectDataDisabled:
@@ -107,11 +107,11 @@ class TestCollectDataDisabled:
         func([1.0, 1.0])
         func([2.0, 2.0])
 
-        assert func.n_evaluations == 0
-        assert func.search_data == []
-        assert func.best_score is None
-        assert func.best_params is None
-        assert func.total_time == 0.0
+        assert func.data.n_evaluations == 0
+        assert func.data.search_data == []
+        assert func.data.best_score is None
+        assert func.data.best_params is None
+        assert func.data.total_time == 0.0
 
 
 class TestResetMethods:
@@ -124,16 +124,16 @@ class TestResetMethods:
         func([1.0, 1.0])
         func([2.0, 2.0])
 
-        assert func.n_evaluations == 2
+        assert func.data.n_evaluations == 2
         assert len(func._memory_cache) == 2
 
-        func.reset_data()
+        func.data.reset()
 
-        assert func.n_evaluations == 0
-        assert func.search_data == []
-        assert func.best_score is None
-        assert func.best_params is None
-        assert func.total_time == 0.0
+        assert func.data.n_evaluations == 0
+        assert func.data.search_data == []
+        assert func.data.best_score is None
+        assert func.data.best_params is None
+        assert func.data.total_time == 0.0
         # Memory cache should still be intact
         assert len(func._memory_cache) == 2
 
@@ -144,10 +144,10 @@ class TestResetMethods:
         func([1.0, 1.0])
         func([2.0, 2.0])
 
-        func.reset_memory()
+        func.memory.reset()
 
         # Data should still be there
-        assert func.n_evaluations == 2
+        assert func.data.n_evaluations == 2
         # Memory cache should be cleared
         assert len(func._memory_cache) == 0
 
@@ -160,11 +160,11 @@ class TestResetMethods:
 
         func.reset()
 
-        assert func.n_evaluations == 0
-        assert func.search_data == []
-        assert func.best_score is None
-        assert func.best_params is None
-        assert func.total_time == 0.0
+        assert func.data.n_evaluations == 0
+        assert func.data.search_data == []
+        assert func.data.best_score is None
+        assert func.data.best_params is None
+        assert func.data.total_time == 0.0
         assert len(func._memory_cache) == 0
 
 
@@ -177,14 +177,14 @@ class TestMemoryAndSearchDataInteraction:
 
         # First evaluation
         func([1.0, 1.0])
-        assert func.n_evaluations == 1
+        assert func.data.n_evaluations == 1
 
         # Second evaluation (from cache)
         func([1.0, 1.0])
-        assert func.n_evaluations == 2
+        assert func.data.n_evaluations == 2
 
         # Both should be in search_data
-        assert len(func.search_data) == 2
+        assert len(func.data.search_data) == 2
 
     def test_cached_evaluations_no_time_added(self):
         """Test that cached evaluations don't add to total_time."""
@@ -193,11 +193,11 @@ class TestMemoryAndSearchDataInteraction:
         func = SphereFunction(n_dim=2, memory=True, modifiers=[DelayModifier(delay=0.05)])
 
         func([1.0, 1.0])
-        time_after_first = func.total_time
+        time_after_first = func.data.total_time
 
         # Cached call should not add significant time
         func([1.0, 1.0])
-        time_after_second = func.total_time
+        time_after_second = func.data.total_time
 
         # Time should be nearly the same (cached call is instant)
         assert time_after_second - time_after_first < 0.01
@@ -212,7 +212,7 @@ class TestSearchDataFormat:
 
         func({"x0": 1.0, "x1": 2.0, "x2": 3.0})
 
-        record = func.search_data[0]
+        record = func.data.search_data[0]
         assert "x0" in record
         assert "x1" in record
         assert "x2" in record
@@ -224,7 +224,7 @@ class TestSearchDataFormat:
 
         result = func([3.0, 4.0])  # 9 + 16 = 25
 
-        record = func.search_data[0]
+        record = func.data.search_data[0]
         assert record["x0"] == 3.0
         assert record["x1"] == 4.0
         assert record["score"] == result
@@ -236,7 +236,7 @@ class TestSearchDataFormat:
 
         func(np.array([1.0, 2.0]))
 
-        record = func.search_data[0]
+        record = func.data.search_data[0]
         assert record["x0"] == 1.0
         assert record["x1"] == 2.0
 
@@ -255,6 +255,6 @@ class TestCollectDataDefault:
 
         func([1.0, 1.0])
 
-        assert func.n_evaluations == 1
-        assert len(func.search_data) == 1
-        assert func.best_score is not None
+        assert func.data.n_evaluations == 1
+        assert len(func.data.search_data) == 1
+        assert func.data.best_score is not None

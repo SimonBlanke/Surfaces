@@ -279,7 +279,7 @@ class TestNoiseIntegration:
         func = SphereFunction(n_dim=2, modifiers=[noise])
 
         noisy = func([1.0, 2.0])
-        true = func.true_value([1.0, 2.0])
+        true = func.pure([1.0, 2.0])
 
         # True value should be 1^2 + 2^2 = 5.0
         assert true == pytest.approx(5.0, rel=1e-10)
@@ -326,7 +326,7 @@ class TestNoiseIntegration:
         results1 = [func([0.0, 0.0]) for _ in range(5)]
 
         # Reset and evaluate again
-        func.reset_modifiers()
+        func.modifiers.reset()
         results2 = [func([0.0, 0.0]) for _ in range(5)]
 
         # Should get same sequence
@@ -339,7 +339,7 @@ class TestNoiseIntegration:
 
         # Evaluate
         result = func([1.0, 2.0])
-        true = func.true_value([1.0, 2.0])
+        true = func.pure([1.0, 2.0])
 
         # True value with maximize is -5.0
         assert true == pytest.approx(-5.0, rel=1e-10)
@@ -388,3 +388,56 @@ class TestEvaluationCounter:
 
         noise.reset()
         assert noise.evaluation_count == 0
+
+
+class TestMultiplicativeNoiseSchedule:
+    """Tests for MultiplicativeNoise schedule functionality."""
+
+    def test_multiplicative_linear_schedule(self):
+        """MultiplicativeNoise supports linear schedule."""
+        noise = MultiplicativeNoise(
+            sigma=1.0,
+            sigma_final=0.0,
+            schedule="linear",
+            total_evaluations=100,
+            seed=42,
+        )
+
+        assert noise.sigma == pytest.approx(1.0, rel=0.01)
+
+        for _ in range(50):
+            noise.apply(1.0, {}, {})
+
+        assert noise.sigma == pytest.approx(0.5, rel=0.01)
+
+        for _ in range(50):
+            noise.apply(1.0, {}, {})
+
+        assert noise.sigma == pytest.approx(0.0, rel=0.01)
+
+    def test_multiplicative_negative_sigma_raises(self):
+        """Negative sigma raises ValueError."""
+        with pytest.raises(ValueError, match="non-negative"):
+            MultiplicativeNoise(sigma=-0.1)
+
+
+class TestBaseModifierReset:
+    """Test BaseModifier default reset behavior."""
+
+    def test_gaussian_noise_reset(self):
+        """BaseModifier.reset() works through GaussianNoise."""
+        noise = GaussianNoise(sigma=0.1, seed=42)
+        noise.apply(1.0, {}, {})
+        noise.apply(1.0, {}, {})
+        assert noise.evaluation_count == 2
+
+        noise.reset()
+        assert noise.evaluation_count == 0
+
+    def test_uniform_noise_reset(self):
+        """UniformNoise reset restores initial state."""
+        noise = UniformNoise(low=-0.5, high=0.5, seed=42)
+        values1 = [noise.apply(0.0, {}, {}) for _ in range(5)]
+        noise.reset()
+        values2 = [noise.apply(0.0, {}, {}) for _ in range(5)]
+        assert values1 == values2

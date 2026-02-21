@@ -80,3 +80,46 @@ class TestSurrogateNamespace:
         """Test error when predicting without fitting."""
         with pytest.raises(RuntimeError, match="No surrogate model fitted"):
             sphere_func_with_data.surrogate.predict({"x": 0, "y": 0})
+
+    def test_fit_gaussian_process(self, sphere_func_with_data):
+        """Test Gaussian Process surrogate fitting."""
+        sphere_func_with_data.surrogate.fit(method="gaussian_process")
+
+        assert sphere_func_with_data.surrogate.is_fitted
+        assert sphere_func_with_data.surrogate.method == "gaussian_process"
+
+    def test_gp_uncertainty(self, sphere_func_with_data):
+        """Test uncertainty method with Gaussian Process."""
+        sphere_func_with_data.surrogate.fit(method="gaussian_process")
+
+        std = sphere_func_with_data.surrogate.uncertainty({"x": 0, "y": 0})
+        assert isinstance(std, float)
+        assert std >= 0
+
+    def test_non_gp_uncertainty_raises(self, sphere_func_with_data):
+        """Test error for uncertainty with non-GP method."""
+        sphere_func_with_data.surrogate.fit(method="random_forest")
+
+        with pytest.raises(ValueError, match="only available for Gaussian Process"):
+            sphere_func_with_data.surrogate.uncertainty({"x": 0, "y": 0})
+
+    def test_fit_gradient_boosting(self, sphere_func_with_data):
+        """Test Gradient Boosting surrogate fitting."""
+        sphere_func_with_data.surrogate.fit(method="gradient_boosting")
+
+        assert sphere_func_with_data.surrogate.is_fitted
+        assert sphere_func_with_data.surrogate.method == "gradient_boosting"
+
+        pred = sphere_func_with_data.surrogate.predict({"x": 0, "y": 0})
+        assert isinstance(pred, float)
+
+    def test_fit_invalid_method_raises(self, sphere_func_with_data):
+        """Test error for invalid surrogate method."""
+        with pytest.raises(ValueError, match="Unknown method"):
+            sphere_func_with_data.surrogate.fit(method="invalid_method")
+
+    def test_check_data_raises(self, sphere_func):
+        """Test error with insufficient data for fitting."""
+        sphere_func({"x": 1.0, "y": 1.0})
+        with pytest.raises(ValueError, match="at least 10 evaluations"):
+            sphere_func.surrogate.fit()

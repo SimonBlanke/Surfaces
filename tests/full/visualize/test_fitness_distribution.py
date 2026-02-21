@@ -56,7 +56,7 @@ class TestFitnessDistributionBasic:
         fig = func.plot.fitness_distribution(n_samples=25)
 
         # The function should have been called 25 times
-        assert func.n_evaluations == 25
+        assert func.data.n_evaluations == 25
 
     def test_returns_plotly_figure(self):
         """Test that the method returns a Plotly Figure."""
@@ -131,10 +131,10 @@ class TestFitnessDistributionWithParams:
         # Check that all samples were within bounds
         # by verifying the function values are reasonable for the restricted range
         assert fig is not None
-        assert func.n_evaluations == 100
+        assert func.data.n_evaluations == 100
 
         # For Sphere function with |x| <= 1, max value is 2 (1^2 + 1^2)
-        max_score = max(record["score"] for record in func.search_data)
+        max_score = max(record["score"] for record in func.data.search_data)
         assert max_score <= 2.0 + 0.01  # Small tolerance
 
     def test_with_fixed_dimensions(self):
@@ -149,10 +149,10 @@ class TestFitnessDistributionWithParams:
         )
 
         assert fig is not None
-        assert func.n_evaluations == 50
+        assert func.data.n_evaluations == 50
 
         # All evaluations should have x2 = 0
-        for record in func.search_data:
+        for record in func.data.search_data:
             assert record["x2"] == 0.0
 
     def test_with_ellipsis_and_fixed(self):
@@ -172,10 +172,10 @@ class TestFitnessDistributionWithParams:
         )
 
         assert fig is not None
-        assert func.n_evaluations == 30
+        assert func.data.n_evaluations == 30
 
         # Check fixed dimensions
-        for record in func.search_data:
+        for record in func.data.search_data:
             assert record["x1"] == 0.5
             assert record["x3"] == -0.5
 
@@ -251,10 +251,10 @@ class TestFitnessDistributionDimensions:
         )
 
         assert fig is not None
-        assert func.n_evaluations == 30
+        assert func.data.n_evaluations == 30
 
         # x1 and x2 should be fixed
-        for record in func.search_data:
+        for record in func.data.search_data:
             assert record["x1"] == 0.0
             assert record["x2"] == 0.0
 
@@ -274,7 +274,7 @@ class TestFitnessDistributionReproducibility:
         fig2 = func2.plot.fitness_distribution(n_samples=50)
 
         # Both should have the same samples (same seed)
-        scores1 = [record["score"] for record in func1.search_data]
-        scores2 = [record["score"] for record in func2.search_data]
+        scores1 = [record["score"] for record in func1.data.search_data]
+        scores2 = [record["score"] for record in func2.data.search_data]
 
         assert scores1 == scores2

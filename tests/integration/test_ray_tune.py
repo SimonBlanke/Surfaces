@@ -182,7 +182,7 @@ def test_ray_tune_surfaces_data_collection():
         result = local_func({"x0": config["x0"], "x1": config["x1"]})
 
         # Local tracking works
-        assert local_func.n_evaluations == 1
+        assert local_func.data.n_evaluations == 1
 
         return {"loss": result}
 

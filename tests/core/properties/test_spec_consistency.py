@@ -23,7 +23,7 @@ class TestSpecStructure:
         """Algebraic functions have spec property."""
         func = instantiate_function(func_class)
         spec = func.spec
-        assert isinstance(spec, dict)
+        assert isinstance(spec.as_dict(), dict)
 
     @pytest.mark.parametrize("func_class", algebraic_functions, ids=func_id)
     def test_algebraic_spec_has_required_keys(self, func_class):
@@ -60,14 +60,14 @@ class TestSpecConsistency:
         _ = func(params)
 
         spec2 = func.spec
-        assert spec1 == spec2
+        assert spec1.as_dict() == spec2.as_dict()
 
     @pytest.mark.parametrize("func_class", algebraic_functions, ids=func_id)
     def test_spec_same_for_different_instances(self, func_class):
         """Spec is identical for different instances of same class."""
         func1 = instantiate_function(func_class)
         func2 = instantiate_function(func_class)
-        assert func1.spec == func2.spec
+        assert func1.spec.as_dict() == func2.spec.as_dict()
 
 
 # =============================================================================

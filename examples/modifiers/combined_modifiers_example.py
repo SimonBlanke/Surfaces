@@ -19,7 +19,7 @@ point = {"x0": 1.0, "x1": 1.0, "x2": 1.0}
 
 # Multiple evaluations at same point
 print(f"\nEvaluating at {point}:")
-print(f"True value: {realistic_sphere.true_value(point)}")
+print(f"True value: {realistic_sphere.pure(point)}")
 
 results = []
 start = time.perf_counter()
@@ -46,5 +46,5 @@ print(f"  Total noise applications: {noise.evaluation_count}")
 
 # Reset all modifiers
 print("\nResetting modifiers...")
-realistic_sphere.reset_modifiers()
+realistic_sphere.modifiers.reset()
 print(f"  Noise evaluation count after reset: {noise.evaluation_count}")

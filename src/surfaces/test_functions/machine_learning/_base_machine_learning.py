@@ -114,9 +114,9 @@ class MachineLearningFunction(BaseTestFunction):
         # Apply modifiers if configured
         if self._modifiers:
             context = {
-                "evaluation_count": self.n_evaluations,
-                "best_score": self.best_score,
-                "search_data": self.search_data,
+                "evaluation_count": self._n_evaluations,
+                "best_score": self._best_score,
+                "search_data": self._search_data,
             }
             for modifier in self._modifiers:
                 raw_value = modifier.apply(raw_value, params, context)

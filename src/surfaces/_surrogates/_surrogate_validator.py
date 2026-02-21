@@ -206,6 +206,16 @@ class SurrogateValidator:
         if not self._surrogate_func.use_surrogate:
             raise ValueError(f"No surrogate model available for {func_class.__name__}")
 
+    # Map init param names to their private attribute names.
+    # These params now have accessor properties that return proxy objects
+    # rather than the raw values expected by __init__.
+    _ACCESSOR_RAW_ATTRS = {
+        "memory": "_memory_enabled",
+        "callbacks": "_callbacks",
+        "modifiers": "_modifiers",
+        "catch_errors": "_error_handlers",
+    }
+
     def _extract_init_params(self, function) -> Dict[str, Any]:
         """Extract initialization parameters from a function instance.
 
@@ -246,8 +256,13 @@ class SurrogateValidator:
             if param_name in ("self", "use_surrogate"):
                 continue
 
-            # Check if the instance has this attribute
-            if hasattr(function, param_name):
+            # Some init params now have accessor properties; read the
+            # underlying private attribute to get the raw value.
+            raw_attr = self._ACCESSOR_RAW_ATTRS.get(param_name)
+            if raw_attr is not None:
+                if hasattr(function, raw_attr):
+                    init_params[param_name] = getattr(function, raw_attr)
+            elif hasattr(function, param_name):
                 init_params[param_name] = getattr(function, param_name)
 
         return init_params

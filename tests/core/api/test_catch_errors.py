@@ -35,7 +35,7 @@ class TestCatchErrorsBasic:
     def test_catch_errors_default_none(self):
         """By default, catch_errors is None (disabled)."""
         func = FailingSphereFunction(n_dim=2)
-        assert func.catch_errors is None
+        assert func._error_handlers is None
 
     def test_error_propagates_when_disabled(self):
         """Errors propagate when catch_errors is None."""
@@ -157,8 +157,8 @@ class TestCatchErrorsWithDataCollection:
 
         func({"x0": -1.0, "x1": 0.0})
 
-        assert len(func.search_data) == 1
-        assert func.search_data[0]["score"] == 999.0
+        assert len(func.data.search_data) == 1
+        assert func.data.search_data[0]["score"] == 999.0
 
     def test_error_does_not_become_best_for_minimize(self):
         """High error return values don't become best_score for minimize."""
@@ -170,8 +170,8 @@ class TestCatchErrorsWithDataCollection:
         func({"x0": 1.0, "x1": 1.0})  # Normal: score = 2.0
         func({"x0": -1.0, "x1": 0.0})  # Error: score = inf
 
-        assert func.best_score == 2.0
-        assert func.n_evaluations == 2
+        assert func.data.best_score == 2.0
+        assert func.data.n_evaluations == 2
 
 
 class TestCatchErrorsWithMemory:
@@ -340,4 +340,4 @@ class TestCatchErrorsWithEngineeringFunctions:
         func = CantileverBeamFunction(
             catch_errors={ValueError: float("inf")},
         )
-        assert func.catch_errors == {ValueError: float("inf")}
+        assert func._error_handlers == {ValueError: float("inf")}
