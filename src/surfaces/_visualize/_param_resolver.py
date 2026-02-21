@@ -188,36 +188,29 @@ def _get_dimension_names(func: "BaseTestFunction") -> List[str]:
 
 
 def _get_default_plot_dims(func: "BaseTestFunction", all_dims: List[str]) -> List[str]:
-    """Get default dimensions to plot."""
-    if hasattr(func, "default_plot_dims"):
-        return func.default_plot_dims
-
-    # Default: first 2 dimensions (or all if less than 2)
+    """Get default dimensions to plot (first 2, or all if fewer)."""
     return all_dims[:2] if len(all_dims) >= 2 else all_dims
 
 
 def _get_default_bounds(
     func: "BaseTestFunction", all_dims: List[str]
 ) -> Dict[str, Tuple[float, float]]:
-    """Get default bounds for each dimension."""
-    if hasattr(func, "default_bounds_per_dim"):
-        return func.default_bounds_per_dim
-
-    # Try to get from search_space
+    """Get default bounds for each dimension from the search space."""
     result = {}
     if hasattr(func, "search_space"):
         for dim_name in all_dims:
             values = func.search_space.get(dim_name)
-            if values is not None and len(values) > 0:
-                # Handle both arrays and lists (including categorical)
-                numeric_values = [v for v in values if isinstance(v, (int, float))]
-                if numeric_values:
-                    result[dim_name] = (min(numeric_values), max(numeric_values))
-                else:
-                    # Categorical: use indices
-                    result[dim_name] = (0, len(values) - 1)
+            if values is None or (hasattr(values, "__len__") and len(values) == 0):
+                continue
+            numeric_values = [
+                v for v in values if isinstance(v, (int, float, np.integer, np.floating))
+            ]
+            if numeric_values:
+                result[dim_name] = (float(min(numeric_values)), float(max(numeric_values)))
+            else:
+                result[dim_name] = (0.0, float(len(values) - 1))
 
-    # Fall back to global default_bounds
+    # Fall back to global default_bounds for any missing dimensions
     if hasattr(func, "default_bounds"):
         global_bounds = func.default_bounds
         for dim_name in all_dims:
@@ -232,18 +225,31 @@ def _get_default_fixed(
     all_dims: List[str],
     default_bounds: Dict[str, Tuple[float, float]],
 ) -> Dict[str, float]:
-    """Get default fixed values for each dimension."""
-    if hasattr(func, "default_fixed"):
-        return func.default_fixed
+    """Get default fixed values for each dimension.
 
-    # Default: center of bounds
+    Uses the middle element of the search space values if available,
+    otherwise falls back to the center of bounds.
+    """
     result = {}
-    for dim_name in all_dims:
-        if dim_name in default_bounds:
-            min_val, max_val = default_bounds[dim_name]
-            result[dim_name] = (min_val + max_val) / 2
-        else:
-            result[dim_name] = 0.0
+    if hasattr(func, "search_space"):
+        for dim_name in all_dims:
+            values = func.search_space.get(dim_name)
+            if values is not None and hasattr(values, "__len__") and len(values) > 0:
+                result[dim_name] = values[len(values) // 2]
+                continue
+            # Fall back to center of bounds
+            if dim_name in default_bounds:
+                min_val, max_val = default_bounds[dim_name]
+                result[dim_name] = (min_val + max_val) / 2
+            else:
+                result[dim_name] = 0.0
+    else:
+        for dim_name in all_dims:
+            if dim_name in default_bounds:
+                min_val, max_val = default_bounds[dim_name]
+                result[dim_name] = (min_val + max_val) / 2
+            else:
+                result[dim_name] = 0.0
 
     return result
 
@@ -253,18 +259,37 @@ def _get_default_step(
     all_dims: List[str],
     default_bounds: Dict[str, Tuple[float, float]],
 ) -> Dict[str, Optional[float]]:
-    """Get default step size for each dimension."""
-    if hasattr(func, "default_step"):
-        return func.default_step
+    """Get default step size for each dimension.
 
-    # Default: (max - min) / 100 for continuous
-    result = {}
-    for dim_name in all_dims:
-        if dim_name in default_bounds:
-            min_val, max_val = default_bounds[dim_name]
-            result[dim_name] = (max_val - min_val) / 100
-        else:
-            result[dim_name] = None
+    For dense arrays (>50 values), uses (max - min) / 100.
+    For discrete values, uses the minimum step between sorted values.
+    """
+    result: Dict[str, Optional[float]] = {}
+    if hasattr(func, "search_space"):
+        for dim_name in all_dims:
+            values = func.search_space.get(dim_name)
+            if values is None or (hasattr(values, "__len__") and len(values) < 2):
+                result[dim_name] = None
+                continue
+            if isinstance(values, np.ndarray) and len(values) > 50:
+                result[dim_name] = float((values.max() - values.min()) / 100)
+                continue
+            numeric_values = [
+                v for v in values if isinstance(v, (int, float, np.integer, np.floating))
+            ]
+            if len(numeric_values) >= 2:
+                sorted_vals = sorted(numeric_values)
+                steps = [sorted_vals[i + 1] - sorted_vals[i] for i in range(len(sorted_vals) - 1)]
+                result[dim_name] = float(min(steps)) if steps else None
+            else:
+                result[dim_name] = None
+    else:
+        for dim_name in all_dims:
+            if dim_name in default_bounds:
+                min_val, max_val = default_bounds[dim_name]
+                result[dim_name] = (max_val - min_val) / 100
+            else:
+                result[dim_name] = None
 
     return result
 

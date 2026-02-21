@@ -236,10 +236,6 @@ class TestMLFunctionWith2DPlots:
         except ImportError:
             pytest.skip("ML dependencies not installed")
 
-    def test_ml_function_default_plot_dims(self, ml_func):
-        """ML function has correct default plot dimensions."""
-        assert ml_func.default_plot_dims == ["n_estimators", "max_depth"]
-
     def test_ml_function_param_resolution(self, ml_func):
         """Param resolution works with ML dimension names."""
         resolved = resolve_params(ml_func, params=None, required_plot_dims=2)
