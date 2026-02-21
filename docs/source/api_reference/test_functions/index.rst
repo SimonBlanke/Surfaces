@@ -9,7 +9,7 @@ Test Functions
 ----
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    algebraic
    bbob

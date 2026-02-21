@@ -59,7 +59,7 @@ Modifiers wrap existing test functions:
     result = noisy_func({"x0": 0, "x1": 0, "x2": 0, "x3": 0, "x4": 0})
 
     # Get true value without noise
-    true_result = noisy_func.true_value({"x0": 0, "x1": 0, "x2": 0, "x3": 0, "x4": 0})
+    true_result = noisy_func.pure({"x0": 0, "x1": 0, "x2": 0, "x3": 0, "x4": 0})
 
 ----
 

@@ -261,7 +261,8 @@ html_theme = "pydata_sphinx_theme"
 
 html_theme_options = {
     "logo": {
-        "text": "Surfaces",
+        "image_light": "_static/images/navbar_logo.svg",
+        "image_dark": "_static/images/navbar_logo_dark.svg",
     },
     "icon_links": [
         {
@@ -280,7 +281,8 @@ html_theme_options = {
     "navbar_start": ["navbar-logo"],
     "navbar_center": ["navbar-nav"],
     "navbar_end": ["theme-switcher", "navbar-icon-links"],
-    "show_toc_level": 2,
+    "show_nav_level": 3,
+    "show_toc_level": 3,
     "secondary_sidebar_items": ["page-toc", "sourcelink"],
 }
 
@@ -304,7 +306,6 @@ html_sidebars = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 html_css_files = ["css/custom.css"]
-html_js_files = ["js/sidebar-toggle.js"]
 
 html_show_sourcelink = False
 
