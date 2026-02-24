@@ -3,17 +3,25 @@
 # License: MIT License
 
 """
-Template Method Migration Tracking Tests
+Template Method Pattern Compliance Tests
 =========================================
 
-These tests track the migration from the closure-based pattern
-(_create_objective_function setting self.pure_objective_function)
-to the template method pattern (_objective / _raw_objective / _ml_objective).
+These tests verify that every discovered test function class provides
+the required override points for the template method pattern:
 
-The _KNOWN_MIGRATION_PENDING set contains all classes not yet migrated.
-As migration proceeds, classes are removed from this set. When the set
-is empty, the migration is complete and Phase 6 (remove backward compat)
-can proceed.
+    All classes:
+        _objective(params)          [required, via self or intermediate base]
+        _default_search_space()     [required, via self or intermediate base]
+
+    EngineeringFunction subclasses:
+        _raw_objective(params)      [required]
+        _constraints(params)        [optional, default returns []]
+
+    MachineLearningFunction subclasses:
+        _ml_objective(params)       [required]
+
+Additionally verifies that no class still uses the legacy closure-based
+pattern (_create_objective_function).
 
 Usage:
     pytest tests/core/properties/test_template_method.py -v
@@ -31,109 +39,131 @@ from .test_interface_compliance import (
 )
 
 # =============================================================================
-# Known migration-pending classes (module.ClassName)
-# Remove entries as each class is migrated to _objective pattern.
-# When this set is empty, Phase 6 (remove backward compat) can proceed.
+# Helper: check MRO for a method between concrete class and a stop class
 # =============================================================================
 
-_KNOWN_MIGRATION_PENDING = frozenset()  # Migration complete
 
-
-def _class_key(cls: Type) -> str:
-    """Unique key for a class: module.ClassName."""
-    return f"{cls.__module__}.{cls.__name__}"
-
-
-def _is_migration_pending(cls: Type) -> bool:
-    """Check if a class is in the known migration-pending set."""
-    return _class_key(cls) in _KNOWN_MIGRATION_PENDING
-
-
-def _has_own_objective(cls: Type) -> bool:
-    """Check if the class (or an intermediate base above BaseTestFunction)
-    provides a non-fallback _objective method.
-
-    A class passes if _objective is overridden anywhere in the MRO between
-    the concrete class and BaseTestFunction (exclusive).
-    """
+def _has_method_in_mro(cls: Type, method_name: str, stop_at: Type = BaseTestFunction) -> bool:
+    """Check if method_name is defined anywhere in the MRO between cls and stop_at (exclusive)."""
     for klass in cls.__mro__:
-        if klass is BaseTestFunction:
+        if klass is stop_at:
             break
-        if "_objective" in klass.__dict__:
+        if method_name in klass.__dict__:
             return True
     return False
 
 
-def _has_own_create_objective(cls: Type) -> bool:
-    """Check if the class defines _create_objective_function in its own __dict__
-    or in an intermediate base above BaseTestFunction."""
-    for klass in cls.__mro__:
-        if klass is BaseTestFunction:
-            break
-        if "_create_objective_function" in klass.__dict__:
-            return True
-    return False
+def _is_engineering_subclass(cls: Type) -> bool:
+    """Check if cls inherits from EngineeringFunction."""
+    from surfaces.test_functions.algebraic.constrained._base_engineering_function import (
+        EngineeringFunction,
+    )
+
+    return issubclass(cls, EngineeringFunction) and cls is not EngineeringFunction
+
+
+def _is_ml_subclass(cls: Type) -> bool:
+    """Check if cls inherits from MachineLearningFunction."""
+    from surfaces.test_functions.machine_learning._base_machine_learning import (
+        MachineLearningFunction,
+    )
+
+    return issubclass(cls, MachineLearningFunction) and cls is not MachineLearningFunction
 
 
 # =============================================================================
-# Tests
+# Core template method tests (all classes)
 # =============================================================================
 
 
 @pytest.mark.static
 @pytest.mark.parametrize("func_class", ALL_TEST_FUNCTION_CLASSES, ids=class_id)
-class TestTemplateMethodMigration:
-    """Track migration from closure pattern to template method pattern."""
+class TestTemplateMethodCompliance:
+    """Verify every class provides the required override points."""
 
     def test_has_objective_method(self, func_class: Type[BaseTestFunction]) -> None:
-        """Class should provide _objective (directly or via intermediate base).
-
-        Migrated classes override _objective somewhere in the hierarchy above
-        BaseTestFunction. Classes still in _KNOWN_MIGRATION_PENDING are allowed
-        to fail this check (they use the backward-compat fallback).
-        """
-        if _is_migration_pending(func_class):
-            pytest.skip(f"{func_class.__name__}: migration pending")
-
-        assert _has_own_objective(func_class), (
+        """Class must provide _objective (directly or via intermediate base)."""
+        assert _has_method_in_mro(func_class, "_objective"), (
             f"{func_class.__name__}: does not override _objective. "
             f"Either implement _objective directly or ensure an intermediate "
             f"base class provides a sub-template."
         )
 
-    def test_no_create_objective_function(self, func_class: Type[BaseTestFunction]) -> None:
-        """Migrated classes should not define _create_objective_function.
+    def test_has_default_search_space(self, func_class: Type[BaseTestFunction]) -> None:
+        """Class must provide _default_search_space (directly or via intermediate base)."""
+        assert _has_method_in_mro(func_class, "_default_search_space"), (
+            f"{func_class.__name__}: does not provide _default_search_space. "
+            f"Implement _default_search_space() to define the parameter space."
+        )
 
-        After migration, the closure-based pattern should be replaced with
-        the _objective method. Classes still in _KNOWN_MIGRATION_PENDING are
-        allowed to still have _create_objective_function.
+    def test_no_search_space_property_override(self, func_class: Type[BaseTestFunction]) -> None:
+        """Subclasses must not override search_space as a property.
+
+        search_space is a fixed property on BaseTestFunction that delegates
+        to _default_search_space(). Overriding it breaks the template pattern.
         """
-        if _is_migration_pending(func_class):
-            pytest.skip(f"{func_class.__name__}: migration pending")
+        for klass in func_class.__mro__:
+            if klass is BaseTestFunction:
+                break
+            if "search_space" in klass.__dict__:
+                assert False, (
+                    f"{func_class.__name__}: overrides search_space directly "
+                    f"(in {klass.__name__}). Override _default_search_space() instead."
+                )
 
-        assert not _has_own_create_objective(func_class), (
+    def test_no_create_objective_function(self, func_class: Type[BaseTestFunction]) -> None:
+        """No class should still use the legacy closure-based pattern."""
+        assert not _has_method_in_mro(func_class, "_create_objective_function"), (
             f"{func_class.__name__}: still defines _create_objective_function. "
             f"Replace with _objective method pattern."
         )
 
 
-@pytest.mark.static
-class TestMigrationProgress:
-    """Track overall migration progress."""
+# =============================================================================
+# Engineering-specific tests
+# =============================================================================
 
-    def test_pending_set_not_stale(self) -> None:
-        """All entries in _KNOWN_MIGRATION_PENDING must correspond to
-        discovered test function classes. Catches typos and removed classes."""
-        discovered_keys = {_class_key(cls) for cls in ALL_TEST_FUNCTION_CLASSES}
-        stale = _KNOWN_MIGRATION_PENDING - discovered_keys
-        assert not stale, (
-            f"Stale entries in _KNOWN_MIGRATION_PENDING (not found in discovery): "
-            f"{sorted(stale)}"
+
+_ENGINEERING_CLASSES = [c for c in ALL_TEST_FUNCTION_CLASSES if _is_engineering_subclass(c)]
+
+
+@pytest.mark.static
+@pytest.mark.parametrize("func_class", _ENGINEERING_CLASSES, ids=class_id)
+class TestEngineeringTemplateMethod:
+    """Verify engineering subclasses provide _raw_objective."""
+
+    def test_has_raw_objective(self, func_class: Type[BaseTestFunction]) -> None:
+        """Engineering subclass must provide _raw_objective."""
+        from surfaces.test_functions.algebraic.constrained._base_engineering_function import (
+            EngineeringFunction,
         )
 
-    def test_migration_count(self) -> None:
-        """Report migration progress (informational)."""
-        total = len(ALL_TEST_FUNCTION_CLASSES)
-        pending = sum(1 for cls in ALL_TEST_FUNCTION_CLASSES if _is_migration_pending(cls))
-        migrated = total - pending
-        print(f"\nMigration progress: {migrated}/{total} classes migrated " f"({pending} pending)")
+        assert _has_method_in_mro(func_class, "_raw_objective", stop_at=EngineeringFunction), (
+            f"{func_class.__name__}: does not implement _raw_objective. "
+            f"Engineering subclasses must define _raw_objective(self, params)."
+        )
+
+
+# =============================================================================
+# ML-specific tests
+# =============================================================================
+
+
+_ML_CLASSES = [c for c in ALL_TEST_FUNCTION_CLASSES if _is_ml_subclass(c)]
+
+
+@pytest.mark.static
+@pytest.mark.parametrize("func_class", _ML_CLASSES, ids=class_id)
+class TestMLTemplateMethod:
+    """Verify ML subclasses provide _ml_objective."""
+
+    def test_has_ml_objective(self, func_class: Type[BaseTestFunction]) -> None:
+        """ML subclass must provide _ml_objective."""
+        from surfaces.test_functions.machine_learning._base_machine_learning import (
+            MachineLearningFunction,
+        )
+
+        assert _has_method_in_mro(func_class, "_ml_objective", stop_at=MachineLearningFunction), (
+            f"{func_class.__name__}: does not implement _ml_objective. "
+            f"ML subclasses must define _ml_objective(self, params)."
+        )
