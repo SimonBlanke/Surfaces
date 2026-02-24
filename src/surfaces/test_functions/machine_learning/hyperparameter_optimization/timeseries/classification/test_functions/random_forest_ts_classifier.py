@@ -126,26 +126,21 @@ class RandomForestTSClassifierFunction(BaseTSClassification):
             "max_depth": self.max_depth_default,
         }
 
-    def _create_objective_function(self) -> None:
-        """Create objective function with fixed dataset and cv."""
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
         from sklearn.ensemble import RandomForestClassifier
         from sklearn.model_selection import cross_val_score
 
         X_raw, y = self._dataset_loader()
         X = extract_ts_features(X_raw)
-        cv = self.cv
 
-        def random_forest_ts_classifier(params: Dict[str, Any]) -> float:
-            model = RandomForestClassifier(
-                n_estimators=params["n_estimators"],
-                max_depth=params["max_depth"],
-                random_state=42,
-                n_jobs=-1,
-            )
-            scores = cross_val_score(model, X, y, cv=cv, scoring="accuracy")
-            return scores.mean()
-
-        self.pure_objective_function = random_forest_ts_classifier
+        model = RandomForestClassifier(
+            n_estimators=params["n_estimators"],
+            max_depth=params["max_depth"],
+            random_state=42,
+            n_jobs=-1,
+        )
+        scores = cross_val_score(model, X, y, cv=self.cv, scoring="accuracy")
+        return scores.mean()
 
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Add fixed parameters for surrogate prediction."""

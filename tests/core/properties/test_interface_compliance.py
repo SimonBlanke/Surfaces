@@ -31,7 +31,7 @@ Required Interface (every concrete test function MUST have)
 -----------------------------------------------------------
 - `name` or `_spec["name"]`: Human-readable function name
 - `_spec`: Dict with function characteristics (continuous, differentiable, etc.)
-- `_create_objective_function()`: Method that creates the objective function
+- `_objective()`: Method that computes the objective value for given parameters
 - `search_space` property or `para_names`/`n_dim` to define parameter space
 - `tagline`: Short description of the function
 - `reference_url`: URL to documentation or paper
@@ -109,19 +109,20 @@ def is_base_class(cls: Type) -> bool:
     return False
 
 
-def is_concrete_test_function(cls: Type) -> bool:
-    """Check if a class is a concrete test function implementation."""
-    if not inspect.isclass(cls):
-        return False
-    if not issubclass(cls, BaseTestFunction):
-        return False
-    if cls is BaseTestFunction:
-        return False
-    if is_base_class(cls):
-        return False
+def _has_own_objective_method(cls: Type) -> bool:
+    """Check if the class provides _objective somewhere between itself and BaseTestFunction."""
+    for klass in cls.__mro__:
+        if klass is BaseTestFunction:
+            break
+        if "_objective" in klass.__dict__:
+            return True
+    return False
+
+
+def _has_implemented_create_objective(cls: Type) -> bool:
+    """Check if _create_objective_function is implemented (not just NotImplementedError)."""
     if not hasattr(cls, "_create_objective_function"):
         return False
-    # Check if method is actually implemented (not just NotImplementedError)
     try:
         method = getattr(cls, "_create_objective_function")
         source = inspect.getsource(method)
@@ -130,6 +131,24 @@ def is_concrete_test_function(cls: Type) -> bool:
     except (TypeError, OSError):
         pass
     return True
+
+
+def is_concrete_test_function(cls: Type) -> bool:
+    """Check if a class is a concrete test function implementation.
+
+    A concrete test function must provide _objective via its own class
+    or an intermediate base (template method pattern). ML functions
+    provide this via _ml_objective, which is called by the ML base's _objective.
+    """
+    if not inspect.isclass(cls):
+        return False
+    if not issubclass(cls, BaseTestFunction):
+        return False
+    if cls is BaseTestFunction:
+        return False
+    if is_base_class(cls):
+        return False
+    return _has_implemented_create_objective(cls) or _has_own_objective_method(cls)
 
 
 def discover_test_function_classes() -> List[Type[BaseTestFunction]]:
@@ -249,7 +268,7 @@ class TestClassAttributes:
     Why these matter:
     - `name`: Used for display, documentation, and function identification
     - `_spec`: Defines function characteristics (convex, separable, etc.)
-    - `_create_objective_function`: The method that defines the actual function
+    - `_objective`: The method that computes the objective value
     """
 
     def test_has_name(self, func_class: Type[BaseTestFunction]) -> None:
@@ -263,11 +282,14 @@ class TestClassAttributes:
         assert hasattr(func_class, "_spec"), f"{func_class.__name__}: Missing '_spec'"
         assert isinstance(func_class._spec, dict), f"{func_class.__name__}: _spec must be dict"
 
-    def test_has_create_objective_method(self, func_class: Type[BaseTestFunction]) -> None:
-        """Class must have _create_objective_function method."""
-        assert hasattr(
-            func_class, "_create_objective_function"
-        ), f"{func_class.__name__}: Missing '_create_objective_function' method"
+    def test_has_objective_implementation(self, func_class: Type[BaseTestFunction]) -> None:
+        """Class must provide an objective implementation (either pattern)."""
+        has_create = _has_implemented_create_objective(func_class)
+        has_objective = _has_own_objective_method(func_class)
+        assert has_create or has_objective, (
+            f"{func_class.__name__}: Must provide _objective "
+            f"via template method pattern (or _ml_objective for ML functions)"
+        )
 
 
 @pytest.mark.static

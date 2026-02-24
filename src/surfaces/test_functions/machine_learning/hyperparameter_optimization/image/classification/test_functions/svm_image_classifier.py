@@ -94,8 +94,7 @@ class SVMImageClassifierFunction(BaseImageClassification):
             "gamma": self.gamma_default,
         }
 
-    def _create_objective_function(self) -> None:
-        """Create objective function with fixed dataset and cv."""
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
         from sklearn.decomposition import PCA
         from sklearn.model_selection import cross_val_score
         from sklearn.preprocessing import StandardScaler
@@ -103,25 +102,19 @@ class SVMImageClassifierFunction(BaseImageClassification):
 
         X_raw, y = self._dataset_loader()
 
-        # Apply PCA for dimensionality reduction
         scaler = StandardScaler()
         pca = PCA(n_components=self.n_components, random_state=42)
         X_scaled = scaler.fit_transform(X_raw)
         X = pca.fit_transform(X_scaled)
 
-        cv = self.cv
-
-        def svm_image_classifier(params: Dict[str, Any]) -> float:
-            model = SVC(
-                C=params["C"],
-                kernel=params["kernel"],
-                gamma=params["gamma"],
-                random_state=42,
-            )
-            scores = cross_val_score(model, X, y, cv=cv, scoring="accuracy")
-            return scores.mean()
-
-        self.pure_objective_function = svm_image_classifier
+        model = SVC(
+            C=params["C"],
+            kernel=params["kernel"],
+            gamma=params["gamma"],
+            random_state=42,
+        )
+        scores = cross_val_score(model, X, y, cv=self.cv, scoring="accuracy")
+        return scores.mean()
 
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Add fixed parameters for surrogate prediction."""

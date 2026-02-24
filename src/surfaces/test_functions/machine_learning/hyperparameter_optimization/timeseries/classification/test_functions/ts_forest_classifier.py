@@ -92,31 +92,24 @@ class TSForestClassifierFunction(BaseTSClassification):
             "min_interval": self.min_interval_default,
         }
 
-    def _create_objective_function(self) -> None:
-        """Create objective function with fixed dataset and cv."""
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
         from sklearn.model_selection import cross_val_score
         from sktime.classification.interval_based import TimeSeriesForestClassifier
 
         X_raw, y = self._dataset_loader()
-        cv = self.cv
 
         # sktime expects 3D array: (n_samples, n_channels, n_timepoints)
-        # Our data is 2D: (n_samples, n_timepoints)
-        # Reshape to add channel dimension
         X = X_raw.reshape(X_raw.shape[0], 1, X_raw.shape[1])
 
-        def ts_forest_classifier(params: Dict[str, Any]) -> float:
-            model = TimeSeriesForestClassifier(
-                n_estimators=params["n_estimators"],
-                min_interval=params["min_interval"],
-                random_state=42,
-                n_jobs=-1,
-            )
+        model = TimeSeriesForestClassifier(
+            n_estimators=params["n_estimators"],
+            min_interval=params["min_interval"],
+            random_state=42,
+            n_jobs=-1,
+        )
 
-            scores = cross_val_score(model, X, y, cv=cv, scoring="accuracy")
-            return scores.mean()
-
-        self.pure_objective_function = ts_forest_classifier
+        scores = cross_val_score(model, X, y, cv=self.cv, scoring="accuracy")
+        return scores.mean()
 
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Add fixed parameters for surrogate prediction."""

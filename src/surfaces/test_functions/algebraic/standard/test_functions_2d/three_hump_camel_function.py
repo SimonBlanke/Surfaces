@@ -84,14 +84,11 @@ class ThreeHumpCamelFunction(AlgebraicFunction):
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 2
 
-    def _create_objective_function(self) -> None:
-        def three_hump_camel_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            return 2 * x**2 - 1.05 * x**4 + x**6 / 6 + x * y + y**2
-
-        self.pure_objective_function = three_hump_camel_function
+        return 2 * x**2 - 1.05 * x**4 + x**6 / 6 + x * y + y**2
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

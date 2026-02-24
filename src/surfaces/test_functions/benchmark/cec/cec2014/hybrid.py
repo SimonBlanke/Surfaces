@@ -408,22 +408,19 @@ class HybridFunction1(_HybridBase):
         "func_id": 17,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         functions = [_high_conditioned_elliptic, _bent_cigar, _rastrigin]
 
-        def hybrid(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
-            groups = self._split_variables(z)
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
+        groups = self._split_variables(z)
 
-            result = 0.0
-            for i, (group, func) in enumerate(zip(groups, functions)):
-                if len(group) > 0:
-                    result += func(group)
+        result = 0.0
+        for i, (group, func) in enumerate(zip(groups, functions)):
+            if len(group) > 0:
+                result += func(group)
 
-            return result + self.f_global
-
-        self.pure_objective_function = hybrid
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized F17: High Conditioned Elliptic + Bent Cigar + Rastrigin."""
@@ -459,7 +456,7 @@ class HybridFunction2(_HybridBase):
         "func_id": 18,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         def weierstrass(z):
             a, b, k_max = 0.5, 3, 20
             D = len(z)
@@ -472,19 +469,16 @@ class HybridFunction2(_HybridBase):
 
         functions = [_griewank, weierstrass, _rosenbrock]
 
-        def hybrid(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
-            groups = self._split_variables(z)
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
+        groups = self._split_variables(z)
 
-            result = 0.0
-            for group, func in zip(groups, functions):
-                if len(group) > 0:
-                    result += func(group)
+        result = 0.0
+        for group, func in zip(groups, functions):
+            if len(group) > 0:
+                result += func(group)
 
-            return result + self.f_global
-
-        self.pure_objective_function = hybrid
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized F18: Griewank + Weierstrass + Rosenbrock."""
@@ -520,7 +514,7 @@ class HybridFunction3(_HybridBase):
         "func_id": 19,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         def weierstrass(z):
             a, b, k_max = 0.5, 3, 20
             D = len(z)
@@ -533,19 +527,16 @@ class HybridFunction3(_HybridBase):
 
         functions = [_griewank, weierstrass, _rosenbrock, _expanded_scaffer]
 
-        def hybrid(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
-            groups = self._split_variables(z)
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
+        groups = self._split_variables(z)
 
-            result = 0.0
-            for group, func in zip(groups, functions):
-                if len(group) > 0:
-                    result += func(group)
+        result = 0.0
+        for group, func in zip(groups, functions):
+            if len(group) > 0:
+                result += func(group)
 
-            return result + self.f_global
-
-        self.pure_objective_function = hybrid
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized F19: Griewank + Weierstrass + Rosenbrock + Expanded Scaffer."""
@@ -586,22 +577,19 @@ class HybridFunction4(_HybridBase):
         "func_id": 20,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         functions = [_hgbat, _discus, _expanded_griewank_rosenbrock, _rastrigin]
 
-        def hybrid(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
-            groups = self._split_variables(z)
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
+        groups = self._split_variables(z)
 
-            result = 0.0
-            for group, func in zip(groups, functions):
-                if len(group) > 0:
-                    result += func(group)
+        result = 0.0
+        for group, func in zip(groups, functions):
+            if len(group) > 0:
+                result += func(group)
 
-            return result + self.f_global
-
-        self.pure_objective_function = hybrid
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized F20: HGBat + Discus + Expanded Griewank-Rosenbrock + Rastrigin."""
@@ -642,7 +630,7 @@ class HybridFunction5(_HybridBase):
         "func_id": 21,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         functions = [
             _expanded_scaffer,
             _hgbat,
@@ -651,19 +639,16 @@ class HybridFunction5(_HybridBase):
             _ackley,
         ]
 
-        def hybrid(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
-            groups = self._split_variables(z)
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
+        groups = self._split_variables(z)
 
-            result = 0.0
-            for group, func in zip(groups, functions):
-                if len(group) > 0:
-                    result += func(group)
+        result = 0.0
+        for group, func in zip(groups, functions):
+            if len(group) > 0:
+                result += func(group)
 
-            return result + self.f_global
-
-        self.pure_objective_function = hybrid
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized F21: Expanded Scaffer + HGBat + Rosenbrock + HCE + Ackley."""
@@ -705,7 +690,7 @@ class HybridFunction6(_HybridBase):
         "func_id": 22,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         functions = [
             _katsuura,
             _happycat,
@@ -714,19 +699,16 @@ class HybridFunction6(_HybridBase):
             _ackley,
         ]
 
-        def hybrid(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
-            groups = self._split_variables(z)
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
+        groups = self._split_variables(z)
 
-            result = 0.0
-            for group, func in zip(groups, functions):
-                if len(group) > 0:
-                    result += func(group)
+        result = 0.0
+        for group, func in zip(groups, functions):
+            if len(group) > 0:
+                result += func(group)
 
-            return result + self.f_global
-
-        self.pure_objective_function = hybrid
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized F22: Katsuura + HappyCat + EGR + Schwefel + Ackley."""

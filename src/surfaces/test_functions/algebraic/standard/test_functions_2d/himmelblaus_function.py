@@ -106,17 +106,14 @@ class HimmelblausFunction(AlgebraicFunction):
         self.A = A
         self.B = B
 
-    def _create_objective_function(self) -> None:
-        def himmelblaus_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            loss1 = (x**2 + y + self.A) ** 2
-            loss2 = (x + y**2 + self.B) ** 2
+        loss1 = (x**2 + y + self.A) ** 2
+        loss2 = (x + y**2 + self.B) ** 2
 
-            return loss1 + loss2
-
-        self.pure_objective_function = himmelblaus_function
+        return loss1 + loss2
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

@@ -89,9 +89,8 @@ class EngineeringFunction(BaseTestFunction):
         """Number of design variables."""
         return len(self.variable_names)
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
-        """Search space based on variable bounds."""
+    def _default_search_space(self) -> Dict[str, Any]:
+        """Build search space from variable_names and variable_bounds."""
         search_space_ = {}
         total_size = self.default_size
         dim_size = int(total_size ** (1 / self.n_dim))
@@ -102,6 +101,11 @@ class EngineeringFunction(BaseTestFunction):
             search_space_[name] = values
 
         return search_space_
+
+    @property
+    def search_space(self) -> Dict[str, Any]:
+        """Search space based on variable bounds."""
+        return self._default_search_space()
 
     def _get_values(self, params: Dict[str, Any]) -> np.ndarray:
         """Extract variable values from params dict in order."""
@@ -188,13 +192,9 @@ class EngineeringFunction(BaseTestFunction):
         """
         raise NotImplementedError("Subclasses must implement raw_objective")
 
-    def _create_objective_function(self) -> None:
-        """Create objective function with penalty for constraint violations."""
-
-        def penalized_objective(params: Dict[str, Any]) -> float:
-            return self.raw_objective(params) + self.penalty(params)
-
-        self.pure_objective_function = penalized_objective
+    def _objective(self, params: Dict[str, Any]) -> float:
+        """Sub-template: raw objective + penalty for constraint violations."""
+        return self.raw_objective(params) + self.penalty(params)
 
     # =====================================================================
     # Batch evaluation methods

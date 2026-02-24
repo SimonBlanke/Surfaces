@@ -89,29 +89,21 @@ class PolynomialFeatureTransformationFunction(BaseTabularFeatureEngineering):
             "include_bias": self.include_bias_default,
         }
 
-    def _create_objective_function(self) -> None:
-        """Create objective function for polynomial feature transformation."""
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
         from sklearn.linear_model import Ridge
         from sklearn.model_selection import cross_val_score
         from sklearn.preprocessing import PolynomialFeatures
 
         X, y = self._dataset_loader()
-        cv = self.cv
 
-        def objective_function(params: Dict[str, Any]) -> float:
-            # Create polynomial features
-            poly = PolynomialFeatures(
-                degree=params["degree"],
-                interaction_only=params["interaction_only"],
-                include_bias=params["include_bias"],
-            )
-            X_poly = poly.fit_transform(X)
+        poly = PolynomialFeatures(
+            degree=params["degree"],
+            interaction_only=params["interaction_only"],
+            include_bias=params["include_bias"],
+        )
+        X_poly = poly.fit_transform(X)
 
-            # Train Ridge regression (handles multicollinearity from poly features)
-            model = Ridge(alpha=1.0, random_state=42)
+        model = Ridge(alpha=1.0, random_state=42)
 
-            # Evaluate using R2 score
-            scores = cross_val_score(model, X_poly, y, cv=cv, scoring="r2")
-            return scores.mean()
-
-        self.pure_objective_function = objective_function
+        scores = cross_val_score(model, X_poly, y, cv=self.cv, scoring="r2")
+        return scores.mean()

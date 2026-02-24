@@ -86,17 +86,14 @@ class BoothFunction(AlgebraicFunction):
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 2
 
-    def _create_objective_function(self) -> None:
-        def booth_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            loss1 = (x + 2 * y - 7) ** 2
-            loss2 = (2 * x + y - 5) ** 2
+        loss1 = (x + 2 * y - 7) ** 2
+        loss2 = (2 * x + y - 5) ** 2
 
-            return loss1 + loss2
-
-        self.pure_objective_function = booth_function
+        return loss1 + loss2
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

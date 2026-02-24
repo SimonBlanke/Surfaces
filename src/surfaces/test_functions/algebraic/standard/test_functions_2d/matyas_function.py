@@ -83,14 +83,11 @@ class MatyasFunction(AlgebraicFunction):
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 2
 
-    def _create_objective_function(self) -> None:
-        def matyas_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            return 0.26 * (x**2 + y**2) - 0.48 * x * y
-
-        self.pure_objective_function = matyas_function
+        return 0.26 * (x**2 + y**2) - 0.48 * x * y
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

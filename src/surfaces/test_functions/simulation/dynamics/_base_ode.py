@@ -167,14 +167,9 @@ class ODESimulationFunction(SimulationFunction):
         # We need to pass params to _compute_objective, so we store them
         return self._compute_objective(result.t, result.y, self._current_params)
 
-    def _create_objective_function(self) -> None:
-        """Create objective function with parameter passing."""
-        self._check_dependencies()
-        self._setup_simulation()
+    def _objective(self, params: Dict[str, Any]) -> float:
+        """Sub-template: run ODE simulation and extract objective."""
+        self._current_params = params  # Store for _extract_objective
+        result = self._run_simulation(params)
+        return self._extract_objective(result)
 
-        def simulation_objective(params: Dict[str, Any]) -> float:
-            self._current_params = params  # Store for _extract_objective
-            result = self._run_simulation(params)
-            return self._extract_objective(result)
-
-        self.pure_objective_function = simulation_objective

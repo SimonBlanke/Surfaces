@@ -46,19 +46,16 @@ class RotatedHighConditionedElliptic(CEC2014Function):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def elliptic(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
 
-            D = self.n_dim
-            result = 0.0
-            for i in range(D):
-                result += (10**6) ** (i / (D - 1)) * z[i] ** 2
+        D = self.n_dim
+        result = 0.0
+        for i in range(D):
+            result += (10**6) ** (i / (D - 1)) * z[i] ** 2
 
-            return result + self.f_global
-
-        self.pure_objective_function = elliptic
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -103,16 +100,13 @@ class RotatedBentCigar(CEC2014Function):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def bent_cigar(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
 
-            result = z[0] ** 2 + 10**6 * np.sum(z[1:] ** 2)
+        result = z[0] ** 2 + 10**6 * np.sum(z[1:] ** 2)
 
-            return result + self.f_global
-
-        self.pure_objective_function = bent_cigar
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -151,16 +145,13 @@ class RotatedDiscus(CEC2014Function):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def discus(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
 
-            result = 10**6 * z[0] ** 2 + np.sum(z[1:] ** 2)
+        result = 10**6 * z[0] ** 2 + np.sum(z[1:] ** 2)
 
-            return result + self.f_global
-
-        self.pure_objective_function = discus
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""

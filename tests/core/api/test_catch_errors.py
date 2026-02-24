@@ -15,18 +15,15 @@ from surfaces.test_functions.algebraic.constrained import CantileverBeamFunction
 class FailingSphereFunction(SphereFunction):
     """Test function that raises different errors based on input."""
 
-    def _create_objective_function(self):
-        def failing_func(params):
-            x = params["x0"]
-            if x < -10:
-                raise RuntimeError("x0 too negative")
-            if x < 0:
-                raise ValueError("x0 must be non-negative")
-            if x == 0:
-                return 1 / x  # ZeroDivisionError
-            return sum(params[f"x{i}"] ** 2 for i in range(self.n_dim))
-
-        self.pure_objective_function = failing_func
+    def _objective(self, params):
+        x = params["x0"]
+        if x < -10:
+            raise RuntimeError("x0 too negative")
+        if x < 0:
+            raise ValueError("x0 must be non-negative")
+        if x == 0:
+            return 1 / x  # ZeroDivisionError
+        return sum(params[f"x{i}"] ** 2 for i in range(self.n_dim))
 
 
 class TestCatchErrorsBasic:
@@ -221,11 +218,8 @@ class TestCatchErrorsInheritance:
             pass
 
         class SubclassErrorFunc(SphereFunction):
-            def _create_objective_function(self):
-                def func(params):
-                    raise CustomValueError("custom error")
-
-                self.pure_objective_function = func
+            def _objective(self, params):
+                raise CustomValueError("custom error")
 
         func = SubclassErrorFunc(
             n_dim=2,
@@ -243,11 +237,8 @@ class TestCatchErrorsInheritance:
             pass
 
         class MultiMatchFunc(SphereFunction):
-            def _create_objective_function(self):
-                def func(params):
-                    raise SpecificError("specific")
-
-                self.pure_objective_function = func
+            def _objective(self, params):
+                raise SpecificError("specific")
 
         # Note: dict iteration order is preserved in Python 3.7+
         func = MultiMatchFunc(

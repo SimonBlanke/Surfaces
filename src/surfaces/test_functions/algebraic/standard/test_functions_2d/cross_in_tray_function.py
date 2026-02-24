@@ -106,17 +106,14 @@ class CrossInTrayFunction(AlgebraicFunction):
         self.B = B
         self.angle = angle
 
-    def _create_objective_function(self) -> None:
-        def cross_in_tray_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            term1 = math.sin(self.angle * x) * math.sin(self.angle * y)
-            term2 = math.exp(abs(self.B - (math.sqrt(x**2 + y**2) / math.pi)))
+        term1 = math.sin(self.angle * x) * math.sin(self.angle * y)
+        term2 = math.exp(abs(self.B - (math.sqrt(x**2 + y**2) / math.pi)))
 
-            return self.A * (abs(term1 * term2) + 1) ** 0.1
-
-        self.pure_objective_function = cross_in_tray_function
+        return self.A * (abs(term1 * term2) + 1) ** 0.1
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

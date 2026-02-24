@@ -14,7 +14,7 @@ Architecture Overview
 The validator works with ML functions that have two evaluation modes:
 
 1. **Real evaluation** (use_surrogate=False):
-   - Calls `pure_objective_function(params)` which performs actual ML training
+   - Calls `_objective(params)` which performs actual ML training
    - `params` contains only hyperparameters (e.g., n_neighbors, algorithm)
    - Fixed parameters (dataset, cv) are bound at function construction time
 
@@ -30,7 +30,7 @@ Data Flow
 
     # Real evaluation path:
     params (hyperparams only)
-        -> function.pure_objective_function(params)
+        -> function._objective(params)
         -> actual ML training with bound dataset/cv
         -> real score
 
@@ -140,7 +140,7 @@ class SurrogateValidator:
 
     **Evaluation paths**:
 
-    - Real: ``pure_objective_function(params)`` - direct ML training
+    - Real: ``_objective(params)`` - direct ML training
     - Surrogate: ``function(params)`` - routes through ``_evaluate()`` which
       calls ``_get_surrogate_params()`` to add fixed params before querying
       the ONNX model
@@ -438,7 +438,7 @@ class SurrogateValidator:
         -----
         **Evaluation strategy**:
 
-        - Real evaluation calls ``function.pure_objective_function(params)``
+        - Real evaluation calls ``function._objective(params)``
           which directly invokes the ML training with the function's bound
           fixed parameters (dataset, cv).
 
@@ -471,7 +471,7 @@ class SurrogateValidator:
             # The function uses its bound fixed params (dataset, cv)
             start = time.time()
             try:
-                real = self.function.pure_objective_function(params)
+                real = self.function._objective(params)
                 real_time = time.time() - start
 
                 if np.isnan(real):

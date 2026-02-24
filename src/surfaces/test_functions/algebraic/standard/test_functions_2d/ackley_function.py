@@ -104,17 +104,14 @@ class AckleyFunction(AlgebraicFunction):
         self.A = A
         self.angle = angle
 
-    def _create_objective_function(self) -> None:
-        def ackley_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            term1 = -self.A * math.exp(-0.2 * math.sqrt(0.5 * (x * x + y * y)))
-            term2 = -math.exp(0.5 * (math.cos(self.angle * x) + math.cos(self.angle * y)))
+        term1 = -self.A * math.exp(-0.2 * math.sqrt(0.5 * (x * x + y * y)))
+        term2 = -math.exp(0.5 * (math.cos(self.angle * x) + math.cos(self.angle * y)))
 
-            return term1 + term2 + math.e + self.A
-
-        self.pure_objective_function = ackley_function
+        return term1 + term2 + math.e + self.A
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

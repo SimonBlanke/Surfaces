@@ -113,24 +113,17 @@ class GradientBoostingRegressorFunction(BaseRegression):
             "max_depth": self.max_depth_default,
         }
 
-    def _create_objective_function(self) -> None:
-        """Create objective function with fixed dataset and cv."""
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
         from sklearn.ensemble import GradientBoostingRegressor
         from sklearn.model_selection import cross_val_score
 
-        # Load dataset once
         X, y = self._dataset_loader()
-        cv = self.cv
-
-        def gradient_boosting_regressor(params: Dict[str, Any]) -> float:
-            gbr = GradientBoostingRegressor(
-                n_estimators=params["n_estimators"],
-                max_depth=params["max_depth"],
-            )
-            scores = cross_val_score(gbr, X, y, cv=cv, scoring="r2")
-            return scores.mean()
-
-        self.pure_objective_function = gradient_boosting_regressor
+        gbr = GradientBoostingRegressor(
+            n_estimators=params["n_estimators"],
+            max_depth=params["max_depth"],
+        )
+        scores = cross_val_score(gbr, X, y, cv=self.cv, scoring="r2")
+        return scores.mean()
 
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Add fixed parameters (dataset, cv) to params for surrogate prediction."""

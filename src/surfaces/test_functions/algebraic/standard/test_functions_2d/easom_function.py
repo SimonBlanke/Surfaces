@@ -103,17 +103,14 @@ class EasomFunction(AlgebraicFunction):
         self.B = B
         self.angle = angle
 
-    def _create_objective_function(self) -> None:
-        def easom_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            loss1 = self.A * math.cos(x * self.angle) * math.cos(y * self.angle)
-            loss2 = math.exp(-((x - math.pi / self.B) ** 2 + (y - math.pi / self.B) ** 2))
+        loss1 = self.A * math.cos(x * self.angle) * math.cos(y * self.angle)
+        loss2 = math.exp(-((x - math.pi / self.B) ** 2 + (y - math.pi / self.B) ** 2))
 
-            return loss1 * loss2
-
-        self.pure_objective_function = easom_function
+        return loss1 * loss2
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

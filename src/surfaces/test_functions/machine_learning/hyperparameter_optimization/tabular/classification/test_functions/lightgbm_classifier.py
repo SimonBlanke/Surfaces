@@ -106,37 +106,29 @@ class LightGBMClassifierFunction(BaseClassification):
             "reg_lambda": self.reg_lambda_default,
         }
 
-    def _create_objective_function(self) -> None:
-        """
-        Creates the objective function closure with fixed data
-        """
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
         from sklearn.model_selection import cross_val_score
 
         check_dependency("lightgbm", "ml")
         from lightgbm import LGBMClassifier
 
         X, y = self._dataset_loader()
-        cv = self.cv
-
-        def objective(params: Dict[str, Any]) -> float:
-            clf = LGBMClassifier(
-                n_estimators=params["n_estimators"],
-                learning_rate=params["learning_rate"],
-                num_leaves=params["num_leaves"],
-                max_depth=params["max_depth"],
-                min_child_samples=params["min_child_samples"],
-                subsample=params["subsample"],
-                colsample_bytree=params["colsample_bytree"],
-                reg_alpha=params["reg_alpha"],
-                reg_lambda=params["reg_lambda"],
-                random_state=42,
-                n_jobs=-1,
-                verbose=-1,
-            )
-            scores = cross_val_score(clf, X, y, cv=cv, scoring="accuracy")
-            return scores.mean()
-
-        self.pure_objective_function = objective
+        clf = LGBMClassifier(
+            n_estimators=params["n_estimators"],
+            learning_rate=params["learning_rate"],
+            num_leaves=params["num_leaves"],
+            max_depth=params["max_depth"],
+            min_child_samples=params["min_child_samples"],
+            subsample=params["subsample"],
+            colsample_bytree=params["colsample_bytree"],
+            reg_alpha=params["reg_alpha"],
+            reg_lambda=params["reg_lambda"],
+            random_state=42,
+            n_jobs=-1,
+            verbose=-1,
+        )
+        scores = cross_val_score(clf, X, y, cv=self.cv, scoring="accuracy")
+        return scores.mean()
 
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         return {**params, "dataset": self.dataset, "cv": self.cv}

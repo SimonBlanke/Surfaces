@@ -70,24 +70,19 @@ class SVMClassifierFunction(BaseClassification):
             "gamma": self.gamma_default,
         }
 
-    def _create_objective_function(self) -> None:
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
         from sklearn.model_selection import cross_val_score
         from sklearn.svm import SVC
 
         X, y = self._dataset_loader()
-        cv = self.cv
-
-        def objective(params: Dict[str, Any]) -> float:
-            clf = SVC(
-                C=params["C"],
-                kernel=params["kernel"],
-                gamma=params["gamma"],
-                random_state=42,
-            )
-            scores = cross_val_score(clf, X, y, cv=cv, scoring="accuracy")
-            return scores.mean()
-
-        self.pure_objective_function = objective
+        clf = SVC(
+            C=params["C"],
+            kernel=params["kernel"],
+            gamma=params["gamma"],
+            random_state=42,
+        )
+        scores = cross_val_score(clf, X, y, cv=self.cv, scoring="accuracy")
+        return scores.mean()
 
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         return {**params, "dataset": self.dataset, "cv": self.cv}

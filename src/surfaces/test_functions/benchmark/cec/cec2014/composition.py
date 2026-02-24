@@ -461,7 +461,7 @@ class CompositionFunction1(_CompositionBase):
         "func_id": 23,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         functions = [
             _rosenbrock,
             _high_conditioned_elliptic,
@@ -470,21 +470,18 @@ class CompositionFunction1(_CompositionBase):
             _high_conditioned_elliptic,
         ]
 
-        def composition(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            optima = self._get_composition_optima()
-            weights = self._compute_weights(x, optima)
-            M = self._get_rotation_matrix()
+        x = self._params_to_array(params)
+        optima = self._get_composition_optima()
+        weights = self._compute_weights(x, optima)
+        M = self._get_rotation_matrix()
 
-            result = 0.0
-            for i in range(self.n_functions):
-                z = M @ (x - optima[i])
-                f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
-                result += weights[i] * f_val
+        result = 0.0
+        for i in range(self.n_functions):
+            z = M @ (x - optima[i])
+            f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
+            result += weights[i] * f_val
 
-            return result + self.f_global
-
-        self.pure_objective_function = composition
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized F23: Rosenbrock + HCE + Bent Cigar + Discus + HCE."""
@@ -542,24 +539,21 @@ class CompositionFunction2(_CompositionBase):
         "func_id": 24,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         functions = [_schwefel, _rastrigin, _high_conditioned_elliptic]
 
-        def composition(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            optima = self._get_composition_optima()
-            weights = self._compute_weights(x, optima)
-            M = self._get_rotation_matrix()
+        x = self._params_to_array(params)
+        optima = self._get_composition_optima()
+        weights = self._compute_weights(x, optima)
+        M = self._get_rotation_matrix()
 
-            result = 0.0
-            for i in range(self.n_functions):
-                z = M @ (x - optima[i])
-                f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
-                result += weights[i] * f_val
+        result = 0.0
+        for i in range(self.n_functions):
+            z = M @ (x - optima[i])
+            f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
+            result += weights[i] * f_val
 
-            return result + self.f_global
-
-        self.pure_objective_function = composition
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized F24: Schwefel + Rastrigin + HCE."""
@@ -606,24 +600,21 @@ class CompositionFunction3(_CompositionBase):
         "func_id": 25,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         functions = [_schwefel, _rastrigin, _ackley]
 
-        def composition(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            optima = self._get_composition_optima()
-            weights = self._compute_weights(x, optima)
-            M = self._get_rotation_matrix()
+        x = self._params_to_array(params)
+        optima = self._get_composition_optima()
+        weights = self._compute_weights(x, optima)
+        M = self._get_rotation_matrix()
 
-            result = 0.0
-            for i in range(self.n_functions):
-                z = M @ (x - optima[i])
-                f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
-                result += weights[i] * f_val
+        result = 0.0
+        for i in range(self.n_functions):
+            z = M @ (x - optima[i])
+            f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
+            result += weights[i] * f_val
 
-            return result + self.f_global
-
-        self.pure_objective_function = composition
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized F25: Schwefel + Rastrigin + Ackley."""
@@ -672,7 +663,7 @@ class CompositionFunction4(_CompositionBase):
         "func_id": 26,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         functions = [
             _schwefel,
             _happycat,
@@ -681,21 +672,18 @@ class CompositionFunction4(_CompositionBase):
             _griewank,
         ]
 
-        def composition(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            optima = self._get_composition_optima()
-            weights = self._compute_weights(x, optima)
-            M = self._get_rotation_matrix()
+        x = self._params_to_array(params)
+        optima = self._get_composition_optima()
+        weights = self._compute_weights(x, optima)
+        M = self._get_rotation_matrix()
 
-            result = 0.0
-            for i in range(self.n_functions):
-                z = M @ (x - optima[i])
-                f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
-                result += weights[i] * f_val
+        result = 0.0
+        for i in range(self.n_functions):
+            z = M @ (x - optima[i])
+            f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
+            result += weights[i] * f_val
 
-            return result + self.f_global
-
-        self.pure_objective_function = composition
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized F26: Schwefel + HappyCat + HCE + Weierstrass + Griewank."""
@@ -750,7 +738,7 @@ class CompositionFunction5(_CompositionBase):
         "func_id": 27,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         functions = [
             _hgbat,
             _rastrigin,
@@ -759,21 +747,18 @@ class CompositionFunction5(_CompositionBase):
             _high_conditioned_elliptic,
         ]
 
-        def composition(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            optima = self._get_composition_optima()
-            weights = self._compute_weights(x, optima)
-            M = self._get_rotation_matrix()
+        x = self._params_to_array(params)
+        optima = self._get_composition_optima()
+        weights = self._compute_weights(x, optima)
+        M = self._get_rotation_matrix()
 
-            result = 0.0
-            for i in range(self.n_functions):
-                z = M @ (x - optima[i])
-                f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
-                result += weights[i] * f_val
+        result = 0.0
+        for i in range(self.n_functions):
+            z = M @ (x - optima[i])
+            f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
+            result += weights[i] * f_val
 
-            return result + self.f_global
-
-        self.pure_objective_function = composition
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized F27: HGBat + Rastrigin + Schwefel + Weierstrass + HCE."""
@@ -828,7 +813,7 @@ class CompositionFunction6(_CompositionBase):
         "func_id": 28,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         functions = [
             _expanded_griewank_rosenbrock,
             _happycat,
@@ -837,21 +822,18 @@ class CompositionFunction6(_CompositionBase):
             _high_conditioned_elliptic,
         ]
 
-        def composition(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            optima = self._get_composition_optima()
-            weights = self._compute_weights(x, optima)
-            M = self._get_rotation_matrix()
+        x = self._params_to_array(params)
+        optima = self._get_composition_optima()
+        weights = self._compute_weights(x, optima)
+        M = self._get_rotation_matrix()
 
-            result = 0.0
-            for i in range(self.n_functions):
-                z = M @ (x - optima[i])
-                f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
-                result += weights[i] * f_val
+        result = 0.0
+        for i in range(self.n_functions):
+            z = M @ (x - optima[i])
+            f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
+            result += weights[i] * f_val
 
-            return result + self.f_global
-
-        self.pure_objective_function = composition
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized F28: EGR + HappyCat + Schwefel + Expanded Scaffer + HCE."""
@@ -899,10 +881,8 @@ class CompositionFunction7(_CompositionBase):
         "func_id": 29,
     }
 
-    def _create_objective_function(self) -> None:
-        # Hybrid function components
+    def _objective(self, params: Dict[str, Any]) -> float:
         def hybrid1(z: np.ndarray) -> float:
-            # Similar to F17: Elliptic + Bent Cigar + Rastrigin
             D = len(z)
             g1, g2 = D // 3, D // 3
             return (
@@ -912,13 +892,11 @@ class CompositionFunction7(_CompositionBase):
             )
 
         def hybrid2(z: np.ndarray) -> float:
-            # Similar to F18: Griewank + Weierstrass + Rosenbrock
             D = len(z)
             g1, g2 = D // 3, D // 3
             return _griewank(z[:g1]) + _weierstrass(z[g1 : g1 + g2]) + _rosenbrock(z[g1 + g2 :])
 
         def hybrid3(z: np.ndarray) -> float:
-            # Similar to F19
             D = len(z)
             g1 = D // 4
             g2 = D // 4
@@ -932,21 +910,18 @@ class CompositionFunction7(_CompositionBase):
 
         functions = [hybrid1, hybrid2, hybrid3]
 
-        def composition(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            optima = self._get_composition_optima()
-            weights = self._compute_weights(x, optima)
-            M = self._get_rotation_matrix()
+        x = self._params_to_array(params)
+        optima = self._get_composition_optima()
+        weights = self._compute_weights(x, optima)
+        M = self._get_rotation_matrix()
 
-            result = 0.0
-            for i in range(self.n_functions):
-                z = M @ (x - optima[i])
-                f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
-                result += weights[i] * f_val
+        result = 0.0
+        for i in range(self.n_functions):
+            z = M @ (x - optima[i])
+            f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
+            result += weights[i] * f_val
 
-            return result + self.f_global
-
-        self.pure_objective_function = composition
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized F29: 3 hybrid functions."""
@@ -1020,9 +995,8 @@ class CompositionFunction8(_CompositionBase):
         "func_id": 30,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         def hybrid4(z: np.ndarray) -> float:
-            # Similar to F20
             D = len(z)
             g1 = D // 4
             g2 = D // 4
@@ -1035,7 +1009,6 @@ class CompositionFunction8(_CompositionBase):
             )
 
         def hybrid5(z: np.ndarray) -> float:
-            # Similar to F21
             D = len(z)
             g = D // 5
             return (
@@ -1047,7 +1020,6 @@ class CompositionFunction8(_CompositionBase):
             )
 
         def hybrid6(z: np.ndarray) -> float:
-            # Similar to F22
             D = len(z)
             g = D // 5
             return (
@@ -1060,21 +1032,18 @@ class CompositionFunction8(_CompositionBase):
 
         functions = [hybrid4, hybrid5, hybrid6]
 
-        def composition(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            optima = self._get_composition_optima()
-            weights = self._compute_weights(x, optima)
-            M = self._get_rotation_matrix()
+        x = self._params_to_array(params)
+        optima = self._get_composition_optima()
+        weights = self._compute_weights(x, optima)
+        M = self._get_rotation_matrix()
 
-            result = 0.0
-            for i in range(self.n_functions):
-                z = M @ (x - optima[i])
-                f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
-                result += weights[i] * f_val
+        result = 0.0
+        for i in range(self.n_functions):
+            z = M @ (x - optima[i])
+            f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
+            result += weights[i] * f_val
 
-            return result + self.f_global
-
-        self.pure_objective_function = composition
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized F30: 3 hybrid functions."""

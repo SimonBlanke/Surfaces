@@ -94,13 +94,10 @@ class DampedSineFunction(AlgebraicFunction):
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 1
 
-    def _create_objective_function(self) -> None:
-        def damped_sine_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
 
-            return -(x + math.sin(x)) * math.exp(-(x**2))
-
-        self.pure_objective_function = damped_sine_function
+        return -(x + math.sin(x)) * math.exp(-(x**2))
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

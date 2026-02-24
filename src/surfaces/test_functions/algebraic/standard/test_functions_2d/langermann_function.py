@@ -82,28 +82,25 @@ class LangermannFunction(AlgebraicFunction):
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 2
 
-    def _create_objective_function(self) -> None:
-        def langermann_function(params: Dict[str, Any]) -> float:
-            loss_sum1 = 0
+    def _objective(self, params: Dict[str, Any]) -> float:
+        loss_sum1 = 0
 
-            for m in range(self.m):
-                loss_sum1 += self.c[m]
+        for m in range(self.m):
+            loss_sum1 += self.c[m]
 
-                loss_sum2 = 0
-                loss_sum3 = 0
-                for dim in range(self.n_dim):
-                    dim_str = "x" + str(dim)
-                    x = params[dim_str]
+            loss_sum2 = 0
+            loss_sum3 = 0
+            for dim in range(self.n_dim):
+                dim_str = "x" + str(dim)
+                x = params[dim_str]
 
-                    loss_sum2 += x - self.A[dim][m]
-                    loss_sum3 += x - self.A[dim][m]
+                loss_sum2 += x - self.A[dim][m]
+                loss_sum3 += x - self.A[dim][m]
 
-                loss_sum2 *= -1 / math.pi
-                loss_sum3 *= math.pi
+            loss_sum2 *= -1 / math.pi
+            loss_sum3 *= math.pi
 
-            return loss_sum1 * math.exp(loss_sum2) * math.cos(loss_sum3)
-
-        self.pure_objective_function = langermann_function
+        return loss_sum1 * math.exp(loss_sum2) * math.cos(loss_sum3)
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

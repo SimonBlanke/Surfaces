@@ -34,16 +34,12 @@ class RastriginRotated(BBOBFunction):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         Lambda = self.lambda_alpha(10)
-
-        def rastrigin(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self.R @ Lambda @ self.Q @ self.t_asy(self.t_osz(self.R @ (x - self.x_opt)), 0.2)
-            D = self.n_dim
-            return 10 * (D - np.sum(np.cos(2 * np.pi * z))) + np.sum(z**2) + self.f_opt
-
-        self.pure_objective_function = rastrigin
+        x = self._params_to_array(params)
+        z = self.R @ Lambda @ self.Q @ self.t_asy(self.t_osz(self.R @ (x - self.x_opt)), 0.2)
+        D = self.n_dim
+        return 10 * (D - np.sum(np.cos(2 * np.pi * z))) + np.sum(z**2) + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -87,7 +83,7 @@ class Weierstrass(BBOBFunction):
         "differentiable": False,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         Lambda = self.lambda_alpha(100)
         k_max = 12
         a = 0.5
@@ -96,21 +92,18 @@ class Weierstrass(BBOBFunction):
         # Precompute the offset
         f0 = sum(a**k * np.cos(np.pi * b**k) for k in range(k_max))
 
-        def weierstrass(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self.R @ Lambda @ self.Q @ (x - self.x_opt)
-            z = z * 0.01  # Scale to [-0.5, 0.5]
+        x = self._params_to_array(params)
+        z = self.R @ Lambda @ self.Q @ (x - self.x_opt)
+        z = z * 0.01  # Scale to [-0.5, 0.5]
 
-            D = self.n_dim
-            result = 0.0
-            for i in range(D):
-                for k in range(k_max):
-                    result += a**k * np.cos(2 * np.pi * b**k * (z[i] + 0.5))
+        D = self.n_dim
+        result = 0.0
+        for i in range(D):
+            for k in range(k_max):
+                result += a**k * np.cos(2 * np.pi * b**k * (z[i] + 0.5))
 
-            result = 10 * ((result / D - f0) ** 3)
-            return result + self.f_pen(x) / D + self.f_opt
-
-        self.pure_objective_function = weierstrass
+        result = 10 * ((result / D - f0) ** 3)
+        return result + self.f_pen(x) / D + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -173,20 +166,16 @@ class SchaffersF7(BBOBFunction):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         Lambda = self.lambda_alpha(10)
+        x = self._params_to_array(params)
+        z = Lambda @ self.Q @ self.t_asy(self.R @ (x - self.x_opt), 0.5)
 
-        def schaffers_f7(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = Lambda @ self.Q @ self.t_asy(self.R @ (x - self.x_opt), 0.5)
+        s = np.sqrt(z[:-1] ** 2 + z[1:] ** 2)
+        result = np.sum(np.sqrt(s) * (np.sin(50 * s**0.2) ** 2 + 1))
+        result = (result / (self.n_dim - 1)) ** 2
 
-            s = np.sqrt(z[:-1] ** 2 + z[1:] ** 2)
-            result = np.sum(np.sqrt(s) * (np.sin(50 * s**0.2) ** 2 + 1))
-            result = (result / (self.n_dim - 1)) ** 2
-
-            return result + self.f_pen(x) + self.f_opt
-
-        self.pure_objective_function = schaffers_f7
+        return result + self.f_pen(x) + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -230,20 +219,16 @@ class SchaffersF7Ill(BBOBFunction):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         Lambda = self.lambda_alpha(1000)
+        x = self._params_to_array(params)
+        z = Lambda @ self.Q @ self.t_asy(self.R @ (x - self.x_opt), 0.5)
 
-        def schaffers_f7_ill(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = Lambda @ self.Q @ self.t_asy(self.R @ (x - self.x_opt), 0.5)
+        s = np.sqrt(z[:-1] ** 2 + z[1:] ** 2)
+        result = np.sum(np.sqrt(s) * (np.sin(50 * s**0.2) ** 2 + 1))
+        result = (result / (self.n_dim - 1)) ** 2
 
-            s = np.sqrt(z[:-1] ** 2 + z[1:] ** 2)
-            result = np.sum(np.sqrt(s) * (np.sin(50 * s**0.2) ** 2 + 1))
-            result = (result / (self.n_dim - 1)) ** 2
-
-            return result + self.f_pen(x) + self.f_opt
-
-        self.pure_objective_function = schaffers_f7_ill
+        return result + self.f_pen(x) + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -298,27 +283,23 @@ class GriewankRosenbrock(BBOBFunction):
         ones = np.ones(self.n_dim)
         return self.R.T @ (0.5 / c * ones)
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         c = max(1, np.sqrt(self.n_dim) / 8)
+        x = self._params_to_array(params)
+        z = c * self.R @ x + 0.5
 
-        def griewank_rosenbrock(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = c * self.R @ x + 0.5
+        # Rosenbrock-like terms
+        s = np.zeros(self.n_dim)
+        for i in range(self.n_dim - 1):
+            s[i] = 100 * (z[i] ** 2 - z[i + 1]) ** 2 + (z[i] - 1) ** 2
+        # Wrap-around for last element
+        s[-1] = 100 * (z[-1] ** 2 - z[0]) ** 2 + (z[-1] - 1) ** 2
 
-            # Rosenbrock-like terms
-            s = np.zeros(self.n_dim)
-            for i in range(self.n_dim - 1):
-                s[i] = 100 * (z[i] ** 2 - z[i + 1]) ** 2 + (z[i] - 1) ** 2
-            # Wrap-around for last element
-            s[-1] = 100 * (z[-1] ** 2 - z[0]) ** 2 + (z[-1] - 1) ** 2
+        # Apply Griewank transformation: 10/D * sum(s/4000 - cos(s)) + 10
+        # At s=0: 10/D * D*(-1) + 10 = -10 + 10 = 0 (correct minimum)
+        result = np.sum(s / 4000 - np.cos(s))
 
-            # Apply Griewank transformation: 10/D * sum(s/4000 - cos(s)) + 10
-            # At s=0: 10/D * D*(-1) + 10 = -10 + 10 = 0 (correct minimum)
-            result = np.sum(s / 4000 - np.cos(s))
-
-            return 10 * (result / self.n_dim + 1) + self.f_opt
-
-        self.pure_objective_function = griewank_rosenbrock
+        return 10 * (result / self.n_dim + 1) + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""

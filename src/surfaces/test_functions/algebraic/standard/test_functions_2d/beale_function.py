@@ -104,18 +104,15 @@ class BealeFunction(AlgebraicFunction):
         self.B = B
         self.C = C
 
-    def _create_objective_function(self) -> None:
-        def beale_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            loss1 = (self.A - x + x * y) ** 2
-            loss2 = (self.B - x + x * y**2) ** 2
-            loss3 = (self.C - x + x * y**3) ** 2
+        loss1 = (self.A - x + x * y) ** 2
+        loss2 = (self.B - x + x * y**2) ** 2
+        loss3 = (self.C - x + x * y**3) ** 2
 
-            return loss1 + loss2 + loss3
-
-        self.pure_objective_function = beale_function
+        return loss1 + loss2 + loss3
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

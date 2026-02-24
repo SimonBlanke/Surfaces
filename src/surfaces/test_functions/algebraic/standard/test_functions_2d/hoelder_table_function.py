@@ -99,17 +99,14 @@ class HölderTableFunction(AlgebraicFunction):
         self.A = A
         self.angle = angle
 
-    def _create_objective_function(self) -> None:
-        def hölder_table_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            loss1 = math.sin(self.angle * x) * math.cos(self.angle * y)
-            loss2 = math.exp(abs(1 - (math.sqrt(x**2 + y**2) / math.pi)))
+        loss1 = math.sin(self.angle * x) * math.cos(self.angle * y)
+        loss2 = math.exp(abs(1 - (math.sqrt(x**2 + y**2) / math.pi)))
 
-            return -abs(loss1 * loss2)
-
-        self.pure_objective_function = hölder_table_function
+        return -abs(loss1 * loss2)
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

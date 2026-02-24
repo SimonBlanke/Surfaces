@@ -78,6 +78,29 @@ class MachineLearningFunction(BaseTestFunction):
             )
             self.use_surrogate = False
 
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
+        """Compute the ML objective value for given hyperparameters.
+
+        Override in subclasses to define the ML training/evaluation logic.
+
+        Parameters
+        ----------
+        params : dict
+            Hyperparameter values.
+
+        Returns
+        -------
+        float
+            Score value (higher is better, e.g. accuracy).
+        """
+        raise NotImplementedError(
+            f"{type(self).__name__} must implement _ml_objective(self, params)"
+        )
+
+    def _objective(self, params: Dict[str, Any]) -> float:
+        """Sub-template: delegates to _ml_objective."""
+        return self._ml_objective(params)
+
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Get parameters for surrogate prediction.
 
@@ -109,7 +132,7 @@ class MachineLearningFunction(BaseTestFunction):
             surrogate_params = self._get_surrogate_params(params)
             raw_value = self._surrogate.predict(surrogate_params)
         else:
-            raw_value = self.pure_objective_function(params)
+            raw_value = self._objective(params)
 
         # Apply modifiers if configured
         if self._modifiers:

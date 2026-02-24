@@ -95,13 +95,11 @@ class DeepCNNClassifierFunction(BaseImageClassification):
             "dropout_rate": self.dropout_rate_default,
         }
 
-    def _create_objective_function(self) -> None:
-        """Create objective function with fixed dataset and epochs."""
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
         import tensorflow as tf
         from tensorflow import keras
         from tensorflow.keras import layers
 
-        # Suppress TF warnings
         tf.get_logger().setLevel("ERROR")
 
         X_raw, y = self._dataset_loader()
@@ -109,70 +107,59 @@ class DeepCNNClassifierFunction(BaseImageClassification):
         # Reshape for CNN (samples, height, width, channels)
         img_size = int(np.sqrt(X_raw.shape[1]))
         X = X_raw.reshape(-1, img_size, img_size, 1).astype("float32")
-
-        # Normalize to [0, 1]
         X = X / X.max()
 
         n_classes = len(np.unique(y))
-        epochs = self.epochs
-        validation_split = self.validation_split
 
-        def deep_cnn_classifier(params):
-            # Clear session to avoid memory accumulation
-            keras.backend.clear_session()
+        # Clear session to avoid memory accumulation
+        keras.backend.clear_session()
 
-            model = keras.Sequential()
+        model = keras.Sequential()
 
-            # Input layer
-            model.add(
-                layers.Conv2D(
-                    params["filters"],
-                    (3, 3),
-                    activation="relu",
-                    input_shape=(img_size, img_size, 1),
-                    padding="same",
-                )
+        model.add(
+            layers.Conv2D(
+                params["filters"],
+                (3, 3),
+                activation="relu",
+                input_shape=(img_size, img_size, 1),
+                padding="same",
             )
+        )
+        model.add(layers.BatchNormalization())
+
+        current_filters = params["filters"]
+        for i in range(params["num_conv_layers"] - 1):
+            current_filters = min(current_filters * 2, 256)
+            model.add(layers.Conv2D(current_filters, (3, 3), activation="relu", padding="same"))
             model.add(layers.BatchNormalization())
+            if (i + 1) % 2 == 0:  # Pool every 2 layers
+                model.add(layers.MaxPooling2D((2, 2)))
+                model.add(layers.Dropout(params["dropout_rate"] / 2))
 
-            # Additional conv layers based on num_conv_layers
-            current_filters = params["filters"]
-            for i in range(params["num_conv_layers"] - 1):
-                current_filters = min(current_filters * 2, 256)
-                model.add(layers.Conv2D(current_filters, (3, 3), activation="relu", padding="same"))
-                model.add(layers.BatchNormalization())
-                if (i + 1) % 2 == 0:  # Pool every 2 layers
-                    model.add(layers.MaxPooling2D((2, 2)))
-                    model.add(layers.Dropout(params["dropout_rate"] / 2))
+        # Ensure at least one pooling
+        model.add(layers.MaxPooling2D((2, 2)))
 
-            # Ensure at least one pooling
-            model.add(layers.MaxPooling2D((2, 2)))
+        model.add(layers.Flatten())
+        model.add(layers.Dense(128, activation="relu"))
+        model.add(layers.Dropout(params["dropout_rate"]))
+        model.add(layers.Dense(n_classes, activation="softmax"))
 
-            # Dense layers
-            model.add(layers.Flatten())
-            model.add(layers.Dense(128, activation="relu"))
-            model.add(layers.Dropout(params["dropout_rate"]))
-            model.add(layers.Dense(n_classes, activation="softmax"))
+        model.compile(
+            optimizer="adam",
+            loss="sparse_categorical_crossentropy",
+            metrics=["accuracy"],
+        )
 
-            model.compile(
-                optimizer="adam",
-                loss="sparse_categorical_crossentropy",
-                metrics=["accuracy"],
-            )
+        history = model.fit(
+            X,
+            y,
+            epochs=self.epochs,
+            validation_split=self.validation_split,
+            verbose=0,
+            batch_size=32,
+        )
 
-            history = model.fit(
-                X,
-                y,
-                epochs=epochs,
-                validation_split=validation_split,
-                verbose=0,
-                batch_size=32,
-            )
-
-            # Return best validation accuracy
-            return max(history.history["val_accuracy"])
-
-        self.pure_objective_function = deep_cnn_classifier
+        return max(history.history["val_accuracy"])
 
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Add fixed parameters for surrogate prediction."""

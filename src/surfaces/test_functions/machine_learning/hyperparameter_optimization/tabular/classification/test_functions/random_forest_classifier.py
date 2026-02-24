@@ -72,24 +72,19 @@ class RandomForestClassifierFunction(BaseClassification):
             "min_samples_split": self.min_samples_split_default,
         }
 
-    def _create_objective_function(self) -> None:
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
         from sklearn.ensemble import RandomForestClassifier
         from sklearn.model_selection import cross_val_score
 
         X, y = self._dataset_loader()
-        cv = self.cv
-
-        def objective(params: Dict[str, Any]) -> float:
-            clf = RandomForestClassifier(
-                n_estimators=params["n_estimators"],
-                max_depth=params["max_depth"],
-                min_samples_split=params["min_samples_split"],
-                random_state=42,
-            )
-            scores = cross_val_score(clf, X, y, cv=cv, scoring="accuracy")
-            return scores.mean()
-
-        self.pure_objective_function = objective
+        clf = RandomForestClassifier(
+            n_estimators=params["n_estimators"],
+            max_depth=params["max_depth"],
+            min_samples_split=params["min_samples_split"],
+            random_state=42,
+        )
+        scores = cross_val_score(clf, X, y, cv=self.cv, scoring="accuracy")
+        return scores.mean()
 
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         return {**params, "dataset": self.dataset, "cv": self.cv}

@@ -97,18 +97,15 @@ class SphereFunction(AlgebraicFunction):
         self.A = A
         self.x_global = tuple(0.0 for _ in range(n_dim))
 
-    def _create_objective_function(self) -> None:
-        def sphere_function(params: Dict[str, Any]) -> float:
-            loss = 0.0
-            for dim in range(self.n_dim):
-                dim_str = "x" + str(dim)
-                x = params[dim_str]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        loss = 0.0
+        for dim in range(self.n_dim):
+            dim_str = "x" + str(dim)
+            x = params[dim_str]
 
-                loss += self.A * x * x
+            loss += self.A * x * x
 
-            return loss
-
-        self.pure_objective_function = sphere_function
+        return loss
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

@@ -107,20 +107,17 @@ class RosenbrockFunction(AlgebraicFunction):
         self.B = B
         self.x_global = tuple(1.0 for _ in range(n_dim))
 
-    def _create_objective_function(self) -> None:
-        def rosenbrock_function(params: Dict[str, Any]) -> float:
-            loss = 0.0
-            for dim in range(self.n_dim - 1):
-                dim_str = "x" + str(dim)
-                dim_str_1 = "x" + str(dim + 1)
+    def _objective(self, params: Dict[str, Any]) -> float:
+        loss = 0.0
+        for dim in range(self.n_dim - 1):
+            dim_str = "x" + str(dim)
+            dim_str_1 = "x" + str(dim + 1)
 
-                x = params[dim_str]
-                y = params[dim_str_1]
+            x = params[dim_str]
+            y = params[dim_str_1]
 
-                loss += (self.A - x) ** 2 + self.B * (y - x**2) ** 2
-            return loss
-
-        self.pure_objective_function = rosenbrock_function
+            loss += (self.A - x) ** 2 + self.B * (y - x**2) ** 2
+        return loss
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

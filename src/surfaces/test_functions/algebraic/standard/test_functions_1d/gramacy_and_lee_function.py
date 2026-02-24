@@ -91,13 +91,10 @@ class GramacyAndLeeFunction(AlgebraicFunction):
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 1
 
-    def _create_objective_function(self) -> None:
-        def gramacy_and_lee_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
 
-            return (math.sin(10 * math.pi * x) / (2 * x)) + (x - 1) ** 4
-
-        self.pure_objective_function = gramacy_and_lee_function
+        return (math.sin(10 * math.pi * x) / (2 * x)) + (x - 1) ** 4
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

@@ -1,5 +1,7 @@
 """Tests for ErrorAccessor: mapping-like access to error handlers."""
 
+import types
+
 import pytest
 
 from surfaces.test_functions._accessors._errors import ErrorAccessor
@@ -96,14 +98,14 @@ class TestErrorHandlingBehavior:
     """Test that configured error handlers actually intercept exceptions."""
 
     def test_caught_error_returns_configured_value(self):
-        """When pure_objective_function raises, the handler return value is used."""
+        """When _objective raises, the handler return value is used."""
         func = SphereFunction(n_dim=2, catch_errors={ValueError: 999.0})
 
         # Patch the objective to raise ValueError
-        def raising_objective(params):
+        def raising_objective(self, params):
             raise ValueError("bad input")
 
-        func.pure_objective_function = raising_objective
+        func._objective = types.MethodType(raising_objective, func)
 
         result = func([1.0, 2.0])
         assert result == 999.0
@@ -112,10 +114,10 @@ class TestErrorHandlingBehavior:
         """Errors not in the handler dict propagate normally."""
         func = SphereFunction(n_dim=2, catch_errors={ValueError: 0.0})
 
-        def raising_objective(params):
+        def raising_objective(self, params):
             raise TypeError("wrong type")
 
-        func.pure_objective_function = raising_objective
+        func._objective = types.MethodType(raising_objective, func)
 
         with pytest.raises(TypeError, match="wrong type"):
             func([1.0, 2.0])
@@ -124,10 +126,10 @@ class TestErrorHandlingBehavior:
         """Ellipsis (...) as key is a catch-all for any exception."""
         func = SphereFunction(n_dim=2, catch_errors={...: -999.0})
 
-        def raising_objective(params):
+        def raising_objective(self, params):
             raise RuntimeError("unexpected")
 
-        func.pure_objective_function = raising_objective
+        func._objective = types.MethodType(raising_objective, func)
 
         result = func([1.0, 2.0])
         assert result == -999.0

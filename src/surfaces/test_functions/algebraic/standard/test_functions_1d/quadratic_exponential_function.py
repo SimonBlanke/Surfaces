@@ -94,13 +94,10 @@ class QuadraticExponentialFunction(AlgebraicFunction):
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 1
 
-    def _create_objective_function(self) -> None:
-        def quadratic_exponential_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
 
-            return -(16 * x**2 - 24 * x + 5) * math.exp(-x)
-
-        self.pure_objective_function = quadratic_exponential_function
+        return -(16 * x**2 - 24 * x + 5) * math.exp(-x)
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

@@ -85,14 +85,11 @@ class SchafferFunctionN2(AlgebraicFunction):
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 2
 
-    def _create_objective_function(self) -> None:
-        def schaffer_function_n2(params):
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            return 0.5 + (math.sin(x**2 - y**2) ** 2 - 0.5) / ((1 + 0.001 * (x**2 + y**2)) ** 2)
-
-        self.pure_objective_function = schaffer_function_n2
+        return 0.5 + (math.sin(x**2 - y**2) ** 2 - 0.5) / ((1 + 0.001 * (x**2 + y**2)) ** 2)
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

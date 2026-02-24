@@ -99,6 +99,8 @@ class SimulationFunction(BaseTestFunction):
         self.timeout = timeout
         self.timeout_value = timeout_value
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
+        self._check_dependencies()
+        self._setup_simulation()
 
     def _check_dependencies(self) -> None:
         """Check if required packages are installed."""
@@ -154,13 +156,8 @@ class SimulationFunction(BaseTestFunction):
         """
         pass
 
-    def _create_objective_function(self) -> None:
-        """Create the objective function that runs simulations."""
-        self._check_dependencies()
-        self._setup_simulation()
+    def _objective(self, params: Dict[str, Any]) -> float:
+        """Sub-template: run simulation and extract objective."""
+        result = self._run_simulation(params)
+        return self._extract_objective(result)
 
-        def simulation_objective(params: Dict[str, Any]) -> float:
-            result = self._run_simulation(params)
-            return self._extract_objective(result)
-
-        self.pure_objective_function = simulation_objective

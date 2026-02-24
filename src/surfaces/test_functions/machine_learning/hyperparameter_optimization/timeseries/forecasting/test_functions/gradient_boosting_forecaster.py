@@ -130,41 +130,33 @@ class GradientBoostingForecasterFunction(BaseForecasting):
             "n_lags": self.n_lags_default,
         }
 
-    def _create_objective_function(self) -> None:
-        """Create objective function with fixed dataset and cv."""
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
         from sklearn.ensemble import GradientBoostingRegressor
         from sklearn.model_selection import TimeSeriesSplit
 
         X, y = self._dataset_loader()
-        cv = self.cv
 
-        def gradient_boosting_forecaster(params: Dict[str, Any]) -> float:
-            n_lags = params["n_lags"]
+        n_lags = params["n_lags"]
+        X_lagged, y_lagged = create_lagged_features(X, y, n_lags)
 
-            # Create lagged features
-            X_lagged, y_lagged = create_lagged_features(X, y, n_lags)
+        model = GradientBoostingRegressor(
+            n_estimators=params["n_estimators"],
+            max_depth=params["max_depth"],
+            random_state=42,
+        )
 
-            model = GradientBoostingRegressor(
-                n_estimators=params["n_estimators"],
-                max_depth=params["max_depth"],
-                random_state=42,
-            )
+        tscv = TimeSeriesSplit(n_splits=self.cv)
+        scores = []
 
-            # Time-series cross-validation
-            tscv = TimeSeriesSplit(n_splits=cv)
-            scores = []
+        for train_idx, test_idx in tscv.split(X_lagged):
+            X_train, X_test = X_lagged[train_idx], X_lagged[test_idx]
+            y_train, y_test = y_lagged[train_idx], y_lagged[test_idx]
 
-            for train_idx, test_idx in tscv.split(X_lagged):
-                X_train, X_test = X_lagged[train_idx], X_lagged[test_idx]
-                y_train, y_test = y_lagged[train_idx], y_lagged[test_idx]
+            model.fit(X_train, y_train)
+            score = model.score(X_test, y_test)
+            scores.append(score)
 
-                model.fit(X_train, y_train)
-                score = model.score(X_test, y_test)  # R2 score
-                scores.append(score)
-
-            return np.mean(scores)
-
-        self.pure_objective_function = gradient_boosting_forecaster
+        return np.mean(scores)
 
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Add fixed parameters for surrogate prediction."""

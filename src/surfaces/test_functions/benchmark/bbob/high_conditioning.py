@@ -34,16 +34,12 @@ class EllipsoidalRotated(BBOBFunction):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         i = np.arange(self.n_dim)
         coeffs = np.power(1e6, i / (self.n_dim - 1)) if self.n_dim > 1 else np.ones(1)
-
-        def ellipsoidal(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self.t_osz(self.R @ (x - self.x_opt))
-            return np.sum(coeffs * z**2) + self.f_opt
-
-        self.pure_objective_function = ellipsoidal
+        x = self._params_to_array(params)
+        z = self.t_osz(self.R @ (x - self.x_opt))
+        return np.sum(coeffs * z**2) + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -80,13 +76,10 @@ class Discus(BBOBFunction):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def discus(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self.t_osz(self.R @ (x - self.x_opt))
-            return 1e6 * z[0] ** 2 + np.sum(z[1:] ** 2) + self.f_opt
-
-        self.pure_objective_function = discus
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self.t_osz(self.R @ (x - self.x_opt))
+        return 1e6 * z[0] ** 2 + np.sum(z[1:] ** 2) + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -118,13 +111,10 @@ class BentCigar(BBOBFunction):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def bent_cigar(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self.R @ self.t_asy(self.R @ (x - self.x_opt), 0.5)
-            return z[0] ** 2 + 1e6 * np.sum(z[1:] ** 2) + self.f_opt
-
-        self.pure_objective_function = bent_cigar
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self.R @ self.t_asy(self.R @ (x - self.x_opt), 0.5)
+        return z[0] ** 2 + 1e6 * np.sum(z[1:] ** 2) + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -159,15 +149,11 @@ class SharpRidge(BBOBFunction):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         Lambda = self.lambda_alpha(10)
-
-        def sharp_ridge(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self.Q @ Lambda @ self.R @ (x - self.x_opt)
-            return z[0] ** 2 + 100 * np.sqrt(np.sum(z[1:] ** 2)) + self.f_opt
-
-        self.pure_objective_function = sharp_ridge
+        x = self._params_to_array(params)
+        z = self.Q @ Lambda @ self.R @ (x - self.x_opt)
+        return z[0] ** 2 + 100 * np.sqrt(np.sum(z[1:] ** 2)) + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -203,16 +189,12 @@ class DifferentPowers(BBOBFunction):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         i = np.arange(self.n_dim)
         exponents = 2 + 4 * i / (self.n_dim - 1) if self.n_dim > 1 else 2 * np.ones(1)
-
-        def different_powers(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self.R @ (x - self.x_opt)
-            return np.sqrt(np.sum(np.abs(z) ** exponents)) + self.f_opt
-
-        self.pure_objective_function = different_powers
+        x = self._params_to_array(params)
+        z = self.R @ (x - self.x_opt)
+        return np.sqrt(np.sum(np.abs(z) ** exponents)) + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""

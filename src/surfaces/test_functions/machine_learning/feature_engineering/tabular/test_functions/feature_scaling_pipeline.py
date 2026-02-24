@@ -87,44 +87,36 @@ class FeatureScalingPipelineFunction(BaseTabularFeatureEngineering):
             "model_type": self.model_type_default,
         }
 
-    def _create_objective_function(self) -> None:
-        """Create objective function for feature scaling pipeline."""
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
         from sklearn.ensemble import GradientBoostingClassifier
         from sklearn.model_selection import cross_val_score
         from sklearn.preprocessing import MinMaxScaler, RobustScaler, StandardScaler
         from sklearn.svm import SVC
 
         X, y = self._dataset_loader()
-        cv = self.cv
 
-        def objective_function(params: Dict[str, Any]) -> float:
-            # Apply scaling
-            scaler_type = params["scaler"]
-            if scaler_type == "standard":
-                scaler = StandardScaler()
-                X_scaled = scaler.fit_transform(X)
-            elif scaler_type == "minmax":
-                scaler = MinMaxScaler()
-                X_scaled = scaler.fit_transform(X)
-            elif scaler_type == "robust":
-                scaler = RobustScaler()
-                X_scaled = scaler.fit_transform(X)
-            elif scaler_type == "none":
-                X_scaled = X
-            else:
-                raise ValueError(f"Unknown scaler: {scaler_type}")
+        scaler_type = params["scaler"]
+        if scaler_type == "standard":
+            scaler = StandardScaler()
+            X_scaled = scaler.fit_transform(X)
+        elif scaler_type == "minmax":
+            scaler = MinMaxScaler()
+            X_scaled = scaler.fit_transform(X)
+        elif scaler_type == "robust":
+            scaler = RobustScaler()
+            X_scaled = scaler.fit_transform(X)
+        elif scaler_type == "none":
+            X_scaled = X
+        else:
+            raise ValueError(f"Unknown scaler: {scaler_type}")
 
-            # Train model on scaled features
-            model_type = params["model_type"]
-            if model_type == "svm":
-                model = SVC(kernel="rbf", random_state=42)
-            elif model_type == "gb":
-                model = GradientBoostingClassifier(n_estimators=50, random_state=42)
-            else:
-                raise ValueError(f"Unknown model_type: {model_type}")
+        model_type = params["model_type"]
+        if model_type == "svm":
+            model = SVC(kernel="rbf", random_state=42)
+        elif model_type == "gb":
+            model = GradientBoostingClassifier(n_estimators=50, random_state=42)
+        else:
+            raise ValueError(f"Unknown model_type: {model_type}")
 
-            # Evaluate
-            scores = cross_val_score(model, X_scaled, y, cv=cv, scoring="accuracy")
-            return scores.mean()
-
-        self.pure_objective_function = objective_function
+        scores = cross_val_score(model, X_scaled, y, cv=self.cv, scoring="accuracy")
+        return scores.mean()

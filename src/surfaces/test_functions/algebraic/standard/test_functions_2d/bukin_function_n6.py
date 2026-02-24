@@ -88,14 +88,11 @@ class BukinFunctionN6(AlgebraicFunction):
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 2
 
-    def _create_objective_function(self) -> None:
-        def bukin_function_n6(params):
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            return 100 * math.sqrt(abs(y - 0.01 * x**2)) + 0.01 * abs(x + 10)
-
-        self.pure_objective_function = bukin_function_n6
+        return 100 * math.sqrt(abs(y - 0.01 * x**2)) + 0.01 * abs(x + 10)
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

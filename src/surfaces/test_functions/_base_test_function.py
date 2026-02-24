@@ -41,8 +41,6 @@ class BaseTestFunction:
     >>> func([1.0, 2.0])                  # list input
     """
 
-    pure_objective_function: callable
-
     @property
     def __name__(self):
         """Make __name__ accessible on instances (external libs expect it)."""
@@ -93,19 +91,9 @@ class BaseTestFunction:
     f_global: Optional[float] = None
     x_global: Optional[np.ndarray] = None
 
-    def _create_objective_function_(func):
-        """Decorator that calls _create_objective_function after __init__."""
-
-        def wrapper(self, *args, **kwargs):
-            func(self, *args, **kwargs)
-            self._create_objective_function()
-
-        return wrapper
-
     # Type alias for callbacks
     CallbackType = Union[Callable[[Dict[str, Any]], None], List[Callable[[Dict[str, Any]], None]]]
 
-    @_create_objective_function_
     def __init__(
         self,
         objective="minimize",
@@ -154,8 +142,42 @@ class BaseTestFunction:
         self._errors_accessor = None
         self._meta_accessor = None
 
-    def _create_objective_function(self):
-        raise NotImplementedError("'_create_objective_function' must be implemented")
+    def _objective(self, params: Dict[str, Any]) -> float:
+        """Compute the raw objective value for the given parameters.
+
+        Override this method in subclasses to define the objective function.
+
+        Parameters
+        ----------
+        params : dict
+            Parameter values to evaluate.
+
+        Returns
+        -------
+        float
+            Raw objective function value (before modifiers/direction).
+        """
+        raise NotImplementedError(
+            f"{type(self).__name__} must implement _objective(self, params)"
+        )
+
+    def _default_search_space(self) -> Dict[str, Any]:
+        """Build the default search space for this function.
+
+        Override in subclasses to provide a search space definition.
+        Called by the search_space property with validation.
+
+        Returns
+        -------
+        dict
+            Search space mapping parameter names to value arrays.
+
+        Raises
+        ------
+        NotImplementedError
+            If not overridden by a subclass.
+        """
+        raise NotImplementedError("'_default_search_space' must be implemented")
 
     @property
     def search_space(self) -> Dict[str, Any]:
@@ -310,7 +332,7 @@ class BaseTestFunction:
     def _evaluate(self, params: Dict[str, Any]) -> float:
         """Evaluate with modifiers and objective transformation."""
         try:
-            raw_value = self.pure_objective_function(params)
+            raw_value = self._objective(params)
         except Exception as e:
             if self._error_handlers is not None:
                 for exc_type, return_value in self._error_handlers.items():
@@ -393,7 +415,7 @@ class BaseTestFunction:
             The true function value without modifiers.
         """
         params = self._normalize_input(params, **kwargs)
-        raw_value = self.pure_objective_function(params)
+        raw_value = self._objective(params)
         if self.objective == "maximize":
             return -raw_value
         return raw_value

@@ -6,7 +6,7 @@
 Surrogate model loader for fast function evaluation.
 
 Loads pre-trained ONNX models and provides a callable interface
-that matches the pure_objective_function signature.
+that matches the _objective signature.
 """
 
 import json
@@ -172,7 +172,7 @@ class SurrogateLoader:
         Parameters
         ----------
         params : dict
-            Parameter dictionary matching pure_objective_function signature.
+            Parameter dictionary matching _objective signature.
 
         Returns
         -------
@@ -189,7 +189,7 @@ class SurrogateLoader:
         return float(output[0][0, 0])
 
     def as_objective_function(self) -> Callable[[Dict[str, Any]], float]:
-        """Return a callable matching pure_objective_function signature.
+        """Return a callable matching _objective signature.
 
         Returns
         -------

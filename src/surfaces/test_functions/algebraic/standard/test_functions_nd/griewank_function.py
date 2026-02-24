@@ -91,20 +91,17 @@ class GriewankFunction(AlgebraicFunction):
         self.n_dim = n_dim
         self.x_global = tuple(0.0 for _ in range(n_dim))
 
-    def _create_objective_function(self) -> None:
-        def griewank_function(params: Dict[str, Any]) -> float:
-            loss_sum = 0.0
-            loss_product = 1.0
-            for dim in range(self.n_dim):
-                dim_str = "x" + str(dim)
-                x = params[dim_str]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        loss_sum = 0.0
+        loss_product = 1.0
+        for dim in range(self.n_dim):
+            dim_str = "x" + str(dim)
+            x = params[dim_str]
 
-                loss_sum += x**2 / 4000
-                loss_product *= math.cos(x / math.sqrt(dim + 1))
+            loss_sum += x**2 / 4000
+            loss_product *= math.cos(x / math.sqrt(dim + 1))
 
-            return loss_sum - loss_product + 1
-
-        self.pure_objective_function = griewank_function
+        return loss_sum - loss_product + 1
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

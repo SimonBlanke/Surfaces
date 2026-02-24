@@ -114,24 +114,17 @@ class KNeighborsClassifierFunction(BaseClassification):
             "algorithm": self.algorithm_default,
         }
 
-    def _create_objective_function(self) -> None:
-        """Create objective function with fixed dataset and cv."""
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
         from sklearn.model_selection import cross_val_score
         from sklearn.neighbors import KNeighborsClassifier
 
-        # Load dataset once
         X, y = self._dataset_loader()
-        cv = self.cv
-
-        def k_neighbors_classifier(params: Dict[str, Any]) -> float:
-            knc = KNeighborsClassifier(
-                n_neighbors=params["n_neighbors"],
-                algorithm=params["algorithm"],
-            )
-            scores = cross_val_score(knc, X, y, cv=cv, scoring="accuracy")
-            return scores.mean()
-
-        self.pure_objective_function = k_neighbors_classifier
+        knc = KNeighborsClassifier(
+            n_neighbors=params["n_neighbors"],
+            algorithm=params["algorithm"],
+        )
+        scores = cross_val_score(knc, X, y, cv=self.cv, scoring="accuracy")
+        return scores.mean()
 
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Add fixed parameters (dataset, cv) to params for surrogate prediction.

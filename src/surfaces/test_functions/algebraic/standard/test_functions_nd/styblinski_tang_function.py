@@ -84,18 +84,15 @@ class StyblinskiTangFunction(AlgebraicFunction):
         self.x_global = tuple(-2.903534 for _ in range(n_dim))
         self.f_global = -39.16617 * n_dim
 
-    def _create_objective_function(self) -> None:
-        def styblinski_tang_function(params: Dict[str, Any]) -> float:
-            loss = 0.0
-            for dim in range(self.n_dim):
-                dim_str = "x" + str(dim)
-                x = params[dim_str]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        loss = 0.0
+        for dim in range(self.n_dim):
+            dim_str = "x" + str(dim)
+            x = params[dim_str]
 
-                loss += x**4 - 16 * x**2 + 5 * x
+            loss += x**4 - 16 * x**2 + 5 * x
 
-            return loss / 2
-
-        self.pure_objective_function = styblinski_tang_function
+        return loss / 2
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

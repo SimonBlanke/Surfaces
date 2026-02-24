@@ -52,13 +52,10 @@ class Sphere(BBOBFunction):
     reference = "Hansen et al. (2009)"
     reference_url = "https://numbbo.github.io/coco/testsuites/bbob"
 
-    def _create_objective_function(self) -> None:
-        def sphere(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = x - self.x_opt
-            return np.sum(z**2) + self.f_opt
-
-        self.pure_objective_function = sphere
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = x - self.x_opt
+        return np.sum(z**2) + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation for Sphere.
@@ -99,16 +96,12 @@ class EllipsoidalSeparable(BBOBFunction):
         "separable": True,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         i = np.arange(self.n_dim)
         coeffs = np.power(1e6, i / (self.n_dim - 1)) if self.n_dim > 1 else np.ones(1)
-
-        def ellipsoidal(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self.t_osz(x - self.x_opt)
-            return np.sum(coeffs * z**2) + self.f_opt
-
-        self.pure_objective_function = ellipsoidal
+        x = self._params_to_array(params)
+        z = self.t_osz(x - self.x_opt)
+        return np.sum(coeffs * z**2) + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation for Ellipsoidal.
@@ -156,16 +149,12 @@ class RastriginSeparable(BBOBFunction):
         "separable": True,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         Lambda = self.lambda_alpha(10)
-
-        def rastrigin(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = Lambda @ self.t_asy(self.t_osz(x - self.x_opt), 0.2)
-            D = self.n_dim
-            return 10 * (D - np.sum(np.cos(2 * np.pi * z))) + np.sum(z**2) + self.f_opt
-
-        self.pure_objective_function = rastrigin
+        x = self._params_to_array(params)
+        z = Lambda @ self.t_asy(self.t_osz(x - self.x_opt), 0.2)
+        D = self.n_dim
+        return 10 * (D - np.sum(np.cos(2 * np.pi * z))) + np.sum(z**2) + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation for Rastrigin.
@@ -221,26 +210,22 @@ class BuecheRastrigin(BBOBFunction):
         x[::2] = np.abs(x[::2])
         return x
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         Lambda = self.lambda_alpha(10)
+        x = self._params_to_array(params)
+        z = x - self.x_opt
 
-        def bueche_rastrigin(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = x - self.x_opt
+        # Apply scaling to odd indices
+        s = np.ones(self.n_dim)
+        mask = (np.arange(self.n_dim) % 2 == 0) & (z > 0)
+        s[mask] = 10
 
-            # Apply scaling to odd indices
-            s = np.ones(self.n_dim)
-            mask = (np.arange(self.n_dim) % 2 == 0) & (z > 0)
-            s[mask] = 10
+        z = s * self.t_osz(z)
+        z = Lambda @ z
 
-            z = s * self.t_osz(z)
-            z = Lambda @ z
-
-            D = self.n_dim
-            result = 10 * (D - np.sum(np.cos(2 * np.pi * z))) + np.sum(z**2)
-            return result + 100 * self.f_pen(x) + self.f_opt
-
-        self.pure_objective_function = bueche_rastrigin
+        D = self.n_dim
+        result = 10 * (D - np.sum(np.cos(2 * np.pi * z))) + np.sum(z**2)
+        return result + 100 * self.f_pen(x) + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation for Bueche-Rastrigin.
@@ -303,21 +288,17 @@ class LinearSlope(BBOBFunction):
         signs = np.where(self._rng.rand(self.n_dim) > 0.5, 1, -1)
         return 5 * signs
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         i = np.arange(self.n_dim)
         s = (
             np.sign(self.x_opt) * np.power(10, i / (self.n_dim - 1))
             if self.n_dim > 1
             else np.sign(self.x_opt)
         )
-
-        def linear_slope(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            # Clip x to ensure we don't go past the boundary
-            z = np.where(self.x_opt * x < 25, x, self.x_opt)
-            return np.sum(5 * np.abs(s) - s * z) + self.f_opt
-
-        self.pure_objective_function = linear_slope
+        x = self._params_to_array(params)
+        # Clip x to ensure we don't go past the boundary
+        z = np.where(self.x_opt * x < 25, x, self.x_opt)
+        return np.sum(5 * np.abs(s) - s * z) + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation for LinearSlope.

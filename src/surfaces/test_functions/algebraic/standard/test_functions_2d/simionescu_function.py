@@ -114,21 +114,18 @@ class SimionescuFunction(AlgebraicFunction):
         self.r_S = r_S
         self.n = n
 
-    def _create_objective_function(self) -> None:
-        def simionescu_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            # Use atan2 for safe handling of y=0 case
-            constraint_radius = self.r_T + self.r_S * math.cos(self.n * math.atan2(x, y))
-            constraint = constraint_radius**2
+        # Use atan2 for safe handling of y=0 case
+        constraint_radius = self.r_T + self.r_S * math.cos(self.n * math.atan2(x, y))
+        constraint = constraint_radius**2
 
-            # Check if point is within the constraint boundary
-            if x**2 + y**2 <= constraint:
-                return self.A * x * y
-            return float("nan")
-
-        self.pure_objective_function = simionescu_function
+        # Check if point is within the constraint boundary
+        if x**2 + y**2 <= constraint:
+            return self.A * x * y
+        return float("nan")
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

@@ -95,13 +95,11 @@ class SimpleCNNClassifierFunction(BaseImageClassification):
             "dense_units": self.dense_units_default,
         }
 
-    def _create_objective_function(self) -> None:
-        """Create objective function with fixed dataset and epochs."""
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
         import tensorflow as tf
         from tensorflow import keras
         from tensorflow.keras import layers
 
-        # Suppress TF warnings
         tf.get_logger().setLevel("ERROR")
 
         X_raw, y = self._dataset_loader()
@@ -109,61 +107,53 @@ class SimpleCNNClassifierFunction(BaseImageClassification):
         # Reshape for CNN (samples, height, width, channels)
         img_size = int(np.sqrt(X_raw.shape[1]))
         X = X_raw.reshape(-1, img_size, img_size, 1).astype("float32")
-
-        # Normalize to [0, 1]
         X = X / X.max()
 
         n_classes = len(np.unique(y))
-        epochs = self.epochs
-        validation_split = self.validation_split
 
-        def simple_cnn_classifier(params):
-            # Clear session to avoid memory accumulation
-            keras.backend.clear_session()
+        # Clear session to avoid memory accumulation
+        keras.backend.clear_session()
 
-            model = keras.Sequential(
-                [
-                    layers.Conv2D(
-                        params["filters"],
-                        (params["kernel_size"], params["kernel_size"]),
-                        activation="relu",
-                        input_shape=(img_size, img_size, 1),
-                        padding="same",
-                    ),
-                    layers.MaxPooling2D((2, 2)),
-                    layers.Conv2D(
-                        params["filters"] * 2,
-                        (params["kernel_size"], params["kernel_size"]),
-                        activation="relu",
-                        padding="same",
-                    ),
-                    layers.MaxPooling2D((2, 2)),
-                    layers.Flatten(),
-                    layers.Dense(params["dense_units"], activation="relu"),
-                    layers.Dropout(0.5),
-                    layers.Dense(n_classes, activation="softmax"),
-                ]
-            )
+        model = keras.Sequential(
+            [
+                layers.Conv2D(
+                    params["filters"],
+                    (params["kernel_size"], params["kernel_size"]),
+                    activation="relu",
+                    input_shape=(img_size, img_size, 1),
+                    padding="same",
+                ),
+                layers.MaxPooling2D((2, 2)),
+                layers.Conv2D(
+                    params["filters"] * 2,
+                    (params["kernel_size"], params["kernel_size"]),
+                    activation="relu",
+                    padding="same",
+                ),
+                layers.MaxPooling2D((2, 2)),
+                layers.Flatten(),
+                layers.Dense(params["dense_units"], activation="relu"),
+                layers.Dropout(0.5),
+                layers.Dense(n_classes, activation="softmax"),
+            ]
+        )
 
-            model.compile(
-                optimizer="adam",
-                loss="sparse_categorical_crossentropy",
-                metrics=["accuracy"],
-            )
+        model.compile(
+            optimizer="adam",
+            loss="sparse_categorical_crossentropy",
+            metrics=["accuracy"],
+        )
 
-            history = model.fit(
-                X,
-                y,
-                epochs=epochs,
-                validation_split=validation_split,
-                verbose=0,
-                batch_size=32,
-            )
+        history = model.fit(
+            X,
+            y,
+            epochs=self.epochs,
+            validation_split=self.validation_split,
+            verbose=0,
+            batch_size=32,
+        )
 
-            # Return best validation accuracy
-            return max(history.history["val_accuracy"])
-
-        self.pure_objective_function = simple_cnn_classifier
+        return max(history.history["val_accuracy"])
 
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Add fixed parameters for surrogate prediction."""

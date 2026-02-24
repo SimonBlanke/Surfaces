@@ -33,19 +33,15 @@ class AttractiveSector(BBOBFunction):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         Lambda = self.lambda_alpha(10)
+        x = self._params_to_array(params)
+        z = self.Q @ Lambda @ self.R @ (x - self.x_opt)
 
-        def attractive_sector(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self.Q @ Lambda @ self.R @ (x - self.x_opt)
-
-            # Apply different weights based on sign
-            s = np.where(z * self.x_opt > 0, 100, 1)
-            result = np.sum((s * z) ** 2)
-            return self.t_osz(result) ** 0.9 + self.f_opt
-
-        self.pure_objective_function = attractive_sector
+        # Apply different weights based on sign
+        s = np.where(z * self.x_opt > 0, 100, 1)
+        result = np.sum((s * z) ** 2)
+        return self.t_osz(result) ** 0.9 + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -88,27 +84,23 @@ class StepEllipsoidal(BBOBFunction):
         "continuous": False,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         Lambda = self.lambda_alpha(10)
+        x = self._params_to_array(params)
+        z_hat = Lambda @ self.R @ (x - self.x_opt)
 
-        def step_ellipsoidal(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z_hat = Lambda @ self.R @ (x - self.x_opt)
+        # Apply step function
+        z_tilde = np.where(
+            np.abs(z_hat) > 0.5, np.floor(0.5 + z_hat), np.floor(0.5 + 10 * z_hat) / 10
+        )
 
-            # Apply step function
-            z_tilde = np.where(
-                np.abs(z_hat) > 0.5, np.floor(0.5 + z_hat), np.floor(0.5 + 10 * z_hat) / 10
-            )
+        z = self.Q @ z_tilde
 
-            z = self.Q @ z_tilde
+        i = np.arange(self.n_dim)
+        coeffs = np.power(10, 2 * i / (self.n_dim - 1)) if self.n_dim > 1 else np.ones(1)
 
-            i = np.arange(self.n_dim)
-            coeffs = np.power(10, 2 * i / (self.n_dim - 1)) if self.n_dim > 1 else np.ones(1)
-
-            result = 0.1 * max(np.abs(z_hat[0]) / 1e4, np.sum(coeffs * z**2))
-            return result + self.f_pen(x) + self.f_opt
-
-        self.pure_objective_function = step_ellipsoidal
+        result = 0.1 * max(np.abs(z_hat[0]) / 1e4, np.sum(coeffs * z**2))
+        return result + self.f_pen(x) + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -168,20 +160,16 @@ class RosenbrockOriginal(BBOBFunction):
         """Generate x_opt constrained to [-3, 3]."""
         return self._rng.uniform(-3, 3, self.n_dim)
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         c = max(1, np.sqrt(self.n_dim) / 8)
+        x = self._params_to_array(params)
+        z = c * (x - self.x_opt) + 1
 
-        def rosenbrock(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = c * (x - self.x_opt) + 1
+        result = 0.0
+        for i in range(self.n_dim - 1):
+            result += 100 * (z[i] ** 2 - z[i + 1]) ** 2 + (z[i] - 1) ** 2
 
-            result = 0.0
-            for i in range(self.n_dim - 1):
-                result += 100 * (z[i] ** 2 - z[i + 1]) ** 2 + (z[i] - 1) ** 2
-
-            return result + self.f_opt
-
-        self.pure_objective_function = rosenbrock
+        return result + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -230,21 +218,17 @@ class RosenbrockRotated(BBOBFunction):
         # x_opt = R^T @ (0.5/c * ones) since R is orthogonal (R^(-1) = R^T)
         return self.R.T @ (0.5 / c * ones)
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         c = max(1, np.sqrt(self.n_dim) / 8)
+        x = self._params_to_array(params)
+        # At x = x_opt: z = c * R @ x_opt + 0.5 = 0.5 + 0.5 = 1 (optimum for Rosenbrock)
+        z = c * self.R @ x + 0.5
 
-        def rosenbrock_rotated(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            # At x = x_opt: z = c * R @ x_opt + 0.5 = 0.5 + 0.5 = 1 (optimum for Rosenbrock)
-            z = c * self.R @ x + 0.5
+        result = 0.0
+        for i in range(self.n_dim - 1):
+            result += 100 * (z[i] ** 2 - z[i + 1]) ** 2 + (z[i] - 1) ** 2
 
-            result = 0.0
-            for i in range(self.n_dim - 1):
-                result += 100 * (z[i] ** 2 - z[i + 1]) ** 2 + (z[i] - 1) ** 2
-
-            return result + self.f_opt
-
-        self.pure_objective_function = rosenbrock_rotated
+        return result + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""

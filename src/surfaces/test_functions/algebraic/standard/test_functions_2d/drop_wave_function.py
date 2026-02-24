@@ -85,14 +85,11 @@ class DropWaveFunction(AlgebraicFunction):
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 2
 
-    def _create_objective_function(self) -> None:
-        def drop_wave_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            return -(1 + math.cos(12 * math.sqrt(x**2 + y**2))) / (0.5 * (x**2 + y**2) + 2)
-
-        self.pure_objective_function = drop_wave_function
+        return -(1 + math.cos(12 * math.sqrt(x**2 + y**2))) / (0.5 * (x**2 + y**2) + 2)
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.
