@@ -408,6 +408,7 @@ Contents
    installation
    user_guide
    api_reference
+   developer_guide
    examples
    faq
    troubleshooting
