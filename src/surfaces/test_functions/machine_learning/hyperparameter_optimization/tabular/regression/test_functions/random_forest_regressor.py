@@ -64,8 +64,7 @@ class RandomForestRegressorFunction(BaseRegression):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         return {
             "n_estimators": self.n_estimators_default,
             "max_depth": self.max_depth_default,

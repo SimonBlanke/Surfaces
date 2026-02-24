@@ -157,9 +157,7 @@ class BaseTestFunction:
         float
             Raw objective function value (before modifiers/direction).
         """
-        raise NotImplementedError(
-            f"{type(self).__name__} must implement _objective(self, params)"
-        )
+        raise NotImplementedError(f"{type(self).__name__} must implement _objective(self, params)")
 
     def _default_search_space(self) -> Dict[str, Any]:
         """Build the default search space for this function.
@@ -181,8 +179,8 @@ class BaseTestFunction:
 
     @property
     def search_space(self) -> Dict[str, Any]:
-        """Search space for this function (override in subclasses)."""
-        raise NotImplementedError("'search_space' must be implemented")
+        """Search space for this function (read-only public API)."""
+        return self._default_search_space()
 
     # =========================================================================
     # Accessor Properties (lazy-cached)
@@ -433,6 +431,26 @@ class BaseTestFunction:
     # Batch Evaluation
     # =========================================================================
 
+    def _batch_objective(self, X: ArrayLike) -> ArrayLike:
+        """Compute the objective for a batch of parameter sets.
+
+        Override this method in subclasses to provide vectorized evaluation.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            2D array of shape (n_points, n_dim).
+
+        Returns
+        -------
+        ArrayLike
+            1D array of shape (n_points,) with objective values.
+        """
+        raise NotImplementedError(
+            f"{type(self).__name__} does not support vectorized batch evaluation. "
+            "Implement _batch_objective(X) to enable this feature."
+        )
+
     def batch(self, X: ArrayLike) -> ArrayLike:
         """Evaluate multiple parameter sets in a single call.
 
@@ -453,11 +471,6 @@ class BaseTestFunction:
         ValueError
             If X has wrong number of dimensions or wrong n_dim.
         """
-        if not hasattr(self, "_batch_objective"):
-            raise NotImplementedError(
-                f"{type(self).__name__} does not support vectorized batch evaluation. "
-                "Implement _batch_objective(X) to enable this feature."
-            )
 
         if not is_array_like(X):
             raise TypeError(

@@ -102,16 +102,11 @@ class EngineeringFunction(BaseTestFunction):
 
         return search_space_
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
-        """Search space based on variable bounds."""
-        return self._default_search_space()
-
     def _get_values(self, params: Dict[str, Any]) -> np.ndarray:
         """Extract variable values from params dict in order."""
         return np.array([params[name] for name in self.variable_names])
 
-    def constraints(self, params: Dict[str, Any]) -> List[float]:
+    def _constraints(self, params: Dict[str, Any]) -> List[float]:
         """Evaluate constraint functions.
 
         Override in subclasses to define problem-specific constraints.
@@ -129,6 +124,10 @@ class EngineeringFunction(BaseTestFunction):
         """
         return []
 
+    def constraints(self, params: Dict[str, Any]) -> List[float]:
+        """Public API: evaluate constraint functions."""
+        return self._constraints(params)
+
     def constraint_violations(self, params: Dict[str, Any]) -> List[float]:
         """Calculate constraint violations (positive values only).
 
@@ -142,7 +141,7 @@ class EngineeringFunction(BaseTestFunction):
         list of float
             Violation amounts. Zero means constraint is satisfied.
         """
-        return [max(0, g) for g in self.constraints(params)]
+        return [max(0, g) for g in self._constraints(params)]
 
     def is_feasible(self, params: Dict[str, Any]) -> bool:
         """Check if a solution satisfies all constraints.
@@ -157,7 +156,7 @@ class EngineeringFunction(BaseTestFunction):
         bool
             True if all constraints are satisfied.
         """
-        return all(g <= 0 for g in self.constraints(params))
+        return all(g <= 0 for g in self._constraints(params))
 
     def penalty(self, params: Dict[str, Any]) -> float:
         """Calculate total penalty for constraint violations.
@@ -175,7 +174,7 @@ class EngineeringFunction(BaseTestFunction):
         violations = self.constraint_violations(params)
         return self.penalty_coefficient * sum(v**2 for v in violations)
 
-    def raw_objective(self, params: Dict[str, Any]) -> float:
+    def _raw_objective(self, params: Dict[str, Any]) -> float:
         """Evaluate the raw objective function without penalties.
 
         Override in subclasses to define the engineering objective.
@@ -190,11 +189,17 @@ class EngineeringFunction(BaseTestFunction):
         float
             Raw objective function value.
         """
-        raise NotImplementedError("Subclasses must implement raw_objective")
+        raise NotImplementedError(
+            f"{type(self).__name__} must implement _raw_objective(self, params)"
+        )
+
+    def raw_objective(self, params: Dict[str, Any]) -> float:
+        """Public API: evaluate raw objective without penalties."""
+        return self._raw_objective(params)
 
     def _objective(self, params: Dict[str, Any]) -> float:
         """Sub-template: raw objective + penalty for constraint violations."""
-        return self.raw_objective(params) + self.penalty(params)
+        return self._raw_objective(params) + self.penalty(params)
 
     # =====================================================================
     # Batch evaluation methods

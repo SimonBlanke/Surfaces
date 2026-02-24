@@ -174,7 +174,7 @@ class PressureVesselFunction(EngineeringFunction):
             penalty_coefficient,
         )
 
-    def raw_objective(self, params: Dict[str, Any]) -> float:
+    def _raw_objective(self, params: Dict[str, Any]) -> float:
         """Calculate total manufacturing cost."""
         Ts = params["Ts"]
         Th = params["Th"]
@@ -184,7 +184,7 @@ class PressureVesselFunction(EngineeringFunction):
         cost = 0.6224 * Ts * R * L + 1.7781 * Th * R**2 + 3.1661 * Ts**2 * L + 19.84 * Ts**2 * R
         return cost
 
-    def constraints(self, params: Dict[str, Any]) -> List[float]:
+    def _constraints(self, params: Dict[str, Any]) -> List[float]:
         """Evaluate design constraints."""
         Ts = params["Ts"]
         Th = params["Th"]

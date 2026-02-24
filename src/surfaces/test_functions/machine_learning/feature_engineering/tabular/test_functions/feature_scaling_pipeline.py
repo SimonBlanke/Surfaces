@@ -79,8 +79,7 @@ class FeatureScalingPipelineFunction(BaseTabularFeatureEngineering):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         """Search space for feature scaling pipeline."""
         return {
             "scaler": self.scaler_default,

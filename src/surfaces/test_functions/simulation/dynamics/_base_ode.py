@@ -56,10 +56,11 @@ class ODESimulationFunction(SimulationFunction):
 
     requires: List[str] = []  # scipy is always available
 
-    @property
-    def search_space(self) -> Dict[str, np.ndarray]:
-        """Search space for ODE parameters (override in subclasses)."""
-        raise NotImplementedError("Subclasses must implement search_space property")
+    def _default_search_space(self) -> Dict[str, np.ndarray]:
+        """Build the default search space for ODE parameters (override in subclasses)."""
+        raise NotImplementedError(
+            f"{type(self).__name__} must implement _default_search_space(self)"
+        )
 
     def __init__(
         self,
@@ -172,4 +173,3 @@ class ODESimulationFunction(SimulationFunction):
         self._current_params = params  # Store for _extract_objective
         result = self._run_simulation(params)
         return self._extract_objective(result)
-

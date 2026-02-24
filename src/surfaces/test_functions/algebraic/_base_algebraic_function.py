@@ -46,11 +46,6 @@ class AlgebraicFunction(BaseTestFunction):
         min_val, max_val = self.default_bounds
         return self._create_n_dim_search_space(min=min_val, max=max_val, size=self.default_size)
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
-        """Search space based on default_bounds and n_dim."""
-        return self._default_search_space()
-
     def __init__(
         self,
         objective: str = "minimize",

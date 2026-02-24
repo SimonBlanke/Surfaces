@@ -95,8 +95,7 @@ class RLCCircuitFunction(ODESimulationFunction):
         t_eval = np.linspace(t_span[0], t_span[1], 2000)
         super().__init__(t_span=t_span, t_eval=t_eval, **kwargs)
 
-    @property
-    def search_space(self) -> Dict[str, np.ndarray]:
+    def _default_search_space(self) -> Dict[str, np.ndarray]:
         """3D search space for circuit parameters."""
         return {
             "R": np.linspace(0.1, 100.0, 100),
@@ -268,8 +267,7 @@ class RCFilterFunction(ODESimulationFunction):
         t_eval = np.linspace(t_span[0], t_span[1], 2000)
         super().__init__(t_span=t_span, t_eval=t_eval, **kwargs)
 
-    @property
-    def search_space(self) -> Dict[str, np.ndarray]:
+    def _default_search_space(self) -> Dict[str, np.ndarray]:
         """2D search space for filter parameters."""
         return {
             "R": np.logspace(2, 5, 100),  # 100 to 100k Ohms

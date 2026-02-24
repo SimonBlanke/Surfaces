@@ -86,8 +86,7 @@ class DeepCNNClassifierFunction(BaseImageClassification):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         """Search space containing hyperparameters."""
         return {
             "num_conv_layers": self.num_conv_layers_default,

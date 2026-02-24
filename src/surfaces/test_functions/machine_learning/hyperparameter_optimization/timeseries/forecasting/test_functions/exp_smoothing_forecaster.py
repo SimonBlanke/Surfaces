@@ -81,8 +81,7 @@ class ExpSmoothingForecasterFunction(BaseForecasting):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         """Search space containing hyperparameters."""
         return {
             "trend": self.trend_default,

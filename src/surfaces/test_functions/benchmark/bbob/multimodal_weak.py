@@ -71,9 +71,7 @@ class Schwefel(BBOBFunction):
                 result += zi * np.sin(np.sqrt(np.abs(zi)))
             else:
                 # Penalty for out-of-bounds
-                result += (500 - np.abs(zi) % 500) * np.sin(
-                    np.sqrt(np.abs(500 - np.abs(zi) % 500))
-                )
+                result += (500 - np.abs(zi) % 500) * np.sin(np.sqrt(np.abs(500 - np.abs(zi) % 500)))
                 result -= (zi - 500) ** 2 / (10000 * D) * np.sign(zi)
 
         result = -result / (100 * D)

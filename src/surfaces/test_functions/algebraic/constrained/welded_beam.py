@@ -173,7 +173,7 @@ class WeldedBeamFunction(EngineeringFunction):
             penalty_coefficient,
         )
 
-    def raw_objective(self, params: Dict[str, Any]) -> float:
+    def _raw_objective(self, params: Dict[str, Any]) -> float:
         """Calculate fabrication cost."""
         h = params["h"]
         weld_len = params["l"]
@@ -215,7 +215,7 @@ class WeldedBeamFunction(EngineeringFunction):
 
         return tau, sigma
 
-    def constraints(self, params: Dict[str, Any]) -> List[float]:
+    def _constraints(self, params: Dict[str, Any]) -> List[float]:
         """Evaluate design constraints."""
         h = params["h"]
         t = params["t"]

@@ -164,9 +164,8 @@ class CustomTestFunction(BaseTestFunction):
         """Delegate to user-provided objective function."""
         return self._user_objective_fn(params)
 
-    @property
-    def search_space(self) -> Dict[str, np.ndarray]:
-        """Search space for this function."""
+    def _default_search_space(self) -> Dict[str, np.ndarray]:
+        """Return the user-provided search space."""
         return self._search_space
 
     @property

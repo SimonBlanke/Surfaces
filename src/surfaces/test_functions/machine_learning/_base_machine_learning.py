@@ -36,9 +36,8 @@ class MachineLearningFunction(BaseTestFunction):
 
     para_names: list = []
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
-        """Search space built from *_default class attributes."""
+    def _default_search_space(self) -> Dict[str, Any]:
+        """Build search space from *_default class attributes."""
         search_space = {}
         for param_name in self.para_names:
             default_attr = f"{param_name}_default"

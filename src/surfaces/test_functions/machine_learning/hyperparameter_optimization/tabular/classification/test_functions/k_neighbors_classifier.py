@@ -106,8 +106,7 @@ class KNeighborsClassifierFunction(BaseClassification):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         """Search space containing only hyperparameters (not dataset/cv)."""
         return {
             "n_neighbors": self.n_neighbors_default,

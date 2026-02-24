@@ -98,8 +98,7 @@ class LotkaVolterraFunction(ODESimulationFunction):
         t_eval = np.linspace(t_span[0], t_span[1], 500)
         super().__init__(t_span=t_span, t_eval=t_eval, **kwargs)
 
-    @property
-    def search_space(self) -> Dict[str, np.ndarray]:
+    def _default_search_space(self) -> Dict[str, np.ndarray]:
         """4D search space for Lotka-Volterra parameters."""
         return {
             "alpha": np.linspace(0.1, 2.0, 100),  # Prey birth rate

@@ -88,8 +88,7 @@ class LightGBMRegressorFunction(BaseRegression):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         return {
             "n_estimators": self.n_estimators_default,
             "learning_rate": self.learning_rate_default,

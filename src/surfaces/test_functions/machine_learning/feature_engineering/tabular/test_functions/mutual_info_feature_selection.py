@@ -85,8 +85,7 @@ class MutualInfoFeatureSelectionFunction(BaseTabularFeatureEngineering):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         """Search space for feature selection optimization."""
         return {
             "n_features": self.n_features_default,

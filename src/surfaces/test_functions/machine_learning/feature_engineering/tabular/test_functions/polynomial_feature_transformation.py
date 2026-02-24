@@ -80,8 +80,7 @@ class PolynomialFeatureTransformationFunction(BaseTabularFeatureEngineering):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         """Search space for polynomial feature transformation."""
         return {
             "degree": self.degree_default,

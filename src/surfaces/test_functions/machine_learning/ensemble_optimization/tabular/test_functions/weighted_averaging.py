@@ -80,8 +80,7 @@ class WeightedAveragingFunction(BaseTabularEnsemble):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         """Search space for weighted averaging optimization."""
         return {
             "dt_weight": self.dt_weight_default,

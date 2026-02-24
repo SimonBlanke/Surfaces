@@ -83,8 +83,7 @@ class VotingEnsembleFunction(BaseTabularEnsemble):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         """Search space for voting ensemble optimization."""
         return {
             "use_dt": self.use_dt_default,
@@ -115,9 +114,7 @@ class VotingEnsembleFunction(BaseTabularEnsemble):
             estimators.append(("rf", RandomForestClassifier(n_estimators=50, random_state=42)))
 
         if params["use_gb"]:
-            estimators.append(
-                ("gb", GradientBoostingClassifier(n_estimators=50, random_state=42))
-            )
+            estimators.append(("gb", GradientBoostingClassifier(n_estimators=50, random_state=42)))
 
         if params["use_svm"]:
             estimators.append(("svm", SVC(probability=True, random_state=42)))

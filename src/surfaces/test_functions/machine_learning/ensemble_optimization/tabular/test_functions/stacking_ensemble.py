@@ -83,8 +83,7 @@ class StackingEnsembleFunction(BaseTabularEnsemble):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         """Search space for stacking ensemble optimization."""
         return {
             "use_dt": self.use_dt_default,
@@ -116,9 +115,7 @@ class StackingEnsembleFunction(BaseTabularEnsemble):
             estimators.append(("rf", RandomForestClassifier(n_estimators=50, random_state=42)))
 
         if params["use_gb"]:
-            estimators.append(
-                ("gb", GradientBoostingClassifier(n_estimators=50, random_state=42))
-            )
+            estimators.append(("gb", GradientBoostingClassifier(n_estimators=50, random_state=42)))
 
         if params["use_svm"]:
             estimators.append(("svm", SVC(probability=True, random_state=42)))
@@ -136,9 +133,7 @@ class StackingEnsembleFunction(BaseTabularEnsemble):
         else:
             raise ValueError(f"Unknown final_estimator: {final_est_type}")
 
-        ensemble = StackingClassifier(
-            estimators=estimators, final_estimator=final_estimator, cv=3
-        )
+        ensemble = StackingClassifier(estimators=estimators, final_estimator=final_estimator, cv=3)
 
         scores = cross_val_score(ensemble, X, y, cv=self.cv, scoring="accuracy")
         return scores.mean()

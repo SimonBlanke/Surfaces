@@ -160,4 +160,3 @@ class SimulationFunction(BaseTestFunction):
         """Sub-template: run simulation and extract objective."""
         result = self._run_simulation(params)
         return self._extract_objective(result)
-
