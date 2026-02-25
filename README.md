@@ -174,7 +174,7 @@ print(sphere({"x0": 0, "x1": 0, "x2": 0, "x3": 0, "x4": 0}))  # Optimum: 0
 
 # Highly multimodal function with many local optima
 rastrigin = RastriginFunction(n_dim=3)
-print(f"Search space bounds: {rastrigin.default_bounds}")
+print(f"Search space bounds: {rastrigin.spec.default_bounds}")
 
 # Challenging function with a narrow global basin
 ackley = AckleyFunction()  # 2D by default
