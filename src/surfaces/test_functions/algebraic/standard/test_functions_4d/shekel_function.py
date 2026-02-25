@@ -47,8 +47,6 @@ class ShekelFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (fixed at 4).
-    default_bounds : tuple
-        Default parameter bounds (0.0, 10.0).
 
     Examples
     --------
@@ -64,11 +62,11 @@ class ShekelFunction(AlgebraicFunction):
         "unimodal": False,
         "separable": False,
         "scalable": False,
+        "default_bounds": (0.0, 10.0),
     }
 
     # Placeholder; instance variable set in __init__
     f_global = None
-    default_bounds = (0.0, 10.0)
 
     latex_formula = (
         r"f(\vec{x}) = - \sum_{i=1}^{m} \left( \sum_{j=1}^{4} (x_j - a_{ij})^2 + c_i \right)^{-1}"

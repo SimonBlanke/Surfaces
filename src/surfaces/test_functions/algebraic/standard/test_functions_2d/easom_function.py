@@ -46,9 +46,6 @@ class EasomFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-10.0, 10.0).
-
     Examples
     --------
     >>> from surfaces.test_functions import EasomFunction
@@ -64,12 +61,12 @@ class EasomFunction(AlgebraicFunction):
         "unimodal": True,
         "separable": True,
         "scalable": False,
+        "default_bounds": (-10.0, 10.0),
     }
 
     f_global = -1.0
     x_global = (math.pi, math.pi)
 
-    default_bounds = (-10.0, 10.0)
     n_dim = 2
 
     latex_formula = r"f(x, y) = -\cos(x)\cos(y)\exp\left[-(x - \pi)^2 - (y - \pi)^2\right]"

@@ -203,7 +203,7 @@ class TestCEC2014SearchSpace:
     def test_default_bounds(self):
         """Default bounds should be [-100, 100]."""
         func = RotatedHighConditionedElliptic(n_dim=10)
-        assert func.default_bounds == (-100.0, 100.0)
+        assert func.spec.default_bounds == (-100.0, 100.0)
 
     def test_search_space(self):
         """Search space should have correct dimensions."""

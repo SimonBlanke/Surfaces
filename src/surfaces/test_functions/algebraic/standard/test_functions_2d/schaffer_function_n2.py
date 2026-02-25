@@ -36,8 +36,6 @@ class SchafferFunctionN2(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-50.0, 50.0).
 
     Examples
     --------
@@ -53,12 +51,12 @@ class SchafferFunctionN2(AlgebraicFunction):
         "unimodal": False,
         "separable": False,
         "scalable": False,
+        "default_bounds": (-50.0, 50.0),
     }
 
     f_global = 0.0
     x_global = (0.0, 0.0)
 
-    default_bounds = (-50.0, 50.0)
     n_dim = 2
 
     latex_formula = r"f(x, y) = 0.5 + \frac{\sin^2(x^2 - y^2) - 0.5}{[1 + 0.001(x^2 + y^2)]^2}"

@@ -43,7 +43,7 @@ class AlgebraicFunction(BaseTestFunction):
 
     def _default_search_space(self) -> Dict[str, Any]:
         """Build search space from n_dim and default_bounds."""
-        min_val, max_val = self.default_bounds
+        min_val, max_val = self.spec.default_bounds
         return self._create_n_dim_search_space(min=min_val, max=max_val, size=self.default_size)
 
     def __init__(

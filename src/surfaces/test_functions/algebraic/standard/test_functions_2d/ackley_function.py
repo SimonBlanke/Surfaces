@@ -44,9 +44,6 @@ class AckleyFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-5.0, 5.0).
-
     References
     ----------
     .. [1] Ackley, D. H. (1987). "A connectionist machine for genetic
@@ -66,12 +63,12 @@ class AckleyFunction(AlgebraicFunction):
         "unimodal": False,
         "separable": False,
         "scalable": False,
+        "default_bounds": (-5.0, 5.0),
     }
 
     f_global = 0.0
     x_global = (0.0, 0.0)
 
-    default_bounds = (-5.0, 5.0)
     n_dim = 2
 
     latex_formula = r"f(x, y) = -20\exp\left[-0.2\sqrt{0.5(x^2+y^2)}\right] - \exp\left[0.5(\cos 2\pi x + \cos 2\pi y)\right] + e + 20"

@@ -44,8 +44,6 @@ class RosenbrockFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions.
-    default_bounds : tuple
-        Default parameter bounds (-5.0, 5.0).
 
     References
     ----------
@@ -67,11 +65,10 @@ class RosenbrockFunction(AlgebraicFunction):
         "unimodal": True,
         "separable": False,
         "scalable": True,
+        "default_bounds": (-5.0, 5.0),
     }
 
     f_global = 0.0
-
-    default_bounds = (-5.0, 5.0)
 
     latex_formula = (
         r"f(\vec{x}) = \sum_{i=1}^{n-1} \left[100(x_{i+1} - x_i^2)^2 + (1 - x_i)^2\right]"

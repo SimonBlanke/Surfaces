@@ -36,9 +36,6 @@ class EggholderFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-1000.0, 1000.0).
-
     Examples
     --------
     >>> from surfaces.test_functions import EggholderFunction
@@ -51,12 +48,12 @@ class EggholderFunction(AlgebraicFunction):
         "unimodal": False,
         "separable": False,
         "scalable": False,
+        "default_bounds": (-1000.0, 1000.0),
     }
 
     f_global = -959.6407
     x_global = (512.0, 404.2319)
 
-    default_bounds = (-1000.0, 1000.0)
     n_dim = 2
 
     latex_formula = r"f(x, y) = -(y + 47)\sin\sqrt{\left|\frac{x}{2} + (y + 47)\right|} - x\sin\sqrt{|x - (y + 47)|}"

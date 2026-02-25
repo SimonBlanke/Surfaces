@@ -45,9 +45,6 @@ class CrossInTrayFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-10.0, 10.0).
-
     Examples
     --------
     >>> from surfaces.test_functions import CrossInTrayFunction
@@ -60,6 +57,7 @@ class CrossInTrayFunction(AlgebraicFunction):
         "unimodal": False,
         "separable": False,
         "scalable": False,
+        "default_bounds": (-10.0, 10.0),
     }
 
     f_global = -2.06261
@@ -70,7 +68,6 @@ class CrossInTrayFunction(AlgebraicFunction):
         (-1.34941, -1.34941),
     )
 
-    default_bounds = (-10.0, 10.0)
     n_dim = 2
 
     latex_formula = r"f(x, y) = -0.0001\left[\left|\sin(x)\sin(y)\exp\left(\left|100 - \frac{\sqrt{x^2+y^2}}{\pi}\right|\right)\right| + 1\right]^{0.1}"

@@ -79,7 +79,7 @@ def plot_fitness_distribution(
         # Legacy path
         n_dim = _get_function_dimensions(func)
         if bounds is None:
-            default_bounds = getattr(func, "default_bounds", (-5.0, 5.0))
+            default_bounds = func.spec.default_bounds if hasattr(func, "spec") else (-5.0, 5.0)
             sample_bounds = {f"x{i}": default_bounds for i in range(n_dim)}
         else:
             sample_bounds = bounds

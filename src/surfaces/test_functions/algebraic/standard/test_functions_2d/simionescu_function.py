@@ -53,8 +53,6 @@ class SimionescuFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-1.25, 1.25).
 
     Examples
     --------
@@ -68,6 +66,7 @@ class SimionescuFunction(AlgebraicFunction):
         "unimodal": False,
         "separable": False,
         "scalable": False,
+        "default_bounds": (-1.25, 1.25),
     }
 
     f_global = -0.072
@@ -76,7 +75,6 @@ class SimionescuFunction(AlgebraicFunction):
         (-0.84852813, 0.84852813),
     )
 
-    default_bounds = (-1.25, 1.25)
     n_dim = 2
 
     latex_formula = (

@@ -34,9 +34,6 @@ class BoothFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-10.0, 10.0).
-
     References
     ----------
     .. [1] Global Optimization Test Problems. Retrieved June 2013, from
@@ -54,12 +51,12 @@ class BoothFunction(AlgebraicFunction):
         "unimodal": True,
         "separable": False,
         "scalable": False,
+        "default_bounds": (-10.0, 10.0),
     }
 
     f_global = 0.0
     x_global = (1.0, 3.0)
 
-    default_bounds = (-10.0, 10.0)
     n_dim = 2
 
     latex_formula = r"f(x, y) = (x + 2y - 7)^2 + (2x + y - 5)^2"

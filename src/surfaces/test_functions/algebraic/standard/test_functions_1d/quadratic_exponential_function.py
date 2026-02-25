@@ -35,8 +35,6 @@ class QuadraticExponentialFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 1).
-    default_bounds : tuple
-        Default parameter bounds (1.9, 3.9).
 
     References
     ----------
@@ -62,12 +60,12 @@ class QuadraticExponentialFunction(AlgebraicFunction):
         "unimodal": True,
         "separable": True,
         "scalable": False,
+        "default_bounds": (1.9, 3.9),
     }
 
     f_global = -3.8504507087979953
     x_global = (2.8680325095605212,)
 
-    default_bounds = (1.9, 3.9)
     n_dim = 1
 
     latex_formula = r"f(x) = -(16x^2 - 24x + 5) e^{-x}"

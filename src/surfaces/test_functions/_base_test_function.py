@@ -490,12 +490,3 @@ class BaseTestFunction:
             result = -result
 
         return result
-
-    # =========================================================================
-    # Default Bounds (from spec, used by subclasses to build search_space)
-    # =========================================================================
-
-    @property
-    def default_bounds(self) -> Tuple[float, float]:
-        """Default parameter bounds for the search space."""
-        return self.spec.get("default_bounds", (-5.0, 5.0))

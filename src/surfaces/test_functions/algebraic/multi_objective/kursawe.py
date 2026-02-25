@@ -38,8 +38,6 @@ class Kursawe(MultiObjectiveFunction):
     ----------
     n_objectives : int
         Number of objectives (always 2).
-    default_bounds : tuple
-        Parameter bounds (-5.0, 5.0).
 
     References
     ----------
@@ -58,14 +56,13 @@ class Kursawe(MultiObjectiveFunction):
 
     name = "Kursawe"
     n_objectives = 2
-    default_bounds = (-5.0, 5.0)
-
     _spec = {
         "continuous": True,
         "differentiable": False,  # |x|^0.8 is not differentiable at 0
         "convex_front": False,
         "disconnected_front": True,
         "scalable": True,
+        "default_bounds": (-5.0, 5.0),
     }
 
     def __init__(self, n_dim: int = 3, sleep: float = 0):

@@ -45,8 +45,6 @@ class RastriginFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions.
-    default_bounds : tuple
-        Default parameter bounds (-5.0, 5.0).
 
     Examples
     --------
@@ -62,11 +60,10 @@ class RastriginFunction(AlgebraicFunction):
         "unimodal": False,
         "separable": True,
         "scalable": True,
+        "default_bounds": (-5.0, 5.0),
     }
 
     f_global = 0.0
-
-    default_bounds = (-5.0, 5.0)
 
     latex_formula = r"f(\vec{x}) = 10n + \sum_{i=1}^{n} \left[x_i^2 - 10\cos(2\pi x_i)\right]"
     pgfmath_formula = (

@@ -36,8 +36,6 @@ class LeviFunctionN13(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-10.0, 10.0).
 
     Examples
     --------
@@ -53,12 +51,12 @@ class LeviFunctionN13(AlgebraicFunction):
         "unimodal": False,
         "separable": False,
         "scalable": False,
+        "default_bounds": (-10.0, 10.0),
     }
 
     f_global = 0.0
     x_global = (1.0, 1.0)
 
-    default_bounds = (-10.0, 10.0)
     n_dim = 2
 
     latex_formula = (

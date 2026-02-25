@@ -36,9 +36,6 @@ class BukinFunctionN6(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-8.0, 8.0).
-
     Examples
     --------
     >>> from surfaces.test_functions import BukinFunctionN6
@@ -56,12 +53,12 @@ class BukinFunctionN6(AlgebraicFunction):
         "separable": False,
         "scalable": False,
         "differentiable": False,
+        "default_bounds": (-8.0, 8.0),
     }
 
     f_global = 0.0
     x_global = (-10.0, 1.0)
 
-    default_bounds = (-8.0, 8.0)
     n_dim = 2
 
     latex_formula = r"f(x, y) = 100\sqrt{|y - 0.01x^2|} + 0.01|x + 10|"

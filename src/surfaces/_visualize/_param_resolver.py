@@ -211,8 +211,8 @@ def _get_default_bounds(
                 result[dim_name] = (0.0, float(len(values) - 1))
 
     # Fall back to global default_bounds for any missing dimensions
-    if hasattr(func, "default_bounds"):
-        global_bounds = func.default_bounds
+    if hasattr(func, "spec"):
+        global_bounds = func.spec.default_bounds
         for dim_name in all_dims:
             if dim_name not in result:
                 result[dim_name] = global_bounds

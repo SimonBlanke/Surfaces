@@ -82,7 +82,7 @@ def create_search_space_grid(
         return {name: np.linspace(b[0], b[1], resolution) for name, b in bounds.items()}
 
     # Use function's default bounds
-    default_bounds = getattr(func, "default_bounds", (-5.0, 5.0))
+    default_bounds = func.spec.default_bounds if hasattr(func, "spec") else (-5.0, 5.0)
     n_dim = _get_function_dimensions(func)
 
     return {

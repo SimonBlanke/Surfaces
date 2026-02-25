@@ -29,9 +29,6 @@ class GoldsteinPriceFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-2.0, 2.0).
-
     Examples
     --------
     >>> from surfaces.test_functions import GoldsteinPriceFunction
@@ -46,12 +43,12 @@ class GoldsteinPriceFunction(AlgebraicFunction):
         "unimodal": False,
         "separable": False,
         "scalable": False,
+        "default_bounds": (-2.0, 2.0),
     }
 
     f_global = 3.0
     x_global = (0.0, -1.0)
 
-    default_bounds = (-2.0, 2.0)
     n_dim = 2
 
     latex_formula = r"f(x, y) = \left[1 + (x + y + 1)^2(19 - 14x + 3x^2 - 14y + 6xy + 3y^2)\right]\left[30 + (2x - 3y)^2(18 - 32x + 12x^2 + 48y - 36xy + 27y^2)\right]"

@@ -37,8 +37,6 @@ class StyblinskiTangFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions.
-    default_bounds : tuple
-        Default parameter bounds (-5.0, 5.0).
 
     Examples
     --------
@@ -52,9 +50,8 @@ class StyblinskiTangFunction(AlgebraicFunction):
         "unimodal": False,
         "separable": True,
         "scalable": True,
+        "default_bounds": (-5.0, 5.0),
     }
-
-    default_bounds = (-5.0, 5.0)
 
     latex_formula = r"f(\vec{x}) = \frac{1}{2} \sum_{i=1}^{n} \left(x_i^4 - 16x_i^2 + 5x_i\right)"
     pgfmath_formula = "0.5*(#1^4 - 16*#1^2 + 5*#1 + #2^4 - 16*#2^2 + 5*#2)"  # 2D specialization

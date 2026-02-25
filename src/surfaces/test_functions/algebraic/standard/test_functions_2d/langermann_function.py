@@ -46,12 +46,12 @@ class LangermannFunction(AlgebraicFunction):
         "unimodal": False,
         "separable": False,
         "scalable": False,
+        "default_bounds": (-15.0, 15.0),
     }
 
     f_global = None  # Complex to determine analytically
     x_global = None
 
-    default_bounds = (-15.0, 15.0)
     n_dim = 2
 
     latex_formula = r"f(x, y) = \sum_{i=1}^{m} c_i \exp\left(-\frac{1}{\pi}\sum_{j=1}^{2}(x_j - A_{ji})^2\right) \cos\left(\pi\sum_{j=1}^{2}(x_j - A_{ji})^2\right)"

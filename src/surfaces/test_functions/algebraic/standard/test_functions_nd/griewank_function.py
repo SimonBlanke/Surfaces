@@ -39,8 +39,6 @@ class GriewankFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions.
-    default_bounds : tuple
-        Default parameter bounds (-100.0, 100.0).
 
     Examples
     --------
@@ -56,11 +54,10 @@ class GriewankFunction(AlgebraicFunction):
         "unimodal": False,
         "separable": False,
         "scalable": True,
+        "default_bounds": (-100.0, 100.0),
     }
 
     f_global = 0.0
-
-    default_bounds = (-100.0, 100.0)
 
     latex_formula = r"f(\vec{x}) = \sum_{i=1}^{n} \frac{x_i^2}{4000} - \prod_{i=1}^{n} \cos\left(\frac{x_i}{\sqrt{i}}\right) + 1"
     pgfmath_formula = (

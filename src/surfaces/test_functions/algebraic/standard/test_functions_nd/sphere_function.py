@@ -43,8 +43,6 @@ class SphereFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions.
-    default_bounds : tuple
-        Default parameter bounds (-5.0, 5.0).
 
     Examples
     --------
@@ -62,11 +60,10 @@ class SphereFunction(AlgebraicFunction):
         "unimodal": True,
         "separable": True,
         "scalable": True,
+        "default_bounds": (-5.0, 5.0),
     }
 
     f_global = 0.0
-
-    default_bounds = (-5.0, 5.0)
 
     latex_formula = r"f(\vec{x}) = \sum_{i=1}^{n} x_i^2"
     pgfmath_formula = "#1^2 + #2^2"  # 2D specialization

@@ -35,8 +35,6 @@ class DampedSineFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 1).
-    default_bounds : tuple
-        Default parameter bounds (-10, 10).
 
     References
     ----------
@@ -62,12 +60,12 @@ class DampedSineFunction(AlgebraicFunction):
         "unimodal": False,
         "separable": True,
         "scalable": False,
+        "default_bounds": (-10.0, 10.0),
     }
 
     f_global = -0.8242393984760573
     x_global = (0.6795787635255166,)
 
-    default_bounds = (-10.0, 10.0)
     n_dim = 1
 
     latex_formula = r"f(x) = -(x + \sin(x)) e^{-x^2}"

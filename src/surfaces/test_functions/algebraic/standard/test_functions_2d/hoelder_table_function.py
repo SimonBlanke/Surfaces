@@ -42,8 +42,6 @@ class HölderTableFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-10.0, 10.0).
 
     Examples
     --------
@@ -57,6 +55,7 @@ class HölderTableFunction(AlgebraicFunction):
         "unimodal": False,
         "separable": False,
         "scalable": False,
+        "default_bounds": (-10.0, 10.0),
     }
 
     f_global = -19.2085
@@ -67,7 +66,6 @@ class HölderTableFunction(AlgebraicFunction):
         (-8.05502, -9.66459),
     )
 
-    default_bounds = (-10.0, 10.0)
     n_dim = 2
 
     latex_formula = r"f(x, y) = -\left|\sin(x)\cos(y)\exp\left(\left|1 - \frac{\sqrt{x^2 + y^2}}{\pi}\right|\right)\right|"

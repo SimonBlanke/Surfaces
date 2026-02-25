@@ -34,8 +34,6 @@ class GramacyAndLeeFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 1).
-    default_bounds : tuple
-        Default parameter bounds (0.5, 2.5).
 
     References
     ----------
@@ -59,12 +57,12 @@ class GramacyAndLeeFunction(AlgebraicFunction):
         "unimodal": False,
         "separable": True,
         "scalable": False,
+        "default_bounds": (0.5, 2.5),
     }
 
     f_global = -0.869011134989500
     x_global = (0.548563444114526,)
 
-    default_bounds = (0.5, 2.5)
     n_dim = 1
 
     latex_formula = r"f(x) = \frac{\sin(10\pi x)}{2x} + (x - 1)^4"

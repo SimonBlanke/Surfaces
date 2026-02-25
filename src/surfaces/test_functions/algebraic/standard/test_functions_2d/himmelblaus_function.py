@@ -44,8 +44,6 @@ class HimmelblausFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-5.0, 5.0).
 
     Examples
     --------
@@ -64,6 +62,7 @@ class HimmelblausFunction(AlgebraicFunction):
         "unimodal": False,
         "separable": False,
         "scalable": False,
+        "default_bounds": (-5.0, 5.0),
     }
 
     f_global = 0.0
@@ -74,7 +73,6 @@ class HimmelblausFunction(AlgebraicFunction):
         (3.584428, -1.848126),
     )
 
-    default_bounds = (-5.0, 5.0)
     n_dim = 2
 
     latex_formula = r"f(x, y) = (x^2 + y - 11)^2 + (x + y^2 - 7)^2"

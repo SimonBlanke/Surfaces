@@ -36,8 +36,6 @@ class ForresterFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 1).
-    default_bounds : tuple
-        Default parameter bounds (0, 1).
 
     References
     ----------
@@ -63,12 +61,12 @@ class ForresterFunction(AlgebraicFunction):
         "unimodal": False,
         "separable": True,
         "scalable": False,
+        "default_bounds": (0.0, 1.0),
     }
 
     f_global = -6.020740055766075
     x_global = (0.7572487144081974,)
 
-    default_bounds = (0.0, 1.0)
     n_dim = 1
 
     latex_formula = r"f(x) = (6x - 2)^2 \sin(12x - 4)"

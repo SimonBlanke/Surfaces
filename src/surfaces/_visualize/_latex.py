@@ -186,7 +186,7 @@ def plot_latex(
         domain_min = min(dim0_bounds[0], dim1_bounds[0])
         domain_max = max(dim0_bounds[1], dim1_bounds[1])
     else:
-        default_bounds = getattr(func, "default_bounds", (-5.0, 5.0))
+        default_bounds = func.spec.default_bounds if hasattr(func, "spec") else (-5.0, 5.0)
         domain_min = default_bounds[0]
         domain_max = default_bounds[1]
 

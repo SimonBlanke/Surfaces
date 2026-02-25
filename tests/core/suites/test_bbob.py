@@ -101,7 +101,7 @@ class TestBBOBGlobalOptimum:
         """x_global should be within search bounds."""
         func = func_class(n_dim=2)
         x_global = func.x_global
-        bounds = func.default_bounds
+        bounds = func.spec.default_bounds
         # Allow small tolerance outside bounds
         assert np.all(x_global >= bounds[0] - 1)
         assert np.all(x_global <= bounds[1] + 1)
@@ -278,7 +278,7 @@ class TestBBOBSearchSpace:
     def test_default_bounds(self, func_class):
         """Default bounds should be [-5, 5]."""
         func = func_class(n_dim=2)
-        assert func.default_bounds == (-5.0, 5.0)
+        assert func.spec.default_bounds == (-5.0, 5.0)
 
     @pytest.mark.parametrize("func_class", ALL_BBOB, ids=func_id)
     def test_search_space_keys(self, func_class):
