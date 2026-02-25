@@ -4,6 +4,10 @@
 
 """Tests for CustomTestFunction plot namespace (requires matplotlib)."""
 
+import matplotlib
+
+matplotlib.use("Agg")
+
 import numpy as np
 import pytest
 
