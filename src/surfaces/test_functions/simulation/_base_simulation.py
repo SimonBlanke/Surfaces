@@ -17,10 +17,10 @@ from typing import Any, Callable, Dict, List, Optional, Union
 
 from surfaces.modifiers import BaseModifier
 
-from .._base_test_function import BaseTestFunction
+from .._base_single_objective import BaseSingleObjectiveTestFunction
 
 
-class SimulationFunction(BaseTestFunction):
+class SimulationFunction(BaseSingleObjectiveTestFunction):
     """Base class for simulation-based optimization test functions.
 
     Simulation functions evaluate objectives by running numerical simulations

@@ -8,7 +8,7 @@ from typing import Any, Callable, Dict, List, Optional, Union
 from surfaces.modifiers import BaseModifier
 
 from ..._surrogates import load_surrogate
-from .._base_test_function import BaseTestFunction
+from .._base_single_objective import BaseSingleObjectiveTestFunction
 
 
 def _load_surrogate_before_init(init_func):
@@ -32,7 +32,7 @@ def _load_surrogate_before_init(init_func):
     return wrapper
 
 
-class MachineLearningFunction(BaseTestFunction):
+class MachineLearningFunction(BaseSingleObjectiveTestFunction):
     """
     Base class for machine learning hyperparameter optimization test functions.
 

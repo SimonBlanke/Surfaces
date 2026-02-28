@@ -10,10 +10,10 @@ import numpy as np
 
 from surfaces.modifiers import BaseModifier
 
-from .._base_test_function import BaseTestFunction
+from .._base_single_objective import BaseSingleObjectiveTestFunction
 
 
-class AlgebraicFunction(BaseTestFunction):
+class AlgebraicFunction(BaseSingleObjectiveTestFunction):
     """Base class for algebraic optimization test functions.
 
     Algebraic functions are defined by closed-form analytical expressions,

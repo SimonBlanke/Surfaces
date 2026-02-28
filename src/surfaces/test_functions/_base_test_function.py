@@ -28,10 +28,16 @@ def _check_dependencies_after_init(init_func):
 class BaseTestFunction:
     """Base class for all test functions in the Surfaces library.
 
+    This is the generic root class providing the template method pattern
+    for evaluation, memory caching, data collection, callbacks, and
+    error handling. Subclasses should inherit from one of the two
+    intermediate bases:
+
+    - :class:`BaseSingleObjectiveTestFunction` for scalar objectives
+    - :class:`BaseMultiObjectiveTestFunction` for vector objectives
+
     Parameters
     ----------
-    objective : str, default="minimize"
-        Either "minimize" or "maximize".
     modifiers : list of BaseModifier, optional
         List of modifiers to apply to function evaluations. Modifiers are
         applied in the order they appear in the list.
@@ -114,16 +120,12 @@ class BaseTestFunction:
     @_check_dependencies_after_init
     def __init__(
         self,
-        objective="minimize",
         modifiers: Optional[List[BaseModifier]] = None,
         memory=False,
         collect_data=True,
         callbacks=None,
         catch_errors=None,
     ):
-        if objective not in ("minimize", "maximize"):
-            raise ValueError(f"objective must be 'minimize' or 'maximize', got '{objective}'")
-        self.objective = objective
         self.collect_data = collect_data
 
         # Private state: memory
@@ -307,7 +309,7 @@ class BaseTestFunction:
         self,
         params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None,
         **kwargs,
-    ) -> float:
+    ):
         """Evaluate the objective function.
 
         Args:
@@ -360,8 +362,12 @@ class BaseTestFunction:
         """Convert params dict to a hashable cache key (sorted tuple of values)."""
         return tuple(params[k] for k in sorted(params.keys()))
 
-    def _evaluate(self, params: Dict[str, Any]) -> float:
-        """Evaluate with modifiers and objective transformation."""
+    def _evaluate(self, params: Dict[str, Any]):
+        """Evaluate with error handling and modifiers.
+
+        Subclasses (e.g. BaseSingleObjectiveTestFunction) may override
+        to add objective-direction handling on top.
+        """
         try:
             raw_value = self._objective(params)
         except Exception as e:
@@ -371,18 +377,24 @@ class BaseTestFunction:
                         return return_value
             raise
 
-        # Apply modifiers if configured
         if self._modifiers:
-            context = {
-                "evaluation_count": self._n_evaluations,
-                "best_score": self._best_score,
-                "search_data": self._search_data,
-            }
-            for modifier in self._modifiers:
-                raw_value = modifier.apply(raw_value, params, context)
+            raw_value = self._apply_modifiers(raw_value, params)
 
-        if self.objective == "maximize":
-            return -raw_value
+        return raw_value
+
+    def _apply_modifiers(self, raw_value, params):
+        """Apply modifier pipeline to the raw value.
+
+        Override in subclasses to change how modifiers interact with the
+        result (e.g. multi-objective passes only the first element).
+        """
+        context = {
+            "evaluation_count": self._n_evaluations,
+            "best_score": self._best_score,
+            "search_data": self._search_data,
+        }
+        for modifier in self._modifiers:
+            raw_value = modifier.apply(raw_value, params, context)
         return raw_value
 
     # =========================================================================
@@ -392,7 +404,7 @@ class BaseTestFunction:
     def _record_evaluation(
         self,
         params: Dict[str, Any],
-        score: float,
+        score,
         elapsed_time: float = 0.0,
         from_cache: bool = False,
     ) -> None:
@@ -406,50 +418,17 @@ class BaseTestFunction:
             if not from_cache:
                 self._total_time += elapsed_time
 
-            is_better = (
-                self._best_score is None
-                or (self.objective == "minimize" and score < self._best_score)
-                or (self.objective == "maximize" and score > self._best_score)
-            )
-            if is_better:
-                self._best_score = score
-                self._best_params = params.copy()
+            self._update_best(params, score)
 
         for callback in self._callbacks:
             callback(record)
 
-    # =========================================================================
-    # Evaluation Variants
-    # =========================================================================
+    def _update_best(self, params: Dict[str, Any], score) -> None:
+        """Update best score/params if score is an improvement.
 
-    def pure(
-        self,
-        params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None,
-        **kwargs,
-    ) -> float:
-        """Evaluate the function without modifiers.
-
-        Returns the true (deterministic) function value, bypassing any
-        configured modifiers. Does not update search_data, n_evaluations,
-        or callbacks. Ignores memory caching.
-
-        Parameters
-        ----------
-        params : dict, array, list, or tuple
-            Parameter values to evaluate.
-        **kwargs : dict
-            Parameters as keyword arguments.
-
-        Returns
-        -------
-        float
-            The true function value without modifiers.
+        No-op in the base class. Overridden by
+        :class:`BaseSingleObjectiveTestFunction` for scalar comparison.
         """
-        params = self._normalize_input(params, **kwargs)
-        raw_value = self._objective(params)
-        if self.objective == "maximize":
-            return -raw_value
-        return raw_value
 
     # =========================================================================
     # Reset Methods
@@ -517,9 +496,4 @@ class BaseTestFunction:
         if X.shape[1] != self.n_dim:
             raise ValueError(f"Expected {self.n_dim} dimensions, got {X.shape[1]}")
 
-        result = self._batch_objective(X)
-
-        if self.objective == "maximize":
-            result = -result
-
-        return result
+        return self._batch_objective(X)

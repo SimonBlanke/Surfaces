@@ -10,10 +10,10 @@ import numpy as np
 
 from surfaces._array_utils import ArrayLike, get_array_namespace
 
-from ._base_multi_objective import MultiObjectiveFunction
+from ..._base_multi_objective import BaseMultiObjectiveTestFunction
 
 
-class ZDT1(MultiObjectiveFunction):
+class ZDT1(BaseMultiObjectiveTestFunction):
     """ZDT1 multi-objective test function.
 
     The ZDT1 function is a widely used benchmark for multi-objective
@@ -33,8 +33,9 @@ class ZDT1(MultiObjectiveFunction):
     ----------
     n_dim : int, default=30
         Number of input dimensions. Must be >= 2.
-    modifiers : list of BaseModifier, optional
-        List of modifiers to apply to function evaluations.
+    **kwargs
+        Additional keyword arguments passed to
+        :class:`BaseMultiObjectiveTestFunction` (modifiers, memory, etc.).
 
     Attributes
     ----------
@@ -49,7 +50,7 @@ class ZDT1(MultiObjectiveFunction):
 
     Examples
     --------
-    >>> from surfaces.multi_objective import ZDT1
+    >>> from surfaces.test_functions.algebraic.multi_objective import ZDT1
     >>> func = ZDT1(n_dim=30)
     >>> result = func(np.zeros(30))
     >>> result.shape
@@ -68,59 +69,29 @@ class ZDT1(MultiObjectiveFunction):
         "default_bounds": (0.0, 1.0),
     }
 
-    def __init__(self, n_dim: int = 30, sleep: float = 0):
+    def __init__(self, n_dim: int = 30, **kwargs):
         if n_dim < 2:
             raise ValueError(f"n_dim must be >= 2, got {n_dim}")
-        super().__init__(n_dim, sleep)
+        super().__init__(n_dim, **kwargs)
 
-    def _create_objective_function(self):
-        def zdt1(params: Dict[str, Any]) -> np.ndarray:
-            x = self._params_to_array(params)
+    def _objective(self, params: Dict[str, Any]) -> np.ndarray:
+        x = self._params_to_array(params)
 
-            f1 = x[0]
+        f1 = x[0]
 
-            g = 1 + 9 * np.sum(x[1:]) / (self.n_dim - 1)
-            f2 = g * (1 - np.sqrt(f1 / g))
+        g = 1 + 9 * np.sum(x[1:]) / (self.n_dim - 1)
+        f2 = g * (1 - np.sqrt(f1 / g))
 
-            return np.array([f1, f2])
+        return np.array([f1, f2])
 
-        self.pure_objective_function = zdt1
-
-    def pareto_front(self, n_points: int = 100) -> np.ndarray:
-        """Generate points on the theoretical Pareto front.
-
-        The Pareto front of ZDT1 is the convex curve f2 = 1 - sqrt(f1)
-        for f1 in [0, 1].
-
-        Parameters
-        ----------
-        n_points : int, default=100
-            Number of points to generate.
-
-        Returns
-        -------
-        np.ndarray
-            Array of shape (n_points, 2).
-        """
+    def _pareto_front(self, n_points: int) -> np.ndarray:
+        """Pareto front: f2 = 1 - sqrt(f1) for f1 in [0, 1]."""
         f1 = np.linspace(0, 1, n_points)
         f2 = 1 - np.sqrt(f1)
         return np.column_stack([f1, f2])
 
-    def pareto_set(self, n_points: int = 100) -> np.ndarray:
-        """Generate points in the Pareto set.
-
-        The Pareto set of ZDT1 is x1 in [0, 1] with x2 = ... = xn = 0.
-
-        Parameters
-        ----------
-        n_points : int, default=100
-            Number of points to generate.
-
-        Returns
-        -------
-        np.ndarray
-            Array of shape (n_points, n_dim).
-        """
+    def _pareto_set(self, n_points: int) -> np.ndarray:
+        """Pareto set: x1 in [0, 1] with x2 = ... = xn = 0."""
         x = np.zeros((n_points, self.n_dim))
         x[:, 0] = np.linspace(0, 1, n_points)
         return x

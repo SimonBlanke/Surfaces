@@ -10,10 +10,10 @@ import numpy as np
 
 from surfaces._array_utils import ArrayLike, get_array_namespace
 
-from ._base_multi_objective import MultiObjectiveFunction
+from ..._base_multi_objective import BaseMultiObjectiveTestFunction
 
 
-class FonsecaFleming(MultiObjectiveFunction):
+class FonsecaFleming(BaseMultiObjectiveTestFunction):
     """Fonseca-Fleming multi-objective test function.
 
     A classic multi-objective test function with a non-convex Pareto front.
@@ -30,8 +30,9 @@ class FonsecaFleming(MultiObjectiveFunction):
     ----------
     n_dim : int, default=3
         Number of input dimensions.
-    modifiers : list of BaseModifier, optional
-        List of modifiers to apply to function evaluations.
+    **kwargs
+        Additional keyword arguments passed to
+        :class:`BaseMultiObjectiveTestFunction` (modifiers, memory, etc.).
 
     Attributes
     ----------
@@ -46,7 +47,7 @@ class FonsecaFleming(MultiObjectiveFunction):
 
     Examples
     --------
-    >>> from surfaces.multi_objective import FonsecaFleming
+    >>> from surfaces.test_functions.algebraic.multi_objective import FonsecaFleming
     >>> func = FonsecaFleming(n_dim=3)
     >>> result = func(np.zeros(3))
     >>> result.shape
@@ -64,68 +65,24 @@ class FonsecaFleming(MultiObjectiveFunction):
         "default_bounds": (-4.0, 4.0),
     }
 
-    def __init__(self, n_dim: int = 3, sleep: float = 0):
-        super().__init__(n_dim, sleep)
+    def __init__(self, n_dim: int = 3, **kwargs):
+        super().__init__(n_dim, **kwargs)
 
-    def _create_objective_function(self):
+    def _objective(self, params: Dict[str, Any]) -> np.ndarray:
+        x = self._params_to_array(params)
         n = self.n_dim
         offset = 1.0 / np.sqrt(n)
 
-        def fonseca_fleming(params: Dict[str, Any]) -> np.ndarray:
-            x = self._params_to_array(params)
+        sum1 = np.sum((x - offset) ** 2)
+        sum2 = np.sum((x + offset) ** 2)
 
-            sum1 = np.sum((x - offset) ** 2)
-            sum2 = np.sum((x + offset) ** 2)
+        f1 = 1 - np.exp(-sum1)
+        f2 = 1 - np.exp(-sum2)
 
-            f1 = 1 - np.exp(-sum1)
-            f2 = 1 - np.exp(-sum2)
+        return np.array([f1, f2])
 
-            return np.array([f1, f2])
-
-        self.pure_objective_function = fonseca_fleming
-
-    def pareto_front(self, n_points: int = 100) -> np.ndarray:
-        """Generate points on the theoretical Pareto front.
-
-        The Pareto front is obtained when all xi = t for t in [-1/sqrt(n), 1/sqrt(n)].
-
-        Parameters
-        ----------
-        n_points : int, default=100
-            Number of points to generate.
-
-        Returns
-        -------
-        np.ndarray
-            Array of shape (n_points, 2).
-        """
-        n = self.n_dim
-        offset = 1.0 / np.sqrt(n)
-
-        # Pareto optimal when all xi = t
-        t = np.linspace(-offset, offset, n_points)
-
-        f1 = 1 - np.exp(-n * (t - offset) ** 2)
-        f2 = 1 - np.exp(-n * (t + offset) ** 2)
-
-        return np.column_stack([f1, f2])
-
-    def pareto_set(self, n_points: int = 100) -> np.ndarray:
-        """Generate points in the Pareto set.
-
-        The Pareto set consists of points where all xi are equal,
-        with xi in [-1/sqrt(n), 1/sqrt(n)].
-
-        Parameters
-        ----------
-        n_points : int, default=100
-            Number of points to generate.
-
-        Returns
-        -------
-        np.ndarray
-            Array of shape (n_points, n_dim).
-        """
+    def _pareto_set(self, n_points: int) -> np.ndarray:
+        """Pareto set: all xi equal, in [-1/sqrt(n), 1/sqrt(n)]."""
         n = self.n_dim
         offset = 1.0 / np.sqrt(n)
 

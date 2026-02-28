@@ -10,10 +10,10 @@ import numpy as np
 
 from surfaces._array_utils import ArrayLike, get_array_namespace
 
-from ._base_multi_objective import MultiObjectiveFunction
+from ..._base_multi_objective import BaseMultiObjectiveTestFunction
 
 
-class Kursawe(MultiObjectiveFunction):
+class Kursawe(BaseMultiObjectiveTestFunction):
     """Kursawe multi-objective test function.
 
     A multi-objective test function with a non-convex, disconnected
@@ -31,8 +31,9 @@ class Kursawe(MultiObjectiveFunction):
     ----------
     n_dim : int, default=3
         Number of input dimensions. Must be >= 2.
-    modifiers : list of BaseModifier, optional
-        List of modifiers to apply to function evaluations.
+    **kwargs
+        Additional keyword arguments passed to
+        :class:`BaseMultiObjectiveTestFunction` (modifiers, memory, etc.).
 
     Attributes
     ----------
@@ -47,7 +48,7 @@ class Kursawe(MultiObjectiveFunction):
 
     Examples
     --------
-    >>> from surfaces.multi_objective import Kursawe
+    >>> from surfaces.test_functions.algebraic.multi_objective import Kursawe
     >>> func = Kursawe(n_dim=3)
     >>> result = func(np.zeros(3))
     >>> result.shape
@@ -65,71 +66,26 @@ class Kursawe(MultiObjectiveFunction):
         "default_bounds": (-5.0, 5.0),
     }
 
-    def __init__(self, n_dim: int = 3, sleep: float = 0):
+    def __init__(self, n_dim: int = 3, **kwargs):
         if n_dim < 2:
             raise ValueError(f"n_dim must be >= 2, got {n_dim}")
-        super().__init__(n_dim, sleep)
+        super().__init__(n_dim, **kwargs)
 
-    def _create_objective_function(self):
-        def kursawe(params: Dict[str, Any]) -> np.ndarray:
-            x = self._params_to_array(params)
+    def _objective(self, params: Dict[str, Any]) -> np.ndarray:
+        x = self._params_to_array(params)
 
-            # f1: sum of exponential terms
-            f1 = 0.0
-            for i in range(self.n_dim - 1):
-                f1 += -10 * np.exp(-0.2 * np.sqrt(x[i] ** 2 + x[i + 1] ** 2))
+        # f1: sum of exponential terms
+        f1 = 0.0
+        for i in range(self.n_dim - 1):
+            f1 += -10 * np.exp(-0.2 * np.sqrt(x[i] ** 2 + x[i + 1] ** 2))
 
-            # f2: sum of power and sine terms
-            f2 = np.sum(np.abs(x) ** 0.8 + 5 * np.sin(x) ** 3)
+        # f2: sum of power and sine terms
+        f2 = np.sum(np.abs(x) ** 0.8 + 5 * np.sin(x) ** 3)
 
-            return np.array([f1, f2])
+        return np.array([f1, f2])
 
-        self.pure_objective_function = kursawe
-
-    def pareto_front(self, n_points: int = 100) -> np.ndarray:
-        """Generate approximate points on the Pareto front.
-
-        The Kursawe function has a complex, disconnected Pareto front
-        that cannot be expressed analytically. This method generates
-        an approximation by sampling the Pareto set.
-
-        Parameters
-        ----------
-        n_points : int, default=100
-            Number of points to generate.
-
-        Returns
-        -------
-        np.ndarray
-            Array of shape (n_points, 2).
-        """
-        # Sample from the approximate Pareto set and evaluate
-        x_samples = self.pareto_set(n_points)
-        front = np.zeros((n_points, 2))
-
-        for i, x in enumerate(x_samples):
-            params = {f"x{j}": x[j] for j in range(self.n_dim)}
-            front[i] = self.pure_objective_function(params)
-
-        return front
-
-    def pareto_set(self, n_points: int = 100) -> np.ndarray:
-        """Generate approximate points in the Pareto set.
-
-        The Pareto set of Kursawe is approximately obtained when
-        all variables are equal. This is a rough approximation.
-
-        Parameters
-        ----------
-        n_points : int, default=100
-            Number of points to generate.
-
-        Returns
-        -------
-        np.ndarray
-            Array of shape (n_points, n_dim).
-        """
-        # Approximate Pareto set: all variables equal, in range roughly [-1.5, 1.5]
+    def _pareto_set(self, n_points: int) -> np.ndarray:
+        """Approximate Pareto set: all variables equal, in [-1.5, 1.5]."""
         t = np.linspace(-1.5, 1.5, n_points)
         x = np.tile(t[:, np.newaxis], (1, self.n_dim))
         return x

@@ -11,10 +11,10 @@ import numpy as np
 from surfaces._array_utils import ArrayLike, get_array_namespace
 from surfaces.modifiers import BaseModifier
 
-from ..._base_test_function import BaseTestFunction
+from ..._base_single_objective import BaseSingleObjectiveTestFunction
 
 
-class EngineeringFunction(BaseTestFunction):
+class EngineeringFunction(BaseSingleObjectiveTestFunction):
     """Base class for real-world engineering design optimization problems.
 
     Engineering functions represent practical design optimization problems

@@ -61,6 +61,8 @@ from surfaces.test_functions._base_test_function import BaseTestFunction
 # Base classes that should be excluded from testing (abstract/intermediate)
 BASE_CLASS_NAMES = {
     "BaseTestFunction",
+    "BaseSingleObjectiveTestFunction",
+    "BaseMultiObjectiveTestFunction",
     "AlgebraicFunction",
     "MathematicalFunction",
     "BBOBFunction",

@@ -14,10 +14,10 @@ import numpy as np
 
 from surfaces.modifiers import BaseModifier
 
-from ._base_test_function import BaseTestFunction
+from ._base_single_objective import BaseSingleObjectiveTestFunction
 
 
-class CustomTestFunction(BaseTestFunction):
+class CustomTestFunction(BaseSingleObjectiveTestFunction):
     """User-defined test function with full Surfaces infrastructure.
 
     Allows users to wrap any callable as a Surfaces test function,

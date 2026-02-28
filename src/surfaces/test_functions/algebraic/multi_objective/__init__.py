@@ -16,7 +16,7 @@ Kursawe : Disconnected Pareto front, scalable dimensions
 
 Examples
 --------
->>> from surfaces.multi_objective import ZDT1
+>>> from surfaces.test_functions.algebraic.multi_objective import ZDT1
 >>> func = ZDT1(n_dim=30)
 >>> result = func([0.5] + [0.0] * 29)
 >>> result.shape
@@ -28,12 +28,14 @@ Examples
 (100, 2)
 """
 
-from ._base_multi_objective import MultiObjectiveFunction
+from ..._base_multi_objective import BaseMultiObjectiveTestFunction
+from ._base_multi_objective import MultiObjectiveFunction  # backward compat
 from .fonseca_fleming import FonsecaFleming
 from .kursawe import Kursawe
 from .zdt1 import ZDT1
 
 __all__ = [
+    "BaseMultiObjectiveTestFunction",
     "MultiObjectiveFunction",
     "ZDT1",
     "FonsecaFleming",

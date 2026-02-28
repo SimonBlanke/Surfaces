@@ -31,7 +31,7 @@ class DataAccessor:
         return self._func._search_data
 
     @property
-    def best_score(self) -> Optional[float]:
+    def best_score(self) -> Optional[Any]:
         return self._func._best_score
 
     @property
