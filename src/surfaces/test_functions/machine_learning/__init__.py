@@ -46,6 +46,7 @@ if _HAS_SKLEARN:
         SVMImageClassifierFunction,
         SVMRegressorFunction,
         TSForestClassifierFunction,
+        XGBoostClassifierFunction,
         XGBoostImageClassifierFunction,
     )
 
@@ -57,6 +58,7 @@ if _HAS_SKLEARN:
         "RandomForestClassifierFunction",
         "SVMClassifierFunction",
         "LightGBMClassifierFunction",
+        "XGBoostClassifierFunction",
         # Tabular - Regression
         "DecisionTreeRegressorFunction",
         "GradientBoostingRegressorFunction",
@@ -96,6 +98,7 @@ if _HAS_SKLEARN:
         RandomForestClassifierFunction,
         SVMClassifierFunction,
         LightGBMClassifierFunction,
+        XGBoostClassifierFunction,
         # Tabular - Regression
         DecisionTreeRegressorFunction,
         GradientBoostingRegressorFunction,

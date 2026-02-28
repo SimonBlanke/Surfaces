@@ -38,6 +38,7 @@ if _HAS_SKLEARN:
         RandomForestRegressorFunction,
         SVMClassifierFunction,
         SVMRegressorFunction,
+        XGBoostClassifierFunction,
     )
     from .timeseries import (
         ExpSmoothingForecasterFunction,
@@ -56,6 +57,7 @@ if _HAS_SKLEARN:
         "RandomForestClassifierFunction",
         "SVMClassifierFunction",
         "LightGBMClassifierFunction",
+        "XGBoostClassifierFunction",
         # Tabular - Regression
         "DecisionTreeRegressorFunction",
         "GradientBoostingRegressorFunction",

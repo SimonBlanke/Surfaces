@@ -21,4 +21,5 @@ smac
 # Distributed optimization
 ray[tune]
 
+# Gradient boosting
 xgboost

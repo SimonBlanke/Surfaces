@@ -8,7 +8,7 @@ from .k_neighbors_classifier import KNeighborsClassifierFunction
 from .lightgbm_classifier import LightGBMClassifierFunction
 from .random_forest_classifier import RandomForestClassifierFunction
 from .svm_classifier import SVMClassifierFunction
-from .xgboost import XGBoostClassifierFunction
+from .xgboost_classifier import XGBoostClassifierFunction
 
 __all__ = [
     "DecisionTreeClassifierFunction",
