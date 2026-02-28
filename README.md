@@ -379,9 +379,9 @@ This library is part of a suite of optimization tools. For updates, [follow on G
 
 | Resource | Description |
 |----------|-------------|
-| [User Guide](https://github.com/SimonBlanke/Surfaces#usage) | Installation and basic usage examples |
-| [API Reference](https://github.com/SimonBlanke/Surfaces#function-categories) | Complete list of available test functions |
-| [Examples](https://github.com/SimonBlanke/Surfaces#examples) | Code examples for common use cases |
+| [User Guide](https://surfaces.readthedocs.io/en/latest/user_guide.html) | Installation and basic usage examples |
+| [API Reference](https://surfaces.readthedocs.io/en/latest/api_reference.html) | Complete list of available test functions |
+| [Examples](https://surfaces.readthedocs.io/en/latest/examples.html) | Code examples for common use cases |
 | [GitHub Issues](https://github.com/SimonBlanke/Surfaces/issues) | Bug reports and feature requests |
 
 <br>
