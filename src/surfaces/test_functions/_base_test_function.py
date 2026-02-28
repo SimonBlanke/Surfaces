@@ -2,6 +2,7 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
+import functools
 import re
 import time
 from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
@@ -10,6 +11,18 @@ import numpy as np
 
 from surfaces._array_utils import ArrayLike, is_array_like
 from surfaces.modifiers import BaseModifier
+
+
+def _check_dependencies_after_init(init_func):
+    """Call ``_check_dependencies()`` after ``__init__`` completes."""
+
+    @functools.wraps(init_func)
+    def wrapper(self, *args, **kwargs):
+        result = init_func(self, *args, **kwargs)
+        self._check_dependencies()
+        return result
+
+    return wrapper
 
 
 class BaseTestFunction:
@@ -98,6 +111,7 @@ class BaseTestFunction:
     # Type alias for callbacks
     CallbackType = Union[Callable[[Dict[str, Any]], None], List[Callable[[Dict[str, Any]], None]]]
 
+    @_check_dependencies_after_init
     def __init__(
         self,
         objective="minimize",
@@ -136,8 +150,6 @@ class BaseTestFunction:
 
         # Private state: error handlers
         self._error_handlers: Optional[Dict[Type[Exception], float]] = catch_errors
-
-        self._check_dependencies()
 
         # Accessor caches (lazy-loaded)
         self._spec_accessor = None
