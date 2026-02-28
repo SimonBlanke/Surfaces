@@ -54,10 +54,6 @@ import pytest
 
 from surfaces.test_functions._base_test_function import BaseTestFunction
 
-# =============================================================================
-# Discovery Infrastructure
-# =============================================================================
-
 # Base classes that should be excluded from testing (abstract/intermediate)
 BASE_CLASS_NAMES = {
     "BaseTestFunction",

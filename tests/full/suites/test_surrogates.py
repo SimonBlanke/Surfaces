@@ -23,7 +23,6 @@ import pytest
 HAS_ONNXRUNTIME = importlib.util.find_spec("onnxruntime") is not None
 HAS_SKLEARN = importlib.util.find_spec("sklearn") is not None
 
-
 requires_onnxruntime = pytest.mark.skipif(
     not HAS_ONNXRUNTIME, reason="Requires onnxruntime: pip install onnxruntime"
 )
@@ -31,11 +30,6 @@ requires_onnxruntime = pytest.mark.skipif(
 requires_sklearn = pytest.mark.skipif(
     not HAS_SKLEARN, reason="Requires scikit-learn: pip install surfaces[ml]"
 )
-
-
-# =============================================================================
-# ONNX Utilities Tests
-# =============================================================================
 
 
 class TestOnnxUtils:
@@ -68,11 +62,6 @@ class TestOnnxUtils:
 
         result = get_surrogate_model_path("nonexistent_function_xyz")
         assert result is None
-
-
-# =============================================================================
-# ML Registry Tests
-# =============================================================================
 
 
 @requires_sklearn
@@ -142,11 +131,6 @@ class TestMLRegistry:
             get_function_config("nonexistent_function")
 
 
-# =============================================================================
-# SurrogateLoader Tests
-# =============================================================================
-
-
 class TestSurrogateLoader:
     """Test SurrogateLoader class."""
 
@@ -176,11 +160,6 @@ class TestSurrogateLoader:
         loader = SurrogateLoader(fake_model)
         with pytest.raises(FileNotFoundError, match="Metadata file not found"):
             _ = loader.metadata
-
-
-# =============================================================================
-# Surrogate Availability Tests
-# =============================================================================
 
 
 @requires_sklearn
@@ -216,11 +195,6 @@ class TestSurrogateAvailability:
         func = KNeighborsClassifierFunction(use_surrogate=True)
         assert func.use_surrogate
         assert func._surrogate is not None
-
-
-# =============================================================================
-# SurrogateValidator Tests
-# =============================================================================
 
 
 @requires_sklearn
@@ -348,11 +322,6 @@ class TestSurrogateValidator:
         assert validator._surrogate_func.use_surrogate is True  # Override
 
 
-# =============================================================================
-# Surrogate Prediction Tests
-# =============================================================================
-
-
 @requires_sklearn
 @requires_onnxruntime
 class TestSurrogatePrediction:
@@ -443,11 +412,6 @@ class TestSurrogatePrediction:
         assert -2.0 <= result <= 2.0, f"Result {result} outside reasonable range"
 
 
-# =============================================================================
-# Integration Tests
-# =============================================================================
-
-
 @requires_sklearn
 @requires_onnxruntime
 class TestSurrogateIntegration:
@@ -519,11 +483,6 @@ class TestSurrogateIntegration:
 
         result = objective_func(params)
         assert isinstance(result, float)
-
-
-# =============================================================================
-# Trainer API Tests (without actual training)
-# =============================================================================
 
 
 @requires_sklearn

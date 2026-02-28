@@ -28,11 +28,6 @@ def mock_db():
     db_path.unlink(missing_ok=True)
 
 
-# =============================================================================
-# App Loading Tests
-# =============================================================================
-
-
 @pytest.mark.dashboard
 class TestAppLoading:
     """Tests for basic app loading."""
@@ -69,11 +64,6 @@ class TestAppLoading:
 
             assert len(at.title) > 0
             assert "Surrogate Dashboard" in at.title[0].value
-
-
-# =============================================================================
-# Sidebar Tests
-# =============================================================================
 
 
 @pytest.mark.dashboard
@@ -125,11 +115,6 @@ class TestSidebar:
             assert len(buttons) > 0
 
 
-# =============================================================================
-# Tab Navigation Tests
-# =============================================================================
-
-
 @pytest.mark.dashboard
 class TestTabNavigation:
     """Tests for tab-based navigation."""
@@ -150,11 +135,6 @@ class TestTabNavigation:
 
             # Check that tabs exist
             assert len(at.tabs) > 0
-
-
-# =============================================================================
-# Integration Tests
-# =============================================================================
 
 
 @pytest.mark.dashboard

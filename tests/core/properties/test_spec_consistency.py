@@ -10,10 +10,6 @@ from surfaces.test_functions.algebraic import algebraic_functions
 from surfaces.test_functions.benchmark.bbob import bbob_functions
 from tests.conftest import func_id, instantiate_function
 
-# =============================================================================
-# Spec Existence and Structure
-# =============================================================================
-
 
 class TestSpecStructure:
     """Test that specs have correct structure."""
@@ -42,11 +38,6 @@ class TestSpecStructure:
         assert isinstance(func.spec["func_id"], int)
 
 
-# =============================================================================
-# Spec Consistency
-# =============================================================================
-
-
 class TestSpecConsistency:
     """Test that specs are consistent across instances."""
 
@@ -68,11 +59,6 @@ class TestSpecConsistency:
         func1 = instantiate_function(func_class)
         func2 = instantiate_function(func_class)
         assert func1.spec.as_dict() == func2.spec.as_dict()
-
-
-# =============================================================================
-# Spec Values
-# =============================================================================
 
 
 class TestSpecValues:

@@ -20,10 +20,6 @@ from surfaces.custom_test_function import (
     Storage,
 )
 
-# =============================================================================
-# Test Fixtures
-# =============================================================================
-
 
 def sphere(params: Dict[str, Any]) -> float:
     """Simple sphere function for testing."""
@@ -50,11 +46,6 @@ def temp_db_path():
             path.unlink()
     except (PermissionError, OSError):
         pass  # Let OS clean up temp directory later
-
-
-# =============================================================================
-# InMemoryStorage Tests
-# =============================================================================
 
 
 class TestInMemoryStorage:
@@ -216,11 +207,6 @@ class TestInMemoryStorage:
         with InMemoryStorage() as storage:
             storage.save_evaluation({"x": 1.0, "score": 1.0})
             assert len(storage.load_evaluations()) == 1
-
-
-# =============================================================================
-# SQLiteStorage Tests
-# =============================================================================
 
 
 class TestSQLiteStorage:
@@ -433,11 +419,6 @@ class TestSQLiteStorage:
         # Connection should be closed, but new one works
         with SQLiteStorage(temp_db_path, experiment="test") as storage:
             assert len(storage.load_evaluations()) == 1
-
-
-# =============================================================================
-# CustomTestFunction Storage Integration Tests
-# =============================================================================
 
 
 class TestCustomTestFunctionWithStorage:
@@ -717,11 +698,6 @@ class TestCustomTestFunctionWithStorage:
         assert len(func2._memory_cache) == 1
 
         func2.close()
-
-
-# =============================================================================
-# Custom Storage Implementation Test
-# =============================================================================
 
 
 class TestCustomStorageImplementation:

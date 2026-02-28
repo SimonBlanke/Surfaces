@@ -19,11 +19,6 @@ CEC2014_FUNCTIONS = [
 CEC2014_UNIMODAL = CEC2014_FUNCTIONS[:3]
 
 
-# =============================================================================
-# CEC Functions - Global Optima
-# =============================================================================
-
-
 @pytest.mark.cec
 class TestCECGlobalOptima:
     """Test global optima for CEC functions."""

@@ -11,10 +11,6 @@ from surfaces.test_functions.algebraic.constrained import constrained_functions
 from surfaces.test_functions.benchmark.bbob import bbob_functions
 from tests.conftest import func_id, instantiate_function
 
-# =============================================================================
-# Search Space Structure
-# =============================================================================
-
 
 class TestSearchSpaceStructure:
     """Test that search spaces have correct structure."""
@@ -41,11 +37,6 @@ class TestSearchSpaceStructure:
         assert len(func.search_space) == 2
 
 
-# =============================================================================
-# Search Space Keys
-# =============================================================================
-
-
 class TestSearchSpaceKeys:
     """Test that search space keys are valid."""
 
@@ -63,11 +54,6 @@ class TestSearchSpaceKeys:
         keys = list(func.search_space.keys())
         expected = [f"x{i}" for i in range(len(keys))]
         assert keys == expected
-
-
-# =============================================================================
-# Search Space Values
-# =============================================================================
 
 
 class TestSearchSpaceValues:

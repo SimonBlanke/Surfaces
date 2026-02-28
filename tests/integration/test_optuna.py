@@ -14,11 +14,6 @@ pytestmark = pytest.mark.slow
 optuna.logging.set_verbosity(optuna.logging.WARNING)
 
 
-# =============================================================================
-# Basic Integration Tests
-# =============================================================================
-
-
 def test_optuna_sphere():
     """Test Optuna optimization with Sphere function."""
     func = SphereFunction(n_dim=2)
@@ -49,11 +44,6 @@ def test_optuna_rastrigin():
 
     # Rastrigin has global minimum at origin with value 0
     assert study.best_value < 10.0
-
-
-# =============================================================================
-# Optuna-Specific Feature Tests
-# =============================================================================
 
 
 def test_optuna_with_pruning():

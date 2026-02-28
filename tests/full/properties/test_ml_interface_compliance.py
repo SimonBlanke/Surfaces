@@ -57,11 +57,6 @@ _KNOWN_SURROGATE_VIOLATIONS = {
 }
 
 
-# =============================================================================
-# Required Class Attributes
-# =============================================================================
-
-
 @pytest.mark.ml
 @pytest.mark.static
 @pytest.mark.parametrize("cls", ML_CLASSES, ids=ml_class_id)
@@ -106,11 +101,6 @@ class TestMLRequiredAttributes:
         assert hasattr(cls, "__name__") and isinstance(
             cls.__name__, str
         ), f"{cls.__name__}: Missing or non-string '__name__' attribute"
-
-
-# =============================================================================
-# Required Method Overrides
-# =============================================================================
 
 
 @pytest.mark.ml
@@ -166,11 +156,6 @@ class TestMLRequiredMethods:
         )
 
 
-# =============================================================================
-# Search Space Consistency
-# =============================================================================
-
-
 @pytest.mark.ml
 @pytest.mark.static
 @pytest.mark.parametrize("cls", ML_CLASSES, ids=ml_class_id)
@@ -193,11 +178,6 @@ class TestMLSearchSpaceConsistency:
                         f"{cls.__name__}: Has '{attr_name}' attribute but "
                         f"'{param_name}' is not in para_names = {cls.para_names}"
                     )
-
-
-# =============================================================================
-# Unique Identifiers
-# =============================================================================
 
 
 @pytest.mark.ml

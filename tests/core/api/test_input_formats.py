@@ -17,11 +17,6 @@ def is_numeric(value):
     return isinstance(value, numbers.Number)
 
 
-# =============================================================================
-# Dictionary Input Tests
-# =============================================================================
-
-
 class TestDictInput:
     """Test functions accept dictionary input with parameter names as keys."""
 
@@ -46,11 +41,6 @@ class TestDictInput:
         assert is_numeric(result)
 
 
-# =============================================================================
-# Array Input Tests
-# =============================================================================
-
-
 class TestArrayInput:
     """Test functions accept numpy array input (values in sorted key order)."""
 
@@ -68,11 +58,6 @@ class TestArrayInput:
         func = SphereFunction(n_dim=2)
         result = func(np.array([1.0, 2.0], dtype=np.float32))
         assert is_numeric(result)
-
-
-# =============================================================================
-# List Input Tests
-# =============================================================================
 
 
 class TestListInput:
@@ -94,11 +79,6 @@ class TestListInput:
         assert is_numeric(result)
 
 
-# =============================================================================
-# Tuple Input Tests
-# =============================================================================
-
-
 class TestTupleInput:
     """Test functions accept tuple input (values in sorted key order)."""
 
@@ -113,11 +93,6 @@ class TestTupleInput:
         assert is_numeric(result)
 
 
-# =============================================================================
-# Kwargs Input Tests
-# =============================================================================
-
-
 class TestKwargsInput:
     """Test functions accept keyword arguments."""
 
@@ -130,11 +105,6 @@ class TestKwargsInput:
         func = SphereFunction(n_dim=2)
         result = func({"x0": 1.0}, x1=2.0)
         assert is_numeric(result)
-
-
-# =============================================================================
-# Higher Dimensions Tests
-# =============================================================================
 
 
 class TestHigherDimensions:
@@ -155,11 +125,6 @@ class TestHigherDimensions:
         func = SphereFunction(n_dim=5)
         result = func([0.0, 1.0, 2.0, 3.0, 4.0])
         assert is_numeric(result)
-
-
-# =============================================================================
-# 1D Function Tests
-# =============================================================================
 
 
 class Test1DFunction:
@@ -185,11 +150,6 @@ class Test1DFunction:
         func = GramacyAndLeeFunction()
         result = func([0.5])
         assert is_numeric(result)
-
-
-# =============================================================================
-# Consistency Tests
-# =============================================================================
 
 
 class TestInputConsistency:
@@ -231,11 +191,6 @@ class TestInputConsistency:
         kwargs_result = func(x0=values[0], x1=values[1], x2=values[2])
 
         assert dict_result == array_result == list_result == tuple_result == kwargs_result
-
-
-# =============================================================================
-# Error Cases
-# =============================================================================
 
 
 class TestInputErrors:

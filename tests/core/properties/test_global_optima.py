@@ -11,10 +11,6 @@ from surfaces.test_functions.algebraic import algebraic_functions
 from surfaces.test_functions.benchmark.bbob import bbob_functions
 from tests.conftest import func_id, instantiate_function
 
-# =============================================================================
-# Algebraic Functions - Global Optima
-# =============================================================================
-
 
 @pytest.mark.algebraic
 class TestAlgebraicGlobalOptima:
@@ -54,11 +50,6 @@ class TestAlgebraicGlobalOptima:
 
         result = func(params)
         np.testing.assert_almost_equal(result, f_global, decimal=3)
-
-
-# =============================================================================
-# BBOB Functions - Global Optima
-# =============================================================================
 
 
 @pytest.mark.bbob

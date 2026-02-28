@@ -75,11 +75,6 @@ def func_id(func_class):
     return func_class.__name__
 
 
-# =============================================================================
-# Global Optimum Tests
-# =============================================================================
-
-
 @pytest.mark.bbob
 class TestBBOBGlobalOptimum:
     """Test that BBOB functions have global optimum information.
@@ -105,11 +100,6 @@ class TestBBOBGlobalOptimum:
         # Allow small tolerance outside bounds
         assert np.all(x_global >= bounds[0] - 1)
         assert np.all(x_global <= bounds[1] + 1)
-
-
-# =============================================================================
-# Function Properties Tests
-# =============================================================================
 
 
 @pytest.mark.bbob
@@ -144,11 +134,6 @@ class TestBBOBFunctionProperties:
         func = func_class(n_dim=2)
         # StepEllipsoidal is not continuous due to floor operation
         assert "continuous" in func.spec or func.spec.get("continuous", True) is True
-
-
-# =============================================================================
-# Category-Specific Tests
-# =============================================================================
 
 
 @pytest.mark.bbob
@@ -196,11 +181,6 @@ class TestMultimodalFunctions:
         assert func.spec.get("unimodal", True) is False
 
 
-# =============================================================================
-# Dimension Handling Tests
-# =============================================================================
-
-
 @pytest.mark.bbob
 class TestBBOBDimensions:
     """Test dimension handling for BBOB functions."""
@@ -228,11 +208,6 @@ class TestBBOBDimensions:
         func = func_class(n_dim=10)
         result = func(np.zeros(10))
         assert np.isfinite(result)
-
-
-# =============================================================================
-# Input Format Tests
-# =============================================================================
 
 
 @pytest.mark.bbob
@@ -265,11 +240,6 @@ class TestBBOBInputFormats:
         assert np.isfinite(result)
 
 
-# =============================================================================
-# Search Space Tests
-# =============================================================================
-
-
 @pytest.mark.bbob
 class TestBBOBSearchSpace:
     """Test search space properties for BBOB functions."""
@@ -289,11 +259,6 @@ class TestBBOBSearchSpace:
             assert f"x{i}" in space
 
 
-# =============================================================================
-# Objective Direction Tests
-# =============================================================================
-
-
 @pytest.mark.bbob
 class TestBBOBObjective:
     """Test objective parameter behavior."""
@@ -309,11 +274,6 @@ class TestBBOBObjective:
         func = Sphere(n_dim=2, objective="maximize")
         result = func(func.x_global)
         assert result == -func.f_global
-
-
-# =============================================================================
-# Instance Reproducibility Tests
-# =============================================================================
 
 
 @pytest.mark.bbob

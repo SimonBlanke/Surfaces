@@ -40,6 +40,7 @@ Usage:
 import numpy as np
 import pytest
 
+from surfaces.test_functions._base_single_objective import BaseSingleObjectiveTestFunction
 from surfaces.test_functions._base_test_function import BaseTestFunction
 from surfaces.test_functions.algebraic.constrained._base_engineering_function import (
     EngineeringFunction,
@@ -48,12 +49,8 @@ from surfaces.test_functions.machine_learning._base_machine_learning import (
     MachineLearningFunction,
 )
 
-# =========================================================================
-# Minimal valid implementations (used as positive controls)
-# =========================================================================
 
-
-class _ValidAlgebraic(BaseTestFunction):
+class _ValidAlgebraic(BaseSingleObjectiveTestFunction):
     """Minimal valid concrete algebraic function."""
 
     _spec = {"n_dim": 1, "default_bounds": (-5.0, 5.0)}
@@ -84,11 +81,6 @@ class _ValidML(MachineLearningFunction):
 
     def _ml_objective(self, params):
         return 1.0 / (1.0 + params["alpha"])
-
-
-# =========================================================================
-# BaseTestFunction contracts
-# =========================================================================
 
 
 class TestBaseContracts:
@@ -152,11 +144,6 @@ class TestBaseContracts:
         """Invalid objective direction raises ValueError."""
         with pytest.raises(ValueError, match="minimize.*maximize"):
             _ValidAlgebraic(objective="invalid")
-
-
-# =========================================================================
-# EngineeringFunction contracts
-# =========================================================================
 
 
 class TestEngineeringContracts:
@@ -235,11 +222,6 @@ class TestEngineeringContracts:
         assert func._objective({"x0": 0.5}) == 42.0
 
 
-# =========================================================================
-# MachineLearningFunction contracts
-# =========================================================================
-
-
 class TestMLContracts:
     """Verify MachineLearningFunction enforces _ml_objective override."""
 
@@ -306,11 +288,6 @@ class TestMLContracts:
         result = func._ml_objective({"alpha": 0.1})
         assert isinstance(result, float)
         assert result > 0
-
-
-# =========================================================================
-# SimulationFunction contracts
-# =========================================================================
 
 
 class TestSimulationContracts:
@@ -414,11 +391,6 @@ class TestSimulationContracts:
         assert result == pytest.approx(3.0)
 
 
-# =========================================================================
-# ODESimulationFunction contracts
-# =========================================================================
-
-
 class TestODEContracts:
     """Verify ODESimulationFunction enforces abstract method overrides.
 
@@ -520,11 +492,6 @@ class TestODEContracts:
         result = func._objective({"k": 1.0})
         # y(1) = exp(-1) ~ 0.368
         assert 0.3 < result < 0.4
-
-
-# =========================================================================
-# Cross-cutting contract tests
-# =========================================================================
 
 
 class TestCrossCuttingContracts:

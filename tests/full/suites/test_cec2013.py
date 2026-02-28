@@ -78,11 +78,6 @@ COMPOSITION = [
 ALL_FUNCTIONS = UNIMODAL + MULTIMODAL + COMPOSITION
 
 
-# =============================================================================
-# Evaluation Tests
-# =============================================================================
-
-
 class TestCEC2013Evaluation:
     """Test evaluation of all CEC 2013 functions."""
 
@@ -127,11 +122,6 @@ class TestCEC2013Evaluation:
         assert r1 == r2
 
 
-# =============================================================================
-# Batch Evaluation Tests
-# =============================================================================
-
-
 class TestCEC2013BatchEvaluation:
     """Test batch evaluation for CEC 2013 functions."""
 
@@ -166,11 +156,6 @@ class TestCEC2013BatchEvaluation:
         X = np.zeros((8, 10))
         result = func.batch(X)
         assert result.shape == (8,)
-
-
-# =============================================================================
-# Property Tests
-# =============================================================================
 
 
 class TestCEC2013Properties:
@@ -209,11 +194,6 @@ class TestCEC2013Properties:
         assert len(cec2013_functions) == 28
 
 
-# =============================================================================
-# Dimension Tests
-# =============================================================================
-
-
 class TestCEC2013Dimensions:
     """Test dimension handling."""
 
@@ -229,11 +209,6 @@ class TestCEC2013Dimensions:
         """Unsupported dimensions raise ValueError."""
         with pytest.raises(ValueError, match="n_dim must be one of"):
             Sphere(n_dim=15)
-
-
-# =============================================================================
-# Global Optimum Tests
-# =============================================================================
 
 
 class TestCEC2013GlobalOptimum:

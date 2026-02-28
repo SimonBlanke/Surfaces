@@ -19,11 +19,6 @@ CEC2014_FUNCTIONS = [
 ]
 
 
-# =============================================================================
-# Search Space Structure
-# =============================================================================
-
-
 class TestSearchSpaceStructure:
     """Test that search spaces have correct structure."""
 

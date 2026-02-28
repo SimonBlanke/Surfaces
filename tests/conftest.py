@@ -8,10 +8,6 @@ This file contains:
 
 import pytest
 
-# =============================================================================
-# Helper Functions
-# =============================================================================
-
 
 def instantiate_function(func_class, n_dim=None):
     """Instantiate a test function with appropriate parameters.
@@ -54,11 +50,6 @@ def get_middle_params(func):
 def func_id(func_class):
     """Generate a readable ID for a test function class."""
     return func_class.__name__
-
-
-# =============================================================================
-# Fixtures
-# =============================================================================
 
 
 @pytest.fixture

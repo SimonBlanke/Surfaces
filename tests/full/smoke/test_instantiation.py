@@ -53,11 +53,6 @@ def instantiate_function(func_class, **kwargs):
     return func_class(**kwargs)
 
 
-# =============================================================================
-# CEC Functions
-# =============================================================================
-
-
 @pytest.mark.smoke
 @pytest.mark.cec
 @pytest.mark.cec2013
@@ -104,11 +99,6 @@ class TestCEC2017Instantiation:
         result = func(np.zeros(10))
         assert isinstance(result, (int, float))
         assert np.isfinite(result)
-
-
-# =============================================================================
-# Machine Learning Functions
-# =============================================================================
 
 
 @pytest.mark.smoke

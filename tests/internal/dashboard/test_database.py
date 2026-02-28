@@ -41,11 +41,6 @@ def temp_db():
     db_path.unlink(missing_ok=True)
 
 
-# =============================================================================
-# Database Initialization Tests
-# =============================================================================
-
-
 @pytest.mark.dashboard
 class TestDatabaseInit:
     """Tests for database initialization."""
@@ -69,11 +64,6 @@ class TestDatabaseInit:
         with get_connection(temp_db) as conn:
             count = conn.execute("SELECT COUNT(*) FROM surrogates").fetchone()[0]
             assert count == 0
-
-
-# =============================================================================
-# Surrogate CRUD Tests
-# =============================================================================
 
 
 @pytest.mark.dashboard
@@ -161,11 +151,6 @@ class TestSurrogateCRUD:
         assert "Func3" in names
 
 
-# =============================================================================
-# Validation Runs Tests
-# =============================================================================
-
-
 @pytest.mark.dashboard
 class TestValidationRuns:
     """Tests for validation run operations."""
@@ -231,11 +216,6 @@ class TestValidationRuns:
         assert result is None
 
 
-# =============================================================================
-# Training Jobs Tests
-# =============================================================================
-
-
 @pytest.mark.dashboard
 class TestTrainingJobs:
     """Tests for training job operations."""
@@ -290,11 +270,6 @@ class TestTrainingJobs:
 
         assert len(running) == 1
         assert len(completed) == 1
-
-
-# =============================================================================
-# Dashboard Query Tests
-# =============================================================================
 
 
 @pytest.mark.dashboard

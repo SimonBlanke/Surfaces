@@ -9,10 +9,6 @@ import pytest
 
 from surfaces.test_functions.algebraic import AckleyFunction, SphereFunction
 
-# =============================================================================
-# Contour Plot Tests (Legacy Path)
-# =============================================================================
-
 
 @pytest.mark.viz
 class TestContourLegacy:
@@ -54,11 +50,6 @@ class TestContourLegacy:
         assert "Custom Title" in fig.layout.title.text
 
 
-# =============================================================================
-# Surface Plot Tests (Legacy Path)
-# =============================================================================
-
-
 @pytest.mark.viz
 class TestSurfaceLegacy:
     """Test plot_surface with direct function + bounds (legacy path)."""
@@ -89,11 +80,6 @@ class TestSurfaceLegacy:
         assert "My Title" in fig.layout.title.text
         assert fig.layout.width == 600
         assert fig.layout.height == 500
-
-
-# =============================================================================
-# Multi-Slice Plot Tests (Legacy Path)
-# =============================================================================
 
 
 @pytest.mark.viz
@@ -135,11 +121,6 @@ class TestMultiSliceLegacy:
         assert fig is not None
 
 
-# =============================================================================
-# Auto-Plot Tests
-# =============================================================================
-
-
 @pytest.mark.viz
 class TestAutoPlot:
     """Test auto_plot selection logic."""
@@ -172,11 +153,6 @@ class TestAutoPlot:
         history = [10.0, 8.0, 5.0, 3.0, 1.0]
         fig = auto_plot(func, history=history)
         assert fig is not None
-
-
-# =============================================================================
-# Utils Tests
-# =============================================================================
 
 
 @pytest.mark.viz

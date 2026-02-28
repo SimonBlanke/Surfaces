@@ -38,10 +38,6 @@ from .test_interface_compliance import (
     class_id,
 )
 
-# =============================================================================
-# Helper: check MRO for a method between concrete class and a stop class
-# =============================================================================
-
 
 def _has_method_in_mro(cls: Type, method_name: str, stop_at: Type = BaseTestFunction) -> bool:
     """Check if method_name is defined anywhere in the MRO between cls and stop_at (exclusive)."""
@@ -69,11 +65,6 @@ def _is_ml_subclass(cls: Type) -> bool:
     )
 
     return issubclass(cls, MachineLearningFunction) and cls is not MachineLearningFunction
-
-
-# =============================================================================
-# Core template method tests (all classes)
-# =============================================================================
 
 
 @pytest.mark.static
@@ -119,11 +110,6 @@ class TestTemplateMethodCompliance:
         )
 
 
-# =============================================================================
-# Engineering-specific tests
-# =============================================================================
-
-
 _ENGINEERING_CLASSES = [c for c in ALL_TEST_FUNCTION_CLASSES if _is_engineering_subclass(c)]
 
 
@@ -142,11 +128,6 @@ class TestEngineeringTemplateMethod:
             f"{func_class.__name__}: does not implement _raw_objective. "
             f"Engineering subclasses must define _raw_objective(self, params)."
         )
-
-
-# =============================================================================
-# ML-specific tests
-# =============================================================================
 
 
 _ML_CLASSES = [c for c in ALL_TEST_FUNCTION_CLASSES if _is_ml_subclass(c)]

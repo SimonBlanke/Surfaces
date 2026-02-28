@@ -22,10 +22,6 @@ from surfaces.test_functions.algebraic.constrained import (
 )
 from tests.conftest import func_id, get_sample_params, instantiate_function
 
-# =============================================================================
-# Basic Instantiation and Evaluation
-# =============================================================================
-
 
 @pytest.mark.engineering
 class TestEngineeringInstantiation:
@@ -53,11 +49,6 @@ class TestEngineeringInstantiation:
         params = get_sample_params(func)
         result = func(params)
         assert np.isfinite(result)
-
-
-# =============================================================================
-# Constraint Methods
-# =============================================================================
 
 
 @pytest.mark.engineering
@@ -111,11 +102,6 @@ class TestConstraintMethods:
         assert isinstance(feasible, (bool, np.bool_))
 
 
-# =============================================================================
-# Penalty Behavior
-# =============================================================================
-
-
 @pytest.mark.engineering
 class TestPenaltyBehavior:
     """Test penalty calculation behavior."""
@@ -150,11 +136,6 @@ class TestPenaltyBehavior:
         # The penalized objective should be raw + penalty * coefficient
         # (the coefficient may vary, so we just check the relationship)
         assert total >= raw or np.isclose(total, raw)
-
-
-# =============================================================================
-# Specific Function Tests
-# =============================================================================
 
 
 @pytest.mark.engineering
@@ -240,11 +221,6 @@ class TestCantileverBeam:
         params = get_sample_params(func)
         constraints = func.constraints(params)
         assert len(constraints) == 1
-
-
-# =============================================================================
-# Input Format Tests
-# =============================================================================
 
 
 @pytest.mark.engineering

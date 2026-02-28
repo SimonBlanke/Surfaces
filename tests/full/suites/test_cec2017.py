@@ -15,11 +15,6 @@ from surfaces.test_functions.benchmark.cec.cec2017 import (
 ALL_FUNCTIONS = cec2017_functions
 
 
-# =============================================================================
-# Evaluation Tests
-# =============================================================================
-
-
 class TestCEC2017Evaluation:
     """Test evaluation of all CEC 2017 simple functions."""
 
@@ -65,11 +60,6 @@ class TestCEC2017Evaluation:
             assert np.isfinite(result)
 
 
-# =============================================================================
-# Batch Evaluation Tests
-# =============================================================================
-
-
 class TestCEC2017BatchEvaluation:
     """Test batch evaluation for CEC 2017 functions."""
 
@@ -92,11 +82,6 @@ class TestCEC2017BatchEvaluation:
         X = np.zeros((8, 10))
         result = func.batch(X)
         assert result.shape == (8,)
-
-
-# =============================================================================
-# Property Tests
-# =============================================================================
 
 
 class TestCEC2017Properties:
@@ -135,11 +120,6 @@ class TestCEC2017Properties:
         assert len(cec2017_functions) == 10
 
 
-# =============================================================================
-# Dimension Tests
-# =============================================================================
-
-
 class TestCEC2017Dimensions:
     """Test dimension handling."""
 
@@ -155,11 +135,6 @@ class TestCEC2017Dimensions:
         """Unsupported dimensions raise ValueError."""
         with pytest.raises(ValueError, match="n_dim must be one of"):
             ShiftedRotatedBentCigar(n_dim=15)
-
-
-# =============================================================================
-# Objective Direction Tests
-# =============================================================================
 
 
 class TestCEC2017Objective:

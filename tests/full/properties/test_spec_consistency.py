@@ -19,11 +19,6 @@ CEC2014_FUNCTIONS = [
 CEC2014_UNIMODAL = CEC2014_FUNCTIONS[:3]
 
 
-# =============================================================================
-# Spec Existence and Structure
-# =============================================================================
-
-
 class TestSpecStructure:
     """Test that specs have correct structure."""
 

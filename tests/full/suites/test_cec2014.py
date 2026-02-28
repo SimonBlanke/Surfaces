@@ -230,10 +230,6 @@ class TestCEC2014Objective:
         assert result == -func.f_global  # -100.0
 
 
-# =============================================================================
-# Composition Function Evaluation
-# =============================================================================
-
 COMPOSITION_FUNCTIONS = [
     CompositionFunction1,
     CompositionFunction2,

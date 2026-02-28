@@ -22,10 +22,6 @@ from surfaces.test_functions.algebraic import (
     SphereFunction,
 )
 
-# =========================================================================
-# PlotRequirements.check() -- dimension constraints
-# =========================================================================
-
 
 class TestExactDimensionConstraint:
     """Test that dimensions=int requires an exact match."""
@@ -81,11 +77,6 @@ class TestRangeDimensionConstraint:
         assert req.check(SphereFunction(n_dim=50))[0] is True
 
 
-# =========================================================================
-# PlotRequirements.check() -- history constraint
-# =========================================================================
-
-
 class TestHistoryConstraint:
     """Test that requires_history gates on history availability."""
 
@@ -101,11 +92,6 @@ class TestHistoryConstraint:
         req = PlotRequirements("test", "desc", dimensions=(1, None), requires_history=True)
         ok, _ = req.check(AckleyFunction(), has_history=True)
         assert ok is True
-
-
-# =========================================================================
-# PlotRequirements.check() -- attribute constraint
-# =========================================================================
 
 
 class TestAttributeConstraint:
@@ -134,11 +120,6 @@ class TestAttributeConstraint:
         assert ok is True
 
 
-# =========================================================================
-# PlotRequirements.check() -- evaluation order
-# =========================================================================
-
-
 class TestCheckEvaluationOrder:
     """Test that check() short-circuits: dimensions checked before attribute.
 
@@ -152,11 +133,6 @@ class TestCheckEvaluationOrder:
         ok, reason = req.check(SphereFunction(n_dim=5))
         assert ok is False
         assert "5D" in reason  # dimension error, not attribute error
-
-
-# =========================================================================
-# PLOT_REGISTRY consistency
-# =========================================================================
 
 
 class TestRegistryConsistency:
@@ -179,11 +155,6 @@ class TestRegistryConsistency:
         """
         req = PLOT_REGISTRY["latex"]
         assert req.requires_attribute == "latex_formula"
-
-
-# =========================================================================
-# available_plots() -- integration
-# =========================================================================
 
 
 class TestAvailablePlots:
@@ -235,11 +206,6 @@ class TestAvailablePlots:
         names = [p["name"] for p in available_plots(func)]
         assert "latex" not in names
         assert "surface" in names
-
-
-# =========================================================================
-# check_compatibility() -- single-plot query
-# =========================================================================
 
 
 class TestCheckCompatibility:

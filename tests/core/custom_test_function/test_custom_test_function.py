@@ -9,10 +9,6 @@ import pytest
 
 from surfaces.custom_test_function import CustomTestFunction
 
-# =============================================================================
-# Fixtures
-# =============================================================================
-
 
 @pytest.fixture
 def sphere_func():
@@ -35,11 +31,6 @@ def sphere_func_with_data(sphere_func):
         x, y = np.random.uniform(-5, 5, 2)
         sphere_func({"x": x, "y": y})
     return sphere_func
-
-
-# =============================================================================
-# Basic Functionality Tests
-# =============================================================================
 
 
 class TestBasicFunctionality:
@@ -102,11 +93,6 @@ class TestBasicFunctionality:
         assert sphere_func.best_params == {"x": 1, "y": 1}
 
 
-# =============================================================================
-# Search Space Tests
-# =============================================================================
-
-
 class TestSearchSpace:
     """Test search space handling."""
 
@@ -160,11 +146,6 @@ class TestSearchSpace:
         assert bounds["y"] == pytest.approx((0, 10), rel=0.1)
 
 
-# =============================================================================
-# Memory Cache Tests
-# =============================================================================
-
-
 class TestMemoryCache:
     """Test memory caching functionality."""
 
@@ -210,11 +191,6 @@ class TestMemoryCache:
         assert call_count[0] == 2
 
 
-# =============================================================================
-# Namespace Tests
-# =============================================================================
-
-
 class TestNamespaces:
     """Test that namespaces are properly lazy-loaded."""
 
@@ -248,11 +224,6 @@ class TestNamespaces:
 
         _ = func.plot
         assert func._plot is not None
-
-
-# =============================================================================
-# Analysis Namespace Tests
-# =============================================================================
 
 
 class TestAnalysisNamespace:
@@ -297,11 +268,6 @@ class TestAnalysisNamespace:
             sphere_func.analysis.parameter_importance()
 
 
-# =============================================================================
-# Experiment Metadata Tests
-# =============================================================================
-
-
 class TestExperimentMetadata:
     """Test experiment metadata handling."""
 
@@ -331,11 +297,6 @@ class TestExperimentMetadata:
             metadata={"version": "1.0", "author": "test"},
         )
         assert func.metadata["version"] == "1.0"
-
-
-# =============================================================================
-# State Management Tests
-# =============================================================================
 
 
 class TestStateManagement:
@@ -375,11 +336,6 @@ class TestStateManagement:
 
         assert X.shape == (50, 2)
         assert y.shape == (50,)
-
-
-# =============================================================================
-# Repr Tests
-# =============================================================================
 
 
 class TestRepr:

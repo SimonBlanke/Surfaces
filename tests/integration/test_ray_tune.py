@@ -13,11 +13,6 @@ from surfaces.test_functions.algebraic import RastriginFunction, SphereFunction
 pytestmark = pytest.mark.slow
 
 
-# =============================================================================
-# Basic Integration Tests
-# =============================================================================
-
-
 def test_ray_tune():
     """Test that Surfaces functions work with Ray Tune."""
     func = SphereFunction(n_dim=2)
@@ -58,11 +53,6 @@ def test_ray_tune():
     finally:
         if ray.is_initialized():
             ray.shutdown()
-
-
-# =============================================================================
-# Ray Tune-Specific Feature Tests
-# =============================================================================
 
 
 def test_ray_tune_config_is_dict():

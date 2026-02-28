@@ -46,11 +46,6 @@ def get_sample_params(func):
     return params
 
 
-# =============================================================================
-# Algebraic Functions
-# =============================================================================
-
-
 @pytest.mark.smoke
 @pytest.mark.algebraic
 class TestAlgebraicInstantiation:
@@ -82,11 +77,6 @@ class TestAlgebraicInstantiation:
         assert isinstance(result, (int, float))
 
 
-# =============================================================================
-# Engineering Functions
-# =============================================================================
-
-
 @pytest.mark.smoke
 @pytest.mark.engineering
 class TestEngineeringInstantiation:
@@ -107,11 +97,6 @@ class TestEngineeringInstantiation:
         assert hasattr(func, "constraints")
         assert hasattr(func, "is_feasible")
         assert hasattr(func, "raw_objective")
-
-
-# =============================================================================
-# BBOB Functions
-# =============================================================================
 
 
 @pytest.mark.smoke

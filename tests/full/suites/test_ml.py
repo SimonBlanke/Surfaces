@@ -17,10 +17,6 @@ import pytest
 from surfaces.test_functions.machine_learning import machine_learning_functions
 from tests.conftest import func_id, get_sample_params, instantiate_function
 
-# =============================================================================
-# Basic Instantiation
-# =============================================================================
-
 
 @pytest.mark.ml
 class TestMLInstantiation:
@@ -45,11 +41,6 @@ class TestMLInstantiation:
         assert callable(func)
 
 
-# =============================================================================
-# Search Space Properties
-# =============================================================================
-
-
 @pytest.mark.ml
 class TestMLSearchSpace:
     """Test ML function search space properties."""
@@ -69,11 +60,6 @@ class TestMLSearchSpace:
             if hasattr(values, "__iter__") and not isinstance(values, (str, type)):
                 values_list = list(values)
                 assert len(values_list) > 0, f"{key} must have values"
-
-
-# =============================================================================
-# Classification Functions
-# =============================================================================
 
 
 @pytest.mark.ml
@@ -116,11 +102,6 @@ class TestClassificationFunctions:
         assert np.isfinite(result)
 
 
-# =============================================================================
-# Regression Functions
-# =============================================================================
-
-
 @pytest.mark.ml
 class TestRegressionFunctions:
     """Test regression ML functions."""
@@ -148,11 +129,6 @@ class TestRegressionFunctions:
         assert np.isfinite(result)
 
 
-# =============================================================================
-# Objective Direction
-# =============================================================================
-
-
 @pytest.mark.ml
 class TestMLObjectiveDirection:
     """Test objective direction for ML functions."""
@@ -177,11 +153,6 @@ class TestMLObjectiveDirection:
         result = func(params)
 
         assert isinstance(result, (int, float))
-
-
-# =============================================================================
-# Data Collection
-# =============================================================================
 
 
 @pytest.mark.ml
@@ -211,11 +182,6 @@ class TestMLDataCollection:
         func(params)
         assert func.data.best_score is not None
         assert func.data.best_params is not None
-
-
-# =============================================================================
-# Memory Caching
-# =============================================================================
 
 
 @pytest.mark.ml
@@ -257,11 +223,6 @@ class TestMLMemory:
         assert isinstance(result2, (int, float))
 
 
-# =============================================================================
-# Callbacks
-# =============================================================================
-
-
 @pytest.mark.ml
 class TestMLCallbacks:
     """Test callbacks for ML functions."""
@@ -278,11 +239,6 @@ class TestMLCallbacks:
 
         assert len(records) == 1
         assert "score" in records[0]
-
-
-# =============================================================================
-# Additional Classification Functions
-# =============================================================================
 
 
 @pytest.mark.ml
@@ -321,11 +277,6 @@ class TestAdditionalClassifiers:
 
         assert isinstance(result, (int, float))
         assert np.isfinite(result)
-
-
-# =============================================================================
-# Additional Regression Functions
-# =============================================================================
 
 
 @pytest.mark.ml
@@ -377,11 +328,6 @@ class TestAdditionalRegressors:
         assert np.isfinite(result)
 
 
-# =============================================================================
-# Ensemble Functions
-# =============================================================================
-
-
 @pytest.mark.ml
 class TestEnsembleFunctions:
     """Test ensemble optimization functions."""
@@ -418,11 +364,6 @@ class TestEnsembleFunctions:
 
         assert isinstance(result, (int, float))
         assert np.isfinite(result)
-
-
-# =============================================================================
-# Feature Engineering Functions
-# =============================================================================
 
 
 @pytest.mark.ml

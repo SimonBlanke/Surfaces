@@ -31,10 +31,6 @@ from surfaces.test_functions.algebraic import (
 )
 from tests.conftest import func_id, get_sample_params, instantiate_function
 
-# =============================================================================
-# 1D Function Tests
-# =============================================================================
-
 
 @pytest.mark.algebraic
 class Test1DFunctions:
@@ -59,11 +55,6 @@ class Test1DFunctions:
         func = GramacyAndLeeFunction()
         # Function should be defined on [0.5, 2.5]
         assert "x0" in func.search_space
-
-
-# =============================================================================
-# 2D Function Tests
-# =============================================================================
 
 
 @pytest.mark.algebraic
@@ -92,11 +83,6 @@ class Test2DFunctions:
         assert "x1" in func.search_space
 
 
-# =============================================================================
-# ND Function Tests
-# =============================================================================
-
-
 @pytest.mark.algebraic
 class TestNDFunctions:
     """Tests for N-dimensional algebraic functions."""
@@ -120,11 +106,6 @@ class TestNDFunctions:
         func = instantiate_function(func_class, n_dim=5)
         result = func(np.zeros(5))
         assert np.isfinite(result)
-
-
-# =============================================================================
-# Known Function Behavior Tests
-# =============================================================================
 
 
 @pytest.mark.algebraic
@@ -186,11 +167,6 @@ class TestKnownBehavior:
             assert np.isclose(result, 0.0, atol=1e-3)
 
 
-# =============================================================================
-# Input Format Consistency Tests
-# =============================================================================
-
-
 @pytest.mark.algebraic
 class TestInputConsistency:
     """Test that different input formats give consistent results."""
@@ -216,11 +192,6 @@ class TestInputConsistency:
         array_result = func(np.array(values))
 
         assert list_result == array_result
-
-
-# =============================================================================
-# Objective Direction Tests
-# =============================================================================
 
 
 @pytest.mark.algebraic

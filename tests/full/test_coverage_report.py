@@ -203,11 +203,6 @@ if __name__ == "__main__":
     main()
 
 
-# =============================================================================
-# Pytest Tests for Coverage Validation
-# =============================================================================
-
-
 class TestCoverageValidation:
     """Validate that test helper functions work correctly."""
 

@@ -16,10 +16,6 @@ from surfaces._surrogates._dashboard._pages.overview import (
     get_status_color,
 )
 
-# =============================================================================
-# Status Logic Tests
-# =============================================================================
-
 
 @pytest.mark.dashboard
 class TestStatusLogic:
@@ -54,11 +50,6 @@ class TestStatusLogic:
         assert get_status(row) == "Needs Attention"
 
 
-# =============================================================================
-# Status Color Tests
-# =============================================================================
-
-
 @pytest.mark.dashboard
 class TestStatusColors:
     """Tests for status color mapping."""
@@ -87,11 +78,6 @@ class TestStatusColors:
         """Unknown status returns gray fallback."""
         color = get_status_color("Unknown")
         assert color == "#6c757d"
-
-
-# =============================================================================
-# Threshold Configuration Tests
-# =============================================================================
 
 
 @pytest.mark.dashboard
