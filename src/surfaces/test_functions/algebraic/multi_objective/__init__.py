@@ -28,8 +28,7 @@ Examples
 (100, 2)
 """
 
-from ..._base_multi_objective import BaseMultiObjectiveTestFunction
-from ._base_multi_objective import MultiObjectiveFunction  # backward compat
+from ._base_multi_objective import BaseMultiObjectiveTestFunction, MultiObjectiveFunction
 from .fonseca_fleming import FonsecaFleming
 from .kursawe import Kursawe
 from .zdt1 import ZDT1

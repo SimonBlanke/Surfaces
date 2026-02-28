@@ -194,10 +194,6 @@ class TensionCompressionSpringFunction(EngineeringFunction):
 
         return [g1, g2, g3, g4]
 
-    # =====================================================================
-    # Batch evaluation methods
-    # =====================================================================
-
     def _batch_raw_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized raw objective: weight = (N + 2) * D * d^2."""
         d = X[:, 0]

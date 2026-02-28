@@ -4,9 +4,6 @@
 
 """Pre-defined function suites for standardized optimizer testing."""
 
-# =============================================================================
-# Algebraic Functions (always available - numpy only)
-# =============================================================================
 from ..test_functions.algebraic import (
     # 1D
     AckleyFunction,
@@ -34,10 +31,6 @@ from ..test_functions.algebraic import (
     StyblinskiTangFunction,
     ThreeHumpCamelFunction,
 )
-
-# =============================================================================
-# Engineering Functions (always available - numpy only)
-# =============================================================================
 from ..test_functions.algebraic.constrained import (
     CantileverBeamFunction,
     PressureVesselFunction,
@@ -74,18 +67,10 @@ from ..test_functions.benchmark.bbob import (
     StepEllipsoidal,
     Weierstrass,
 )
-
-# =============================================================================
-# BBOB Functions (always available - numpy only)
-# =============================================================================
 from ..test_functions.benchmark.bbob import (
     # Separable (f1-f5)
     Sphere as BBOB_Sphere,
 )
-
-# =============================================================================
-# CEC Functions (always available - numpy only)
-# =============================================================================
 from ..test_functions.benchmark.cec.cec2014 import (
     # Composition
     CompositionFunction1,
@@ -146,10 +131,6 @@ from ..test_functions.benchmark.cec.cec2017 import (
 from ..test_functions.benchmark.cec.cec2017 import (
     ShiftedRotatedSchwefel as CEC2017_ShiftedRotatedSchwefel,
 )
-
-# =============================================================================
-# SUITE DEFINITIONS
-# =============================================================================
 
 quick = [
     SphereFunction,  # Simplest convex function, baseline

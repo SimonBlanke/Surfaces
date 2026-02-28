@@ -38,6 +38,10 @@ class BaseTestFunction:
 
     Parameters
     ----------
+    objective : str, list, or None
+        Optimization direction. Interpreted by subclasses:
+        single-objective uses ``"minimize"``/``"maximize"``;
+        multi-objective accepts a list of per-objective directions.
     modifiers : list of BaseModifier, optional
         List of modifiers to apply to function evaluations. Modifiers are
         applied in the order they appear in the list.
@@ -86,10 +90,6 @@ class BaseTestFunction:
         if "_name_" not in cls.__dict__:
             cls._name_ = cls.name.lower().replace(" ", "_")
 
-    # =========================================================================
-    # Spec: Function Characteristics (override in subclasses)
-    # =========================================================================
-
     _spec: Dict[str, Any] = {
         "n_dim": None,
         "n_objectives": 1,
@@ -102,10 +102,6 @@ class BaseTestFunction:
         "unimodal": False,
         "scalable": False,
     }
-
-    # =========================================================================
-    # Global Optimum Information (override in subclasses)
-    # =========================================================================
 
     f_global: Optional[float] = None
     x_global: Optional[np.ndarray] = None
@@ -120,12 +116,14 @@ class BaseTestFunction:
     @_check_dependencies_after_init
     def __init__(
         self,
+        objective=None,
         modifiers: Optional[List[BaseModifier]] = None,
         memory=False,
         collect_data=True,
         callbacks=None,
         catch_errors=None,
     ):
+        self.objective = objective
         self.collect_data = collect_data
 
         # Private state: memory
@@ -217,10 +215,6 @@ class BaseTestFunction:
         """Search space for this function (read-only public API)."""
         return self._default_search_space()
 
-    # =========================================================================
-    # Accessor Properties (lazy-cached)
-    # =========================================================================
-
     @property
     def spec(self):
         """Function characteristics (SpecAccessor)."""
@@ -301,10 +295,6 @@ class BaseTestFunction:
 
         return PlotAccessor(self)
 
-    # =========================================================================
-    # Primary Interface: __call__
-    # =========================================================================
-
     def __call__(
         self,
         params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None,
@@ -362,11 +352,30 @@ class BaseTestFunction:
         """Convert params dict to a hashable cache key (sorted tuple of values)."""
         return tuple(params[k] for k in sorted(params.keys()))
 
-    def _evaluate(self, params: Dict[str, Any]):
-        """Evaluate with error handling and modifiers.
+    def _apply_direction(self, value):
+        """Apply objective-direction transformation.
 
-        Subclasses (e.g. BaseSingleObjectiveTestFunction) may override
-        to add objective-direction handling on top.
+        Identity in the base class. Overridden by:
+        - ``BaseSingleObjectiveTestFunction``: negate for maximize
+        - ``BaseMultiObjectiveTestFunction``: per-element negation
+        - ``MachineLearningFunction``: negate for minimize
+
+        Parameters
+        ----------
+        value
+            The evaluated value (scalar or array).
+
+        Returns
+        -------
+        same type as *value*
+            Direction-adjusted value.
+        """
+        return value
+
+    def _evaluate(self, params: Dict[str, Any]):
+        """Evaluate with error handling, modifiers, and direction.
+
+        Pipeline: _objective -> error handling -> _apply_modifiers -> _apply_direction
         """
         try:
             raw_value = self._objective(params)
@@ -380,7 +389,7 @@ class BaseTestFunction:
         if self._modifiers:
             raw_value = self._apply_modifiers(raw_value, params)
 
-        return raw_value
+        return self._apply_direction(raw_value)
 
     def _apply_modifiers(self, raw_value, params):
         """Apply modifier pipeline to the raw value.
@@ -396,10 +405,6 @@ class BaseTestFunction:
         for modifier in self._modifiers:
             raw_value = modifier.apply(raw_value, params, context)
         return raw_value
-
-    # =========================================================================
-    # Data Recording (inlined from DataCollectionMixin)
-    # =========================================================================
 
     def _record_evaluation(
         self,
@@ -430,18 +435,37 @@ class BaseTestFunction:
         :class:`BaseSingleObjectiveTestFunction` for scalar comparison.
         """
 
-    # =========================================================================
-    # Reset Methods
-    # =========================================================================
+    def pure(
+        self,
+        params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None,
+        **kwargs,
+    ):
+        """Evaluate the function without modifiers.
+
+        Returns the true (deterministic) function value, bypassing any
+        configured modifiers. Does not update search_data, n_evaluations,
+        or callbacks. Ignores memory caching.
+
+        Parameters
+        ----------
+        params : dict, array, list, or tuple
+            Parameter values to evaluate.
+        **kwargs : dict
+            Parameters as keyword arguments.
+
+        Returns
+        -------
+        float or np.ndarray
+            The true function value without modifiers, with direction applied.
+        """
+        params = self._normalize_input(params, **kwargs)
+        raw_value = self._objective(params)
+        return self._apply_direction(raw_value)
 
     def reset(self) -> None:
         """Reset all state including collected data and memory cache."""
         self.data.reset()
         self.memory.reset()
-
-    # =========================================================================
-    # Batch Evaluation
-    # =========================================================================
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Compute the objective for a batch of parameter sets.
@@ -496,4 +520,5 @@ class BaseTestFunction:
         if X.shape[1] != self.n_dim:
             raise ValueError(f"Expected {self.n_dim} dimensions, got {X.shape[1]}")
 
-        return self._batch_objective(X)
+        result = self._batch_objective(X)
+        return self._apply_direction(result)

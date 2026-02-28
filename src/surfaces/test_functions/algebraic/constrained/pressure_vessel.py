@@ -208,10 +208,6 @@ class PressureVesselFunction(EngineeringFunction):
 
         return [g1, g2, g3]
 
-    # =====================================================================
-    # Batch evaluation methods
-    # =====================================================================
-
     def _batch_raw_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized raw objective: total manufacturing cost."""
         Ts = X[:, 0]

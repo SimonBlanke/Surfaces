@@ -143,31 +143,25 @@ class MachineLearningFunction(BaseSingleObjectiveTestFunction):
         """
         return params
 
+    def _apply_direction(self, value):
+        """ML functions return higher-is-better, so negate for minimize."""
+        if self.objective == "minimize":
+            return -value
+        return value
+
     def _evaluate(self, params: Dict[str, Any]) -> float:
-        """Evaluate with timing and objective transformation.
+        """Evaluate with surrogate support and direction handling.
 
         ML functions naturally return scores (higher is better),
-        so we negate when objective is "minimize".
-
-        Modifiers are applied after evaluation but before objective transformation.
+        so direction is inverted compared to algebraic functions.
         """
         if self.use_surrogate and self._surrogate is not None:
-            # Use _get_surrogate_params to include fixed params (dataset, cv)
             surrogate_params = self._get_surrogate_params(params)
             raw_value = self._surrogate.predict(surrogate_params)
         else:
             raw_value = self._objective(params)
 
-        # Apply modifiers if configured
         if self._modifiers:
-            context = {
-                "evaluation_count": self._n_evaluations,
-                "best_score": self._best_score,
-                "search_data": self._search_data,
-            }
-            for modifier in self._modifiers:
-                raw_value = modifier.apply(raw_value, params, context)
+            raw_value = self._apply_modifiers(raw_value, params)
 
-        if self.objective == "minimize":
-            return -raw_value
-        return raw_value
+        return self._apply_direction(raw_value)

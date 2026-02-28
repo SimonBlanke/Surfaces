@@ -195,10 +195,6 @@ class CantileverBeamFunction(EngineeringFunction):
 
         return [g]
 
-    # =====================================================================
-    # Batch evaluation methods
-    # =====================================================================
-
     def _batch_raw_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized raw objective: weight = 0.0624 * sum(x_i)."""
         xp = get_array_namespace(X)

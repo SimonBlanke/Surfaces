@@ -303,11 +303,6 @@ class MLSurrogateTrainer:
         return output_path
 
 
-# ============================================================================
-# Developer API
-# ============================================================================
-
-
 def train_ml_surrogate(
     function_name: str,
     verbose: bool = True,

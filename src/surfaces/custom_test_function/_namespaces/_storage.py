@@ -73,10 +73,6 @@ class StorageNamespace:
                 "Pass a Storage instance to CustomTestFunction constructor."
             )
 
-    # =========================================================================
-    # Checkpointing
-    # =========================================================================
-
     def save_checkpoint(self) -> None:
         """Save current state to storage for later resumption.
 
@@ -137,10 +133,6 @@ class StorageNamespace:
             self._func._memory_cache = state["memory_cache"]
 
         return True
-
-    # =========================================================================
-    # Data Access
-    # =========================================================================
 
     def query(
         self,
@@ -220,10 +212,6 @@ class StorageNamespace:
         self._require_storage()
         return len(self._func._storage.load_evaluations())
 
-    # =========================================================================
-    # Experiment Management
-    # =========================================================================
-
     def delete(self) -> None:
         """Delete all stored data for this experiment.
 
@@ -274,10 +262,6 @@ class StorageNamespace:
         """
         self._require_storage()
         return self._func._storage.experiment_exists()
-
-    # =========================================================================
-    # Connection Management
-    # =========================================================================
 
     def close(self) -> None:
         """Close the storage connection and release resources.

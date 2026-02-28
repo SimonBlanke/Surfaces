@@ -10,7 +10,7 @@ import numpy as np
 
 from surfaces._array_utils import ArrayLike, get_array_namespace
 
-from ..._base_multi_objective import BaseMultiObjectiveTestFunction
+from ._base_multi_objective import BaseMultiObjectiveTestFunction
 
 
 class ZDT1(BaseMultiObjectiveTestFunction):
@@ -95,10 +95,6 @@ class ZDT1(BaseMultiObjectiveTestFunction):
         x = np.zeros((n_points, self.n_dim))
         x[:, 0] = np.linspace(0, 1, n_points)
         return x
-
-    # =========================================================================
-    # Batch Evaluation
-    # =========================================================================
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized ZDT1 evaluation.

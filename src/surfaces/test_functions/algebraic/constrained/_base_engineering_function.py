@@ -201,10 +201,6 @@ class EngineeringFunction(BaseSingleObjectiveTestFunction):
         """Sub-template: raw objective + penalty for constraint violations."""
         return self._raw_objective(params) + self.penalty(params)
 
-    # =====================================================================
-    # Batch evaluation methods
-    # =====================================================================
-
     def _batch_raw_objective(self, X: ArrayLike) -> ArrayLike:
         """Compute raw objective for batch of points.
 

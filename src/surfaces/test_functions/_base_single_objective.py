@@ -5,16 +5,13 @@
 """Base class for single-objective test functions.
 
 This intermediate base adds the ``objective`` parameter (minimize/maximize)
-and all scalar-specific logic (negation, best-score tracking, ``pure()``).
+and all scalar-specific logic (negation, best-score tracking).
 All single-objective function hierarchies (algebraic, ML, simulation,
 engineering, custom) inherit from this class.
 """
 
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
-import numpy as np
-
-from surfaces._array_utils import ArrayLike
 from surfaces.modifiers import BaseModifier
 
 from ._base_test_function import BaseTestFunction
@@ -25,10 +22,8 @@ class BaseSingleObjectiveTestFunction(BaseTestFunction):
 
     Extends :class:`BaseTestFunction` with:
     - ``objective`` parameter ("minimize" / "maximize")
-    - Negation in ``_evaluate`` for maximize
+    - ``_apply_direction``: negate for maximize
     - Scalar best-score tracking
-    - ``pure()`` evaluation (no modifiers)
-    - Batch negation for maximize
 
     Parameters
     ----------
@@ -57,19 +52,17 @@ class BaseSingleObjectiveTestFunction(BaseTestFunction):
     ):
         if objective not in ("minimize", "maximize"):
             raise ValueError(f"objective must be 'minimize' or 'maximize', got '{objective}'")
-        self.objective = objective
-        super().__init__(modifiers, memory, collect_data, callbacks, catch_errors)
+        super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
 
     # -----------------------------------------------------------------
-    # Evaluation: add negation for maximize
+    # Direction: negate for maximize
     # -----------------------------------------------------------------
 
-    def _evaluate(self, params: Dict[str, Any]) -> float:
-        """Evaluate with modifiers and negate for maximize."""
-        result = super()._evaluate(params)
+    def _apply_direction(self, value):
+        """Negate the value when objective is 'maximize'."""
         if self.objective == "maximize":
-            return -result
-        return result
+            return -value
+        return value
 
     # -----------------------------------------------------------------
     # Best-score tracking (scalar comparison)
@@ -85,58 +78,3 @@ class BaseSingleObjectiveTestFunction(BaseTestFunction):
         if is_better:
             self._best_score = score
             self._best_params = params.copy()
-
-    # -----------------------------------------------------------------
-    # Pure evaluation (no modifiers, no recording)
-    # -----------------------------------------------------------------
-
-    def pure(
-        self,
-        params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None,
-        **kwargs,
-    ) -> float:
-        """Evaluate the function without modifiers.
-
-        Returns the true (deterministic) function value, bypassing any
-        configured modifiers. Does not update search_data, n_evaluations,
-        or callbacks. Ignores memory caching.
-
-        Parameters
-        ----------
-        params : dict, array, list, or tuple
-            Parameter values to evaluate.
-        **kwargs : dict
-            Parameters as keyword arguments.
-
-        Returns
-        -------
-        float
-            The true function value without modifiers.
-        """
-        params = self._normalize_input(params, **kwargs)
-        raw_value = self._objective(params)
-        if self.objective == "maximize":
-            return -raw_value
-        return raw_value
-
-    # -----------------------------------------------------------------
-    # Batch: add negation for maximize
-    # -----------------------------------------------------------------
-
-    def batch(self, X: ArrayLike) -> ArrayLike:
-        """Evaluate multiple parameter sets with objective-direction handling.
-
-        Parameters
-        ----------
-        X : ArrayLike
-            2D array of shape (n_points, n_dim).
-
-        Returns
-        -------
-        ArrayLike
-            1D array of shape (n_points,) with evaluation results.
-        """
-        result = super().batch(X)
-        if self.objective == "maximize":
-            result = -result
-        return result

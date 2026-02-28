@@ -55,11 +55,6 @@ def get_function_config(name: str) -> Dict[str, Any]:
     return ML_SURROGATE_REGISTRY[name]
 
 
-# ============================================================================
-# Register ML functions (lazy to avoid circular imports)
-# ============================================================================
-
-
 def _ensure_registered():
     """Register all ML functions lazily on first access."""
     if ML_SURROGATE_REGISTRY:
@@ -85,9 +80,6 @@ def _ensure_registered():
     regression_datasets = ["diabetes", "california", "friedman1", "friedman2", "linear"]
     cv_options = [2, 3, 5, 10]
 
-    # =========================================================================
-    # Classification functions
-    # =========================================================================
     register_ml_function(
         name="decision_tree_classifier",
         function_class=DecisionTreeClassifierFunction,
@@ -123,9 +115,6 @@ def _ensure_registered():
         hyperparams=["C", "kernel", "gamma"],
     )
 
-    # =========================================================================
-    # Regression functions
-    # =========================================================================
     register_ml_function(
         name="decision_tree_regressor",
         function_class=DecisionTreeRegressorFunction,

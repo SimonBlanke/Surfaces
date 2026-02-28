@@ -311,10 +311,6 @@ class CECFunction(AlgebraicFunction):
         """
         return np.array([params[f"x{i}"] for i in range(self.n_dim)])
 
-    # =====================================================================
-    # Batch evaluation helper methods
-    # =====================================================================
-
     def _batch_shift(self, X: ArrayLike, index: int = None) -> ArrayLike:
         """Apply shift transformation to batch: Z = X - o.
 

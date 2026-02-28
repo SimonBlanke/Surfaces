@@ -10,7 +10,7 @@ import numpy as np
 
 from surfaces._array_utils import ArrayLike, get_array_namespace
 
-from ..._base_multi_objective import BaseMultiObjectiveTestFunction
+from ._base_multi_objective import BaseMultiObjectiveTestFunction
 
 
 class Kursawe(BaseMultiObjectiveTestFunction):
@@ -89,10 +89,6 @@ class Kursawe(BaseMultiObjectiveTestFunction):
         t = np.linspace(-1.5, 1.5, n_points)
         x = np.tile(t[:, np.newaxis], (1, self.n_dim))
         return x
-
-    # =========================================================================
-    # Batch Evaluation
-    # =========================================================================
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized Kursawe evaluation.

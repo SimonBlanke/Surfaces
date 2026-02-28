@@ -242,11 +242,6 @@ def _expanded_scaffer(z: np.ndarray) -> float:
     return result
 
 
-# =========================================================================
-# Vectorized basic functions for batch evaluation
-# =========================================================================
-
-
 def _batch_sphere(Z: ArrayLike) -> ArrayLike:
     """Vectorized Sphere: sum(z_i^2)."""
     xp = get_array_namespace(Z)

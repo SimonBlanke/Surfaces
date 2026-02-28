@@ -13,10 +13,6 @@ from surfaces._array_utils import ArrayLike, get_array_namespace
 
 from ._base_cec2013 import CEC2013Function
 
-# =============================================================================
-# Unimodal Functions (F1-F5)
-# =============================================================================
-
 
 class Sphere(CEC2013Function):
     """F1: Sphere Function.
@@ -209,11 +205,6 @@ class DifferentPowers(CEC2013Function):
 
         result = xp.sum(xp.abs(Z) ** exponents, axis=1)
         return xp.sqrt(result) + self.f_global
-
-
-# =============================================================================
-# Multimodal Functions (F6-F20)
-# =============================================================================
 
 
 class RotatedRosenbrock(CEC2013Function):
@@ -1068,11 +1059,6 @@ class RotatedExpandedScafferF6(CEC2013Function):
         return result + self.f_global
 
 
-# =============================================================================
-# Composition Functions (F21-F28)
-# =============================================================================
-
-
 class _CompositionBase(CEC2013Function):
     """Base class for CEC 2013 composition functions."""
 
@@ -1149,11 +1135,6 @@ class _CompositionBase(CEC2013Function):
         weights = xp.where(weight_sum == 0, 1.0 / self.n_functions, weights / weight_sum)
 
         return weights
-
-
-# =========================================================================
-# Vectorized basic functions for CEC 2013 composition
-# =========================================================================
 
 
 def _batch_rosenbrock_scaled(Z: ArrayLike) -> ArrayLike:

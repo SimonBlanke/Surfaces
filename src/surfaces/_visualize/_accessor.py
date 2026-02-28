@@ -80,10 +80,6 @@ class PlotAccessor:
         self._history = history
         return self
 
-    # =========================================================================
-    # 2D Plots (require exactly 2 plotted dimensions)
-    # =========================================================================
-
     def surface(
         self,
         params: Optional[Dict[str, Any]] = None,
@@ -237,10 +233,6 @@ class PlotAccessor:
             **kwargs,
         )
 
-    # =========================================================================
-    # N-D Plots (work with any number of dimensions)
-    # =========================================================================
-
     def multi_slice(
         self,
         params: Optional[Dict[str, Any]] = None,
@@ -342,10 +334,6 @@ class PlotAccessor:
             **kwargs,
         )
 
-    # =========================================================================
-    # History-dependent Plots
-    # =========================================================================
-
     def convergence(
         self,
         history: Optional[List[Dict[str, Any]]] = None,
@@ -405,10 +393,6 @@ class PlotAccessor:
 
         return plot_convergence(self._func, history=history, **kwargs)
 
-    # =========================================================================
-    # Special Plots
-    # =========================================================================
-
     def latex(
         self,
         params: Optional[Dict[str, Any]] = None,
@@ -466,10 +450,6 @@ class PlotAccessor:
             output_path=output_path,
             **kwargs,
         )
-
-    # =========================================================================
-    # Discovery Methods
-    # =========================================================================
 
     def available(self) -> List[str]:
         """List plot types available for this function.

@@ -21,11 +21,6 @@ from typing import Any, Dict, List, Optional
 # Database file location (alongside dashboard code)
 DB_PATH = Path(__file__).parent / "surrogates.db"
 
-
-# =============================================================================
-# Schema
-# =============================================================================
-
 SCHEMA = """
 -- Core surrogate info (synced from .meta.json)
 CREATE TABLE IF NOT EXISTS surrogates (
@@ -97,11 +92,6 @@ CREATE INDEX IF NOT EXISTS idx_training_status ON training_jobs(status);
 """
 
 
-# =============================================================================
-# Connection Management
-# =============================================================================
-
-
 def init_db(db_path: Optional[Path] = None) -> None:
     """Initialize the database with schema."""
     path = db_path or DB_PATH
@@ -125,11 +115,6 @@ def get_connection(db_path: Optional[Path] = None):
 def dict_from_row(row: sqlite3.Row) -> Dict[str, Any]:
     """Convert sqlite3.Row to dict."""
     return dict(zip(row.keys(), row))
-
-
-# =============================================================================
-# Surrogate CRUD
-# =============================================================================
 
 
 def upsert_surrogate(
@@ -236,11 +221,6 @@ def get_all_surrogates(db_path: Optional[Path] = None) -> List[Dict]:
         return results
 
 
-# =============================================================================
-# Validation Runs CRUD
-# =============================================================================
-
-
 def insert_validation_run(
     function_name: str,
     validation_type: str,
@@ -323,11 +303,6 @@ def get_latest_validation(
     return runs[0] if runs else None
 
 
-# =============================================================================
-# Training Jobs CRUD
-# =============================================================================
-
-
 def insert_training_job(
     function_name: str,
     triggered_by: str = "manual",
@@ -395,11 +370,6 @@ def get_training_jobs(
 
         rows = conn.execute(query, params).fetchall()
         return [dict_from_row(row) for row in rows]
-
-
-# =============================================================================
-# Dashboard Queries
-# =============================================================================
 
 
 def get_overview_data(db_path: Optional[Path] = None) -> List[Dict]:

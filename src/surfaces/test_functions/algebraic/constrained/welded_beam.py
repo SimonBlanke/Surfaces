@@ -252,10 +252,6 @@ class WeldedBeamFunction(EngineeringFunction):
 
         return [g1, g2, g3, g4, g5]
 
-    # =====================================================================
-    # Batch evaluation methods
-    # =====================================================================
-
     def _batch_raw_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized raw objective: fabrication cost."""
         h = X[:, 0]

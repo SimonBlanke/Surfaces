@@ -174,10 +174,6 @@ class Storage(ABC):
         """
         ...
 
-    # =========================================================================
-    # Optional Methods (with default implementations)
-    # =========================================================================
-
     def query(
         self,
         filter_fn: Optional[callable] = None,
@@ -258,10 +254,6 @@ class Storage(ABC):
             return len(evaluations) > 0
         except Exception:
             return False
-
-    # =========================================================================
-    # Context Manager Support
-    # =========================================================================
 
     def __enter__(self) -> "Storage":
         """Enter context manager."""

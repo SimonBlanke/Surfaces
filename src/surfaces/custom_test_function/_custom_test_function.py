@@ -172,10 +172,6 @@ class CustomTestFunction:
         self._storage_ns: Optional[StorageNamespace] = None
         self._surrogate: Optional[SurrogateNamespace] = None
 
-    # =========================================================================
-    # Namespace Properties (Lazy Loading)
-    # =========================================================================
-
     @property
     def analysis(self) -> "AnalysisNamespace":
         """Analysis tools for understanding the optimization landscape.
@@ -287,10 +283,6 @@ class CustomTestFunction:
             self._storage_ns = StorageNamespace(self)
         return self._storage_ns
 
-    # =========================================================================
-    # Search Space
-    # =========================================================================
-
     def _normalize_search_space(
         self,
         search_space: Dict[str, Union[Tuple[float, float], np.ndarray, List]],
@@ -337,10 +329,6 @@ class CustomTestFunction:
     def bounds(self) -> Dict[str, Tuple[float, float]]:
         """Parameter bounds as (min, max) tuples."""
         return {name: (arr.min(), arr.max()) for name, arr in self._search_space.items()}
-
-    # =========================================================================
-    # Call Interface
-    # =========================================================================
 
     def __call__(
         self,
@@ -447,10 +435,6 @@ class CustomTestFunction:
         if self._storage is not None:
             self._storage.save_evaluation(evaluation)
 
-    # =========================================================================
-    # Data Access
-    # =========================================================================
-
     def get_data_as_arrays(self) -> Tuple[np.ndarray, np.ndarray]:
         """Get evaluation data as numpy arrays.
 
@@ -469,10 +453,6 @@ class CustomTestFunction:
         y = np.array([d["score"] for d in self.search_data])
         return X, y
 
-    # =========================================================================
-    # State Management
-    # =========================================================================
-
     def reset(self) -> None:
         """Reset all state including evaluations and cache."""
         self.n_evaluations = 0
@@ -485,10 +465,6 @@ class CustomTestFunction:
     def reset_cache(self) -> None:
         """Clear only the memory cache."""
         self._memory_cache = {}
-
-    # =========================================================================
-    # Storage & Persistence (Internal)
-    # =========================================================================
 
     def _load_from_storage(self) -> None:
         """Load existing data from storage."""
@@ -542,10 +518,6 @@ class CustomTestFunction:
     def __exit__(self, exc_type, exc_val, exc_tb) -> None:
         """Exit context manager, closing storage."""
         self.close()
-
-    # =========================================================================
-    # Representation
-    # =========================================================================
 
     def __repr__(self) -> str:
         parts = [

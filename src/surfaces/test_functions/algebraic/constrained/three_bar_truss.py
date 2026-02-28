@@ -189,10 +189,6 @@ class ThreeBarTrussFunction(EngineeringFunction):
 
         return [g1, g2, g3]
 
-    # =====================================================================
-    # Batch evaluation methods
-    # =====================================================================
-
     def _batch_raw_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized raw objective: weight = L * (2*sqrt(2)*A1 + A2)."""
         xp = get_array_namespace(X)

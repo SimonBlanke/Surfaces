@@ -10,7 +10,7 @@ import numpy as np
 
 from surfaces._array_utils import ArrayLike, get_array_namespace
 
-from ..._base_multi_objective import BaseMultiObjectiveTestFunction
+from ._base_multi_objective import BaseMultiObjectiveTestFunction
 
 
 class FonsecaFleming(BaseMultiObjectiveTestFunction):
@@ -90,10 +90,6 @@ class FonsecaFleming(BaseMultiObjectiveTestFunction):
         x = np.tile(t[:, np.newaxis], (1, n))
 
         return x
-
-    # =========================================================================
-    # Batch Evaluation
-    # =========================================================================
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized Fonseca-Fleming evaluation.

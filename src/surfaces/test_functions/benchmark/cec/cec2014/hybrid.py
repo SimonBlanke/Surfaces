@@ -191,11 +191,6 @@ def _expanded_scaffer(z: np.ndarray) -> float:
     return result
 
 
-# =========================================================================
-# Vectorized basic functions for batch evaluation
-# =========================================================================
-
-
 def _batch_high_conditioned_elliptic(Z: ArrayLike) -> ArrayLike:
     """Vectorized High Conditioned Elliptic: sum(10^6^(i/(D-1)) * z_i^2)."""
     xp = get_array_namespace(Z)
