@@ -4,7 +4,6 @@ from typing import Any, Dict, List, Optional
 
 import numpy as np
 
-from surfaces._dependencies import check_dependency
 from surfaces.modifiers import BaseModifier
 
 from .._base_classification import BaseClassification
@@ -26,6 +25,7 @@ class LightGBMClassifierFunction(BaseClassification):
 
     name = "LightGBM Classifier Function"
     _name_ = "lightgbm_classifier"
+    _dependencies = {"ml": ["lightgbm"]}
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]
@@ -106,10 +106,8 @@ class LightGBMClassifierFunction(BaseClassification):
         }
 
     def _ml_objective(self, params: Dict[str, Any]) -> float:
-        from sklearn.model_selection import cross_val_score
-
-        check_dependency("lightgbm", "ml")
         from lightgbm import LGBMClassifier
+        from sklearn.model_selection import cross_val_score
 
         X, y = self._dataset_loader()
         clf = LGBMClassifier(

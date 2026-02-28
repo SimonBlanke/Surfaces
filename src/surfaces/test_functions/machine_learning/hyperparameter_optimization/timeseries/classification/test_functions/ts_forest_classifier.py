@@ -2,7 +2,6 @@
 
 from typing import Any, Dict, List, Optional
 
-from surfaces._dependencies import check_dependency
 from surfaces.modifiers import BaseModifier
 
 from .._base_ts_classification import BaseTSClassification
@@ -39,6 +38,7 @@ class TSForestClassifierFunction(BaseTSClassification):
 
     name = "Time Series Forest Classifier Function"
     _name_ = "ts_forest_classifier"
+    _dependencies = {"timeseries": ["sktime"]}
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5]
@@ -60,8 +60,6 @@ class TSForestClassifierFunction(BaseTSClassification):
         catch_errors=None,
         use_surrogate: bool = False,
     ):
-        check_dependency("sktime", "timeseries")
-
         if dataset not in DATASETS:
             raise ValueError(
                 f"Unknown dataset '{dataset}'. " f"Available: {self.available_datasets}"

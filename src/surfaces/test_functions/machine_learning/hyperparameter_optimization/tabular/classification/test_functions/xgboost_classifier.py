@@ -4,7 +4,6 @@ from typing import Any, Dict, List, Optional
 
 import numpy as np
 
-from surfaces._dependencies import check_dependency
 from surfaces.modifiers import BaseModifier
 
 from .._base_classification import BaseClassification
@@ -25,6 +24,7 @@ class XGBoostClassifierFunction(BaseClassification):
     """
 
     _name_ = "xgboost_classifier"
+    _dependencies = {"ml": ["xgboost"]}
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]
@@ -75,8 +75,6 @@ class XGBoostClassifierFunction(BaseClassification):
 
     def _ml_objective(self, params: Dict[str, Any]) -> float:
         from sklearn.model_selection import cross_val_score
-
-        check_dependency("xgboost", "ml")
         from xgboost import XGBClassifier
 
         X, y = self._dataset_loader()

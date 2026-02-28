@@ -2,7 +2,6 @@
 
 from typing import Any, Dict, List, Optional
 
-from surfaces._dependencies import check_dependency
 from surfaces.modifiers import BaseModifier
 
 from .._base_forecasting import BaseForecasting
@@ -39,6 +38,7 @@ class ExpSmoothingForecasterFunction(BaseForecasting):
 
     name = "Exponential Smoothing Forecaster Function"
     _name_ = "exp_smoothing_forecaster"
+    _dependencies = {"timeseries": ["sktime"]}
 
     available_datasets = list(DATASETS.keys())
 
@@ -60,8 +60,6 @@ class ExpSmoothingForecasterFunction(BaseForecasting):
         catch_errors=None,
         use_surrogate: bool = False,
     ):
-        check_dependency("sktime", "timeseries")
-
         if dataset not in DATASETS:
             raise ValueError(
                 f"Unknown dataset '{dataset}'. " f"Available: {self.available_datasets}"

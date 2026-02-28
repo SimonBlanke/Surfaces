@@ -4,7 +4,6 @@ from typing import Any, Dict, List, Optional
 
 import numpy as np
 
-from surfaces._dependencies import check_dependency
 from surfaces.modifiers import BaseModifier
 
 from .._base_image_classification import BaseImageClassification
@@ -43,6 +42,7 @@ class XGBoostImageClassifierFunction(BaseImageClassification):
 
     name = "XGBoost Image Classifier Function"
     _name_ = "xgboost_image_classifier"
+    _dependencies = {"xgboost": ["xgboost"]}
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5]
@@ -66,8 +66,6 @@ class XGBoostImageClassifierFunction(BaseImageClassification):
         catch_errors=None,
         use_surrogate: bool = False,
     ):
-        check_dependency("xgboost", "xgboost")
-
         if dataset not in DATASETS:
             raise ValueError(
                 f"Unknown dataset '{dataset}'. " f"Available: {self.available_datasets}"

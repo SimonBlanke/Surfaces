@@ -91,6 +91,10 @@ class BaseTestFunction:
     f_global: Optional[float] = None
     x_global: Optional[np.ndarray] = None
 
+    # Optional dependencies: {extras_group: [package, ...]}
+    # Subclasses set this to declare packages checked at init time.
+    _dependencies = None
+
     # Type alias for callbacks
     CallbackType = Union[Callable[[Dict[str, Any]], None], List[Callable[[Dict[str, Any]], None]]]
 
@@ -133,6 +137,8 @@ class BaseTestFunction:
         # Private state: error handlers
         self._error_handlers: Optional[Dict[Type[Exception], float]] = catch_errors
 
+        self._check_dependencies()
+
         # Accessor caches (lazy-loaded)
         self._spec_accessor = None
         self._data_accessor = None
@@ -141,6 +147,21 @@ class BaseTestFunction:
         self._memory_accessor = None
         self._errors_accessor = None
         self._meta_accessor = None
+
+    def _check_dependencies(self):
+        """Check that required optional dependencies are installed.
+
+        Iterates over ``_dependencies`` (if set) and calls
+        :func:`surfaces._dependencies.check_dependency` for each package.
+        Subclasses may override to customise behaviour (e.g. skip when
+        using a surrogate model).
+        """
+        if self._dependencies:
+            from surfaces._dependencies import check_dependency
+
+            for extras, packages in self._dependencies.items():
+                for package in packages:
+                    check_dependency(package, extras)
 
     def _objective(self, params: Dict[str, Any]) -> float:
         """Compute the raw objective value for the given parameters.

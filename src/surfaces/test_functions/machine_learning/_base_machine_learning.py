@@ -2,12 +2,34 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
+import functools
 from typing import Any, Callable, Dict, List, Optional, Union
 
 from surfaces.modifiers import BaseModifier
 
 from ..._surrogates import load_surrogate
 from .._base_test_function import BaseTestFunction
+
+
+def _load_surrogate_before_init(init_func):
+    """Ensure surrogate loading happens before __init__ body executes.
+
+    This guarantees that ``self.use_surrogate`` and ``self._surrogate``
+    are set before ``super().__init__()`` triggers
+    ``_check_dependencies()``, so the ML override can skip the check
+    when a surrogate is active.
+    """
+
+    @functools.wraps(init_func)
+    def wrapper(self, *args, **kwargs):
+        use_surrogate = kwargs.get("use_surrogate", False)
+        self.use_surrogate = use_surrogate
+        self._surrogate = None
+        if use_surrogate:
+            self._load_surrogate()
+        return init_func(self, *args, **kwargs)
+
+    return wrapper
 
 
 class MachineLearningFunction(BaseTestFunction):
@@ -45,6 +67,7 @@ class MachineLearningFunction(BaseTestFunction):
                 search_space[param_name] = getattr(self, default_attr)
         return search_space
 
+    @_load_surrogate_before_init
     def __init__(
         self,
         objective: str = "maximize",
@@ -56,12 +79,8 @@ class MachineLearningFunction(BaseTestFunction):
         use_surrogate: bool = False,
         **kwargs: Any,
     ) -> None:
+        # use_surrogate / _surrogate already set by @_load_surrogate_before_init
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
-        self.use_surrogate = use_surrogate
-        self._surrogate = None
-
-        if use_surrogate:
-            self._load_surrogate()
 
     def _load_surrogate(self) -> None:
         """Load pre-trained surrogate model if available."""
@@ -76,6 +95,12 @@ class MachineLearningFunction(BaseTestFunction):
                 UserWarning,
             )
             self.use_surrogate = False
+
+    def _check_dependencies(self):
+        """Skip dependency check when using a surrogate model."""
+        if self.use_surrogate and self._surrogate is not None:
+            return
+        super()._check_dependencies()
 
     def _ml_objective(self, params: Dict[str, Any]) -> float:
         """Compute the ML objective value for given hyperparameters.

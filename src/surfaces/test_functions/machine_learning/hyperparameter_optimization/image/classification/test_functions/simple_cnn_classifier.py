@@ -4,7 +4,6 @@ from typing import Any, Dict, List, Optional
 
 import numpy as np
 
-from surfaces._dependencies import check_dependency
 from surfaces.modifiers import BaseModifier
 
 from .._base_image_classification import BaseImageClassification
@@ -42,6 +41,7 @@ class SimpleCNNClassifierFunction(BaseImageClassification):
     """
 
     _name_ = "simple_cnn_classifier"
+    _dependencies = {"images": ["tensorflow"]}
 
     available_datasets = list(DATASETS.keys())
 
@@ -64,8 +64,6 @@ class SimpleCNNClassifierFunction(BaseImageClassification):
         catch_errors=None,
         use_surrogate: bool = False,
     ):
-        check_dependency("tensorflow", "images")
-
         if dataset not in DATASETS:
             raise ValueError(
                 f"Unknown dataset '{dataset}'. " f"Available: {self.available_datasets}"

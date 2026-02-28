@@ -2,7 +2,6 @@ from typing import Any, Dict, List, Optional
 
 import numpy as np
 
-from surfaces._dependencies import check_dependency
 from surfaces.modifiers import BaseModifier
 
 from .._base_regression import BaseRegression
@@ -24,6 +23,7 @@ class LightGBMRegressorFunction(BaseRegression):
 
     name = "LightGBM Regressor Function"
     _name_ = "lightgbm_regressor"
+    _dependencies = {"ml": ["lightgbm"]}
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]
@@ -102,10 +102,8 @@ class LightGBMRegressorFunction(BaseRegression):
         }
 
     def _ml_objective(self, params: Dict[str, Any]) -> float:
-        from sklearn.model_selection import cross_val_score
-
-        check_dependency("lightgbm", "ml")
         from lightgbm import LGBMRegressor
+        from sklearn.model_selection import cross_val_score
 
         X, y = self._dataset_loader()
         reg = LGBMRegressor(
