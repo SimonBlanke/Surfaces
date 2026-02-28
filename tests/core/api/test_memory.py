@@ -62,7 +62,7 @@ def test_memory_disabled_by_default(test_function):
     except TypeError:
         func = test_function(n_dim=2)
 
-    assert func.memory is False
+    assert func.memory.enabled is False
     assert len(func._memory_cache) == 0
 
 

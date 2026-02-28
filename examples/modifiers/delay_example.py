@@ -36,10 +36,10 @@ print(f"\n{n_evals} evaluations:")
 print(f"  Total time: {elapsed*1000:.1f}ms (expected: ~{n_evals*100}ms)")
 print(f"  Per evaluation: {elapsed/n_evals*1000:.1f}ms")
 
-# true_value() bypasses modifiers - useful for comparison
-print("\nBypassing delay with true_value():")
+# pure() bypasses modifiers - useful for comparison
+print("\nBypassing delay with pure():")
 start = time.perf_counter()
-true_result = slow_sphere.true_value(point)
+true_result = slow_sphere.pure(point)
 elapsed = time.perf_counter() - start
 print(f"  Result: {true_result}")
 print(f"  Time: {elapsed*1000:.2f}ms (no delay)")

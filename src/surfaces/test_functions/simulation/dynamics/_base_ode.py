@@ -8,7 +8,6 @@ from abc import abstractmethod
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
-from scipy.integrate import solve_ivp
 
 from .._base_simulation import SimulationFunction
 
@@ -57,10 +56,11 @@ class ODESimulationFunction(SimulationFunction):
 
     requires: List[str] = []  # scipy is always available
 
-    @property
-    def search_space(self) -> Dict[str, np.ndarray]:
-        """Search space for ODE parameters (override in subclasses)."""
-        raise NotImplementedError("Subclasses must implement search_space property")
+    def _default_search_space(self) -> Dict[str, np.ndarray]:
+        """Build the default search space for ODE parameters (override in subclasses)."""
+        raise NotImplementedError(
+            f"{type(self).__name__} must implement _default_search_space(self)"
+        )
 
     def __init__(
         self,
@@ -135,6 +135,8 @@ class ODESimulationFunction(SimulationFunction):
 
     def _run_simulation(self, params: Dict[str, Any]) -> Any:
         """Integrate the ODE system."""
+        from scipy.integrate import solve_ivp
+
         y0 = self._get_initial_conditions()
 
         # Create wrapper that includes params
@@ -166,14 +168,8 @@ class ODESimulationFunction(SimulationFunction):
         # We need to pass params to _compute_objective, so we store them
         return self._compute_objective(result.t, result.y, self._current_params)
 
-    def _create_objective_function(self) -> None:
-        """Create objective function with parameter passing."""
-        self._check_dependencies()
-        self._setup_simulation()
-
-        def simulation_objective(params: Dict[str, Any]) -> float:
-            self._current_params = params  # Store for _extract_objective
-            result = self._run_simulation(params)
-            return self._extract_objective(result)
-
-        self.pure_objective_function = simulation_objective
+    def _objective(self, params: Dict[str, Any]) -> float:
+        """Sub-template: run ODE simulation and extract objective."""
+        self._current_params = params  # Store for _extract_objective
+        result = self._run_simulation(params)
+        return self._extract_objective(result)

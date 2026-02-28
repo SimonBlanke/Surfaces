@@ -47,8 +47,6 @@ class ShekelFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (fixed at 4).
-    default_bounds : tuple
-        Default parameter bounds (0.0, 10.0).
 
     Examples
     --------
@@ -59,20 +57,16 @@ class ShekelFunction(AlgebraicFunction):
     True
     """
 
-    name = "Shekel Function"
-    _name_ = "shekel_function"
-    __name__ = "ShekelFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,
         "separable": False,
         "scalable": False,
+        "default_bounds": (0.0, 10.0),
     }
 
     # Placeholder; instance variable set in __init__
     f_global = None
-    default_bounds = (0.0, 10.0)
 
     latex_formula = (
         r"f(\vec{x}) = - \sum_{i=1}^{m} \left( \sum_{j=1}^{4} (x_j - a_{ij})^2 + c_i \right)^{-1}"
@@ -128,22 +122,19 @@ class ShekelFunction(AlgebraicFunction):
 
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
 
-        self.f_global = self.pure_objective_function({"x0": 4.0, "x1": 4.0, "x2": 4.0, "x3": 4.0})
+        self.f_global = self._objective({"x0": 4.0, "x1": 4.0, "x2": 4.0, "x3": 4.0})
 
-    def _create_objective_function(self) -> None:
-        def shekel_function(params: Dict[str, Any]) -> float:
-            # Unpack for 4D
-            x_input = np.array([params["x0"], params["x1"], params["x2"], params["x3"]])
+    def _objective(self, params: Dict[str, Any]) -> float:
+        # Unpack for 4D
+        x_input = np.array([params["x0"], params["x1"], params["x2"], params["x3"]])
 
-            result = 0.0
-            for i in range(self.m):
-                diff = x_input - self.A[i]
-                sq_sum = np.dot(diff, diff)
-                result -= 1.0 / (sq_sum + self.c[i])
+        result = 0.0
+        for i in range(self.m):
+            diff = x_input - self.A[i]
+            sq_sum = np.dot(diff, diff)
+            result -= 1.0 / (sq_sum + self.c[i])
 
-            return result
-
-        self.pure_objective_function = shekel_function
+        return result
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation for Shekel Function."""

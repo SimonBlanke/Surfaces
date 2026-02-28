@@ -34,9 +34,6 @@ class BoothFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-10.0, 10.0).
-
     References
     ----------
     .. [1] Global Optimization Test Problems. Retrieved June 2013, from
@@ -49,21 +46,17 @@ class BoothFunction(AlgebraicFunction):
     >>> result = func({"x0": 1.0, "x1": 3.0})
     """
 
-    name = "Booth Function"
-    _name_ = "booth_function"
-    __name__ = "BoothFunction"
-
     _spec = {
         "convex": False,
         "unimodal": True,
         "separable": False,
         "scalable": False,
+        "default_bounds": (-10.0, 10.0),
     }
 
     f_global = 0.0
     x_global = (1.0, 3.0)
 
-    default_bounds = (-10.0, 10.0)
     n_dim = 2
 
     latex_formula = r"f(x, y) = (x + 2y - 7)^2 + (2x + y - 5)^2"
@@ -90,17 +83,14 @@ class BoothFunction(AlgebraicFunction):
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 2
 
-    def _create_objective_function(self) -> None:
-        def booth_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            loss1 = (x + 2 * y - 7) ** 2
-            loss2 = (2 * x + y - 5) ** 2
+        loss1 = (x + 2 * y - 7) ** 2
+        loss2 = (2 * x + y - 5) ** 2
 
-            return loss1 + loss2
-
-        self.pure_objective_function = booth_function
+        return loss1 + loss2
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

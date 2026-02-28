@@ -35,8 +35,6 @@ class QuadraticExponentialFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 1).
-    default_bounds : tuple
-        Default parameter bounds (1.9, 3.9).
 
     References
     ----------
@@ -57,21 +55,17 @@ class QuadraticExponentialFunction(AlgebraicFunction):
     1
     """
 
-    name = "Quadratic Exponential Function"
-    _name_ = "quadratic_exponential_function"
-    __name__ = "QuadraticExponentialFunction"
-
     _spec = {
         "convex": False,
         "unimodal": True,
         "separable": True,
         "scalable": False,
+        "default_bounds": (1.9, 3.9),
     }
 
     f_global = -3.8504507087979953
     x_global = (2.8680325095605212,)
 
-    default_bounds = (1.9, 3.9)
     n_dim = 1
 
     latex_formula = r"f(x) = -(16x^2 - 24x + 5) e^{-x}"
@@ -98,13 +92,10 @@ class QuadraticExponentialFunction(AlgebraicFunction):
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 1
 
-    def _create_objective_function(self) -> None:
-        def quadratic_exponential_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
 
-            return -(16 * x**2 - 24 * x + 5) * math.exp(-x)
-
-        self.pure_objective_function = quadratic_exponential_function
+        return -(16 * x**2 - 24 * x + 5) * math.exp(-x)
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

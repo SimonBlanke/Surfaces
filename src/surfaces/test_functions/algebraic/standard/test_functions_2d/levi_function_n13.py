@@ -36,8 +36,6 @@ class LeviFunctionN13(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-10.0, 10.0).
 
     Examples
     --------
@@ -47,20 +45,18 @@ class LeviFunctionN13(AlgebraicFunction):
     """
 
     name = "Levi Function N13"
-    _name_ = "levi_function_n13"
-    __name__ = "LeviFunctionN13"
 
     _spec = {
         "convex": False,
         "unimodal": False,
         "separable": False,
         "scalable": False,
+        "default_bounds": (-10.0, 10.0),
     }
 
     f_global = 0.0
     x_global = (1.0, 1.0)
 
-    default_bounds = (-10.0, 10.0)
     n_dim = 2
 
     latex_formula = (
@@ -89,18 +85,15 @@ class LeviFunctionN13(AlgebraicFunction):
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 2
 
-    def _create_objective_function(self) -> None:
-        def levi_function_n13(params):
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            return (
-                math.sin(3 * math.pi * x) ** 2
-                + (x + 1) ** 2 * (1 + math.sin(3 * math.pi * y) ** 2)
-                + (y - 1) ** 2 * (1 + math.sin(3 * math.pi * y) ** 2)
-            )
-
-        self.pure_objective_function = levi_function_n13
+        return (
+            math.sin(3 * math.pi * x) ** 2
+            + (x + 1) ** 2 * (1 + math.sin(3 * math.pi * y) ** 2)
+            + (y - 1) ** 2 * (1 + math.sin(3 * math.pi * y) ** 2)
+        )
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

@@ -44,9 +44,6 @@ class AckleyFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-5.0, 5.0).
-
     References
     ----------
     .. [1] Ackley, D. H. (1987). "A connectionist machine for genetic
@@ -61,21 +58,17 @@ class AckleyFunction(AlgebraicFunction):
     True
     """
 
-    name = "Ackley Function"
-    _name_ = "ackley_function"
-    __name__ = "AckleyFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,
         "separable": False,
         "scalable": False,
+        "default_bounds": (-5.0, 5.0),
     }
 
     f_global = 0.0
     x_global = (0.0, 0.0)
 
-    default_bounds = (-5.0, 5.0)
     n_dim = 2
 
     latex_formula = r"f(x, y) = -20\exp\left[-0.2\sqrt{0.5(x^2+y^2)}\right] - \exp\left[0.5(\cos 2\pi x + \cos 2\pi y)\right] + e + 20"
@@ -108,17 +101,14 @@ class AckleyFunction(AlgebraicFunction):
         self.A = A
         self.angle = angle
 
-    def _create_objective_function(self) -> None:
-        def ackley_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            term1 = -self.A * math.exp(-0.2 * math.sqrt(0.5 * (x * x + y * y)))
-            term2 = -math.exp(0.5 * (math.cos(self.angle * x) + math.cos(self.angle * y)))
+        term1 = -self.A * math.exp(-0.2 * math.sqrt(0.5 * (x * x + y * y)))
+        term2 = -math.exp(0.5 * (math.cos(self.angle * x) + math.cos(self.angle * y)))
 
-            return term1 + term2 + math.e + self.A
-
-        self.pure_objective_function = ackley_function
+        return term1 + term2 + math.e + self.A
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

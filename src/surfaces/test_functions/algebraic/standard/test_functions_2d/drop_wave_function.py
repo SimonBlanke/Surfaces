@@ -36,9 +36,6 @@ class DropWaveFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-5.0, 5.0).
-
     Examples
     --------
     >>> from surfaces.test_functions import DropWaveFunction
@@ -48,21 +45,17 @@ class DropWaveFunction(AlgebraicFunction):
     True
     """
 
-    name = "Drop Wave Function"
-    _name_ = "drop_wave_function"
-    __name__ = "DropWaveFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,
         "separable": False,
         "scalable": False,
+        "default_bounds": (-5.0, 5.0),
     }
 
     f_global = -1.0
     x_global = (0.0, 0.0)
 
-    default_bounds = (-5.0, 5.0)
     n_dim = 2
 
     latex_formula = r"f(x, y) = -\frac{1 + \cos\left(12\sqrt{x^2 + y^2}\right)}{0.5(x^2 + y^2) + 2}"
@@ -89,14 +82,11 @@ class DropWaveFunction(AlgebraicFunction):
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 2
 
-    def _create_objective_function(self) -> None:
-        def drop_wave_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            return -(1 + math.cos(12 * math.sqrt(x**2 + y**2))) / (0.5 * (x**2 + y**2) + 2)
-
-        self.pure_objective_function = drop_wave_function
+        return -(1 + math.cos(12 * math.sqrt(x**2 + y**2))) / (0.5 * (x**2 + y**2) + 2)
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

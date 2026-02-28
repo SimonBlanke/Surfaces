@@ -36,9 +36,6 @@ class EggholderFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-1000.0, 1000.0).
-
     Examples
     --------
     >>> from surfaces.test_functions import EggholderFunction
@@ -46,21 +43,17 @@ class EggholderFunction(AlgebraicFunction):
     >>> result = func({"x0": 512.0, "x1": 404.2319})
     """
 
-    name = "Eggholder Function"
-    _name_ = "eggholder_function"
-    __name__ = "EggholderFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,
         "separable": False,
         "scalable": False,
+        "default_bounds": (-1000.0, 1000.0),
     }
 
     f_global = -959.6407
     x_global = (512.0, 404.2319)
 
-    default_bounds = (-1000.0, 1000.0)
     n_dim = 2
 
     latex_formula = r"f(x, y) = -(y + 47)\sin\sqrt{\left|\frac{x}{2} + (y + 47)\right|} - x\sin\sqrt{|x - (y + 47)|}"
@@ -89,16 +82,13 @@ class EggholderFunction(AlgebraicFunction):
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 2
 
-    def _create_objective_function(self) -> None:
-        def eggholder_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            return -(y + 47) * math.sin(math.sqrt(abs(x / 2 + (y + 47)))) - x * math.sin(
-                math.sqrt(abs(x - (y + 47)))
-            )
-
-        self.pure_objective_function = eggholder_function
+        return -(y + 47) * math.sin(math.sqrt(abs(x / 2 + (y + 47)))) - x * math.sin(
+            math.sqrt(abs(x - (y + 47)))
+        )
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

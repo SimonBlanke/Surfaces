@@ -203,7 +203,7 @@ class TestCEC2014SearchSpace:
     def test_default_bounds(self):
         """Default bounds should be [-100, 100]."""
         func = RotatedHighConditionedElliptic(n_dim=10)
-        assert func.default_bounds == (-100.0, 100.0)
+        assert func.spec.default_bounds == (-100.0, 100.0)
 
     def test_search_space(self):
         """Search space should have correct dimensions."""
@@ -228,3 +228,117 @@ class TestCEC2014Objective:
         func = RotatedHighConditionedElliptic(n_dim=10, objective="maximize")
         result = func(func.x_global)
         assert result == -func.f_global  # -100.0
+
+
+# =============================================================================
+# Composition Function Evaluation
+# =============================================================================
+
+COMPOSITION_FUNCTIONS = [
+    CompositionFunction1,
+    CompositionFunction2,
+    CompositionFunction3,
+    CompositionFunction4,
+    CompositionFunction5,
+    CompositionFunction6,
+    CompositionFunction7,
+    CompositionFunction8,
+]
+
+HYBRID_FUNCTIONS = [
+    HybridFunction1,
+    HybridFunction2,
+    HybridFunction3,
+    HybridFunction4,
+    HybridFunction5,
+    HybridFunction6,
+]
+
+
+class TestCEC2014CompositionEvaluation:
+    """Test evaluation of composition functions (F23-F30)."""
+
+    @pytest.mark.parametrize("func_class", COMPOSITION_FUNCTIONS)
+    def test_evaluate_at_random_points(self, func_class):
+        """Composition functions return finite values at random points."""
+        rng = np.random.default_rng(42)
+        func = func_class(n_dim=10)
+        for _ in range(3):
+            x = rng.uniform(-100, 100, size=10)
+            result = func(x)
+            assert np.isfinite(result), f"{func_class.__name__} returned non-finite"
+
+    @pytest.mark.parametrize("func_class", COMPOSITION_FUNCTIONS)
+    def test_evaluate_dict_input(self, func_class):
+        """Composition functions accept dict input."""
+        func = func_class(n_dim=10)
+        params = {f"x{i}": 1.0 for i in range(10)}
+        result = func(params)
+        assert np.isfinite(result)
+
+    @pytest.mark.parametrize("func_class", COMPOSITION_FUNCTIONS)
+    def test_deterministic(self, func_class):
+        """Same input produces same output for composition functions."""
+        func = func_class(n_dim=10)
+        x = np.ones(10) * 10.0
+        r1 = func(x)
+        r2 = func(x)
+        assert r1 == r2
+
+
+class TestCEC2014HybridEvaluation:
+    """Test evaluation of hybrid functions (F17-F22)."""
+
+    @pytest.mark.parametrize("func_class", HYBRID_FUNCTIONS)
+    def test_evaluate_at_random_points(self, func_class):
+        """Hybrid functions return finite values at random points."""
+        rng = np.random.default_rng(42)
+        func = func_class(n_dim=10)
+        for _ in range(3):
+            x = rng.uniform(-100, 100, size=10)
+            result = func(x)
+            assert np.isfinite(result), f"{func_class.__name__} returned non-finite"
+
+    @pytest.mark.parametrize("func_class", HYBRID_FUNCTIONS)
+    def test_evaluate_dict_input(self, func_class):
+        """Hybrid functions accept dict input."""
+        func = func_class(n_dim=10)
+        params = {f"x{i}": 1.0 for i in range(10)}
+        result = func(params)
+        assert np.isfinite(result)
+
+
+class TestCEC2014BatchEvaluation:
+    """Test batch evaluation for composition and hybrid functions."""
+
+    @pytest.mark.parametrize("func_class", COMPOSITION_FUNCTIONS)
+    def test_batch_composition_matches_scalar(self, func_class):
+        """Batch composition matches scalar evaluation."""
+        rng = np.random.default_rng(42)
+        func = func_class(n_dim=10)
+        X = rng.uniform(-50, 50, size=(3, 10))
+
+        batch_results = func.batch(X)
+        scalar_results = np.array([func(X[i]) for i in range(3)])
+
+        np.testing.assert_allclose(batch_results, scalar_results, rtol=1e-5)
+
+    @pytest.mark.parametrize("func_class", HYBRID_FUNCTIONS)
+    def test_batch_hybrid_matches_scalar(self, func_class):
+        """Batch hybrid matches scalar evaluation."""
+        rng = np.random.default_rng(42)
+        func = func_class(n_dim=10)
+        X = rng.uniform(-50, 50, size=(3, 10))
+
+        batch_results = func.batch(X)
+        scalar_results = np.array([func(X[i]) for i in range(3)])
+
+        np.testing.assert_allclose(batch_results, scalar_results, rtol=1e-5)
+
+    @pytest.mark.parametrize("func_class", COMPOSITION_FUNCTIONS[:2] + HYBRID_FUNCTIONS[:2])
+    def test_batch_shape(self, func_class):
+        """Batch returns correct shape."""
+        func = func_class(n_dim=10)
+        X = np.zeros((5, 10))
+        result = func.batch(X)
+        assert result.shape == (5,)

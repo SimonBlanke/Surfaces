@@ -39,8 +39,6 @@ class GriewankFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions.
-    default_bounds : tuple
-        Default parameter bounds (-100.0, 100.0).
 
     Examples
     --------
@@ -51,20 +49,15 @@ class GriewankFunction(AlgebraicFunction):
     True
     """
 
-    name = "Griewank Function"
-    _name_ = "griewank_function"
-    __name__ = "GriewankFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,
         "separable": False,
         "scalable": True,
+        "default_bounds": (-100.0, 100.0),
     }
 
     f_global = 0.0
-
-    default_bounds = (-100.0, 100.0)
 
     latex_formula = r"f(\vec{x}) = \sum_{i=1}^{n} \frac{x_i^2}{4000} - \prod_{i=1}^{n} \cos\left(\frac{x_i}{\sqrt{i}}\right) + 1"
     pgfmath_formula = (
@@ -83,7 +76,7 @@ class GriewankFunction(AlgebraicFunction):
 
     def __init__(
         self,
-        n_dim: int,
+        n_dim: int = 2,
         objective: str = "minimize",
         modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
@@ -95,20 +88,17 @@ class GriewankFunction(AlgebraicFunction):
         self.n_dim = n_dim
         self.x_global = tuple(0.0 for _ in range(n_dim))
 
-    def _create_objective_function(self) -> None:
-        def griewank_function(params: Dict[str, Any]) -> float:
-            loss_sum = 0.0
-            loss_product = 1.0
-            for dim in range(self.n_dim):
-                dim_str = "x" + str(dim)
-                x = params[dim_str]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        loss_sum = 0.0
+        loss_product = 1.0
+        for dim in range(self.n_dim):
+            dim_str = "x" + str(dim)
+            x = params[dim_str]
 
-                loss_sum += x**2 / 4000
-                loss_product *= math.cos(x / math.sqrt(dim + 1))
+            loss_sum += x**2 / 4000
+            loss_product *= math.cos(x / math.sqrt(dim + 1))
 
-            return loss_sum - loss_product + 1
-
-        self.pure_objective_function = griewank_function
+        return loss_sum - loss_product + 1
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

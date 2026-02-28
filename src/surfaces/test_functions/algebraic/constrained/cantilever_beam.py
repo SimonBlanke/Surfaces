@@ -124,10 +124,6 @@ class CantileverBeamFunction(EngineeringFunction):
     True
     """
 
-    name = "Cantilever Beam Function"
-    _name_ = "cantilever_beam_function"
-    __name__ = "CantileverBeamFunction"
-
     _spec = {
         "n_dim": 5,
         "convex": False,
@@ -162,7 +158,7 @@ class CantileverBeamFunction(EngineeringFunction):
             penalty_coefficient,
         )
 
-    def raw_objective(self, params: Dict[str, Any]) -> float:
+    def _raw_objective(self, params: Dict[str, Any]) -> float:
         """Calculate beam weight (total volume)."""
         x1 = params["x1"]
         x2 = params["x2"]
@@ -173,7 +169,7 @@ class CantileverBeamFunction(EngineeringFunction):
         weight = 0.0624 * (x1 + x2 + x3 + x4 + x5)
         return weight
 
-    def constraints(self, params: Dict[str, Any]) -> List[float]:
+    def _constraints(self, params: Dict[str, Any]) -> List[float]:
         """Evaluate deflection constraint."""
         x1 = params["x1"]
         x2 = params["x2"]

@@ -36,8 +36,6 @@ class McCormickFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-5.0, 5.0).
 
     Examples
     --------
@@ -46,21 +44,19 @@ class McCormickFunction(AlgebraicFunction):
     >>> result = func({"x0": -0.54719, "x1": -1.54719})
     """
 
-    name = "Mc Cormick Function"
     _name_ = "mccormick_function"
-    __name__ = "McCormickFunction"
 
     _spec = {
         "convex": False,
         "unimodal": True,
         "separable": False,
         "scalable": False,
+        "default_bounds": (-5.0, 5.0),
     }
 
     f_global = -1.9133
     x_global = (-0.54719, -1.54719)
 
-    default_bounds = (-5.0, 5.0)
     n_dim = 2
 
     latex_formula = r"f(x, y) = \sin(x + y) + (x - y)^2 - 1.5x + 2.5y + 1"
@@ -87,14 +83,11 @@ class McCormickFunction(AlgebraicFunction):
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 2
 
-    def _create_objective_function(self) -> None:
-        def mccormick_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            return math.sin(x + y) + (x - y) ** 2 - 1.5 * x + 2.5 * y + 1
-
-        self.pure_objective_function = mccormick_function
+        return math.sin(x + y) + (x - y) ** 2 - 1.5 * x + 2.5 * y + 1
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

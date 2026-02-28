@@ -169,9 +169,9 @@ class SurrogateTrainer:
                 else:
                     x_row.append(float(val))
 
-            # Evaluate function (use pure_objective_function to get raw value)
+            # Evaluate function (use _objective to get raw value)
             try:
-                score = self.function.pure_objective_function(params)
+                score = self.function._objective(params)
 
                 # Track all samples for validity model
                 X_all_list.append(x_row)

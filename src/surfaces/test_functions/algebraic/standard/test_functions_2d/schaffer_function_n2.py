@@ -36,8 +36,6 @@ class SchafferFunctionN2(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-50.0, 50.0).
 
     Examples
     --------
@@ -47,20 +45,18 @@ class SchafferFunctionN2(AlgebraicFunction):
     """
 
     name = "Schaffer Function N2"
-    _name_ = "schaffer_function_n2"
-    __name__ = "SchafferFunctionN2"
 
     _spec = {
         "convex": False,
         "unimodal": False,
         "separable": False,
         "scalable": False,
+        "default_bounds": (-50.0, 50.0),
     }
 
     f_global = 0.0
     x_global = (0.0, 0.0)
 
-    default_bounds = (-50.0, 50.0)
     n_dim = 2
 
     latex_formula = r"f(x, y) = 0.5 + \frac{\sin^2(x^2 - y^2) - 0.5}{[1 + 0.001(x^2 + y^2)]^2}"
@@ -87,14 +83,11 @@ class SchafferFunctionN2(AlgebraicFunction):
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 2
 
-    def _create_objective_function(self) -> None:
-        def schaffer_function_n2(params):
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            return 0.5 + (math.sin(x**2 - y**2) ** 2 - 0.5) / ((1 + 0.001 * (x**2 + y**2)) ** 2)
-
-        self.pure_objective_function = schaffer_function_n2
+        return 0.5 + (math.sin(x**2 - y**2) ** 2 - 0.5) / ((1 + 0.001 * (x**2 + y**2)) ** 2)
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

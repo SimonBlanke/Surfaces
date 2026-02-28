@@ -29,9 +29,6 @@ class GoldsteinPriceFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-2.0, 2.0).
-
     Examples
     --------
     >>> from surfaces.test_functions import GoldsteinPriceFunction
@@ -41,21 +38,17 @@ class GoldsteinPriceFunction(AlgebraicFunction):
     True
     """
 
-    name = "Goldstein Price Function"
-    _name_ = "goldstein_price_function"
-    __name__ = "GoldsteinPriceFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,
         "separable": False,
         "scalable": False,
+        "default_bounds": (-2.0, 2.0),
     }
 
     f_global = 3.0
     x_global = (0.0, -1.0)
 
-    default_bounds = (-2.0, 2.0)
     n_dim = 2
 
     latex_formula = r"f(x, y) = \left[1 + (x + y + 1)^2(19 - 14x + 3x^2 - 14y + 6xy + 3y^2)\right]\left[30 + (2x - 3y)^2(18 - 32x + 12x^2 + 48y - 36xy + 27y^2)\right]"
@@ -82,19 +75,16 @@ class GoldsteinPriceFunction(AlgebraicFunction):
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 2
 
-    def _create_objective_function(self) -> None:
-        def goldstein_price_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            loss1 = 1 + (x + y + 1) ** 2 * (19 - 14 * x + 3 * x**2 - 14 * y + 6 * x * y + 3 * y**2)
-            loss2 = 30 + (2 * x - 3 * y) ** 2 * (
-                18 - 32 * x + 12 * x**2 + 48 * y - 36 * x * y + 27 * y**2
-            )
+        loss1 = 1 + (x + y + 1) ** 2 * (19 - 14 * x + 3 * x**2 - 14 * y + 6 * x * y + 3 * y**2)
+        loss2 = 30 + (2 * x - 3 * y) ** 2 * (
+            18 - 32 * x + 12 * x**2 + 48 * y - 36 * x * y + 27 * y**2
+        )
 
-            return loss1 * loss2
-
-        self.pure_objective_function = goldstein_price_function
+        return loss1 * loss2
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

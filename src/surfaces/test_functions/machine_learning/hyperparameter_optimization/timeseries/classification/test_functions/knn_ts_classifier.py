@@ -3,9 +3,6 @@
 from typing import Any, Dict, List, Optional
 
 import numpy as np
-from sklearn.model_selection import cross_val_score
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.preprocessing import StandardScaler
 
 from surfaces.modifiers import BaseModifier
 
@@ -43,7 +40,6 @@ class KNNTSClassifierFunction(BaseTSClassification):
 
     name = "KNN Time-Series Classifier Function"
     _name_ = "knn_ts_classifier"
-    __name__ = "KNNTSClassifierFunction"
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]
@@ -87,32 +83,29 @@ class KNNTSClassifierFunction(BaseTSClassification):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         """Search space containing hyperparameters."""
         return {
             "n_neighbors": self.n_neighbors_default,
             "metric": self.metric_default,
         }
 
-    def _create_objective_function(self) -> None:
-        """Create objective function with fixed dataset and cv."""
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
+        from sklearn.model_selection import cross_val_score
+        from sklearn.neighbors import KNeighborsClassifier
+        from sklearn.preprocessing import StandardScaler
+
         X_raw, y = self._dataset_loader()
-        # Normalize time-series for better distance computation
         scaler = StandardScaler()
         X = scaler.fit_transform(X_raw)
-        cv = self.cv
 
-        def knn_ts_classifier(params: Dict[str, Any]) -> float:
-            model = KNeighborsClassifier(
-                n_neighbors=params["n_neighbors"],
-                metric=params["metric"],
-                n_jobs=-1,
-            )
-            scores = cross_val_score(model, X, y, cv=cv, scoring="accuracy")
-            return scores.mean()
-
-        self.pure_objective_function = knn_ts_classifier
+        model = KNeighborsClassifier(
+            n_neighbors=params["n_neighbors"],
+            metric=params["metric"],
+            n_jobs=-1,
+        )
+        scores = cross_val_score(model, X, y, cv=self.cv, scoring="accuracy")
+        return scores.mean()
 
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Add fixed parameters for surrogate prediction."""

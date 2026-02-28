@@ -34,8 +34,6 @@ class GramacyAndLeeFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 1).
-    default_bounds : tuple
-        Default parameter bounds (0.5, 2.5).
 
     References
     ----------
@@ -54,21 +52,17 @@ class GramacyAndLeeFunction(AlgebraicFunction):
     1
     """
 
-    name = "Gramacy And Lee Function"
-    _name_ = "gramacy_and_lee_function"
-    __name__ = "GramacyAndLeeFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,
         "separable": True,
         "scalable": False,
+        "default_bounds": (0.5, 2.5),
     }
 
     f_global = -0.869011134989500
     x_global = (0.548563444114526,)
 
-    default_bounds = (0.5, 2.5)
     n_dim = 1
 
     latex_formula = r"f(x) = \frac{\sin(10\pi x)}{2x} + (x - 1)^4"
@@ -95,13 +89,10 @@ class GramacyAndLeeFunction(AlgebraicFunction):
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 1
 
-    def _create_objective_function(self) -> None:
-        def gramacy_and_lee_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
 
-            return (math.sin(10 * math.pi * x) / (2 * x)) + (x - 1) ** 4
-
-        self.pure_objective_function = gramacy_and_lee_function
+        return (math.sin(10 * math.pi * x) / (2 * x)) + (x - 1) ** 4
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

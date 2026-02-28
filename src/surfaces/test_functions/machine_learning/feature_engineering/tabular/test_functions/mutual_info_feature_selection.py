@@ -2,11 +2,6 @@
 
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
-from sklearn.feature_selection import SelectKBest, mutual_info_classif
-from sklearn.model_selection import cross_val_score
-from sklearn.tree import DecisionTreeClassifier
-
 from surfaces.modifiers import BaseModifier
 from surfaces.test_functions.machine_learning.hyperparameter_optimization.tabular.classification.datasets import (
     DATASETS,
@@ -44,7 +39,6 @@ class MutualInfoFeatureSelectionFunction(BaseTabularFeatureEngineering):
 
     name = "Mutual Information Feature Selection"
     _name_ = "mutual_info_feature_selection"
-    __name__ = "MutualInfoFeatureSelectionFunction"
 
     available_datasets = ["digits", "iris", "wine", "breast_cancer"]
     available_cv = [2, 3, 5, 10]
@@ -91,38 +85,34 @@ class MutualInfoFeatureSelectionFunction(BaseTabularFeatureEngineering):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         """Search space for feature selection optimization."""
         return {
             "n_features": self.n_features_default,
             "model_type": self.model_type_default,
         }
 
-    def _create_objective_function(self) -> None:
-        """Create objective function for feature selection."""
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
+        from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
+        from sklearn.feature_selection import SelectKBest, mutual_info_classif
+        from sklearn.model_selection import cross_val_score
+        from sklearn.tree import DecisionTreeClassifier
+
         X, y = self._dataset_loader()
-        cv = self.cv
 
-        def objective_function(params: Dict[str, Any]) -> float:
-            # Select features using mutual information
-            n_features = params["n_features"]
-            selector = SelectKBest(mutual_info_classif, k=min(n_features, X.shape[1]))
-            X_selected = selector.fit_transform(X, y)
+        n_features = params["n_features"]
+        selector = SelectKBest(mutual_info_classif, k=min(n_features, X.shape[1]))
+        X_selected = selector.fit_transform(X, y)
 
-            # Train model on selected features
-            model_type = params["model_type"]
-            if model_type == "dt":
-                model = DecisionTreeClassifier(random_state=42)
-            elif model_type == "rf":
-                model = RandomForestClassifier(n_estimators=50, random_state=42)
-            elif model_type == "gb":
-                model = GradientBoostingClassifier(n_estimators=50, random_state=42)
-            else:
-                raise ValueError(f"Unknown model_type: {model_type}")
+        model_type = params["model_type"]
+        if model_type == "dt":
+            model = DecisionTreeClassifier(random_state=42)
+        elif model_type == "rf":
+            model = RandomForestClassifier(n_estimators=50, random_state=42)
+        elif model_type == "gb":
+            model = GradientBoostingClassifier(n_estimators=50, random_state=42)
+        else:
+            raise ValueError(f"Unknown model_type: {model_type}")
 
-            # Evaluate
-            scores = cross_val_score(model, X_selected, y, cv=cv, scoring="accuracy")
-            return scores.mean()
-
-        self.pure_objective_function = objective_function
+        scores = cross_val_score(model, X_selected, y, cv=self.cv, scoring="accuracy")
+        return scores.mean()

@@ -2,9 +2,6 @@
 
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
-from sklearn.tree import DecisionTreeRegressor
-
 from surfaces.modifiers import BaseModifier
 from surfaces.test_functions.machine_learning.hyperparameter_optimization.tabular.regression.datasets import (
     DATASETS,
@@ -42,7 +39,6 @@ class WeightedAveragingFunction(BaseTabularEnsemble):
 
     name = "Weighted Averaging Ensemble"
     _name_ = "weighted_averaging"
-    __name__ = "WeightedAveragingFunction"
 
     available_datasets = ["diabetes", "california"]
     available_cv = [2, 3, 5, 10]
@@ -84,8 +80,7 @@ class WeightedAveragingFunction(BaseTabularEnsemble):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         """Search space for weighted averaging optimization."""
         return {
             "dt_weight": self.dt_weight_default,
@@ -93,47 +88,37 @@ class WeightedAveragingFunction(BaseTabularEnsemble):
             "gb_weight": self.gb_weight_default,
         }
 
-    def _create_objective_function(self) -> None:
-        """Create objective function for weighted averaging ensemble."""
-        X, y = self._dataset_loader()
-        cv = self.cv
-
-        # Pre-train base models and get cross-validated predictions
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
+        from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
+        from sklearn.metrics import r2_score
         from sklearn.model_selection import cross_val_predict
+        from sklearn.tree import DecisionTreeRegressor
+
+        X, y = self._dataset_loader()
 
         dt_model = DecisionTreeRegressor(random_state=42)
         rf_model = RandomForestRegressor(n_estimators=50, random_state=42)
         gb_model = GradientBoostingRegressor(n_estimators=50, random_state=42)
 
-        # Get predictions from each model
-        dt_preds = cross_val_predict(dt_model, X, y, cv=cv)
-        rf_preds = cross_val_predict(rf_model, X, y, cv=cv)
-        gb_preds = cross_val_predict(gb_model, X, y, cv=cv)
+        dt_preds = cross_val_predict(dt_model, X, y, cv=self.cv)
+        rf_preds = cross_val_predict(rf_model, X, y, cv=self.cv)
+        gb_preds = cross_val_predict(gb_model, X, y, cv=self.cv)
 
-        def objective_function(params: Dict[str, Any]) -> float:
-            # Extract weights
-            dt_weight = params["dt_weight"]
-            rf_weight = params["rf_weight"]
-            gb_weight = params["gb_weight"]
+        dt_weight = params["dt_weight"]
+        rf_weight = params["rf_weight"]
+        gb_weight = params["gb_weight"]
 
-            # Normalize weights
-            total_weight = dt_weight + rf_weight + gb_weight
-            if total_weight == 0.0:
-                return 0.0  # Invalid weight combination
+        total_weight = dt_weight + rf_weight + gb_weight
+        if total_weight == 0.0:
+            return 0.0
 
-            dt_weight_norm = dt_weight / total_weight
-            rf_weight_norm = rf_weight / total_weight
-            gb_weight_norm = gb_weight / total_weight
+        dt_weight_norm = dt_weight / total_weight
+        rf_weight_norm = rf_weight / total_weight
+        gb_weight_norm = gb_weight / total_weight
 
-            # Compute weighted average of predictions
-            weighted_preds = (
-                dt_weight_norm * dt_preds + rf_weight_norm * rf_preds + gb_weight_norm * gb_preds
-            )
+        weighted_preds = (
+            dt_weight_norm * dt_preds + rf_weight_norm * rf_preds + gb_weight_norm * gb_preds
+        )
 
-            # Compute R2 score
-            from sklearn.metrics import r2_score
-
-            score = r2_score(y, weighted_preds)
-            return score
-
-        self.pure_objective_function = objective_function
+        score = r2_score(y, weighted_preds)
+        return score

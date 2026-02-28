@@ -141,7 +141,7 @@ class MLSurrogateTrainer:
                 hp_dict = dict(zip(hp_keys, hp_combo))
 
                 try:
-                    score = func.pure_objective_function(hp_dict)
+                    score = func._objective(hp_dict)
                     if not np.isnan(score):
                         records.append(
                             {

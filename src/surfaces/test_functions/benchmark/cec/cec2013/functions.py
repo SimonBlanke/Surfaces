@@ -38,13 +38,10 @@ class Sphere(CEC2013Function):
         "separable": True,
     }
 
-    def _create_objective_function(self) -> None:
-        def sphere(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift(x)
-            return np.sum(z**2) + self.f_global
-
-        self.pure_objective_function = sphere
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._shift(x)
+        return np.sum(z**2) + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -73,19 +70,16 @@ class RotatedHighConditionedElliptic(CEC2013Function):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def elliptic(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._oscillation(self._shift_rotate(x))
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._oscillation(self._shift_rotate(x))
 
-            D = self.n_dim
-            result = 0.0
-            for i in range(D):
-                result += (10**6) ** (i / (D - 1)) * z[i] ** 2
+        D = self.n_dim
+        result = 0.0
+        for i in range(D):
+            result += (10**6) ** (i / (D - 1)) * z[i] ** 2
 
-            return result + self.f_global
-
-        self.pure_objective_function = elliptic
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -122,15 +116,12 @@ class RotatedBentCigar(CEC2013Function):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def bent_cigar(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._asymmetric(self._shift_rotate(x), 0.5)
-            z = self._rotate(z)
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._asymmetric(self._shift_rotate(x), 0.5)
+        z = self._rotate(z)
 
-            return z[0] ** 2 + 10**6 * np.sum(z[1:] ** 2) + self.f_global
-
-        self.pure_objective_function = bent_cigar
+        return z[0] ** 2 + 10**6 * np.sum(z[1:] ** 2) + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -161,14 +152,11 @@ class RotatedDiscus(CEC2013Function):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def discus(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._oscillation(self._shift_rotate(x))
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._oscillation(self._shift_rotate(x))
 
-            return 10**6 * z[0] ** 2 + np.sum(z[1:] ** 2) + self.f_global
-
-        self.pure_objective_function = discus
+        return 10**6 * z[0] ** 2 + np.sum(z[1:] ** 2) + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -197,19 +185,16 @@ class DifferentPowers(CEC2013Function):
         "separable": True,
     }
 
-    def _create_objective_function(self) -> None:
-        def different_powers(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift(x)
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._shift(x)
 
-            D = self.n_dim
-            result = 0.0
-            for i in range(D):
-                result += abs(z[i]) ** (2 + 4 * i / (D - 1))
+        D = self.n_dim
+        result = 0.0
+        for i in range(D):
+            result += abs(z[i]) ** (2 + 4 * i / (D - 1))
 
-            return np.sqrt(result) + self.f_global
-
-        self.pure_objective_function = different_powers
+        return np.sqrt(result) + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -250,19 +235,16 @@ class RotatedRosenbrock(CEC2013Function):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def rosenbrock(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
-            z = z * 2.048 / 100 + 1
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
+        z = z * 2.048 / 100 + 1
 
-            result = 0.0
-            for i in range(self.n_dim - 1):
-                result += 100 * (z[i] ** 2 - z[i + 1]) ** 2 + (z[i] - 1) ** 2
+        result = 0.0
+        for i in range(self.n_dim - 1):
+            result += 100 * (z[i] ** 2 - z[i + 1]) ** 2 + (z[i] - 1) ** 2
 
-            return result + self.f_global
-
-        self.pure_objective_function = rosenbrock
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -294,26 +276,23 @@ class RotatedSchafferF7(CEC2013Function):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def schaffer_f7(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._asymmetric(self._shift_rotate(x), 0.5)
-            z = self._rotate(z)
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._asymmetric(self._shift_rotate(x), 0.5)
+        z = self._rotate(z)
 
-            D = self.n_dim
-            s = np.zeros(D - 1)
-            for i in range(D - 1):
-                s[i] = np.sqrt(z[i] ** 2 + z[i + 1] ** 2)
+        D = self.n_dim
+        s = np.zeros(D - 1)
+        for i in range(D - 1):
+            s[i] = np.sqrt(z[i] ** 2 + z[i + 1] ** 2)
 
-            result = 0.0
-            for i in range(D - 1):
-                result += np.sqrt(s[i]) * (np.sin(50 * s[i] ** 0.2) + 1)
+        result = 0.0
+        for i in range(D - 1):
+            result += np.sqrt(s[i]) * (np.sin(50 * s[i] ** 0.2) + 1)
 
-            result = (result / (D - 1)) ** 2
+        result = (result / (D - 1)) ** 2
 
-            return result + self.f_global
-
-        self.pure_objective_function = schaffer_f7
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -353,21 +332,18 @@ class RotatedAckley(CEC2013Function):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def ackley(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._asymmetric(self._shift_rotate(x), 0.5)
-            z = self._rotate(z)
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._asymmetric(self._shift_rotate(x), 0.5)
+        z = self._rotate(z)
 
-            D = self.n_dim
-            sum1 = np.sum(z**2)
-            sum2 = np.sum(np.cos(2 * np.pi * z))
+        D = self.n_dim
+        sum1 = np.sum(z**2)
+        sum2 = np.sum(np.cos(2 * np.pi * z))
 
-            result = -20 * np.exp(-0.2 * np.sqrt(sum1 / D)) - np.exp(sum2 / D) + 20 + np.e
+        result = -20 * np.exp(-0.2 * np.sqrt(sum1 / D)) - np.exp(sum2 / D) + 20 + np.e
 
-            return result + self.f_global
-
-        self.pure_objective_function = ackley
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -407,29 +383,26 @@ class RotatedWeierstrass(CEC2013Function):
         "differentiable": False,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         a = 0.5
         b = 3
         k_max = 20
 
-        def weierstrass(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._asymmetric(self._shift_rotate(x), 0.5)
-            z = self._rotate(z)
-            z = z * 0.5 / 100
+        x = self._params_to_array(params)
+        z = self._asymmetric(self._shift_rotate(x), 0.5)
+        z = self._rotate(z)
+        z = z * 0.5 / 100
 
-            D = self.n_dim
-            result = 0.0
-            for i in range(D):
-                for k in range(k_max + 1):
-                    result += a**k * np.cos(2 * np.pi * b**k * (z[i] + 0.5))
+        D = self.n_dim
+        result = 0.0
+        for i in range(D):
+            for k in range(k_max + 1):
+                result += a**k * np.cos(2 * np.pi * b**k * (z[i] + 0.5))
 
-            offset = D * sum(a**k * np.cos(2 * np.pi * b**k * 0.5) for k in range(k_max + 1))
-            result -= offset
+        offset = D * sum(a**k * np.cos(2 * np.pi * b**k * 0.5) for k in range(k_max + 1))
+        result -= offset
 
-            return result + self.f_global
-
-        self.pure_objective_function = weierstrass
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -483,19 +456,16 @@ class RotatedGriewank(CEC2013Function):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def griewank(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
-            z = z * 600 / 100
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
+        z = z * 600 / 100
 
-            D = self.n_dim
-            sum_sq = np.sum(z**2) / 4000
-            prod_cos = np.prod(np.cos(z / np.sqrt(np.arange(1, D + 1))))
+        D = self.n_dim
+        sum_sq = np.sum(z**2) / 4000
+        prod_cos = np.prod(np.cos(z / np.sqrt(np.arange(1, D + 1))))
 
-            return sum_sq - prod_cos + 1 + self.f_global
-
-        self.pure_objective_function = griewank
+        return sum_sq - prod_cos + 1 + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -533,18 +503,15 @@ class Rastrigin(CEC2013Function):
         "separable": True,
     }
 
-    def _create_objective_function(self) -> None:
-        def rastrigin(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._oscillation(self._asymmetric(self._shift(x), 0.2))
-            z = z * 5.12 / 100
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._oscillation(self._asymmetric(self._shift(x), 0.2))
+        z = z * 5.12 / 100
 
-            D = self.n_dim
-            result = 10 * D + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
+        D = self.n_dim
+        result = 10 * D + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
 
-            return result + self.f_global
-
-        self.pure_objective_function = rastrigin
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -580,19 +547,16 @@ class RotatedRastrigin(CEC2013Function):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def rastrigin(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._oscillation(self._asymmetric(self._shift_rotate(x), 0.2))
-            z = self._rotate(z)
-            z = z * 5.12 / 100
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._oscillation(self._asymmetric(self._shift_rotate(x), 0.2))
+        z = self._rotate(z)
+        z = z * 5.12 / 100
 
-            D = self.n_dim
-            result = 10 * D + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
+        D = self.n_dim
+        result = 10 * D + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
 
-            return result + self.f_global
-
-        self.pure_objective_function = rastrigin
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -630,25 +594,22 @@ class StepRastrigin(CEC2013Function):
         "continuous": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def step_rastrigin(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._oscillation(self._asymmetric(self._shift_rotate(x), 0.2))
-            z = self._rotate(z)
-            z = z * 5.12 / 100
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._oscillation(self._asymmetric(self._shift_rotate(x), 0.2))
+        z = self._rotate(z)
+        z = z * 5.12 / 100
 
-            # Step function transformation
-            y = z.copy()
-            for i in range(len(z)):
-                if abs(y[i]) > 0.5:
-                    y[i] = np.round(2 * y[i]) / 2
+        # Step function transformation
+        y = z.copy()
+        for i in range(len(z)):
+            if abs(y[i]) > 0.5:
+                y[i] = np.round(2 * y[i]) / 2
 
-            D = self.n_dim
-            result = 10 * D + np.sum(y**2 - 10 * np.cos(2 * np.pi * y))
+        D = self.n_dim
+        result = 10 * D + np.sum(y**2 - 10 * np.cos(2 * np.pi * y))
 
-            return result + self.f_global
-
-        self.pure_objective_function = step_rastrigin
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -688,30 +649,27 @@ class Schwefel(CEC2013Function):
         "separable": True,
     }
 
-    def _create_objective_function(self) -> None:
-        def schwefel(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift(x)
-            z = z * 1000 / 100 + 4.209687462275036e2
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._shift(x)
+        z = z * 1000 / 100 + 4.209687462275036e2
 
-            D = self.n_dim
-            result = 0.0
-            for i in range(D):
-                zi = z[i]
-                if abs(zi) <= 500:
-                    result += zi * np.sin(np.sqrt(abs(zi)))
-                elif zi > 500:
-                    result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500)))
-                    result -= (zi - 500) ** 2 / (10000 * D)
-                else:
-                    result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500)))
-                    result -= (zi + 500) ** 2 / (10000 * D)
+        D = self.n_dim
+        result = 0.0
+        for i in range(D):
+            zi = z[i]
+            if abs(zi) <= 500:
+                result += zi * np.sin(np.sqrt(abs(zi)))
+            elif zi > 500:
+                result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500)))
+                result -= (zi - 500) ** 2 / (10000 * D)
+            else:
+                result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500)))
+                result -= (zi + 500) ** 2 / (10000 * D)
 
-            result = 418.9829 * D - result
+        result = 418.9829 * D - result
 
-            return result + self.f_global
-
-        self.pure_objective_function = schwefel
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -759,30 +717,27 @@ class RotatedSchwefel(CEC2013Function):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def schwefel(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
-            z = z * 1000 / 100 + 4.209687462275036e2
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
+        z = z * 1000 / 100 + 4.209687462275036e2
 
-            D = self.n_dim
-            result = 0.0
-            for i in range(D):
-                zi = z[i]
-                if abs(zi) <= 500:
-                    result += zi * np.sin(np.sqrt(abs(zi)))
-                elif zi > 500:
-                    result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500)))
-                    result -= (zi - 500) ** 2 / (10000 * D)
-                else:
-                    result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500)))
-                    result -= (zi + 500) ** 2 / (10000 * D)
+        D = self.n_dim
+        result = 0.0
+        for i in range(D):
+            zi = z[i]
+            if abs(zi) <= 500:
+                result += zi * np.sin(np.sqrt(abs(zi)))
+            elif zi > 500:
+                result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500)))
+                result -= (zi - 500) ** 2 / (10000 * D)
+            else:
+                result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500)))
+                result -= (zi + 500) ** 2 / (10000 * D)
 
-            result = 418.9829 * D - result
+        result = 418.9829 * D - result
 
-            return result + self.f_global
-
-        self.pure_objective_function = schwefel
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -831,25 +786,22 @@ class RotatedKatsuura(CEC2013Function):
         "differentiable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def katsuura(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
-            z = z * 5 / 100
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
+        z = z * 5 / 100
 
-            D = self.n_dim
-            result = 1.0
-            for i in range(D):
-                inner_sum = 0.0
-                for j in range(1, 33):
-                    inner_sum += abs(2**j * z[i] - round(2**j * z[i])) / (2**j)
-                result *= (1 + (i + 1) * inner_sum) ** (10 / (D**1.2))
+        D = self.n_dim
+        result = 1.0
+        for i in range(D):
+            inner_sum = 0.0
+            for j in range(1, 33):
+                inner_sum += abs(2**j * z[i] - round(2**j * z[i])) / (2**j)
+            result *= (1 + (i + 1) * inner_sum) ** (10 / (D**1.2))
 
-            result = (10 / D**2) * result - (10 / D**2)
+        result = (10 / D**2) * result - (10 / D**2)
 
-            return result + self.f_global
-
-        self.pure_objective_function = katsuura
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -900,27 +852,24 @@ class LunacekBiRastrigin(CEC2013Function):
         "separable": True,
     }
 
-    def _create_objective_function(self) -> None:
-        def bi_rastrigin(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift(x)
-            z = z * 10 / 100
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._shift(x)
+        z = z * 10 / 100
 
-            D = self.n_dim
-            mu0 = 2.5
-            s = 1 - 1 / (2 * np.sqrt(D + 20) - 8.2)
-            mu1 = -np.sqrt((mu0**2 - 1) / s)
-            d = 1
+        D = self.n_dim
+        mu0 = 2.5
+        s = 1 - 1 / (2 * np.sqrt(D + 20) - 8.2)
+        mu1 = -np.sqrt((mu0**2 - 1) / s)
+        d = 1
 
-            sum1 = np.sum((z - mu0) ** 2)
-            sum2 = np.sum((z - mu1) ** 2)
-            sum3 = np.sum(np.cos(2 * np.pi * (z - mu0)))
+        sum1 = np.sum((z - mu0) ** 2)
+        sum2 = np.sum((z - mu1) ** 2)
+        sum3 = np.sum(np.cos(2 * np.pi * (z - mu0)))
 
-            result = min(sum1, d * D + s * sum2) + 10 * (D - sum3)
+        result = min(sum1, d * D + s * sum2) + 10 * (D - sum3)
 
-            return result + self.f_global
-
-        self.pure_objective_function = bi_rastrigin
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -963,29 +912,26 @@ class RotatedLunacekBiRastrigin(CEC2013Function):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def bi_rastrigin(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
-            z = z * 10 / 100
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
+        z = z * 10 / 100
 
-            D = self.n_dim
-            mu0 = 2.5
-            s = 1 - 1 / (2 * np.sqrt(D + 20) - 8.2)
-            mu1 = -np.sqrt((mu0**2 - 1) / s)
-            d = 1
+        D = self.n_dim
+        mu0 = 2.5
+        s = 1 - 1 / (2 * np.sqrt(D + 20) - 8.2)
+        mu1 = -np.sqrt((mu0**2 - 1) / s)
+        d = 1
 
-            y = self._rotate(z - mu0)
+        y = self._rotate(z - mu0)
 
-            sum1 = np.sum((z - mu0) ** 2)
-            sum2 = np.sum((z - mu1) ** 2)
-            sum3 = np.sum(np.cos(2 * np.pi * y))
+        sum1 = np.sum((z - mu0) ** 2)
+        sum2 = np.sum((z - mu1) ** 2)
+        sum3 = np.sum(np.cos(2 * np.pi * y))
 
-            result = min(sum1, d * D + s * sum2) + 10 * (D - sum3)
+        result = min(sum1, d * D + s * sum2) + 10 * (D - sum3)
 
-            return result + self.f_global
-
-        self.pure_objective_function = bi_rastrigin
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -1030,24 +976,21 @@ class RotatedExpandedGriewankRosenbrock(CEC2013Function):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def griewank_rosenbrock(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
-            z = z * 5 / 100 + 1
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
+        z = z * 5 / 100 + 1
 
-            D = self.n_dim
-            result = 0.0
-            for i in range(D - 1):
-                t = 100 * (z[i] ** 2 - z[i + 1]) ** 2 + (z[i] - 1) ** 2
-                result += t**2 / 4000 - np.cos(t) + 1
-
-            t = 100 * (z[-1] ** 2 - z[0]) ** 2 + (z[-1] - 1) ** 2
+        D = self.n_dim
+        result = 0.0
+        for i in range(D - 1):
+            t = 100 * (z[i] ** 2 - z[i + 1]) ** 2 + (z[i] - 1) ** 2
             result += t**2 / 4000 - np.cos(t) + 1
 
-            return result + self.f_global
+        t = 100 * (z[-1] ** 2 - z[0]) ** 2 + (z[-1] - 1) ** 2
+        result += t**2 / 4000 - np.cos(t) + 1
 
-        self.pure_objective_function = griewank_rosenbrock
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -1087,25 +1030,22 @@ class RotatedExpandedScafferF6(CEC2013Function):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         def schaffer_f6(x1: float, x2: float) -> float:
             t = x1**2 + x2**2
             return 0.5 + (np.sin(np.sqrt(t)) ** 2 - 0.5) / (1 + 0.001 * t) ** 2
 
-        def expanded_scaffer(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._asymmetric(self._shift_rotate(x), 0.5)
-            z = self._rotate(z)
+        x = self._params_to_array(params)
+        z = self._asymmetric(self._shift_rotate(x), 0.5)
+        z = self._rotate(z)
 
-            D = self.n_dim
-            result = 0.0
-            for i in range(D - 1):
-                result += schaffer_f6(z[i], z[i + 1])
-            result += schaffer_f6(z[-1], z[0])
+        D = self.n_dim
+        result = 0.0
+        for i in range(D - 1):
+            result += schaffer_f6(z[i], z[i + 1])
+        result += schaffer_f6(z[-1], z[0])
 
-            return result + self.f_global
-
-        self.pure_objective_function = expanded_scaffer
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -1358,7 +1298,7 @@ class CompositionFunction1(_CompositionBase):
     lambdas = [1, 1e-6, 1e-26, 1e-6, 1e-6]
     biases = [0, 100, 200, 300, 400]
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         def rosenbrock(z: np.ndarray) -> float:
             z = z * 2.048 / 100 + 1
             return sum(
@@ -1377,22 +1317,19 @@ class CompositionFunction1(_CompositionBase):
 
         functions = [rosenbrock, elliptic, bent_cigar, discus, elliptic]
 
-        def composition(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            weights = self._compute_weights(x)
-            data = self._load_data()
+        x = self._params_to_array(params)
+        weights = self._compute_weights(x)
+        data = self._load_data()
 
-            result = 0.0
-            for i in range(self.n_functions):
-                shift = data.get(f"shift_{i + 1}", np.zeros(self.n_dim))
-                M = data.get(f"rotation_{i + 1}", np.eye(self.n_dim))
-                z = M @ (x - shift)
-                f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
-                result += weights[i] * f_val
+        result = 0.0
+        for i in range(self.n_functions):
+            shift = data.get(f"shift_{i + 1}", np.zeros(self.n_dim))
+            M = data.get(f"rotation_{i + 1}", np.eye(self.n_dim))
+            z = M @ (x - shift)
+            f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
+            result += weights[i] * f_val
 
-            return result + self.f_global
-
-        self.pure_objective_function = composition
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation for F21."""
@@ -1447,7 +1384,7 @@ class CompositionFunction2(_CompositionBase):
     lambdas = [10, 1, 1e-6]
     biases = [0, 100, 200]
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         def schwefel(z: np.ndarray) -> float:
             z = z * 1000 / 100 + 4.209687462275036e2
             D = len(z)
@@ -1473,21 +1410,18 @@ class CompositionFunction2(_CompositionBase):
 
         functions = [schwefel, rastrigin, elliptic]
 
-        def composition(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            weights = self._compute_weights(x)
-            data = self._load_data()
+        x = self._params_to_array(params)
+        weights = self._compute_weights(x)
+        data = self._load_data()
 
-            result = 0.0
-            for i in range(self.n_functions):
-                shift = data.get(f"shift_{i + 1}", np.zeros(self.n_dim))
-                z = x - shift  # No rotation for F22
-                f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
-                result += weights[i] * f_val
+        result = 0.0
+        for i in range(self.n_functions):
+            shift = data.get(f"shift_{i + 1}", np.zeros(self.n_dim))
+            z = x - shift  # No rotation for F22
+            f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
+            result += weights[i] * f_val
 
-            return result + self.f_global
-
-        self.pure_objective_function = composition
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation for F22."""
@@ -1535,7 +1469,7 @@ class CompositionFunction3(_CompositionBase):
     lambdas = [10, 1, 1e-6]
     biases = [0, 100, 200]
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         def schwefel(z: np.ndarray) -> float:
             z = z * 1000 / 100 + 4.209687462275036e2
             D = len(z)
@@ -1561,22 +1495,19 @@ class CompositionFunction3(_CompositionBase):
 
         functions = [schwefel, rastrigin, elliptic]
 
-        def composition(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            weights = self._compute_weights(x)
-            data = self._load_data()
+        x = self._params_to_array(params)
+        weights = self._compute_weights(x)
+        data = self._load_data()
 
-            result = 0.0
-            for i in range(self.n_functions):
-                shift = data.get(f"shift_{i + 1}", np.zeros(self.n_dim))
-                M = data.get(f"rotation_{i + 1}", np.eye(self.n_dim))
-                z = M @ (x - shift)
-                f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
-                result += weights[i] * f_val
+        result = 0.0
+        for i in range(self.n_functions):
+            shift = data.get(f"shift_{i + 1}", np.zeros(self.n_dim))
+            M = data.get(f"rotation_{i + 1}", np.eye(self.n_dim))
+            z = M @ (x - shift)
+            f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
+            result += weights[i] * f_val
 
-            return result + self.f_global
-
-        self.pure_objective_function = composition
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation for F23."""
@@ -1626,7 +1557,7 @@ class CompositionFunction4(_CompositionBase):
     lambdas = [10, 1, 1e-6]
     biases = [0, 100, 200]
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         def schwefel(z: np.ndarray) -> float:
             z = z * 1000 / 100 + 4.209687462275036e2
             D = len(z)
@@ -1654,22 +1585,19 @@ class CompositionFunction4(_CompositionBase):
 
         functions = [schwefel, rastrigin, weierstrass]
 
-        def composition(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            weights = self._compute_weights(x)
-            data = self._load_data()
+        x = self._params_to_array(params)
+        weights = self._compute_weights(x)
+        data = self._load_data()
 
-            result = 0.0
-            for i in range(self.n_functions):
-                shift = data.get(f"shift_{i + 1}", np.zeros(self.n_dim))
-                M = data.get(f"rotation_{i + 1}", np.eye(self.n_dim))
-                z = M @ (x - shift)
-                f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
-                result += weights[i] * f_val
+        result = 0.0
+        for i in range(self.n_functions):
+            shift = data.get(f"shift_{i + 1}", np.zeros(self.n_dim))
+            M = data.get(f"rotation_{i + 1}", np.eye(self.n_dim))
+            z = M @ (x - shift)
+            f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
+            result += weights[i] * f_val
 
-            return result + self.f_global
-
-        self.pure_objective_function = composition
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation for F24."""
@@ -1719,7 +1647,7 @@ class CompositionFunction5(_CompositionBase):
     lambdas = [10, 1, 1]
     biases = [0, 100, 200]
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         def schwefel(z: np.ndarray) -> float:
             z = z * 1000 / 100 + 4.209687462275036e2
             D = len(z)
@@ -1742,22 +1670,19 @@ class CompositionFunction5(_CompositionBase):
 
         functions = [schwefel, rastrigin, ackley]
 
-        def composition(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            weights = self._compute_weights(x)
-            data = self._load_data()
+        x = self._params_to_array(params)
+        weights = self._compute_weights(x)
+        data = self._load_data()
 
-            result = 0.0
-            for i in range(self.n_functions):
-                shift = data.get(f"shift_{i + 1}", np.zeros(self.n_dim))
-                M = data.get(f"rotation_{i + 1}", np.eye(self.n_dim))
-                z = M @ (x - shift)
-                f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
-                result += weights[i] * f_val
+        result = 0.0
+        for i in range(self.n_functions):
+            shift = data.get(f"shift_{i + 1}", np.zeros(self.n_dim))
+            M = data.get(f"rotation_{i + 1}", np.eye(self.n_dim))
+            z = M @ (x - shift)
+            f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
+            result += weights[i] * f_val
 
-            return result + self.f_global
-
-        self.pure_objective_function = composition
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation for F25."""
@@ -1807,7 +1732,7 @@ class CompositionFunction6(_CompositionBase):
     lambdas = [10, 1, 1e-6, 1, 1]
     biases = [0, 100, 200, 300, 400]
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         def schwefel(z: np.ndarray) -> float:
             z = z * 1000 / 100 + 4.209687462275036e2
             D = len(z)
@@ -1844,22 +1769,19 @@ class CompositionFunction6(_CompositionBase):
 
         functions = [schwefel, rastrigin, elliptic, weierstrass, griewank]
 
-        def composition(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            weights = self._compute_weights(x)
-            data = self._load_data()
+        x = self._params_to_array(params)
+        weights = self._compute_weights(x)
+        data = self._load_data()
 
-            result = 0.0
-            for i in range(self.n_functions):
-                shift = data.get(f"shift_{i + 1}", np.zeros(self.n_dim))
-                M = data.get(f"rotation_{i + 1}", np.eye(self.n_dim))
-                z = M @ (x - shift)
-                f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
-                result += weights[i] * f_val
+        result = 0.0
+        for i in range(self.n_functions):
+            shift = data.get(f"shift_{i + 1}", np.zeros(self.n_dim))
+            M = data.get(f"rotation_{i + 1}", np.eye(self.n_dim))
+            z = M @ (x - shift)
+            f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
+            result += weights[i] * f_val
 
-            return result + self.f_global
-
-        self.pure_objective_function = composition
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation for F26."""
@@ -1911,7 +1833,7 @@ class CompositionFunction7(_CompositionBase):
     lambdas = [10, 10, 2.5, 25, 1e-6]
     biases = [0, 100, 200, 300, 400]
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         def griewank(z: np.ndarray) -> float:
             D = len(z)
             z = z * 600 / 100
@@ -1948,22 +1870,19 @@ class CompositionFunction7(_CompositionBase):
 
         functions = [griewank, rastrigin, schwefel, weierstrass, elliptic]
 
-        def composition(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            weights = self._compute_weights(x)
-            data = self._load_data()
+        x = self._params_to_array(params)
+        weights = self._compute_weights(x)
+        data = self._load_data()
 
-            result = 0.0
-            for i in range(self.n_functions):
-                shift = data.get(f"shift_{i + 1}", np.zeros(self.n_dim))
-                M = data.get(f"rotation_{i + 1}", np.eye(self.n_dim))
-                z = M @ (x - shift)
-                f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
-                result += weights[i] * f_val
+        result = 0.0
+        for i in range(self.n_functions):
+            shift = data.get(f"shift_{i + 1}", np.zeros(self.n_dim))
+            M = data.get(f"rotation_{i + 1}", np.eye(self.n_dim))
+            z = M @ (x - shift)
+            f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
+            result += weights[i] * f_val
 
-            return result + self.f_global
-
-        self.pure_objective_function = composition
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation for F27."""
@@ -2015,7 +1934,7 @@ class CompositionFunction8(_CompositionBase):
     lambdas = [10, 10, 2.5, 25, 1e-6]
     biases = [0, 100, 200, 300, 400]
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         def ackley(z: np.ndarray) -> float:
             D = len(z)
             sum1 = np.sum(z**2)
@@ -2047,22 +1966,19 @@ class CompositionFunction8(_CompositionBase):
 
         functions = [ackley, griewank, schwefel, rastrigin, elliptic]
 
-        def composition(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            weights = self._compute_weights(x)
-            data = self._load_data()
+        x = self._params_to_array(params)
+        weights = self._compute_weights(x)
+        data = self._load_data()
 
-            result = 0.0
-            for i in range(self.n_functions):
-                shift = data.get(f"shift_{i + 1}", np.zeros(self.n_dim))
-                M = data.get(f"rotation_{i + 1}", np.eye(self.n_dim))
-                z = M @ (x - shift)
-                f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
-                result += weights[i] * f_val
+        result = 0.0
+        for i in range(self.n_functions):
+            shift = data.get(f"shift_{i + 1}", np.zeros(self.n_dim))
+            M = data.get(f"rotation_{i + 1}", np.eye(self.n_dim))
+            z = M @ (x - shift)
+            f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
+            result += weights[i] * f_val
 
-            return result + self.f_global
-
-        self.pure_objective_function = composition
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation for F28."""

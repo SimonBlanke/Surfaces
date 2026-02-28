@@ -3,8 +3,6 @@
 from typing import Any, Dict, List, Optional
 
 import numpy as np
-from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.model_selection import cross_val_score
 
 from surfaces.modifiers import BaseModifier
 
@@ -57,9 +55,7 @@ class GradientBoostingRegressorFunction(BaseRegression):
     >>> result = func({"n_estimators": 50, "max_depth": 5})  # ~1ms
     """
 
-    name = "Gradient Boosting Regressor Function"
     _name_ = "gradient_boosting_regressor"
-    __name__ = "GradientBoostingRegressorFunction"
 
     # Available options (for validation and documentation)
     available_datasets = list(DATASETS.keys())
@@ -109,29 +105,24 @@ class GradientBoostingRegressorFunction(BaseRegression):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         """Search space containing only hyperparameters (not dataset/cv)."""
         return {
             "n_estimators": self.n_estimators_default,
             "max_depth": self.max_depth_default,
         }
 
-    def _create_objective_function(self) -> None:
-        """Create objective function with fixed dataset and cv."""
-        # Load dataset once
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
+        from sklearn.ensemble import GradientBoostingRegressor
+        from sklearn.model_selection import cross_val_score
+
         X, y = self._dataset_loader()
-        cv = self.cv
-
-        def gradient_boosting_regressor(params: Dict[str, Any]) -> float:
-            gbr = GradientBoostingRegressor(
-                n_estimators=params["n_estimators"],
-                max_depth=params["max_depth"],
-            )
-            scores = cross_val_score(gbr, X, y, cv=cv, scoring="r2")
-            return scores.mean()
-
-        self.pure_objective_function = gradient_boosting_regressor
+        gbr = GradientBoostingRegressor(
+            n_estimators=params["n_estimators"],
+            max_depth=params["max_depth"],
+        )
+        scores = cross_val_score(gbr, X, y, cv=self.cv, scoring="r2")
+        return scores.mean()
 
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Add fixed parameters (dataset, cv) to params for surrogate prediction."""

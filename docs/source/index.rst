@@ -48,29 +48,21 @@
       </a>
    </div>
 
+   <p align="center">
+   <a href="https://github.com/SimonBlanke/Surfaces/actions"><img src="https://img.shields.io/github/actions/workflow/status/SimonBlanke/Surfaces/tests.yml?style=for-the-badge&logo=githubactions&logoColor=white&label=tests" alt="Tests"></a>
+   <a href="https://app.codecov.io/gh/SimonBlanke/Surfaces"><img src="https://img.shields.io/codecov/c/github/SimonBlanke/Surfaces?style=for-the-badge&logo=codecov&logoColor=white" alt="Coverage"></a>
+   </p>
 
-Surfaces provides a collection of single-objective black-box optimization functions
-for benchmarking. The library includes mathematical test functions (1D, 2D, and N-dimensional)
-and machine learning test functions for evaluating optimization algorithms.
+   <hr style="border-radius: 0; border-top: 3px solid var(--pst-color-border); margin: 2.5rem 0 0.3rem 0;">
 
-.. raw:: html
+   <p style="text-align: center; max-width: 800px; margin: 0.5rem auto; line-height: 1.6;">
+   Surfaces provides a curated collection of optimization test functions for benchmarking
+   gradient-free and black-box optimizers. It includes classical mathematical benchmarks,
+   N-dimensional scalable functions, and ML-model-accelerated surrogates, all accessible
+   through a minimal, plug-and-play API.
+   </p>
 
-   <div class="badge-banner">
-      <div class="badge-items">
-         <a href="https://pypi.org/project/surfaces/" target="_blank">
-            <img src="https://img.shields.io/pypi/v/surfaces?color=8B5A5A&style=flat-square" alt="PyPI Version" />
-         </a>
-         <a href="https://pypi.org/project/surfaces/" target="_blank">
-            <img src="https://img.shields.io/pypi/pyversions/surfaces?color=A67979&style=flat-square" alt="Python Versions" />
-         </a>
-         <a href="https://github.com/SimonBlanke/Surfaces/blob/main/LICENSE" target="_blank">
-            <img src="https://img.shields.io/github/license/SimonBlanke/Surfaces?color=C49393&style=flat-square" alt="License" />
-         </a>
-      </div>
-   </div>
-
-
-----
+   <div style="margin-bottom: 7rem;"></div>
 
 .. _features:
 
@@ -209,6 +201,12 @@ Quick Install
 =============
 
 .. raw:: html
+
+   <p align="center">
+   <a href="https://pypi.org/project/surfaces/" target="_blank"><img src="https://img.shields.io/pypi/v/surfaces?style=flat-square" alt="PyPI Version"></a>
+   <a href="https://pypi.org/project/surfaces/" target="_blank"><img src="https://img.shields.io/pypi/pyversions/surfaces?style=flat-square" alt="Python Versions"></a>
+   <a href="https://github.com/SimonBlanke/Surfaces/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/SimonBlanke/Surfaces?style=flat-square" alt="License"></a>
+   </p>
 
    <div class="segmented-tabs" id="install-tabs">
       <nav class="segmented-tabs-nav" role="tablist">
@@ -410,6 +408,7 @@ Contents
    installation
    user_guide
    api_reference
+   developer_guide
    examples
    faq
    troubleshooting

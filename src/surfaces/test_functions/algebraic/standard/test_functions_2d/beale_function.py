@@ -43,9 +43,6 @@ class BealeFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-4.5, 4.5).
-
     References
     ----------
     .. [1] Global Optimization Test Problems. Retrieved June 2013, from
@@ -60,21 +57,17 @@ class BealeFunction(AlgebraicFunction):
     True
     """
 
-    name = "Beale Function"
-    _name_ = "beale_function"
-    __name__ = "BealeFunction"
-
     _spec = {
         "convex": False,
         "unimodal": True,
         "separable": False,
         "scalable": False,
+        "default_bounds": (-4.5, 4.5),
     }
 
     f_global = 0.0
     x_global = (3.0, 0.5)
 
-    default_bounds = (-4.5, 4.5)
     n_dim = 2
 
     latex_formula = r"f(x, y) = (1.5 - x + xy)^2 + (2.25 - x + xy^2)^2 + (2.625 - x + xy^3)^2"
@@ -108,18 +101,15 @@ class BealeFunction(AlgebraicFunction):
         self.B = B
         self.C = C
 
-    def _create_objective_function(self) -> None:
-        def beale_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            loss1 = (self.A - x + x * y) ** 2
-            loss2 = (self.B - x + x * y**2) ** 2
-            loss3 = (self.C - x + x * y**3) ** 2
+        loss1 = (self.A - x + x * y) ** 2
+        loss2 = (self.B - x + x * y**2) ** 2
+        loss3 = (self.C - x + x * y**3) ** 2
 
-            return loss1 + loss2 + loss3
-
-        self.pure_objective_function = beale_function
+        return loss1 + loss2 + loss3
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

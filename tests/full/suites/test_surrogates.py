@@ -343,7 +343,7 @@ class TestSurrogateValidator:
         assert validator._surrogate_func.dataset == "iris"
         assert validator._surrogate_func.cv == 5
         assert validator._surrogate_func.objective == "minimize"
-        assert validator._surrogate_func.memory is True
+        assert validator._surrogate_func.memory.enabled is True
         assert validator._surrogate_func.collect_data is False
         assert validator._surrogate_func.use_surrogate is True  # Override
 

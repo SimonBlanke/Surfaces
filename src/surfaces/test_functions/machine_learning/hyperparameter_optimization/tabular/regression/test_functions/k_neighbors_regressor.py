@@ -3,8 +3,6 @@
 from typing import Any, Dict, List, Optional
 
 import numpy as np
-from sklearn.model_selection import cross_val_score
-from sklearn.neighbors import KNeighborsRegressor
 
 from surfaces.modifiers import BaseModifier
 
@@ -59,7 +57,6 @@ class KNeighborsRegressorFunction(BaseRegression):
 
     name = "KNeighbors Regressor Function"
     _name_ = "k_neighbors_regressor"
-    __name__ = "KNeighborsRegressorFunction"
 
     # Available options (for validation and documentation)
     available_datasets = list(DATASETS.keys())
@@ -109,29 +106,24 @@ class KNeighborsRegressorFunction(BaseRegression):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         """Search space containing only hyperparameters (not dataset/cv)."""
         return {
             "n_neighbors": self.n_neighbors_default,
             "algorithm": self.algorithm_default,
         }
 
-    def _create_objective_function(self) -> None:
-        """Create objective function with fixed dataset and cv."""
-        # Load dataset once
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
+        from sklearn.model_selection import cross_val_score
+        from sklearn.neighbors import KNeighborsRegressor
+
         X, y = self._dataset_loader()
-        cv = self.cv
-
-        def k_neighbors_regressor(params: Dict[str, Any]) -> float:
-            knr = KNeighborsRegressor(
-                n_neighbors=params["n_neighbors"],
-                algorithm=params["algorithm"],
-            )
-            scores = cross_val_score(knr, X, y, cv=cv, scoring="r2")
-            return scores.mean()
-
-        self.pure_objective_function = k_neighbors_regressor
+        knr = KNeighborsRegressor(
+            n_neighbors=params["n_neighbors"],
+            algorithm=params["algorithm"],
+        )
+        scores = cross_val_score(knr, X, y, cv=self.cv, scoring="r2")
+        return scores.mean()
 
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Add fixed parameters (dataset, cv) to params for surrogate prediction."""

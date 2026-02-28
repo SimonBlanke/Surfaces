@@ -71,8 +71,6 @@ class ConsecutiveReactionFunction(ODESimulationFunction):
     .. [1] Levenspiel, O. (1999). Chemical Reaction Engineering, 3rd ed.
     """
 
-    name = "Consecutive Reaction Function"
-
     _spec = {
         "simulation_based": True,
         "expensive": False,
@@ -101,8 +99,7 @@ class ConsecutiveReactionFunction(ODESimulationFunction):
         t_eval = np.linspace(t_span[0], t_span[1], 500)
         super().__init__(t_span=t_span, t_eval=t_eval, **kwargs)
 
-    @property
-    def search_space(self) -> Dict[str, np.ndarray]:
+    def _default_search_space(self) -> Dict[str, np.ndarray]:
         """2D search space for rate constants."""
         return {
             "k1": np.linspace(0.01, 5.0, 100),

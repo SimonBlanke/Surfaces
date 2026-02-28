@@ -120,7 +120,6 @@ class TensionCompressionSpringFunction(EngineeringFunction):
 
     name = "Tension/Compression Spring Function"
     _name_ = "tension_compression_spring_function"
-    __name__ = "TensionCompressionSpringFunction"
 
     _spec = {
         "n_dim": 3,
@@ -156,7 +155,7 @@ class TensionCompressionSpringFunction(EngineeringFunction):
             penalty_coefficient,
         )
 
-    def raw_objective(self, params: Dict[str, Any]) -> float:
+    def _raw_objective(self, params: Dict[str, Any]) -> float:
         """Calculate spring weight (proportional to wire volume)."""
         d = params["d"]
         D = params["D"]
@@ -165,7 +164,7 @@ class TensionCompressionSpringFunction(EngineeringFunction):
         weight = (N + 2) * D * d**2
         return weight
 
-    def constraints(self, params: Dict[str, Any]) -> List[float]:
+    def _constraints(self, params: Dict[str, Any]) -> List[float]:
         """Evaluate spring design constraints."""
         d = params["d"]
         D = params["D"]

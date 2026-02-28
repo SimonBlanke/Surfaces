@@ -2,49 +2,51 @@
 # Email: simon.blanke@yahoo.com
 # License: MIT License
 
-try:
-    from sklearn.neighbors import KNeighborsClassifier  # noqa: F401
+import importlib.util
 
-    _HAS_SKLEARN = True
-except ImportError:
-    _HAS_SKLEARN = False
-
-
-def _check_sklearn():
-    """Check if scikit-learn is available."""
-    if not _HAS_SKLEARN:
-        raise ImportError(
-            "Machine learning functions require scikit-learn. "
-            "Install with: pip install surfaces[ml]"
-        )
+_HAS_SKLEARN = importlib.util.find_spec("sklearn") is not None
 
 
 if _HAS_SKLEARN:
-    # Import from new hyperparameter_optimization module
+    from .ensemble_optimization import (
+        StackingEnsembleFunction,
+        VotingEnsembleFunction,
+        WeightedAveragingFunction,
+    )
+    from .feature_engineering import (
+        FeatureScalingPipelineFunction,
+        MutualInfoFeatureSelectionFunction,
+        PolynomialFeatureTransformationFunction,
+    )
     from .hyperparameter_optimization import (
         # Tabular - Classification
         DecisionTreeClassifierFunction,
         # Tabular - Regression
         DecisionTreeRegressorFunction,
+        # Image - Classification
+        DeepCNNClassifierFunction,
+        # Time-series - Forecasting
+        ExpSmoothingForecasterFunction,
         GradientBoostingClassifierFunction,
-        # Time-series
         GradientBoostingForecasterFunction,
         GradientBoostingRegressorFunction,
         KNeighborsClassifierFunction,
         KNeighborsRegressorFunction,
+        # Time-series - Classification
         KNNTSClassifierFunction,
-        # LightGBM
         LightGBMClassifierFunction,
         LightGBMRegressorFunction,
         RandomForestClassifierFunction,
         RandomForestForecasterFunction,
-        # Image
         RandomForestImageClassifierFunction,
         RandomForestRegressorFunction,
         RandomForestTSClassifierFunction,
+        SimpleCNNClassifierFunction,
         SVMClassifierFunction,
         SVMImageClassifierFunction,
         SVMRegressorFunction,
+        TSForestClassifierFunction,
+        XGBoostImageClassifierFunction,
     )
 
     __all__ = [
@@ -65,12 +67,25 @@ if _HAS_SKLEARN:
         # Time-series - Forecasting
         "GradientBoostingForecasterFunction",
         "RandomForestForecasterFunction",
+        "ExpSmoothingForecasterFunction",
         # Time-series - Classification
         "RandomForestTSClassifierFunction",
         "KNNTSClassifierFunction",
-        # Image - Classification (sklearn)
+        "TSForestClassifierFunction",
+        # Image - Classification
         "SVMImageClassifierFunction",
         "RandomForestImageClassifierFunction",
+        "SimpleCNNClassifierFunction",
+        "DeepCNNClassifierFunction",
+        "XGBoostImageClassifierFunction",
+        # Ensemble Optimization
+        "StackingEnsembleFunction",
+        "VotingEnsembleFunction",
+        "WeightedAveragingFunction",
+        # Feature Engineering
+        "FeatureScalingPipelineFunction",
+        "MutualInfoFeatureSelectionFunction",
+        "PolynomialFeatureTransformationFunction",
     ]
 
     machine_learning_functions = [
@@ -91,69 +106,26 @@ if _HAS_SKLEARN:
         # Time-series - Forecasting
         GradientBoostingForecasterFunction,
         RandomForestForecasterFunction,
+        ExpSmoothingForecasterFunction,
         # Time-series - Classification
         RandomForestTSClassifierFunction,
         KNNTSClassifierFunction,
-        # Image - Classification (sklearn)
+        TSForestClassifierFunction,
+        # Image - Classification
         SVMImageClassifierFunction,
         RandomForestImageClassifierFunction,
+        SimpleCNNClassifierFunction,
+        DeepCNNClassifierFunction,
+        XGBoostImageClassifierFunction,
+        # Ensemble Optimization
+        StackingEnsembleFunction,
+        VotingEnsembleFunction,
+        WeightedAveragingFunction,
+        # Feature Engineering
+        FeatureScalingPipelineFunction,
+        MutualInfoFeatureSelectionFunction,
+        PolynomialFeatureTransformationFunction,
     ]
-
-    # sktime-based time-series functions (require sktime)
-    try:
-        from .hyperparameter_optimization.timeseries import (
-            ExpSmoothingForecasterFunction,
-            TSForestClassifierFunction,
-        )
-
-        __all__.extend(
-            [
-                "ExpSmoothingForecasterFunction",
-                "TSForestClassifierFunction",
-            ]
-        )
-        machine_learning_functions.extend(
-            [
-                ExpSmoothingForecasterFunction,
-                TSForestClassifierFunction,
-            ]
-        )
-        _HAS_SKTIME = True
-    except ImportError:
-        _HAS_SKTIME = False
-
-    # CNN image classifiers (require tensorflow)
-    try:
-        from .hyperparameter_optimization.image import (
-            DeepCNNClassifierFunction,
-            SimpleCNNClassifierFunction,
-        )
-
-        __all__.extend(
-            [
-                "SimpleCNNClassifierFunction",
-                "DeepCNNClassifierFunction",
-            ]
-        )
-        machine_learning_functions.extend(
-            [
-                SimpleCNNClassifierFunction,
-                DeepCNNClassifierFunction,
-            ]
-        )
-        _HAS_TENSORFLOW = True
-    except ImportError:
-        _HAS_TENSORFLOW = False
-
-    # XGBoost image classifier (requires xgboost)
-    try:
-        from .hyperparameter_optimization.image import XGBoostImageClassifierFunction
-
-        __all__.append("XGBoostImageClassifierFunction")
-        machine_learning_functions.append(XGBoostImageClassifierFunction)
-        _HAS_XGBOOST = True
-    except ImportError:
-        _HAS_XGBOOST = False
 
 else:
     __all__ = []

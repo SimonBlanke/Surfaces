@@ -2,16 +2,6 @@
 
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from sklearn.ensemble import (
-    GradientBoostingClassifier,
-    RandomForestClassifier,
-    StackingClassifier,
-)
-from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import cross_val_score
-from sklearn.svm import SVC
-from sklearn.tree import DecisionTreeClassifier
-
 from surfaces.modifiers import BaseModifier
 from surfaces.test_functions.machine_learning.hyperparameter_optimization.tabular.classification.datasets import (
     DATASETS,
@@ -50,7 +40,6 @@ class StackingEnsembleFunction(BaseTabularEnsemble):
 
     name = "Stacking Ensemble"
     _name_ = "stacking_ensemble"
-    __name__ = "StackingEnsembleFunction"
 
     available_datasets = ["digits", "iris", "wine", "breast_cancer"]
     available_cv = [2, 3, 5, 10]
@@ -94,8 +83,7 @@ class StackingEnsembleFunction(BaseTabularEnsemble):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         """Search space for stacking ensemble optimization."""
         return {
             "use_dt": self.use_dt_default,
@@ -105,51 +93,47 @@ class StackingEnsembleFunction(BaseTabularEnsemble):
             "final_estimator": self.final_estimator_default,
         }
 
-    def _create_objective_function(self) -> None:
-        """Create objective function for stacking ensemble."""
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
+        from sklearn.ensemble import (
+            GradientBoostingClassifier,
+            RandomForestClassifier,
+            StackingClassifier,
+        )
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.model_selection import cross_val_score
+        from sklearn.svm import SVC
+        from sklearn.tree import DecisionTreeClassifier
+
         X, y = self._dataset_loader()
-        cv = self.cv
 
-        def objective_function(params: Dict[str, Any]) -> float:
-            # Build base estimators
-            estimators = []
+        estimators = []
 
-            if params["use_dt"]:
-                estimators.append(("dt", DecisionTreeClassifier(random_state=42)))
+        if params["use_dt"]:
+            estimators.append(("dt", DecisionTreeClassifier(random_state=42)))
 
-            if params["use_rf"]:
-                estimators.append(("rf", RandomForestClassifier(n_estimators=50, random_state=42)))
+        if params["use_rf"]:
+            estimators.append(("rf", RandomForestClassifier(n_estimators=50, random_state=42)))
 
-            if params["use_gb"]:
-                estimators.append(
-                    ("gb", GradientBoostingClassifier(n_estimators=50, random_state=42))
-                )
+        if params["use_gb"]:
+            estimators.append(("gb", GradientBoostingClassifier(n_estimators=50, random_state=42)))
 
-            if params["use_svm"]:
-                estimators.append(("svm", SVC(probability=True, random_state=42)))
+        if params["use_svm"]:
+            estimators.append(("svm", SVC(probability=True, random_state=42)))
 
-            # Need at least 2 base models for stacking
-            if len(estimators) < 2:
-                return 0.0
+        if len(estimators) < 2:
+            return 0.0
 
-            # Select final estimator (meta-learner)
-            final_est_type = params["final_estimator"]
-            if final_est_type == "lr":
-                final_estimator = LogisticRegression(max_iter=1000, random_state=42)
-            elif final_est_type == "rf":
-                final_estimator = RandomForestClassifier(n_estimators=50, random_state=42)
-            elif final_est_type == "gb":
-                final_estimator = GradientBoostingClassifier(n_estimators=50, random_state=42)
-            else:
-                raise ValueError(f"Unknown final_estimator: {final_est_type}")
+        final_est_type = params["final_estimator"]
+        if final_est_type == "lr":
+            final_estimator = LogisticRegression(max_iter=1000, random_state=42)
+        elif final_est_type == "rf":
+            final_estimator = RandomForestClassifier(n_estimators=50, random_state=42)
+        elif final_est_type == "gb":
+            final_estimator = GradientBoostingClassifier(n_estimators=50, random_state=42)
+        else:
+            raise ValueError(f"Unknown final_estimator: {final_est_type}")
 
-            # Create stacking classifier
-            ensemble = StackingClassifier(
-                estimators=estimators, final_estimator=final_estimator, cv=3
-            )
+        ensemble = StackingClassifier(estimators=estimators, final_estimator=final_estimator, cv=3)
 
-            # Evaluate
-            scores = cross_val_score(ensemble, X, y, cv=cv, scoring="accuracy")
-            return scores.mean()
-
-        self.pure_objective_function = objective_function
+        scores = cross_val_score(ensemble, X, y, cv=self.cv, scoring="accuracy")
+        return scores.mean()

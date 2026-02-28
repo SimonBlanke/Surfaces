@@ -107,6 +107,9 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "engineering: Engineering design functions")
     config.addinivalue_line("markers", "viz: Visualization tests (require plotly/matplotlib)")
     config.addinivalue_line("markers", "dashboard: Streamlit dashboard tests")
+    # Interface compliance markers
+    config.addinivalue_line("markers", "static: Tests that don't require instantiation (fast)")
+    config.addinivalue_line("markers", "instance: Tests that require class instantiation")
 
 
 def pytest_collection_modifyitems(config, items):

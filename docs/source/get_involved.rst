@@ -107,54 +107,72 @@ Please follow these guidelines:
 Adding Test Functions
 =====================
 
+Surfaces uses the **template method pattern**: public methods are fixed in
+base classes and delegate to private override points. See
+:ref:`developer_template_method` for the full architecture reference.
+
 To add a new test function:
 
-1. Create a new file in the appropriate category:
-
-   - ``test_functions/mathematical/test_functions_1d/`` for 1D functions
-   - ``test_functions/mathematical/test_functions_2d/`` for 2D functions
-   - ``test_functions/mathematical/test_functions_nd/`` for N-D functions
-
+1. Create a new file in the appropriate category
 2. Inherit from the appropriate base class
-3. Implement required methods
+3. Implement the required override point(s) for that base class
 4. Add to ``__init__.py`` exports
 5. Write tests
-6. Add documentation
 
-Example structure:
+.. list-table::
+   :header-rows: 1
+   :widths: 30 35 35
+
+   * - Base Class
+     - Required Overrides
+     - Search Space
+   * - ``AlgebraicFunction``
+     - ``_objective(params)``
+     - Automatic from ``default_bounds`` + ``n_dim``
+   * - ``EngineeringFunction``
+     - ``_raw_objective(params)``, ``_constraints(params)``
+     - Automatic from ``variable_names`` + ``variable_bounds``
+   * - ``MachineLearningFunction``
+     - ``_ml_objective(params)``, ``_default_search_space()``
+     - Built from ``para_names`` + ``*_default`` attrs
+   * - ``SimulationFunction``
+     - ``_setup_simulation()``, ``_run_simulation(params)``, ``_extract_objective(result)``, ``_default_search_space()``
+     - Explicit dict per function
+
+Example: adding an algebraic function:
 
 .. code-block:: python
 
-    from .._base_mathematical_function import MathematicalFunction
+    from surfaces.test_functions.algebraic._base_algebraic_function import AlgebraicFunction
 
-    class NewFunction(MathematicalFunction):
-        """Description of the function.
+    class NewFunction(AlgebraicFunction):
+        """Description of the function."""
 
-        Parameters
-        ----------
-        metric : str, default="loss"
-            Either "loss" (minimize) or "score" (maximize).
-        sleep : float, default=0
-            Artificial delay per evaluation.
-        """
+        _spec = {
+            "n_dim": 2,
+            "default_bounds": (-5.0, 5.0),
+            "convex": True,
+        }
 
-        default_bounds = (-5.0, 5.0)
+        f_global = 0.0
+        x_global = [0.0, 0.0]
 
-        def __init__(self, metric="loss", sleep=0):
-            super().__init__(metric=metric, sleep=sleep)
-
-        def _create_objective_function(self):
-            def objective(params):
-                x = params["x0"]
-                y = params["x1"]
-                return x**2 + y**2  # Example
-            self.pure_objective_function = objective
+        def _objective(self, params):
+            x = params["x0"]
+            y = params["x1"]
+            return x**2 + y**2
 
 Code of Conduct
 ===============
 
 Please be respectful and constructive in all interactions. We're building
 a welcoming community for everyone interested in optimization.
+
+.. seealso::
+
+   :ref:`developer_template_method`
+      Full architecture reference for the template method pattern used
+      throughout the class hierarchy.
 
 .. toctree::
    :maxdepth: 1

@@ -3,10 +3,6 @@
 from typing import Any, Dict, List, Optional
 
 import numpy as np
-from sklearn.decomposition import PCA
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import cross_val_score
-from sklearn.preprocessing import StandardScaler
 
 from surfaces.modifiers import BaseModifier
 
@@ -44,9 +40,7 @@ class RandomForestImageClassifierFunction(BaseImageClassification):
     >>> result = func({"n_estimators": 100, "max_depth": 10})
     """
 
-    name = "Random Forest Image Classifier Function"
     _name_ = "random_forest_image_classifier"
-    __name__ = "RandomForestImageClassifierFunction"
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5]
@@ -92,37 +86,34 @@ class RandomForestImageClassifierFunction(BaseImageClassification):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         """Search space containing hyperparameters."""
         return {
             "n_estimators": self.n_estimators_default,
             "max_depth": self.max_depth_default,
         }
 
-    def _create_objective_function(self) -> None:
-        """Create objective function with fixed dataset and cv."""
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
+        from sklearn.decomposition import PCA
+        from sklearn.ensemble import RandomForestClassifier
+        from sklearn.model_selection import cross_val_score
+        from sklearn.preprocessing import StandardScaler
+
         X_raw, y = self._dataset_loader()
 
-        # Apply PCA for dimensionality reduction
         scaler = StandardScaler()
         pca = PCA(n_components=self.n_components, random_state=42)
         X_scaled = scaler.fit_transform(X_raw)
         X = pca.fit_transform(X_scaled)
 
-        cv = self.cv
-
-        def random_forest_image_classifier(params: Dict[str, Any]) -> float:
-            model = RandomForestClassifier(
-                n_estimators=params["n_estimators"],
-                max_depth=params["max_depth"],
-                random_state=42,
-                n_jobs=-1,
-            )
-            scores = cross_val_score(model, X, y, cv=cv, scoring="accuracy")
-            return scores.mean()
-
-        self.pure_objective_function = random_forest_image_classifier
+        model = RandomForestClassifier(
+            n_estimators=params["n_estimators"],
+            max_depth=params["max_depth"],
+            random_state=42,
+            n_jobs=-1,
+        )
+        scores = cross_val_score(model, X, y, cv=self.cv, scoring="accuracy")
+        return scores.mean()
 
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Add fixed parameters for surrogate prediction."""

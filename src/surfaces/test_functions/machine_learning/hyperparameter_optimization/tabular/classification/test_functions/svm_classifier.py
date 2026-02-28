@@ -2,9 +2,6 @@
 
 from typing import Any, Dict, List, Optional
 
-from sklearn.model_selection import cross_val_score
-from sklearn.svm import SVC
-
 from surfaces.modifiers import BaseModifier
 
 from .._base_classification import BaseClassification
@@ -24,9 +21,7 @@ class SVMClassifierFunction(BaseClassification):
         If True, use pre-trained surrogate for fast evaluation.
     """
 
-    name = "SVM Classifier Function"
     _name_ = "svm_classifier"
-    __name__ = "SVMClassifierFunction"
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]
@@ -67,29 +62,26 @@ class SVMClassifierFunction(BaseClassification):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         return {
             "C": self.C_default,
             "kernel": self.kernel_default,
             "gamma": self.gamma_default,
         }
 
-    def _create_objective_function(self) -> None:
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
+        from sklearn.model_selection import cross_val_score
+        from sklearn.svm import SVC
+
         X, y = self._dataset_loader()
-        cv = self.cv
-
-        def objective(params: Dict[str, Any]) -> float:
-            clf = SVC(
-                C=params["C"],
-                kernel=params["kernel"],
-                gamma=params["gamma"],
-                random_state=42,
-            )
-            scores = cross_val_score(clf, X, y, cv=cv, scoring="accuracy")
-            return scores.mean()
-
-        self.pure_objective_function = objective
+        clf = SVC(
+            C=params["C"],
+            kernel=params["kernel"],
+            gamma=params["gamma"],
+            random_state=42,
+        )
+        scores = cross_val_score(clf, X, y, cv=self.cv, scoring="accuracy")
+        return scores.mean()
 
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         return {**params, "dataset": self.dataset, "cv": self.cv}

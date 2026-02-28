@@ -2,23 +2,11 @@
 
 from typing import Any, Dict, List, Optional
 
+from surfaces._dependencies import check_dependency
 from surfaces.modifiers import BaseModifier
 
 from .._base_forecasting import BaseForecasting
 from ..datasets import DATASETS
-
-
-def _check_sktime():
-    """Check if sktime is available."""
-    try:
-        import sktime  # noqa: F401
-
-        return True
-    except ImportError:
-        raise ImportError(
-            "Exponential Smoothing forecaster requires sktime. "
-            "Install with: pip install surfaces[timeseries]"
-        )
 
 
 class ExpSmoothingForecasterFunction(BaseForecasting):
@@ -51,7 +39,6 @@ class ExpSmoothingForecasterFunction(BaseForecasting):
 
     name = "Exponential Smoothing Forecaster Function"
     _name_ = "exp_smoothing_forecaster"
-    __name__ = "ExpSmoothingForecasterFunction"
 
     available_datasets = list(DATASETS.keys())
 
@@ -73,7 +60,7 @@ class ExpSmoothingForecasterFunction(BaseForecasting):
         catch_errors=None,
         use_surrogate: bool = False,
     ):
-        _check_sktime()
+        check_dependency("sktime", "timeseries")
 
         if dataset not in DATASETS:
             raise ValueError(
@@ -94,8 +81,7 @@ class ExpSmoothingForecasterFunction(BaseForecasting):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         """Search space containing hyperparameters."""
         return {
             "trend": self.trend_default,
@@ -103,47 +89,37 @@ class ExpSmoothingForecasterFunction(BaseForecasting):
             "sp": self.sp_default,
         }
 
-    def _create_objective_function(self) -> None:
-        """Create objective function with fixed dataset."""
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
         import pandas as pd
         from sktime.forecasting.exp_smoothing import ExponentialSmoothing
         from sktime.performance_metrics.forecasting import mean_absolute_percentage_error
 
         _, y_raw = self._dataset_loader()
-        forecast_horizon = self.forecast_horizon
 
-        # Convert to pandas Series with proper index for sktime
         y = pd.Series(y_raw, index=pd.RangeIndex(start=0, stop=len(y_raw)))
 
-        # Train/test split
-        train_size = len(y) - forecast_horizon
+        train_size = len(y) - self.forecast_horizon
         y_train = y[:train_size]
         y_test = y[train_size:]
 
-        def exp_smoothing_forecaster(params: Dict[str, Any]) -> float:
-            try:
-                forecaster = ExponentialSmoothing(
-                    trend=params["trend"],
-                    seasonal=params["seasonal"],
-                    sp=params["sp"] if params["seasonal"] is not None else None,
-                    random_state=42,
-                )
+        try:
+            forecaster = ExponentialSmoothing(
+                trend=params["trend"],
+                seasonal=params["seasonal"],
+                sp=params["sp"] if params["seasonal"] is not None else None,
+                random_state=42,
+            )
 
-                forecaster.fit(y_train)
-                fh = list(range(1, forecast_horizon + 1))
-                y_pred = forecaster.predict(fh=fh)
+            forecaster.fit(y_train)
+            fh = list(range(1, self.forecast_horizon + 1))
+            y_pred = forecaster.predict(fh=fh)
 
-                # Calculate MAPE and convert to score (1 - MAPE)
-                mape = mean_absolute_percentage_error(y_test, y_pred, symmetric=False)
-                # Clamp score to [0, 1] range
-                score = max(0.0, 1.0 - mape)
-                return score
+            mape = mean_absolute_percentage_error(y_test, y_pred, symmetric=False)
+            score = max(0.0, 1.0 - mape)
+            return score
 
-            except Exception:
-                # Invalid parameter combinations return low score
-                return 0.0
-
-        self.pure_objective_function = exp_smoothing_forecaster
+        except Exception:
+            return 0.0
 
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Add fixed parameters for surrogate prediction."""

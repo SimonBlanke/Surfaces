@@ -36,9 +36,6 @@ class BukinFunctionN6(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-8.0, 8.0).
-
     Examples
     --------
     >>> from surfaces.test_functions import BukinFunctionN6
@@ -49,8 +46,6 @@ class BukinFunctionN6(AlgebraicFunction):
     """
 
     name = "Bukin Function N6"
-    _name_ = "bukin_function_n6"
-    __name__ = "BukinFunctionN6"
 
     _spec = {
         "convex": False,
@@ -58,12 +53,12 @@ class BukinFunctionN6(AlgebraicFunction):
         "separable": False,
         "scalable": False,
         "differentiable": False,
+        "default_bounds": (-8.0, 8.0),
     }
 
     f_global = 0.0
     x_global = (-10.0, 1.0)
 
-    default_bounds = (-8.0, 8.0)
     n_dim = 2
 
     latex_formula = r"f(x, y) = 100\sqrt{|y - 0.01x^2|} + 0.01|x + 10|"
@@ -90,14 +85,11 @@ class BukinFunctionN6(AlgebraicFunction):
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 2
 
-    def _create_objective_function(self) -> None:
-        def bukin_function_n6(params):
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            return 100 * math.sqrt(abs(y - 0.01 * x**2)) + 0.01 * abs(x + 10)
-
-        self.pure_objective_function = bukin_function_n6
+        return 100 * math.sqrt(abs(y - 0.01 * x**2)) + 0.01 * abs(x + 10)
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

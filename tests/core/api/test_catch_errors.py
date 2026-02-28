@@ -15,18 +15,15 @@ from surfaces.test_functions.algebraic.constrained import CantileverBeamFunction
 class FailingSphereFunction(SphereFunction):
     """Test function that raises different errors based on input."""
 
-    def _create_objective_function(self):
-        def failing_func(params):
-            x = params["x0"]
-            if x < -10:
-                raise RuntimeError("x0 too negative")
-            if x < 0:
-                raise ValueError("x0 must be non-negative")
-            if x == 0:
-                return 1 / x  # ZeroDivisionError
-            return sum(params[f"x{i}"] ** 2 for i in range(self.n_dim))
-
-        self.pure_objective_function = failing_func
+    def _objective(self, params):
+        x = params["x0"]
+        if x < -10:
+            raise RuntimeError("x0 too negative")
+        if x < 0:
+            raise ValueError("x0 must be non-negative")
+        if x == 0:
+            return 1 / x  # ZeroDivisionError
+        return sum(params[f"x{i}"] ** 2 for i in range(self.n_dim))
 
 
 class TestCatchErrorsBasic:
@@ -35,7 +32,7 @@ class TestCatchErrorsBasic:
     def test_catch_errors_default_none(self):
         """By default, catch_errors is None (disabled)."""
         func = FailingSphereFunction(n_dim=2)
-        assert func.catch_errors is None
+        assert func._error_handlers is None
 
     def test_error_propagates_when_disabled(self):
         """Errors propagate when catch_errors is None."""
@@ -157,8 +154,8 @@ class TestCatchErrorsWithDataCollection:
 
         func({"x0": -1.0, "x1": 0.0})
 
-        assert len(func.search_data) == 1
-        assert func.search_data[0]["score"] == 999.0
+        assert len(func.data.search_data) == 1
+        assert func.data.search_data[0]["score"] == 999.0
 
     def test_error_does_not_become_best_for_minimize(self):
         """High error return values don't become best_score for minimize."""
@@ -170,8 +167,8 @@ class TestCatchErrorsWithDataCollection:
         func({"x0": 1.0, "x1": 1.0})  # Normal: score = 2.0
         func({"x0": -1.0, "x1": 0.0})  # Error: score = inf
 
-        assert func.best_score == 2.0
-        assert func.n_evaluations == 2
+        assert func.data.best_score == 2.0
+        assert func.data.n_evaluations == 2
 
 
 class TestCatchErrorsWithMemory:
@@ -221,11 +218,8 @@ class TestCatchErrorsInheritance:
             pass
 
         class SubclassErrorFunc(SphereFunction):
-            def _create_objective_function(self):
-                def func(params):
-                    raise CustomValueError("custom error")
-
-                self.pure_objective_function = func
+            def _objective(self, params):
+                raise CustomValueError("custom error")
 
         func = SubclassErrorFunc(
             n_dim=2,
@@ -243,11 +237,8 @@ class TestCatchErrorsInheritance:
             pass
 
         class MultiMatchFunc(SphereFunction):
-            def _create_objective_function(self):
-                def func(params):
-                    raise SpecificError("specific")
-
-                self.pure_objective_function = func
+            def _objective(self, params):
+                raise SpecificError("specific")
 
         # Note: dict iteration order is preserved in Python 3.7+
         func = MultiMatchFunc(
@@ -340,4 +331,4 @@ class TestCatchErrorsWithEngineeringFunctions:
         func = CantileverBeamFunction(
             catch_errors={ValueError: float("inf")},
         )
-        assert func.catch_errors == {ValueError: float("inf")}
+        assert func._error_handlers == {ValueError: float("inf")}

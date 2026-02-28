@@ -43,46 +43,40 @@ class Schwefel(BBOBFunction):
         sign_vector = np.where(self._rng.rand(self.n_dim) > 0.5, 1, -1)
         return 4.2096874633 / 2 * sign_vector
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         Lambda = self.lambda_alpha(10)
         abs_x_opt = np.abs(self.x_opt)  # = 4.2096874633/2 for all dimensions
+        x = self._params_to_array(params)
+        D = self.n_dim
 
-        def schwefel(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            D = self.n_dim
+        # Step 1: x_hat = 2 * sign(x_opt) * x
+        x_hat = 2 * np.sign(self.x_opt) * x
 
-            # Step 1: x_hat = 2 * sign(x_opt) * x
-            x_hat = 2 * np.sign(self.x_opt) * x
+        # Step 2: Sequential coupling (makes function non-separable)
+        # z_hat[0] = x_hat[0]
+        # z_hat[i+1] = x_hat[i+1] + 0.25 * (x_hat[i] - 2*|x_opt[i]|)
+        z_hat = np.zeros(D)
+        z_hat[0] = x_hat[0]
+        for i in range(D - 1):
+            z_hat[i + 1] = x_hat[i + 1] + 0.25 * (x_hat[i] - 2 * abs_x_opt[i])
 
-            # Step 2: Sequential coupling (makes function non-separable)
-            # z_hat[0] = x_hat[0]
-            # z_hat[i+1] = x_hat[i+1] + 0.25 * (x_hat[i] - 2*|x_opt[i]|)
-            z_hat = np.zeros(D)
-            z_hat[0] = x_hat[0]
-            for i in range(D - 1):
-                z_hat[i + 1] = x_hat[i + 1] + 0.25 * (x_hat[i] - 2 * abs_x_opt[i])
+        # Step 3: z = 100 * (Lambda @ (z_hat - 2*|x_opt|) + 2*|x_opt|)
+        z = 100 * (Lambda @ (z_hat - 2 * abs_x_opt) + 2 * abs_x_opt)
 
-            # Step 3: z = 100 * (Lambda @ (z_hat - 2*|x_opt|) + 2*|x_opt|)
-            z = 100 * (Lambda @ (z_hat - 2 * abs_x_opt) + 2 * abs_x_opt)
+        # Schwefel function: -1/(100*D) * sum(z * sin(sqrt(|z|)))
+        result = 0.0
+        for i in range(D):
+            zi = z[i]
+            if np.abs(zi) <= 500:
+                result += zi * np.sin(np.sqrt(np.abs(zi)))
+            else:
+                # Penalty for out-of-bounds
+                result += (500 - np.abs(zi) % 500) * np.sin(np.sqrt(np.abs(500 - np.abs(zi) % 500)))
+                result -= (zi - 500) ** 2 / (10000 * D) * np.sign(zi)
 
-            # Schwefel function: -1/(100*D) * sum(z * sin(sqrt(|z|)))
-            result = 0.0
-            for i in range(D):
-                zi = z[i]
-                if np.abs(zi) <= 500:
-                    result += zi * np.sin(np.sqrt(np.abs(zi)))
-                else:
-                    # Penalty for out-of-bounds
-                    result += (500 - np.abs(zi) % 500) * np.sin(
-                        np.sqrt(np.abs(500 - np.abs(zi) % 500))
-                    )
-                    result -= (zi - 500) ** 2 / (10000 * D) * np.sign(zi)
-
-            result = -result / (100 * D)
-            # Penalty applies to z/100 per COCO, but simplified here
-            return result + 4.189828872724339 + 100 * self.f_pen(z / 100) + self.f_opt
-
-        self.pure_objective_function = schwefel
+        result = -result / (100 * D)
+        # Penalty applies to z/100 per COCO, but simplified here
+        return result + 4.189828872724339 + 100 * self.f_pen(z / 100) + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -185,21 +179,18 @@ class Gallagher101(BBOBFunction):
             C = np.diag(diag / np.power(self._alpha[k], 0.25))
             self._C.append(self.R.T @ C @ self.R)
 
-    def _create_objective_function(self) -> None:
-        def gallagher(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
 
-            max_val = 0
-            for k in range(len(self._w)):
-                diff = x - self._y[k]
-                exponent = -0.5 / self.n_dim * diff @ self._C[k] @ diff
-                val = self._w[k] * np.exp(exponent)
-                max_val = max(max_val, val)
+        max_val = 0
+        for k in range(len(self._w)):
+            diff = x - self._y[k]
+            exponent = -0.5 / self.n_dim * diff @ self._C[k] @ diff
+            val = self._w[k] * np.exp(exponent)
+            max_val = max(max_val, val)
 
-            result = self.t_osz(10 - max_val) ** 2
-            return result + self.f_pen(x) + self.f_opt
-
-        self.pure_objective_function = gallagher
+        result = self.t_osz(10 - max_val) ** 2
+        return result + self.f_pen(x) + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -286,21 +277,18 @@ class Gallagher21(BBOBFunction):
             C = np.diag(diag / np.power(self._alpha[k], 0.25))
             self._C.append(self.R.T @ C @ self.R)
 
-    def _create_objective_function(self) -> None:
-        def gallagher(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
 
-            max_val = 0
-            for k in range(len(self._w)):
-                diff = x - self._y[k]
-                exponent = -0.5 / self.n_dim * diff @ self._C[k] @ diff
-                val = self._w[k] * np.exp(exponent)
-                max_val = max(max_val, val)
+        max_val = 0
+        for k in range(len(self._w)):
+            diff = x - self._y[k]
+            exponent = -0.5 / self.n_dim * diff @ self._C[k] @ diff
+            val = self._w[k] * np.exp(exponent)
+            max_val = max(max_val, val)
 
-            result = self.t_osz(10 - max_val) ** 2
-            return result + self.f_pen(x) + self.f_opt
-
-        self.pure_objective_function = gallagher
+        result = self.t_osz(10 - max_val) ** 2
+        return result + self.f_pen(x) + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -348,26 +336,22 @@ class Katsuura(BBOBFunction):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         Lambda = self.lambda_alpha(100)
+        x = self._params_to_array(params)
+        z = self.Q @ Lambda @ self.R @ (x - self.x_opt)
 
-        def katsuura(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self.Q @ Lambda @ self.R @ (x - self.x_opt)
+        D = self.n_dim
+        result = 1.0
 
-            D = self.n_dim
-            result = 1.0
+        for i in range(D):
+            inner_sum = 0.0
+            for j in range(1, 33):
+                inner_sum += np.abs(2**j * z[i] - np.round(2**j * z[i])) / (2**j)
+            result *= (1 + (i + 1) * inner_sum) ** (10 / D**1.2)
 
-            for i in range(D):
-                inner_sum = 0.0
-                for j in range(1, 33):
-                    inner_sum += np.abs(2**j * z[i] - np.round(2**j * z[i])) / (2**j)
-                result *= (1 + (i + 1) * inner_sum) ** (10 / D**1.2)
-
-            result = 10 / (D**2) * result - 10 / (D**2)
-            return result + self.f_pen(x) + self.f_opt
-
-        self.pure_objective_function = katsuura
+        result = 10 / (D**2) * result - 10 / (D**2)
+        return result + self.f_pen(x) + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -427,33 +411,29 @@ class LunacekBiRastrigin(BBOBFunction):
         """Generate x_opt with special structure."""
         return 0.5 * 2.5 * np.where(self._rng.rand(self.n_dim) > 0.5, 1, -1)
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         mu0 = 2.5
         D = self.n_dim
         s = 1 - 1 / (2 * np.sqrt(D + 20) - 8.2)
         mu1 = -np.sqrt((mu0**2 - 1) / s)
 
         Lambda = self.lambda_alpha(100)
+        x = self._params_to_array(params)
 
-        def lunacek_bi_rastrigin(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
+        # Transform x
+        x_hat = 2 * np.sign(self.x_opt) * x
+        x_tilde = x_hat - mu0
 
-            # Transform x
-            x_hat = 2 * np.sign(self.x_opt) * x
-            x_tilde = x_hat - mu0
+        # Sum terms
+        sum1 = np.sum((x_tilde) ** 2)
+        sum2 = D + s * np.sum((x_hat - mu1) ** 2)
 
-            # Sum terms
-            sum1 = np.sum((x_tilde) ** 2)
-            sum2 = D + s * np.sum((x_hat - mu1) ** 2)
+        # Apply rotation for cosine term
+        z = self.Q @ Lambda @ self.R @ x_tilde
+        sum3 = np.sum(np.cos(2 * np.pi * z))
 
-            # Apply rotation for cosine term
-            z = self.Q @ Lambda @ self.R @ x_tilde
-            sum3 = np.sum(np.cos(2 * np.pi * z))
-
-            result = min(sum1, sum2) + 10 * (D - sum3)
-            return result + 1e4 * self.f_pen(x) + self.f_opt
-
-        self.pure_objective_function = lunacek_bi_rastrigin
+        result = min(sum1, sum2) + 10 * (D - sum3)
+        return result + 1e4 * self.f_pen(x) + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""

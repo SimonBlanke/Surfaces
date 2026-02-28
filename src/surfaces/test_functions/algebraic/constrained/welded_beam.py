@@ -125,10 +125,6 @@ class WeldedBeamFunction(EngineeringFunction):
     >>> violations = func.constraint_violations({"h": 0.2, "l": 3.5, "t": 9.0, "b": 0.2})
     """
 
-    name = "Welded Beam Function"
-    _name_ = "welded_beam_function"
-    __name__ = "WeldedBeamFunction"
-
     _spec = {
         "n_dim": 4,
         "convex": False,
@@ -177,7 +173,7 @@ class WeldedBeamFunction(EngineeringFunction):
             penalty_coefficient,
         )
 
-    def raw_objective(self, params: Dict[str, Any]) -> float:
+    def _raw_objective(self, params: Dict[str, Any]) -> float:
         """Calculate fabrication cost."""
         h = params["h"]
         weld_len = params["l"]
@@ -219,7 +215,7 @@ class WeldedBeamFunction(EngineeringFunction):
 
         return tau, sigma
 
-    def constraints(self, params: Dict[str, Any]) -> List[float]:
+    def _constraints(self, params: Dict[str, Any]) -> List[float]:
         """Evaluate design constraints."""
         h = params["h"]
         t = params["t"]

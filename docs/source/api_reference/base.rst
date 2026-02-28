@@ -1,8 +1,8 @@
 .. _api_base:
 
-============
-Base Classes
-============
+========================
+Base Classes & Interface
+========================
 
 .. include:: ../_generated/diagrams/base_classes_overview.rst
 

@@ -9,9 +9,9 @@ These tests verify the 2D plot functionality through the accessor pattern.
 
 import pytest
 
+from surfaces._visualize._param_resolver import resolve_params
 from surfaces.test_functions.algebraic.standard.test_functions_2d import AckleyFunction
 from surfaces.test_functions.algebraic.standard.test_functions_nd import SphereFunction
-from surfaces.visualize._param_resolver import resolve_params
 
 
 class TestSurfacePlotParamResolution:
@@ -235,10 +235,6 @@ class TestMLFunctionWith2DPlots:
             return RandomForestRegressorFunction(use_surrogate=True)
         except ImportError:
             pytest.skip("ML dependencies not installed")
-
-    def test_ml_function_default_plot_dims(self, ml_func):
-        """ML function has correct default plot dimensions."""
-        assert ml_func.default_plot_dims == ["n_estimators", "max_depth"]
 
     def test_ml_function_param_resolution(self, ml_func):
         """Param resolution works with ML dimension names."""

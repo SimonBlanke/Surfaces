@@ -160,13 +160,12 @@ class CustomTestFunction(BaseTestFunction):
                 )
         return normalized
 
-    def _create_objective_function(self) -> None:
-        """Set the pure objective function from user-provided callable."""
-        self.pure_objective_function = self._user_objective_fn
+    def _objective(self, params: Dict[str, Any]) -> float:
+        """Delegate to user-provided objective function."""
+        return self._user_objective_fn(params)
 
-    @property
-    def search_space(self) -> Dict[str, np.ndarray]:
-        """Search space for this function."""
+    def _default_search_space(self) -> Dict[str, np.ndarray]:
+        """Return the user-provided search space."""
         return self._search_space
 
     @property

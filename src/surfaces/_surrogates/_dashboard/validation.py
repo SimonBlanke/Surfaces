@@ -129,7 +129,7 @@ def validate_surrogate(
             try:
                 # Real evaluation
                 start = time.time()
-                real = real_func.pure_objective_function(params)
+                real = real_func._objective(params)
                 real_time = time.time() - start
 
                 if np.isnan(real):

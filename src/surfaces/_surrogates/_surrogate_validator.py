@@ -14,7 +14,7 @@ Architecture Overview
 The validator works with ML functions that have two evaluation modes:
 
 1. **Real evaluation** (use_surrogate=False):
-   - Calls `pure_objective_function(params)` which performs actual ML training
+   - Calls `_objective(params)` which performs actual ML training
    - `params` contains only hyperparameters (e.g., n_neighbors, algorithm)
    - Fixed parameters (dataset, cv) are bound at function construction time
 
@@ -30,7 +30,7 @@ Data Flow
 
     # Real evaluation path:
     params (hyperparams only)
-        -> function.pure_objective_function(params)
+        -> function._objective(params)
         -> actual ML training with bound dataset/cv
         -> real score
 
@@ -140,7 +140,7 @@ class SurrogateValidator:
 
     **Evaluation paths**:
 
-    - Real: ``pure_objective_function(params)`` - direct ML training
+    - Real: ``_objective(params)`` - direct ML training
     - Surrogate: ``function(params)`` - routes through ``_evaluate()`` which
       calls ``_get_surrogate_params()`` to add fixed params before querying
       the ONNX model
@@ -206,6 +206,16 @@ class SurrogateValidator:
         if not self._surrogate_func.use_surrogate:
             raise ValueError(f"No surrogate model available for {func_class.__name__}")
 
+    # Map init param names to their private attribute names.
+    # These params now have accessor properties that return proxy objects
+    # rather than the raw values expected by __init__.
+    _ACCESSOR_RAW_ATTRS = {
+        "memory": "_memory_enabled",
+        "callbacks": "_callbacks",
+        "modifiers": "_modifiers",
+        "catch_errors": "_error_handlers",
+    }
+
     def _extract_init_params(self, function) -> Dict[str, Any]:
         """Extract initialization parameters from a function instance.
 
@@ -246,8 +256,13 @@ class SurrogateValidator:
             if param_name in ("self", "use_surrogate"):
                 continue
 
-            # Check if the instance has this attribute
-            if hasattr(function, param_name):
+            # Some init params now have accessor properties; read the
+            # underlying private attribute to get the raw value.
+            raw_attr = self._ACCESSOR_RAW_ATTRS.get(param_name)
+            if raw_attr is not None:
+                if hasattr(function, raw_attr):
+                    init_params[param_name] = getattr(function, raw_attr)
+            elif hasattr(function, param_name):
                 init_params[param_name] = getattr(function, param_name)
 
         return init_params
@@ -423,7 +438,7 @@ class SurrogateValidator:
         -----
         **Evaluation strategy**:
 
-        - Real evaluation calls ``function.pure_objective_function(params)``
+        - Real evaluation calls ``function._objective(params)``
           which directly invokes the ML training with the function's bound
           fixed parameters (dataset, cv).
 
@@ -456,7 +471,7 @@ class SurrogateValidator:
             # The function uses its bound fixed params (dataset, cv)
             start = time.time()
             try:
-                real = self.function.pure_objective_function(params)
+                real = self.function._objective(params)
                 real_time = time.time() - start
 
                 if np.isnan(real):

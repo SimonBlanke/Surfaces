@@ -10,7 +10,7 @@ Technical documentation for all classes and functions in Surfaces.
    :maxdepth: 3
 
    api_reference/base
+   api_reference/namespaces/index
    api_reference/test_functions/index
    api_reference/presets
    api_reference/noise
-   api_reference/visualization

@@ -72,8 +72,6 @@ class DampedOscillatorFunction(ODESimulationFunction):
     .. [1] Thomson, W.T. (1993). Theory of Vibration with Applications.
     """
 
-    name = "Damped Oscillator Function"
-
     _spec = {
         "simulation_based": True,
         "expensive": False,
@@ -103,8 +101,7 @@ class DampedOscillatorFunction(ODESimulationFunction):
         t_eval = np.linspace(t_span[0], t_span[1], 1000)
         super().__init__(t_span=t_span, t_eval=t_eval, **kwargs)
 
-    @property
-    def search_space(self) -> Dict[str, np.ndarray]:
+    def _default_search_space(self) -> Dict[str, np.ndarray]:
         """2D search space for oscillator parameters."""
         return {
             "damping": np.linspace(0.1, 10.0, 100),

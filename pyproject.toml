@@ -133,6 +133,26 @@ surfaces-dashboard = "surfaces._surrogates._dashboard:run_dashboard"
 "Source" = "https://github.com/SimonBlanke/Surfaces/"
 
 # =============================================================================
+# Coverage Configuration
+# =============================================================================
+[tool.coverage.run]
+source = ["surfaces"]
+omit = [
+    "src/surfaces/_visualize.py",
+    "src/surfaces/_surrogates/_dashboard/*",
+    "src/surfaces/_surrogates/_surrogate_trainer.py",
+    "src/surfaces/_surrogates/_ml_surrogate_trainer.py",
+    "src/surfaces/_surrogates/_surrogate_validator.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "if __name__ ==",
+]
+
+# =============================================================================
 # Ruff Configuration
 # =============================================================================
 [tool.ruff]

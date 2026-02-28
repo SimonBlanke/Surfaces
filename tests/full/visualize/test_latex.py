@@ -12,13 +12,13 @@ import tempfile
 
 import pytest
 
+from surfaces._visualize._errors import PlotCompatibilityError
 from surfaces.test_functions.algebraic import (
     AckleyFunction,
     RastriginFunction,
     RosenbrockFunction,
     SphereFunction,
 )
-from surfaces.visualize._errors import PlotCompatibilityError
 
 
 class TestLatexBasic:

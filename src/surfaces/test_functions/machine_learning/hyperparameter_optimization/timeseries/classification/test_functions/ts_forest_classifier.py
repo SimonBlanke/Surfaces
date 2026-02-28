@@ -2,23 +2,11 @@
 
 from typing import Any, Dict, List, Optional
 
+from surfaces._dependencies import check_dependency
 from surfaces.modifiers import BaseModifier
 
 from .._base_ts_classification import BaseTSClassification
 from ..datasets import DATASETS
-
-
-def _check_sktime():
-    """Check if sktime is available."""
-    try:
-        import sktime  # noqa: F401
-
-        return True
-    except ImportError:
-        raise ImportError(
-            "Time Series Forest classifier requires sktime. "
-            "Install with: pip install surfaces[timeseries]"
-        )
 
 
 class TSForestClassifierFunction(BaseTSClassification):
@@ -51,7 +39,6 @@ class TSForestClassifierFunction(BaseTSClassification):
 
     name = "Time Series Forest Classifier Function"
     _name_ = "ts_forest_classifier"
-    __name__ = "TSForestClassifierFunction"
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5]
@@ -73,7 +60,7 @@ class TSForestClassifierFunction(BaseTSClassification):
         catch_errors=None,
         use_surrogate: bool = False,
     ):
-        _check_sktime()
+        check_dependency("sktime", "timeseries")
 
         if dataset not in DATASETS:
             raise ValueError(
@@ -97,39 +84,31 @@ class TSForestClassifierFunction(BaseTSClassification):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         """Search space containing hyperparameters."""
         return {
             "n_estimators": self.n_estimators_default,
             "min_interval": self.min_interval_default,
         }
 
-    def _create_objective_function(self) -> None:
-        """Create objective function with fixed dataset and cv."""
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
         from sklearn.model_selection import cross_val_score
         from sktime.classification.interval_based import TimeSeriesForestClassifier
 
         X_raw, y = self._dataset_loader()
-        cv = self.cv
 
         # sktime expects 3D array: (n_samples, n_channels, n_timepoints)
-        # Our data is 2D: (n_samples, n_timepoints)
-        # Reshape to add channel dimension
         X = X_raw.reshape(X_raw.shape[0], 1, X_raw.shape[1])
 
-        def ts_forest_classifier(params: Dict[str, Any]) -> float:
-            model = TimeSeriesForestClassifier(
-                n_estimators=params["n_estimators"],
-                min_interval=params["min_interval"],
-                random_state=42,
-                n_jobs=-1,
-            )
+        model = TimeSeriesForestClassifier(
+            n_estimators=params["n_estimators"],
+            min_interval=params["min_interval"],
+            random_state=42,
+            n_jobs=-1,
+        )
 
-            scores = cross_val_score(model, X, y, cv=cv, scoring="accuracy")
-            return scores.mean()
-
-        self.pure_objective_function = ts_forest_classifier
+        scores = cross_val_score(model, X, y, cv=self.cv, scoring="accuracy")
+        return scores.mean()
 
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Add fixed parameters for surrogate prediction."""

@@ -46,9 +46,6 @@ class EasomFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-10.0, 10.0).
-
     Examples
     --------
     >>> from surfaces.test_functions import EasomFunction
@@ -59,21 +56,17 @@ class EasomFunction(AlgebraicFunction):
     True
     """
 
-    name = "Easom Function"
-    _name_ = "easom_function"
-    __name__ = "EasomFunction"
-
     _spec = {
         "convex": False,
         "unimodal": True,
         "separable": True,
         "scalable": False,
+        "default_bounds": (-10.0, 10.0),
     }
 
     f_global = -1.0
     x_global = (math.pi, math.pi)
 
-    default_bounds = (-10.0, 10.0)
     n_dim = 2
 
     latex_formula = r"f(x, y) = -\cos(x)\cos(y)\exp\left[-(x - \pi)^2 - (y - \pi)^2\right]"
@@ -107,17 +100,14 @@ class EasomFunction(AlgebraicFunction):
         self.B = B
         self.angle = angle
 
-    def _create_objective_function(self) -> None:
-        def easom_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            loss1 = self.A * math.cos(x * self.angle) * math.cos(y * self.angle)
-            loss2 = math.exp(-((x - math.pi / self.B) ** 2 + (y - math.pi / self.B) ** 2))
+        loss1 = self.A * math.cos(x * self.angle) * math.cos(y * self.angle)
+        loss2 = math.exp(-((x - math.pi / self.B) ** 2 + (y - math.pi / self.B) ** 2))
 
-            return loss1 * loss2
-
-        self.pure_objective_function = easom_function
+        return loss1 * loss2
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

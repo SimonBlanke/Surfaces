@@ -41,21 +41,17 @@ class LangermannFunction(AlgebraicFunction):
     >>> result = func({"x0": 0.0, "x1": 0.0})
     """
 
-    name = "Langermann Function"
-    _name_ = "langermann_function"
-    __name__ = "LangermannFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,
         "separable": False,
         "scalable": False,
+        "default_bounds": (-15.0, 15.0),
     }
 
     f_global = None  # Complex to determine analytically
     x_global = None
 
-    default_bounds = (-15.0, 15.0)
     n_dim = 2
 
     latex_formula = r"f(x, y) = \sum_{i=1}^{m} c_i \exp\left(-\frac{1}{\pi}\sum_{j=1}^{2}(x_j - A_{ji})^2\right) \cos\left(\pi\sum_{j=1}^{2}(x_j - A_{ji})^2\right)"
@@ -86,28 +82,25 @@ class LangermannFunction(AlgebraicFunction):
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 2
 
-    def _create_objective_function(self) -> None:
-        def langermann_function(params: Dict[str, Any]) -> float:
-            loss_sum1 = 0
+    def _objective(self, params: Dict[str, Any]) -> float:
+        loss_sum1 = 0
 
-            for m in range(self.m):
-                loss_sum1 += self.c[m]
+        for m in range(self.m):
+            loss_sum1 += self.c[m]
 
-                loss_sum2 = 0
-                loss_sum3 = 0
-                for dim in range(self.n_dim):
-                    dim_str = "x" + str(dim)
-                    x = params[dim_str]
+            loss_sum2 = 0
+            loss_sum3 = 0
+            for dim in range(self.n_dim):
+                dim_str = "x" + str(dim)
+                x = params[dim_str]
 
-                    loss_sum2 += x - self.A[dim][m]
-                    loss_sum3 += x - self.A[dim][m]
+                loss_sum2 += x - self.A[dim][m]
+                loss_sum3 += x - self.A[dim][m]
 
-                loss_sum2 *= -1 / math.pi
-                loss_sum3 *= math.pi
+            loss_sum2 *= -1 / math.pi
+            loss_sum3 *= math.pi
 
-            return loss_sum1 * math.exp(loss_sum2) * math.cos(loss_sum3)
-
-        self.pure_objective_function = langermann_function
+        return loss_sum1 * math.exp(loss_sum2) * math.cos(loss_sum3)
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

@@ -2,11 +2,6 @@
 
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier, VotingClassifier
-from sklearn.model_selection import cross_val_score
-from sklearn.svm import SVC
-from sklearn.tree import DecisionTreeClassifier
-
 from surfaces.modifiers import BaseModifier
 from surfaces.test_functions.machine_learning.hyperparameter_optimization.tabular.classification.datasets import (
     DATASETS,
@@ -45,7 +40,6 @@ class VotingEnsembleFunction(BaseTabularEnsemble):
 
     name = "Voting Ensemble"
     _name_ = "voting_ensemble"
-    __name__ = "VotingEnsembleFunction"
 
     available_datasets = ["digits", "iris", "wine", "breast_cancer"]
     available_cv = [2, 3, 5, 10]
@@ -89,8 +83,7 @@ class VotingEnsembleFunction(BaseTabularEnsemble):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         """Search space for voting ensemble optimization."""
         return {
             "use_dt": self.use_dt_default,
@@ -100,38 +93,36 @@ class VotingEnsembleFunction(BaseTabularEnsemble):
             "voting": self.voting_default,
         }
 
-    def _create_objective_function(self) -> None:
-        """Create objective function for voting ensemble."""
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
+        from sklearn.ensemble import (
+            GradientBoostingClassifier,
+            RandomForestClassifier,
+            VotingClassifier,
+        )
+        from sklearn.model_selection import cross_val_score
+        from sklearn.svm import SVC
+        from sklearn.tree import DecisionTreeClassifier
+
         X, y = self._dataset_loader()
-        cv = self.cv
 
-        def objective_function(params: Dict[str, Any]) -> float:
-            # Build ensemble
-            estimators = []
+        estimators = []
 
-            if params["use_dt"]:
-                estimators.append(("dt", DecisionTreeClassifier(random_state=42)))
+        if params["use_dt"]:
+            estimators.append(("dt", DecisionTreeClassifier(random_state=42)))
 
-            if params["use_rf"]:
-                estimators.append(("rf", RandomForestClassifier(n_estimators=50, random_state=42)))
+        if params["use_rf"]:
+            estimators.append(("rf", RandomForestClassifier(n_estimators=50, random_state=42)))
 
-            if params["use_gb"]:
-                estimators.append(
-                    ("gb", GradientBoostingClassifier(n_estimators=50, random_state=42))
-                )
+        if params["use_gb"]:
+            estimators.append(("gb", GradientBoostingClassifier(n_estimators=50, random_state=42)))
 
-            if params["use_svm"]:
-                estimators.append(("svm", SVC(probability=True, random_state=42)))
+        if params["use_svm"]:
+            estimators.append(("svm", SVC(probability=True, random_state=42)))
 
-            # Need at least 2 models for ensemble
-            if len(estimators) < 2:
-                return 0.0
+        if len(estimators) < 2:
+            return 0.0
 
-            # Create voting classifier
-            ensemble = VotingClassifier(estimators=estimators, voting=params["voting"])
+        ensemble = VotingClassifier(estimators=estimators, voting=params["voting"])
 
-            # Evaluate
-            scores = cross_val_score(ensemble, X, y, cv=cv, scoring="accuracy")
-            return scores.mean()
-
-        self.pure_objective_function = objective_function
+        scores = cross_val_score(ensemble, X, y, cv=self.cv, scoring="accuracy")
+        return scores.mean()

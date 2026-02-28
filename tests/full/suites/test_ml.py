@@ -195,11 +195,11 @@ class TestMLDataCollection:
         func = KNeighborsClassifierFunction()
         params = {**get_sample_params(func), **quick_ml_params}
 
-        assert func.n_evaluations == 0
+        assert func.data.n_evaluations == 0
         func(params)
-        assert func.n_evaluations == 1
+        assert func.data.n_evaluations == 1
         func(params)
-        assert func.n_evaluations == 2
+        assert func.data.n_evaluations == 2
 
     def test_tracks_best_score(self, quick_ml_params):
         """ML functions track best score."""
@@ -209,8 +209,8 @@ class TestMLDataCollection:
         params = {**get_sample_params(func), **quick_ml_params}
 
         func(params)
-        assert func.best_score is not None
-        assert func.best_params is not None
+        assert func.data.best_score is not None
+        assert func.data.best_params is not None
 
 
 # =============================================================================
@@ -278,3 +278,186 @@ class TestMLCallbacks:
 
         assert len(records) == 1
         assert "score" in records[0]
+
+
+# =============================================================================
+# Additional Classification Functions
+# =============================================================================
+
+
+@pytest.mark.ml
+class TestAdditionalClassifiers:
+    """Test additional classifier functions."""
+
+    def test_gradient_boosting_classifier(self, quick_ml_params):
+        """GradientBoostingClassifier evaluates correctly."""
+        from surfaces.test_functions.machine_learning import GradientBoostingClassifierFunction
+
+        func = GradientBoostingClassifierFunction()
+        params = {**get_sample_params(func), **quick_ml_params}
+        result = func(params)
+
+        assert isinstance(result, (int, float))
+        assert np.isfinite(result)
+
+    def test_svm_classifier(self, quick_ml_params):
+        """SVMClassifier evaluates correctly."""
+        from surfaces.test_functions.machine_learning import SVMClassifierFunction
+
+        func = SVMClassifierFunction()
+        params = {**get_sample_params(func), **quick_ml_params}
+        result = func(params)
+
+        assert isinstance(result, (int, float))
+        assert np.isfinite(result)
+
+    def test_lightgbm_classifier(self, quick_ml_params):
+        """LightGBMClassifier evaluates correctly."""
+        from surfaces.test_functions.machine_learning import LightGBMClassifierFunction
+
+        func = LightGBMClassifierFunction()
+        params = {**get_sample_params(func), **quick_ml_params}
+        result = func(params)
+
+        assert isinstance(result, (int, float))
+        assert np.isfinite(result)
+
+
+# =============================================================================
+# Additional Regression Functions
+# =============================================================================
+
+
+@pytest.mark.ml
+class TestAdditionalRegressors:
+    """Test additional regressor functions."""
+
+    def test_gradient_boosting_regressor(self, quick_regression_params):
+        """GradientBoostingRegressor evaluates correctly."""
+        from surfaces.test_functions.machine_learning import GradientBoostingRegressorFunction
+
+        func = GradientBoostingRegressorFunction()
+        params = {**get_sample_params(func), **quick_regression_params}
+        result = func(params)
+
+        assert isinstance(result, (int, float))
+        assert np.isfinite(result)
+
+    def test_svm_regressor(self, quick_regression_params):
+        """SVMRegressor evaluates correctly."""
+        from surfaces.test_functions.machine_learning import SVMRegressorFunction
+
+        func = SVMRegressorFunction()
+        params = {**get_sample_params(func), **quick_regression_params}
+        result = func(params)
+
+        assert isinstance(result, (int, float))
+        assert np.isfinite(result)
+
+    def test_random_forest_regressor(self, quick_regression_params):
+        """RandomForestRegressor evaluates correctly."""
+        from surfaces.test_functions.machine_learning import RandomForestRegressorFunction
+
+        func = RandomForestRegressorFunction()
+        params = {**get_sample_params(func), **quick_regression_params}
+        result = func(params)
+
+        assert isinstance(result, (int, float))
+        assert np.isfinite(result)
+
+    def test_lightgbm_regressor(self, quick_regression_params):
+        """LightGBMRegressor evaluates correctly."""
+        from surfaces.test_functions.machine_learning import LightGBMRegressorFunction
+
+        func = LightGBMRegressorFunction()
+        params = {**get_sample_params(func), **quick_regression_params}
+        result = func(params)
+
+        assert isinstance(result, (int, float))
+        assert np.isfinite(result)
+
+
+# =============================================================================
+# Ensemble Functions
+# =============================================================================
+
+
+@pytest.mark.ml
+class TestEnsembleFunctions:
+    """Test ensemble optimization functions."""
+
+    def test_voting_ensemble(self, quick_ml_params):
+        """VotingEnsemble evaluates correctly."""
+        from surfaces.test_functions.machine_learning import VotingEnsembleFunction
+
+        func = VotingEnsembleFunction()
+        params = {**get_sample_params(func), **quick_ml_params}
+        result = func(params)
+
+        assert isinstance(result, (int, float))
+        assert np.isfinite(result)
+
+    def test_weighted_averaging(self, quick_ml_params):
+        """WeightedAveraging evaluates correctly."""
+        from surfaces.test_functions.machine_learning import WeightedAveragingFunction
+
+        func = WeightedAveragingFunction()
+        params = {**get_sample_params(func), **quick_ml_params}
+        result = func(params)
+
+        assert isinstance(result, (int, float))
+        assert np.isfinite(result)
+
+    def test_stacking_ensemble(self, quick_ml_params):
+        """StackingEnsemble evaluates correctly."""
+        from surfaces.test_functions.machine_learning import StackingEnsembleFunction
+
+        func = StackingEnsembleFunction()
+        params = {**get_sample_params(func), **quick_ml_params}
+        result = func(params)
+
+        assert isinstance(result, (int, float))
+        assert np.isfinite(result)
+
+
+# =============================================================================
+# Feature Engineering Functions
+# =============================================================================
+
+
+@pytest.mark.ml
+class TestFeatureEngineering:
+    """Test feature engineering functions."""
+
+    def test_feature_scaling_pipeline(self, quick_ml_params):
+        """FeatureScalingPipeline evaluates correctly."""
+        from surfaces.test_functions.machine_learning import FeatureScalingPipelineFunction
+
+        func = FeatureScalingPipelineFunction()
+        params = {**get_sample_params(func), **quick_ml_params}
+        result = func(params)
+
+        assert isinstance(result, (int, float))
+        assert np.isfinite(result)
+
+    def test_mutual_info_feature_selection(self, quick_ml_params):
+        """MutualInfoFeatureSelection evaluates correctly."""
+        from surfaces.test_functions.machine_learning import MutualInfoFeatureSelectionFunction
+
+        func = MutualInfoFeatureSelectionFunction()
+        params = {**get_sample_params(func), **quick_ml_params}
+        result = func(params)
+
+        assert isinstance(result, (int, float))
+        assert np.isfinite(result)
+
+    def test_polynomial_feature_transformation(self, quick_ml_params):
+        """PolynomialFeatureTransformation evaluates correctly."""
+        from surfaces.test_functions.machine_learning import PolynomialFeatureTransformationFunction
+
+        func = PolynomialFeatureTransformationFunction()
+        params = {**get_sample_params(func), **quick_ml_params}
+        result = func(params)
+
+        assert isinstance(result, (int, float))
+        assert np.isfinite(result)

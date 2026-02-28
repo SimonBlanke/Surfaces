@@ -37,8 +37,6 @@ class FonsecaFleming(MultiObjectiveFunction):
     ----------
     n_objectives : int
         Number of objectives (always 2).
-    default_bounds : tuple
-        Parameter bounds (-4.0, 4.0).
 
     References
     ----------
@@ -56,14 +54,14 @@ class FonsecaFleming(MultiObjectiveFunction):
     """
 
     name = "Fonseca-Fleming"
+    _name_ = "fonseca_fleming"
     n_objectives = 2
-    default_bounds = (-4.0, 4.0)
-
     _spec = {
         "continuous": True,
         "differentiable": True,
         "convex_front": False,
         "scalable": True,
+        "default_bounds": (-4.0, 4.0),
     }
 
     def __init__(self, n_dim: int = 3, sleep: float = 0):

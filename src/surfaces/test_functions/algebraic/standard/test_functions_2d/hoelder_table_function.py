@@ -42,8 +42,6 @@ class HölderTableFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-10.0, 10.0).
 
     Examples
     --------
@@ -52,15 +50,12 @@ class HölderTableFunction(AlgebraicFunction):
     >>> result = func({"x0": 8.05502, "x1": 9.66459})
     """
 
-    name = "Hölder Table Function"
-    _name_ = "hölder_table_function"
-    __name__ = "HölderTableFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,
         "separable": False,
         "scalable": False,
+        "default_bounds": (-10.0, 10.0),
     }
 
     f_global = -19.2085
@@ -71,7 +66,6 @@ class HölderTableFunction(AlgebraicFunction):
         (-8.05502, -9.66459),
     )
 
-    default_bounds = (-10.0, 10.0)
     n_dim = 2
 
     latex_formula = r"f(x, y) = -\left|\sin(x)\cos(y)\exp\left(\left|1 - \frac{\sqrt{x^2 + y^2}}{\pi}\right|\right)\right|"
@@ -103,17 +97,14 @@ class HölderTableFunction(AlgebraicFunction):
         self.A = A
         self.angle = angle
 
-    def _create_objective_function(self) -> None:
-        def hölder_table_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            loss1 = math.sin(self.angle * x) * math.cos(self.angle * y)
-            loss2 = math.exp(abs(1 - (math.sqrt(x**2 + y**2) / math.pi)))
+        loss1 = math.sin(self.angle * x) * math.cos(self.angle * y)
+        loss2 = math.exp(abs(1 - (math.sqrt(x**2 + y**2) / math.pi)))
 
-            return -abs(loss1 * loss2)
-
-        self.pure_objective_function = hölder_table_function
+        return -abs(loss1 * loss2)
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.
@@ -148,3 +139,7 @@ class HölderTableFunction(AlgebraicFunction):
         return super()._create_n_dim_search_space(
             min=min, max=max, size=size, value_types=value_types
         )
+
+
+# ASCII alias for Sphinx autosummary compatibility
+HoelderTableFunction = HölderTableFunction

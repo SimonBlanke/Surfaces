@@ -40,8 +40,6 @@ class ZDT1(MultiObjectiveFunction):
     ----------
     n_objectives : int
         Number of objectives (always 2).
-    default_bounds : tuple
-        Parameter bounds (0.0, 1.0).
 
     References
     ----------
@@ -62,13 +60,12 @@ class ZDT1(MultiObjectiveFunction):
 
     name = "ZDT1"
     n_objectives = 2
-    default_bounds = (0.0, 1.0)
-
     _spec = {
         "continuous": True,
         "differentiable": True,
         "convex_front": True,
         "scalable": True,
+        "default_bounds": (0.0, 1.0),
     }
 
     def __init__(self, n_dim: int = 30, sleep: float = 0):

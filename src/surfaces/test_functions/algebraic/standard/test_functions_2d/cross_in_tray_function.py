@@ -45,9 +45,6 @@ class CrossInTrayFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-10.0, 10.0).
-
     Examples
     --------
     >>> from surfaces.test_functions import CrossInTrayFunction
@@ -55,15 +52,12 @@ class CrossInTrayFunction(AlgebraicFunction):
     >>> result = func({"x0": 1.34941, "x1": 1.34941})
     """
 
-    name = "Cross In Tray Function"
-    _name_ = "cross_in_tray_function"
-    __name__ = "CrossInTrayFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,
         "separable": False,
         "scalable": False,
+        "default_bounds": (-10.0, 10.0),
     }
 
     f_global = -2.06261
@@ -74,7 +68,6 @@ class CrossInTrayFunction(AlgebraicFunction):
         (-1.34941, -1.34941),
     )
 
-    default_bounds = (-10.0, 10.0)
     n_dim = 2
 
     latex_formula = r"f(x, y) = -0.0001\left[\left|\sin(x)\sin(y)\exp\left(\left|100 - \frac{\sqrt{x^2+y^2}}{\pi}\right|\right)\right| + 1\right]^{0.1}"
@@ -110,17 +103,14 @@ class CrossInTrayFunction(AlgebraicFunction):
         self.B = B
         self.angle = angle
 
-    def _create_objective_function(self) -> None:
-        def cross_in_tray_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            term1 = math.sin(self.angle * x) * math.sin(self.angle * y)
-            term2 = math.exp(abs(self.B - (math.sqrt(x**2 + y**2) / math.pi)))
+        term1 = math.sin(self.angle * x) * math.sin(self.angle * y)
+        term2 = math.exp(abs(self.B - (math.sqrt(x**2 + y**2) / math.pi)))
 
-            return self.A * (abs(term1 * term2) + 1) ** 0.1
-
-        self.pure_objective_function = cross_in_tray_function
+        return self.A * (abs(term1 * term2) + 1) ** 0.1
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

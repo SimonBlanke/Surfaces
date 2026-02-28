@@ -118,7 +118,6 @@ class ThreeBarTrussFunction(EngineeringFunction):
 
     name = "Three-Bar Truss Function"
     _name_ = "three_bar_truss_function"
-    __name__ = "ThreeBarTrussFunction"
 
     _spec = {
         "n_dim": 2,
@@ -158,7 +157,7 @@ class ThreeBarTrussFunction(EngineeringFunction):
             penalty_coefficient,
         )
 
-    def raw_objective(self, params: Dict[str, Any]) -> float:
+    def _raw_objective(self, params: Dict[str, Any]) -> float:
         """Calculate weight of the truss structure."""
         A1 = params["A1"]
         A2 = params["A2"]
@@ -169,7 +168,7 @@ class ThreeBarTrussFunction(EngineeringFunction):
         weight = L * (2 * np.sqrt(2) * A1 + A2)
         return weight
 
-    def constraints(self, params: Dict[str, Any]) -> List[float]:
+    def _constraints(self, params: Dict[str, Any]) -> List[float]:
         """Evaluate stress constraints."""
         A1 = params["A1"]
         A2 = params["A2"]

@@ -19,7 +19,7 @@ Basic Surface Plot
 
     import os
     from surfaces.test_functions.algebraic import AckleyFunction
-    from surfaces.visualize import plot_surface
+    from surfaces._visualize import plot_surface
 
     func = AckleyFunction()
 
@@ -38,7 +38,7 @@ Customizing the Plot
 
     import os
     from surfaces.test_functions.algebraic import RastriginFunction
-    from surfaces.visualize import plot_surface
+    from surfaces._visualize import plot_surface
 
     func = RastriginFunction(n_dim=2)
 
@@ -60,7 +60,7 @@ Saving Plots
 
     import os
     from surfaces.test_functions.algebraic import HimmelblausFunction
-    from surfaces.visualize import plot_surface
+    from surfaces._visualize import plot_surface
 
     func = HimmelblausFunction()
     fig = plot_surface(func)
@@ -84,7 +84,7 @@ Multiple Functions
         AckleyFunction,
         RosenbrockFunction,
     )
-    from surfaces.visualize import plot_surface
+    from surfaces._visualize import plot_surface
 
     functions = [
         SphereFunction(n_dim=2),

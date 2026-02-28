@@ -43,8 +43,6 @@ class SphereFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions.
-    default_bounds : tuple
-        Default parameter bounds (-5.0, 5.0).
 
     Examples
     --------
@@ -57,20 +55,15 @@ class SphereFunction(AlgebraicFunction):
     3
     """
 
-    name = "Sphere Function"
-    _name_ = "sphere_function"
-    __name__ = "SphereFunction"
-
     _spec = {
         "convex": True,
         "unimodal": True,
         "separable": True,
         "scalable": True,
+        "default_bounds": (-5.0, 5.0),
     }
 
     f_global = 0.0
-
-    default_bounds = (-5.0, 5.0)
 
     latex_formula = r"f(\vec{x}) = \sum_{i=1}^{n} x_i^2"
     pgfmath_formula = "#1^2 + #2^2"  # 2D specialization
@@ -87,7 +80,7 @@ class SphereFunction(AlgebraicFunction):
 
     def __init__(
         self,
-        n_dim: int,
+        n_dim: int = 2,
         A: float = 1,
         objective: str = "minimize",
         modifiers: Optional[List[BaseModifier]] = None,
@@ -101,18 +94,15 @@ class SphereFunction(AlgebraicFunction):
         self.A = A
         self.x_global = tuple(0.0 for _ in range(n_dim))
 
-    def _create_objective_function(self) -> None:
-        def sphere_function(params: Dict[str, Any]) -> float:
-            loss = 0.0
-            for dim in range(self.n_dim):
-                dim_str = "x" + str(dim)
-                x = params[dim_str]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        loss = 0.0
+        for dim in range(self.n_dim):
+            dim_str = "x" + str(dim)
+            x = params[dim_str]
 
-                loss += self.A * x * x
+            loss += self.A * x * x
 
-            return loss
-
-        self.pure_objective_function = sphere_function
+        return loss
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

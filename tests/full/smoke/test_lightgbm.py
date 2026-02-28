@@ -12,12 +12,11 @@ def test_lightgbm_classifier_init():
     """Test that LightGBM Classifier instantiates and has a valid search space."""
 
     func = LightGBMClassifierFunction(dataset="digits", cv=2)
-    func._create_objective_function()
     space = func.search_space
     config = {k: v[0] if isinstance(v, list) else v for k, v in space.items()}
-    score = func.pure_objective_function(config)
+    score = func._ml_objective(config)
 
-    # verify output
+    # verify output (raw accuracy score, before direction transformation)
     assert func is not None
     assert isinstance(score, float)
     assert 0.0 <= score <= 1.0
@@ -29,11 +28,8 @@ def test_lightgbm_regressor_init():
     """Test that LightGBM regressor instantiates and has a valid search space."""
 
     func = LightGBMRegressorFunction(dataset="diabetes", cv=2)
-    func._create_objective_function()
-
     space = func.search_space
     config = {k: v[0] if isinstance(v, list) else v for k, v in space.items()}
-
-    score = func.pure_objective_function(config)
+    score = func.pure(config)
 
     assert isinstance(score, float)

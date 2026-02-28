@@ -3,8 +3,6 @@
 from typing import Any, Dict, List, Optional
 
 import numpy as np
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import cross_val_score
 
 from surfaces.modifiers import BaseModifier
 
@@ -25,9 +23,7 @@ class RandomForestRegressorFunction(BaseRegression):
         If True, use pre-trained surrogate for fast evaluation.
     """
 
-    name = "Random Forest Regressor Function"
     _name_ = "random_forest_regressor"
-    __name__ = "RandomForestRegressorFunction"
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]
@@ -68,29 +64,26 @@ class RandomForestRegressorFunction(BaseRegression):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         return {
             "n_estimators": self.n_estimators_default,
             "max_depth": self.max_depth_default,
             "min_samples_split": self.min_samples_split_default,
         }
 
-    def _create_objective_function(self) -> None:
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
+        from sklearn.ensemble import RandomForestRegressor
+        from sklearn.model_selection import cross_val_score
+
         X, y = self._dataset_loader()
-        cv = self.cv
-
-        def objective(params: Dict[str, Any]) -> float:
-            reg = RandomForestRegressor(
-                n_estimators=params["n_estimators"],
-                max_depth=params["max_depth"],
-                min_samples_split=params["min_samples_split"],
-                random_state=42,
-            )
-            scores = cross_val_score(reg, X, y, cv=cv, scoring="r2")
-            return scores.mean()
-
-        self.pure_objective_function = objective
+        reg = RandomForestRegressor(
+            n_estimators=params["n_estimators"],
+            max_depth=params["max_depth"],
+            min_samples_split=params["min_samples_split"],
+            random_state=42,
+        )
+        scores = cross_val_score(reg, X, y, cv=self.cv, scoring="r2")
+        return scores.mean()
 
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         return {**params, "dataset": self.dataset, "cv": self.cv}

@@ -467,7 +467,7 @@ Use ``available_plots(func)`` to see which plots work with your function:
 .. code-block:: python
 
     from surfaces.test_functions.algebraic import SphereFunction
-    from surfaces.visualize import available_plots, auto_plot
+    from surfaces._visualize import available_plots, auto_plot
 
     func = SphereFunction(n_dim=2)
     print(available_plots(func))  # Lists compatible plots

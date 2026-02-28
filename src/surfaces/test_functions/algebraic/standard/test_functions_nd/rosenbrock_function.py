@@ -44,8 +44,6 @@ class RosenbrockFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions.
-    default_bounds : tuple
-        Default parameter bounds (-5.0, 5.0).
 
     References
     ----------
@@ -62,20 +60,15 @@ class RosenbrockFunction(AlgebraicFunction):
     True
     """
 
-    name = "Rosenbrock Function"
-    _name_ = "rosenbrock_function"
-    __name__ = "RosenbrockFunction"
-
     _spec = {
         "convex": False,
         "unimodal": True,
         "separable": False,
         "scalable": True,
+        "default_bounds": (-5.0, 5.0),
     }
 
     f_global = 0.0
-
-    default_bounds = (-5.0, 5.0)
 
     latex_formula = (
         r"f(\vec{x}) = \sum_{i=1}^{n-1} \left[100(x_{i+1} - x_i^2)^2 + (1 - x_i)^2\right]"
@@ -94,7 +87,7 @@ class RosenbrockFunction(AlgebraicFunction):
 
     def __init__(
         self,
-        n_dim: int,
+        n_dim: int = 2,
         A: float = 1,
         B: float = 100,
         objective: str = "minimize",
@@ -111,20 +104,17 @@ class RosenbrockFunction(AlgebraicFunction):
         self.B = B
         self.x_global = tuple(1.0 for _ in range(n_dim))
 
-    def _create_objective_function(self) -> None:
-        def rosenbrock_function(params: Dict[str, Any]) -> float:
-            loss = 0.0
-            for dim in range(self.n_dim - 1):
-                dim_str = "x" + str(dim)
-                dim_str_1 = "x" + str(dim + 1)
+    def _objective(self, params: Dict[str, Any]) -> float:
+        loss = 0.0
+        for dim in range(self.n_dim - 1):
+            dim_str = "x" + str(dim)
+            dim_str_1 = "x" + str(dim + 1)
 
-                x = params[dim_str]
-                y = params[dim_str_1]
+            x = params[dim_str]
+            y = params[dim_str_1]
 
-                loss += (self.A - x) ** 2 + self.B * (y - x**2) ** 2
-            return loss
-
-        self.pure_objective_function = rosenbrock_function
+            loss += (self.A - x) ** 2 + self.B * (y - x**2) ** 2
+        return loss
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

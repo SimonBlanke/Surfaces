@@ -3,8 +3,6 @@
 from typing import Any, Dict, List, Optional
 
 import numpy as np
-from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.model_selection import cross_val_score
 
 from surfaces.modifiers import BaseModifier
 
@@ -25,9 +23,7 @@ class GradientBoostingClassifierFunction(BaseClassification):
         If True, use pre-trained surrogate for fast evaluation.
     """
 
-    name = "Gradient Boosting Classifier Function"
     _name_ = "gradient_boosting_classifier"
-    __name__ = "GradientBoostingClassifierFunction"
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]
@@ -68,29 +64,26 @@ class GradientBoostingClassifierFunction(BaseClassification):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         return {
             "n_estimators": self.n_estimators_default,
             "max_depth": self.max_depth_default,
             "learning_rate": self.learning_rate_default,
         }
 
-    def _create_objective_function(self) -> None:
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
+        from sklearn.ensemble import GradientBoostingClassifier
+        from sklearn.model_selection import cross_val_score
+
         X, y = self._dataset_loader()
-        cv = self.cv
-
-        def objective(params: Dict[str, Any]) -> float:
-            clf = GradientBoostingClassifier(
-                n_estimators=params["n_estimators"],
-                max_depth=params["max_depth"],
-                learning_rate=params["learning_rate"],
-                random_state=42,
-            )
-            scores = cross_val_score(clf, X, y, cv=cv, scoring="accuracy")
-            return scores.mean()
-
-        self.pure_objective_function = objective
+        clf = GradientBoostingClassifier(
+            n_estimators=params["n_estimators"],
+            max_depth=params["max_depth"],
+            learning_rate=params["learning_rate"],
+            random_state=42,
+        )
+        scores = cross_val_score(clf, X, y, cv=self.cv, scoring="accuracy")
+        return scores.mean()
 
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         return {**params, "dataset": self.dataset, "cv": self.cv}

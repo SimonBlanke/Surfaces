@@ -35,8 +35,6 @@ class DampedSineFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 1).
-    default_bounds : tuple
-        Default parameter bounds (-10, 10).
 
     References
     ----------
@@ -57,21 +55,17 @@ class DampedSineFunction(AlgebraicFunction):
     1
     """
 
-    name = "Damped Sine Function"
-    _name_ = "damped_sine_function"
-    __name__ = "DampedSineFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,
         "separable": True,
         "scalable": False,
+        "default_bounds": (-10.0, 10.0),
     }
 
     f_global = -0.8242393984760573
     x_global = (0.6795787635255166,)
 
-    default_bounds = (-10.0, 10.0)
     n_dim = 1
 
     latex_formula = r"f(x) = -(x + \sin(x)) e^{-x^2}"
@@ -98,13 +92,10 @@ class DampedSineFunction(AlgebraicFunction):
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 1
 
-    def _create_objective_function(self) -> None:
-        def damped_sine_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
 
-            return -(x + math.sin(x)) * math.exp(-(x**2))
-
-        self.pure_objective_function = damped_sine_function
+        return -(x + math.sin(x)) * math.exp(-(x**2))
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

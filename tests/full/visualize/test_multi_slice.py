@@ -9,8 +9,8 @@ These tests verify the multi_slice functionality through the accessor pattern.
 
 import pytest
 
+from surfaces._visualize._param_resolver import resolve_params
 from surfaces.test_functions.algebraic.standard.test_functions_nd import SphereFunction
-from surfaces.visualize._param_resolver import resolve_params
 
 
 class TestMultiSliceParamResolution:

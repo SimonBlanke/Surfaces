@@ -260,12 +260,9 @@ html_theme = "pydata_sphinx_theme"
 # documentation.
 
 html_theme_options = {
-    "announcement": (
-        "This documentation is under active development. "
-        "Some sections may be incomplete or subject to change."
-    ),
     "logo": {
-        "text": "Surfaces",
+        "image_light": "_static/images/navbar_logo.svg",
+        "image_dark": "_static/images/navbar_logo_dark.svg",
     },
     "icon_links": [
         {
@@ -284,7 +281,8 @@ html_theme_options = {
     "navbar_start": ["navbar-logo"],
     "navbar_center": ["navbar-nav"],
     "navbar_end": ["theme-switcher", "navbar-icon-links"],
-    "show_toc_level": 2,
+    "show_nav_level": 3,
+    "show_toc_level": 3,
     "secondary_sidebar_items": ["page-toc", "sourcelink"],
 }
 
@@ -308,7 +306,6 @@ html_sidebars = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 html_css_files = ["css/custom.css"]
-html_js_files = ["js/sidebar-toggle.js"]
 
 html_show_sourcelink = False
 
@@ -422,7 +419,11 @@ if str(_generators_path.parent) not in sys.path:
     sys.path.insert(0, str(_generators_path.parent))
 
 try:
-    from docs._generators import count_by_category, get_all_test_functions, get_total_count
+    from docs._generators import (
+        count_by_category,
+        get_all_test_functions,
+        get_total_count,
+    )
 
     _categories = get_all_test_functions()
     _counts = count_by_category(_categories)

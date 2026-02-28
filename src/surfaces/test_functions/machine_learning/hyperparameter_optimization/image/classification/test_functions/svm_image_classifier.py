@@ -2,11 +2,6 @@
 
 from typing import Any, Dict, List, Optional
 
-from sklearn.decomposition import PCA
-from sklearn.model_selection import cross_val_score
-from sklearn.preprocessing import StandardScaler
-from sklearn.svm import SVC
-
 from surfaces.modifiers import BaseModifier
 
 from .._base_image_classification import BaseImageClassification
@@ -43,9 +38,7 @@ class SVMImageClassifierFunction(BaseImageClassification):
     >>> result = func({"C": 1.0, "kernel": "rbf", "gamma": "scale"})
     """
 
-    name = "SVM Image Classifier Function"
     _name_ = "svm_image_classifier"
-    __name__ = "SVMImageClassifierFunction"
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5]
@@ -92,8 +85,7 @@ class SVMImageClassifierFunction(BaseImageClassification):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         """Search space containing hyperparameters."""
         return {
             "C": self.C_default,
@@ -101,29 +93,27 @@ class SVMImageClassifierFunction(BaseImageClassification):
             "gamma": self.gamma_default,
         }
 
-    def _create_objective_function(self) -> None:
-        """Create objective function with fixed dataset and cv."""
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
+        from sklearn.decomposition import PCA
+        from sklearn.model_selection import cross_val_score
+        from sklearn.preprocessing import StandardScaler
+        from sklearn.svm import SVC
+
         X_raw, y = self._dataset_loader()
 
-        # Apply PCA for dimensionality reduction
         scaler = StandardScaler()
         pca = PCA(n_components=self.n_components, random_state=42)
         X_scaled = scaler.fit_transform(X_raw)
         X = pca.fit_transform(X_scaled)
 
-        cv = self.cv
-
-        def svm_image_classifier(params: Dict[str, Any]) -> float:
-            model = SVC(
-                C=params["C"],
-                kernel=params["kernel"],
-                gamma=params["gamma"],
-                random_state=42,
-            )
-            scores = cross_val_score(model, X, y, cv=cv, scoring="accuracy")
-            return scores.mean()
-
-        self.pure_objective_function = svm_image_classifier
+        model = SVC(
+            C=params["C"],
+            kernel=params["kernel"],
+            gamma=params["gamma"],
+            random_state=42,
+        )
+        scores = cross_val_score(model, X, y, cv=self.cv, scoring="accuracy")
+        return scores.mean()
 
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Add fixed parameters for surrogate prediction."""

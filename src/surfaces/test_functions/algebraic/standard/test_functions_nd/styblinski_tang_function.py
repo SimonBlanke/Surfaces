@@ -37,8 +37,6 @@ class StyblinskiTangFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions.
-    default_bounds : tuple
-        Default parameter bounds (-5.0, 5.0).
 
     Examples
     --------
@@ -47,18 +45,13 @@ class StyblinskiTangFunction(AlgebraicFunction):
     >>> result = func({"x0": -2.903534, "x1": -2.903534})
     """
 
-    name = "Styblinski Tang Function"
-    _name_ = "styblinski_tang_function"
-    __name__ = "StyblinskiTangFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,
         "separable": True,
         "scalable": True,
+        "default_bounds": (-5.0, 5.0),
     }
-
-    default_bounds = (-5.0, 5.0)
 
     latex_formula = r"f(\vec{x}) = \frac{1}{2} \sum_{i=1}^{n} \left(x_i^4 - 16x_i^2 + 5x_i\right)"
     pgfmath_formula = "0.5*(#1^4 - 16*#1^2 + 5*#1 + #2^4 - 16*#2^2 + 5*#2)"  # 2D specialization
@@ -75,7 +68,7 @@ class StyblinskiTangFunction(AlgebraicFunction):
 
     def __init__(
         self,
-        n_dim: int,
+        n_dim: int = 2,
         objective: str = "minimize",
         modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
@@ -88,18 +81,15 @@ class StyblinskiTangFunction(AlgebraicFunction):
         self.x_global = tuple(-2.903534 for _ in range(n_dim))
         self.f_global = -39.16617 * n_dim
 
-    def _create_objective_function(self) -> None:
-        def styblinski_tang_function(params: Dict[str, Any]) -> float:
-            loss = 0.0
-            for dim in range(self.n_dim):
-                dim_str = "x" + str(dim)
-                x = params[dim_str]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        loss = 0.0
+        for dim in range(self.n_dim):
+            dim_str = "x" + str(dim)
+            x = params[dim_str]
 
-                loss += x**4 - 16 * x**2 + 5 * x
+            loss += x**4 - 16 * x**2 + 5 * x
 
-            return loss / 2
-
-        self.pure_objective_function = styblinski_tang_function
+        return loss / 2
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

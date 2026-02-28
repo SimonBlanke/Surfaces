@@ -36,8 +36,6 @@ class ForresterFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 1).
-    default_bounds : tuple
-        Default parameter bounds (0, 1).
 
     References
     ----------
@@ -58,21 +56,17 @@ class ForresterFunction(AlgebraicFunction):
     1
     """
 
-    name = "Forrester Function"
-    _name_ = "forrester_function"
-    __name__ = "ForresterFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,
         "separable": True,
         "scalable": False,
+        "default_bounds": (0.0, 1.0),
     }
 
     f_global = -6.020740055766075
     x_global = (0.7572487144081974,)
 
-    default_bounds = (0.0, 1.0)
     n_dim = 1
 
     latex_formula = r"f(x) = (6x - 2)^2 \sin(12x - 4)"
@@ -99,13 +93,10 @@ class ForresterFunction(AlgebraicFunction):
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
         self.n_dim = 1
 
-    def _create_objective_function(self) -> None:
-        def forrester_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
 
-            return ((6 * x - 2) ** 2) * math.sin(12 * x - 4)
-
-        self.pure_objective_function = forrester_function
+        return ((6 * x - 2) ** 2) * math.sin(12 * x - 4)
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

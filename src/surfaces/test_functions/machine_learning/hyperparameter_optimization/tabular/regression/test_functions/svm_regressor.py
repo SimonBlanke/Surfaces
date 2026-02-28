@@ -2,9 +2,6 @@
 
 from typing import Any, Dict, List, Optional
 
-from sklearn.model_selection import cross_val_score
-from sklearn.svm import SVR
-
 from surfaces.modifiers import BaseModifier
 
 from .._base_regression import BaseRegression
@@ -24,9 +21,7 @@ class SVMRegressorFunction(BaseRegression):
         If True, use pre-trained surrogate for fast evaluation.
     """
 
-    name = "SVM Regressor Function"
     _name_ = "svm_regressor"
-    __name__ = "SVMRegressorFunction"
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]
@@ -67,28 +62,25 @@ class SVMRegressorFunction(BaseRegression):
             use_surrogate=use_surrogate,
         )
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
+    def _default_search_space(self) -> Dict[str, Any]:
         return {
             "C": self.C_default,
             "kernel": self.kernel_default,
             "gamma": self.gamma_default,
         }
 
-    def _create_objective_function(self) -> None:
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
+        from sklearn.model_selection import cross_val_score
+        from sklearn.svm import SVR
+
         X, y = self._dataset_loader()
-        cv = self.cv
-
-        def objective(params: Dict[str, Any]) -> float:
-            reg = SVR(
-                C=params["C"],
-                kernel=params["kernel"],
-                gamma=params["gamma"],
-            )
-            scores = cross_val_score(reg, X, y, cv=cv, scoring="r2")
-            return scores.mean()
-
-        self.pure_objective_function = objective
+        reg = SVR(
+            C=params["C"],
+            kernel=params["kernel"],
+            gamma=params["gamma"],
+        )
+        scores = cross_val_score(reg, X, y, cv=self.cv, scoring="r2")
+        return scores.mean()
 
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         return {**params, "dataset": self.dataset, "cv": self.cv}

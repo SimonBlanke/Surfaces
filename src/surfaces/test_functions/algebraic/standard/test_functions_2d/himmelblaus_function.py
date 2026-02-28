@@ -44,8 +44,6 @@ class HimmelblausFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-5.0, 5.0).
 
     Examples
     --------
@@ -58,13 +56,13 @@ class HimmelblausFunction(AlgebraicFunction):
 
     name = "Himmelblau's Function"
     _name_ = "himmelblaus_function"
-    __name__ = "HimmelblausFunction"
 
     _spec = {
         "convex": False,
         "unimodal": False,
         "separable": False,
         "scalable": False,
+        "default_bounds": (-5.0, 5.0),
     }
 
     f_global = 0.0
@@ -75,7 +73,6 @@ class HimmelblausFunction(AlgebraicFunction):
         (3.584428, -1.848126),
     )
 
-    default_bounds = (-5.0, 5.0)
     n_dim = 2
 
     latex_formula = r"f(x, y) = (x^2 + y - 11)^2 + (x + y^2 - 7)^2"
@@ -107,17 +104,14 @@ class HimmelblausFunction(AlgebraicFunction):
         self.A = A
         self.B = B
 
-    def _create_objective_function(self) -> None:
-        def himmelblaus_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            loss1 = (x**2 + y + self.A) ** 2
-            loss2 = (x + y**2 + self.B) ** 2
+        loss1 = (x**2 + y + self.A) ** 2
+        loss2 = (x + y**2 + self.B) ** 2
 
-            return loss1 + loss2
-
-        self.pure_objective_function = himmelblaus_function
+        return loss1 + loss2
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

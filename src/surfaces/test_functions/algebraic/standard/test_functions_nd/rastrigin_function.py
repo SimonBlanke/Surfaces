@@ -45,8 +45,6 @@ class RastriginFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions.
-    default_bounds : tuple
-        Default parameter bounds (-5.0, 5.0).
 
     Examples
     --------
@@ -57,20 +55,15 @@ class RastriginFunction(AlgebraicFunction):
     True
     """
 
-    name = "Rastrigin Function"
-    _name_ = "rastrigin_function"
-    __name__ = "RastriginFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,
         "separable": True,
         "scalable": True,
+        "default_bounds": (-5.0, 5.0),
     }
 
     f_global = 0.0
-
-    default_bounds = (-5.0, 5.0)
 
     latex_formula = r"f(\vec{x}) = 10n + \sum_{i=1}^{n} \left[x_i^2 - 10\cos(2\pi x_i)\right]"
     pgfmath_formula = (
@@ -89,7 +82,7 @@ class RastriginFunction(AlgebraicFunction):
 
     def __init__(
         self,
-        n_dim: int,
+        n_dim: int = 2,
         A: float = 10,
         angle: float = 2 * math.pi,
         objective: str = "minimize",
@@ -106,18 +99,15 @@ class RastriginFunction(AlgebraicFunction):
         self.angle = angle
         self.x_global = tuple(0.0 for _ in range(n_dim))
 
-    def _create_objective_function(self) -> None:
-        def rastrigin_function(params: Dict[str, Any]) -> float:
-            loss = 0.0
-            for dim in range(self.n_dim):
-                dim_str = "x" + str(dim)
-                x = params[dim_str]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        loss = 0.0
+        for dim in range(self.n_dim):
+            dim_str = "x" + str(dim)
+            x = params[dim_str]
 
-                loss += x * x - self.A * math.cos(self.angle * x)
+            loss += x * x - self.A * math.cos(self.angle * x)
 
-            return self.A * self.n_dim + loss
-
-        self.pure_objective_function = rastrigin_function
+        return self.A * self.n_dim + loss
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

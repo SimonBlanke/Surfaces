@@ -42,7 +42,7 @@ Two-dimensional test functions, ideal for visualization.
    surfaces.test_functions.algebraic.standard.test_functions_2d.eggholder_function.EggholderFunction
    surfaces.test_functions.algebraic.standard.test_functions_2d.goldstein_price_function.GoldsteinPriceFunction
    surfaces.test_functions.algebraic.standard.test_functions_2d.himmelblaus_function.HimmelblausFunction
-   surfaces.test_functions.algebraic.standard.test_functions_2d.hoelder_table_function.HölderTableFunction
+   surfaces.test_functions.algebraic.standard.test_functions_2d.hoelder_table_function.HoelderTableFunction
    surfaces.test_functions.algebraic.standard.test_functions_2d.langermann_function.LangermannFunction
    surfaces.test_functions.algebraic.standard.test_functions_2d.levi_function_n13.LeviFunctionN13
    surfaces.test_functions.algebraic.standard.test_functions_2d.matyas_function.MatyasFunction

@@ -42,19 +42,16 @@ class ShiftedRotatedRosenbrock(CEC2014Function):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def rosenbrock(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
-            z = z * 2.048 / 100 + 1  # Scale to standard Rosenbrock domain
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
+        z = z * 2.048 / 100 + 1  # Scale to standard Rosenbrock domain
 
-            result = 0.0
-            for i in range(self.n_dim - 1):
-                result += 100 * (z[i] ** 2 - z[i + 1]) ** 2 + (z[i] - 1) ** 2
+        result = 0.0
+        for i in range(self.n_dim - 1):
+            result += 100 * (z[i] ** 2 - z[i + 1]) ** 2 + (z[i] - 1) ** 2
 
-            return result + self.f_global
-
-        self.pure_objective_function = rosenbrock
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -93,20 +90,17 @@ class ShiftedRotatedAckley(CEC2014Function):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def ackley(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
 
-            sum1 = np.sum(z**2)
-            sum2 = np.sum(np.cos(2 * np.pi * z))
-            D = self.n_dim
+        sum1 = np.sum(z**2)
+        sum2 = np.sum(np.cos(2 * np.pi * z))
+        D = self.n_dim
 
-            result = -20 * np.exp(-0.2 * np.sqrt(sum1 / D)) - np.exp(sum2 / D) + 20 + np.e
+        result = -20 * np.exp(-0.2 * np.sqrt(sum1 / D)) - np.exp(sum2 / D) + 20 + np.e
 
-            return result + self.f_global
-
-        self.pure_objective_function = ackley
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -147,31 +141,27 @@ class ShiftedRotatedWeierstrass(CEC2014Function):
         "differentiable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        # Precompute constants
+    def _objective(self, params: Dict[str, Any]) -> float:
         a = 0.5
         b = 3
         k_max = 20
 
-        def weierstrass(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
-            z = z * 0.5 / 100  # Scale
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
+        z = z * 0.5 / 100  # Scale
 
-            result = 0.0
-            for i in range(self.n_dim):
-                for k in range(k_max + 1):
-                    result += a**k * np.cos(2 * np.pi * b**k * (z[i] + 0.5))
-
-            # Subtract the offset
-            offset = 0.0
+        result = 0.0
+        for i in range(self.n_dim):
             for k in range(k_max + 1):
-                offset += a**k * np.cos(2 * np.pi * b**k * 0.5)
-            result -= self.n_dim * offset
+                result += a**k * np.cos(2 * np.pi * b**k * (z[i] + 0.5))
 
-            return result + self.f_global
+        # Subtract the offset
+        offset = 0.0
+        for k in range(k_max + 1):
+            offset += a**k * np.cos(2 * np.pi * b**k * 0.5)
+        result -= self.n_dim * offset
 
-        self.pure_objective_function = weierstrass
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -220,18 +210,15 @@ class ShiftedRotatedGriewank(CEC2014Function):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def griewank(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
-            z = z * 600 / 100  # Scale to standard Griewank domain
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
+        z = z * 600 / 100  # Scale to standard Griewank domain
 
-            sum_sq = np.sum(z**2) / 4000
-            prod_cos = np.prod(np.cos(z / np.sqrt(np.arange(1, self.n_dim + 1))))
+        sum_sq = np.sum(z**2) / 4000
+        prod_cos = np.prod(np.cos(z / np.sqrt(np.arange(1, self.n_dim + 1))))
 
-            return sum_sq - prod_cos + 1 + self.f_global
-
-        self.pure_objective_function = griewank
+        return sum_sq - prod_cos + 1 + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -271,17 +258,14 @@ class ShiftedRastrigin(CEC2014Function):
         "separable": True,  # No rotation
     }
 
-    def _create_objective_function(self) -> None:
-        def rastrigin(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift(x)  # Only shift, no rotation
-            z = z * 5.12 / 100  # Scale
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._shift(x)  # Only shift, no rotation
+        z = z * 5.12 / 100  # Scale
 
-            result = 10 * self.n_dim + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
+        result = 10 * self.n_dim + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
 
-            return result + self.f_global
-
-        self.pure_objective_function = rastrigin
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -317,17 +301,14 @@ class ShiftedRotatedRastrigin(CEC2014Function):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def rastrigin(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
-            z = z * 5.12 / 100  # Scale
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
+        z = z * 5.12 / 100  # Scale
 
-            result = 10 * self.n_dim + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
+        result = 10 * self.n_dim + np.sum(z**2 - 10 * np.cos(2 * np.pi * z))
 
-            return result + self.f_global
-
-        self.pure_objective_function = rastrigin
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -365,31 +346,28 @@ class ShiftedSchwefel(CEC2014Function):
         "separable": True,
     }
 
-    def _create_objective_function(self) -> None:
-        def schwefel(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift(x)  # Only shift
-            z = z * 1000 / 100 + 4.209687462275036e2  # Scale and shift
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._shift(x)  # Only shift
+        z = z * 1000 / 100 + 4.209687462275036e2  # Scale and shift
 
-            result = 0.0
-            for i in range(self.n_dim):
-                zi = z[i]
-                if abs(zi) <= 500:
-                    result += zi * np.sin(np.sqrt(abs(zi)))
-                elif zi > 500:
-                    result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500))) - (
-                        zi - 500
-                    ) ** 2 / (10000 * self.n_dim)
-                else:
-                    result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500))) - (
-                        zi + 500
-                    ) ** 2 / (10000 * self.n_dim)
+        result = 0.0
+        for i in range(self.n_dim):
+            zi = z[i]
+            if abs(zi) <= 500:
+                result += zi * np.sin(np.sqrt(abs(zi)))
+            elif zi > 500:
+                result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500))) - (
+                    zi - 500
+                ) ** 2 / (10000 * self.n_dim)
+            else:
+                result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500))) - (
+                    zi + 500
+                ) ** 2 / (10000 * self.n_dim)
 
-            result = 418.9829 * self.n_dim - result
+        result = 418.9829 * self.n_dim - result
 
-            return result + self.f_global
-
-        self.pure_objective_function = schwefel
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -443,31 +421,28 @@ class ShiftedRotatedSchwefel(CEC2014Function):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def schwefel(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
-            z = z * 1000 / 100 + 4.209687462275036e2
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
+        z = z * 1000 / 100 + 4.209687462275036e2
 
-            result = 0.0
-            for i in range(self.n_dim):
-                zi = z[i]
-                if abs(zi) <= 500:
-                    result += zi * np.sin(np.sqrt(abs(zi)))
-                elif zi > 500:
-                    result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500))) - (
-                        zi - 500
-                    ) ** 2 / (10000 * self.n_dim)
-                else:
-                    result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500))) - (
-                        zi + 500
-                    ) ** 2 / (10000 * self.n_dim)
+        result = 0.0
+        for i in range(self.n_dim):
+            zi = z[i]
+            if abs(zi) <= 500:
+                result += zi * np.sin(np.sqrt(abs(zi)))
+            elif zi > 500:
+                result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500))) - (
+                    zi - 500
+                ) ** 2 / (10000 * self.n_dim)
+            else:
+                result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500))) - (
+                    zi + 500
+                ) ** 2 / (10000 * self.n_dim)
 
-            result = 418.9829 * self.n_dim - result
+        result = 418.9829 * self.n_dim - result
 
-            return result + self.f_global
-
-        self.pure_objective_function = schwefel
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -522,25 +497,22 @@ class ShiftedRotatedKatsuura(CEC2014Function):
         "differentiable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def katsuura(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
-            z = z * 5 / 100  # Scale
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
+        z = z * 5 / 100  # Scale
 
-            D = self.n_dim
-            result = 1.0
-            for i in range(D):
-                inner_sum = 0.0
-                for j in range(1, 33):
-                    inner_sum += abs(2**j * z[i] - round(2**j * z[i])) / (2**j)
-                result *= (1 + (i + 1) * inner_sum) ** (10 / (D**1.2))
+        D = self.n_dim
+        result = 1.0
+        for i in range(D):
+            inner_sum = 0.0
+            for j in range(1, 33):
+                inner_sum += abs(2**j * z[i] - round(2**j * z[i])) / (2**j)
+            result *= (1 + (i + 1) * inner_sum) ** (10 / (D**1.2))
 
-            result = (10 / D**2) * result - (10 / D**2)
+        result = (10 / D**2) * result - (10 / D**2)
 
-            return result + self.f_global
-
-        self.pure_objective_function = katsuura
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -592,23 +564,20 @@ class ShiftedRotatedHappyCat(CEC2014Function):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         alpha = 1.0 / 8.0
 
-        def happycat(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
-            z = z * 5 / 100 - 1  # Scale and shift to move optimum to origin
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
+        z = z * 5 / 100 - 1  # Scale and shift to move optimum to origin
 
-            D = self.n_dim
-            sum_sq = np.sum(z**2)
-            sum_z = np.sum(z)
+        D = self.n_dim
+        sum_sq = np.sum(z**2)
+        sum_z = np.sum(z)
 
-            result = abs(sum_sq - D) ** (2 * alpha) + (0.5 * sum_sq + sum_z) / D + 0.5
+        result = abs(sum_sq - D) ** (2 * alpha) + (0.5 * sum_sq + sum_z) / D + 0.5
 
-            return result + self.f_global
-
-        self.pure_objective_function = happycat
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -648,21 +617,18 @@ class ShiftedRotatedHGBat(CEC2014Function):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def hgbat(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
-            z = z * 5 / 100 - 1  # Scale and shift to move optimum to origin
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
+        z = z * 5 / 100 - 1  # Scale and shift to move optimum to origin
 
-            D = self.n_dim
-            sum_sq = np.sum(z**2)
-            sum_z = np.sum(z)
+        D = self.n_dim
+        sum_sq = np.sum(z**2)
+        sum_z = np.sum(z)
 
-            result = abs(sum_sq**2 - sum_z**2) ** 0.5 + (0.5 * sum_sq + sum_z) / D + 0.5
+        result = abs(sum_sq**2 - sum_z**2) ** 0.5 + (0.5 * sum_sq + sum_z) / D + 0.5
 
-            return result + self.f_global
-
-        self.pure_objective_function = hgbat
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -701,26 +667,23 @@ class ShiftedRotatedExpandedGriewankRosenbrock(CEC2014Function):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
-        def griewank_rosenbrock(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
-            z = z * 5 / 100 + 1  # Scale
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
+        z = z * 5 / 100 + 1  # Scale
 
-            result = 0.0
-            for i in range(self.n_dim - 1):
-                # Rosenbrock term
-                t = 100 * (z[i] ** 2 - z[i + 1]) ** 2 + (z[i] - 1) ** 2
-                # Griewank of Rosenbrock
-                result += t**2 / 4000 - np.cos(t) + 1
-
-            # Last term wraps around
-            t = 100 * (z[-1] ** 2 - z[0]) ** 2 + (z[-1] - 1) ** 2
+        result = 0.0
+        for i in range(self.n_dim - 1):
+            # Rosenbrock term
+            t = 100 * (z[i] ** 2 - z[i + 1]) ** 2 + (z[i] - 1) ** 2
+            # Griewank of Rosenbrock
             result += t**2 / 4000 - np.cos(t) + 1
 
-            return result + self.f_global
+        # Last term wraps around
+        t = 100 * (z[-1] ** 2 - z[0]) ** 2 + (z[-1] - 1) ** 2
+        result += t**2 / 4000 - np.cos(t) + 1
 
-        self.pure_objective_function = griewank_rosenbrock
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -762,23 +725,20 @@ class ShiftedRotatedExpandedScafferF6(CEC2014Function):
         "separable": False,
     }
 
-    def _create_objective_function(self) -> None:
+    def _objective(self, params: Dict[str, Any]) -> float:
         def schaffer_f6(x1: float, x2: float) -> float:
             t = x1**2 + x2**2
             return 0.5 + (np.sin(np.sqrt(t)) ** 2 - 0.5) / (1 + 0.001 * t) ** 2
 
-        def expanded_schaffer(params: Dict[str, Any]) -> float:
-            x = self._params_to_array(params)
-            z = self._shift_rotate(x)
+        x = self._params_to_array(params)
+        z = self._shift_rotate(x)
 
-            result = 0.0
-            for i in range(self.n_dim - 1):
-                result += schaffer_f6(z[i], z[i + 1])
-            result += schaffer_f6(z[-1], z[0])
+        result = 0.0
+        for i in range(self.n_dim - 1):
+            result += schaffer_f6(z[i], z[i + 1])
+        result += schaffer_f6(z[-1], z[0])
 
-            return result + self.f_global
-
-        self.pure_objective_function = expanded_schaffer
+        return result + self.f_global
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""

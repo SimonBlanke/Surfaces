@@ -72,7 +72,7 @@ class TestCallbackManagement:
         func = SphereFunction(n_dim=2)
         records = []
 
-        func.add_callback(lambda r: records.append(r))
+        func.callbacks.add(lambda r: records.append(r))
         func([1.0, 2.0])
 
         assert len(records) == 1
@@ -86,7 +86,7 @@ class TestCallbackManagement:
         func([1.0, 2.0])
         assert len(records) == 1
 
-        func.remove_callback(callback)
+        func.callbacks.remove(callback)
         func([3.0, 4.0])
         assert len(records) == 1  # No new record
 
@@ -95,7 +95,7 @@ class TestCallbackManagement:
         func = SphereFunction(n_dim=2)
 
         with pytest.raises(ValueError):
-            func.remove_callback(lambda r: None)
+            func.callbacks.remove(lambda r: None)
 
     def test_clear_callbacks(self):
         """clear_callbacks removes all callbacks."""
@@ -111,25 +111,20 @@ class TestCallbackManagement:
         func([1.0, 2.0])
         assert len(records) == 2
 
-        func.clear_callbacks()
+        func.callbacks.clear()
         func([3.0, 4.0])
         assert len(records) == 2  # No new records
 
     def test_callbacks_property(self):
-        """callbacks property returns a copy of callback list."""
+        """callbacks accessor supports len and membership checks."""
         callback1 = lambda r: None
         callback2 = lambda r: None
 
         func = SphereFunction(n_dim=2, callbacks=[callback1, callback2])
 
-        callbacks = func.callbacks
-        assert len(callbacks) == 2
-        assert callback1 in callbacks
-        assert callback2 in callbacks
-
-        # Should be a copy, not the internal list
-        callbacks.append(lambda r: None)
         assert len(func.callbacks) == 2
+        assert callback1 in func.callbacks
+        assert callback2 in func.callbacks
 
 
 class TestCallbackWithDataCollection:
@@ -143,8 +138,8 @@ class TestCallbackWithDataCollection:
         func([1.0, 2.0])
 
         assert len(records) == 1
-        assert func.n_evaluations == 1
-        assert len(func.search_data) == 1
+        assert func.data.n_evaluations == 1
+        assert len(func.data.search_data) == 1
 
     def test_callback_with_collect_data_false(self):
         """Callbacks work even when data collection is disabled."""
@@ -154,8 +149,8 @@ class TestCallbackWithDataCollection:
         func([1.0, 2.0])
 
         assert len(records) == 1
-        assert func.n_evaluations == 0  # Data collection disabled
-        assert len(func.search_data) == 0
+        assert func.data.n_evaluations == 0  # Data collection disabled
+        assert len(func.data.search_data) == 0
 
     def test_callback_with_memory(self):
         """Callbacks are invoked for cached results too."""

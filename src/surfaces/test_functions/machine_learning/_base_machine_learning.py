@@ -36,9 +36,8 @@ class MachineLearningFunction(BaseTestFunction):
 
     para_names: list = []
 
-    @property
-    def search_space(self) -> Dict[str, Any]:
-        """Search space built from *_default class attributes."""
+    def _default_search_space(self) -> Dict[str, Any]:
+        """Build search space from *_default class attributes."""
         search_space = {}
         for param_name in self.para_names:
             default_attr = f"{param_name}_default"
@@ -78,6 +77,29 @@ class MachineLearningFunction(BaseTestFunction):
             )
             self.use_surrogate = False
 
+    def _ml_objective(self, params: Dict[str, Any]) -> float:
+        """Compute the ML objective value for given hyperparameters.
+
+        Override in subclasses to define the ML training/evaluation logic.
+
+        Parameters
+        ----------
+        params : dict
+            Hyperparameter values.
+
+        Returns
+        -------
+        float
+            Score value (higher is better, e.g. accuracy).
+        """
+        raise NotImplementedError(
+            f"{type(self).__name__} must implement _ml_objective(self, params)"
+        )
+
+    def _objective(self, params: Dict[str, Any]) -> float:
+        """Sub-template: delegates to _ml_objective."""
+        return self._ml_objective(params)
+
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Get parameters for surrogate prediction.
 
@@ -109,14 +131,14 @@ class MachineLearningFunction(BaseTestFunction):
             surrogate_params = self._get_surrogate_params(params)
             raw_value = self._surrogate.predict(surrogate_params)
         else:
-            raw_value = self.pure_objective_function(params)
+            raw_value = self._objective(params)
 
         # Apply modifiers if configured
         if self._modifiers:
             context = {
-                "evaluation_count": self.n_evaluations,
-                "best_score": self.best_score,
-                "search_data": self.search_data,
+                "evaluation_count": self._n_evaluations,
+                "best_score": self._best_score,
+                "search_data": self._search_data,
             }
             for modifier in self._modifiers:
                 raw_value = modifier.apply(raw_value, params, context)

@@ -4,7 +4,8 @@
 
 """Base class for multi-objective optimization test functions."""
 
-from typing import Any, Dict, List, Optional, Tuple, Union
+import re
+from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
 
@@ -46,14 +47,30 @@ class MultiObjectiveFunction:
 
     pure_objective_function: callable
     n_objectives: int = 2
-    default_bounds: Tuple[float, float] = (0.0, 1.0)
     default_size: int = 1000
+
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        if "name" not in cls.__dict__:
+            spec = cls.__dict__.get("_spec", {})
+            if isinstance(spec, dict) and "name" in spec:
+                cls.name = spec["name"]
+            else:
+                raw = cls.__name__.removesuffix("Function")
+                cls.name = re.sub(
+                    r"(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])",
+                    " ",
+                    raw,
+                )
+        if "_name_" not in cls.__dict__:
+            cls._name_ = cls.name.lower().replace(" ", "_")
 
     _spec: Dict[str, Any] = {
         "continuous": True,
         "differentiable": True,
         "convex": False,
         "scalable": True,
+        "default_bounds": (0.0, 1.0),
     }
 
     @property
@@ -85,7 +102,7 @@ class MultiObjectiveFunction:
     @property
     def search_space(self) -> Dict[str, Any]:
         """Search space based on default_bounds and n_dim."""
-        min_val, max_val = self.default_bounds
+        min_val, max_val = self.spec.get("default_bounds", (0.0, 1.0))
         return self._create_search_space(min=min_val, max=max_val, size=self.default_size)
 
     def _create_search_space(

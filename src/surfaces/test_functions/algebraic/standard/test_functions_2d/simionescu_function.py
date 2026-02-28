@@ -53,8 +53,6 @@ class SimionescuFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions (always 2).
-    default_bounds : tuple
-        Default parameter bounds (-1.25, 1.25).
 
     Examples
     --------
@@ -63,15 +61,12 @@ class SimionescuFunction(AlgebraicFunction):
     >>> result = func({"x0": 0.84852813, "x1": -0.84852813})
     """
 
-    name = "Simionescu Function"
-    _name_ = "simionescu_function"
-    __name__ = "SimionescuFunction"
-
     _spec = {
         "convex": False,
         "unimodal": False,
         "separable": False,
         "scalable": False,
+        "default_bounds": (-1.25, 1.25),
     }
 
     f_global = -0.072
@@ -80,7 +75,6 @@ class SimionescuFunction(AlgebraicFunction):
         (-0.84852813, 0.84852813),
     )
 
-    default_bounds = (-1.25, 1.25)
     n_dim = 2
 
     latex_formula = (
@@ -118,21 +112,18 @@ class SimionescuFunction(AlgebraicFunction):
         self.r_S = r_S
         self.n = n
 
-    def _create_objective_function(self) -> None:
-        def simionescu_function(params: Dict[str, Any]) -> float:
-            x = params["x0"]
-            y = params["x1"]
+    def _objective(self, params: Dict[str, Any]) -> float:
+        x = params["x0"]
+        y = params["x1"]
 
-            # Use atan2 for safe handling of y=0 case
-            constraint_radius = self.r_T + self.r_S * math.cos(self.n * math.atan2(x, y))
-            constraint = constraint_radius**2
+        # Use atan2 for safe handling of y=0 case
+        constraint_radius = self.r_T + self.r_S * math.cos(self.n * math.atan2(x, y))
+        constraint = constraint_radius**2
 
-            # Check if point is within the constraint boundary
-            if x**2 + y**2 <= constraint:
-                return self.A * x * y
-            return float("nan")
-
-        self.pure_objective_function = simionescu_function
+        # Check if point is within the constraint boundary
+        if x**2 + y**2 <= constraint:
+            return self.A * x * y
+        return float("nan")
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation.

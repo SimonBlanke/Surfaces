@@ -173,8 +173,8 @@ def test_optuna_surfaces_data_collection():
     study.optimize(objective, n_trials=20, show_progress_bar=False)
 
     # Verify Surfaces tracked all evaluations
-    assert func.n_evaluations == 20
-    assert len(func.search_data) == 20
+    assert func.data.n_evaluations == 20
+    assert len(func.data.search_data) == 20
 
     # Verify Surfaces' best matches Optuna's best
-    assert func.best_score == pytest.approx(study.best_value, rel=1e-6)
+    assert func.data.best_score == pytest.approx(study.best_value, rel=1e-6)

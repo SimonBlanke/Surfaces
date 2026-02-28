@@ -1,13 +1,9 @@
-<h1 align="center">
-Surfaces
-</h1>
-
 <p align="center">
   <a href="https://surfaces.readthedocs.io/en/latest/">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="./docs/source/_static/surfaces_logo_dark.svg">
-      <source media="(prefers-color-scheme: light)" srcset="./docs/source/_static/surfaces_logo.svg">
-      <img src="./docs/source/_static/surfaces_logo.svg" width="400" alt="Surfaces Logo">
+      <source media="(prefers-color-scheme: dark)" srcset="./docs/source/_static/logo_with_text.svg">
+      <source media="(prefers-color-scheme: light)" srcset="./docs/source/_static/logo_with_text.svg">
+      <img src="./docs/source/_static/surfaces_logo.svg" width="550" alt="Surfaces Logo">
     </picture>
   </a>
 </p>
@@ -178,7 +174,7 @@ print(sphere({"x0": 0, "x1": 0, "x2": 0, "x3": 0, "x4": 0}))  # Optimum: 0
 
 # Highly multimodal function with many local optima
 rastrigin = RastriginFunction(n_dim=3)
-print(f"Search space bounds: {rastrigin.default_bounds}")
+print(f"Search space bounds: {rastrigin.spec.default_bounds}")
 
 # Challenging function with a narrow global basin
 ackley = AckleyFunction()  # 2D by default
@@ -258,8 +254,8 @@ sphere = SphereFunction(
 noisy_result = sphere({"x0": 1.0, "x1": 2.0})
 
 # Get the true value without modifiers
-true_value = sphere.true_value({"x0": 1.0, "x1": 2.0})
-print(f"Noisy: {noisy_result:.4f}, True: {true_value:.4f}")
+pure = sphere.pure({"x0": 1.0, "x1": 2.0})
+print(f"Noisy: {noisy_result:.4f}, True: {pure:.4f}")
 ```
 
 </details>
@@ -383,9 +379,9 @@ This library is part of a suite of optimization tools. For updates, [follow on G
 
 | Resource | Description |
 |----------|-------------|
-| [User Guide](https://github.com/SimonBlanke/Surfaces#usage) | Installation and basic usage examples |
-| [API Reference](https://github.com/SimonBlanke/Surfaces#function-categories) | Complete list of available test functions |
-| [Examples](https://github.com/SimonBlanke/Surfaces#examples) | Code examples for common use cases |
+| [User Guide](https://surfaces.readthedocs.io/en/latest/user_guide.html) | Installation and basic usage examples |
+| [API Reference](https://surfaces.readthedocs.io/en/latest/api_reference.html) | Complete list of available test functions |
+| [Examples](https://surfaces.readthedocs.io/en/latest/examples.html) | Code examples for common use cases |
 | [GitHub Issues](https://github.com/SimonBlanke/Surfaces/issues) | Bug reports and feature requests |
 
 <br>
