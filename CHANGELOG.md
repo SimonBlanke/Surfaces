@@ -7,14 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.1] - 2026-03-01
+
 ### Added
 - Ensemble test functions: StackingEnsembleFunction, VotingEnsembleFunction, WeightedAveragingFunction
 - BaseTabularEnsemble base class for ensemble methods
 - MutualInfoFeatureSelectionFunction for feature selection optimization
 - PolynomialFeatureTransformationFunction for polynomial feature engineering
 - FeatureScalingPipelineFunction for scaling pipeline optimization
+- XGBoostClassifierFunction for tabular ML
+- LightGBMRegressorFunction and LightGBMClassifierFunction
+- ShekelFunction (algebraic ND)
+- Tests for CEC 2013 and CEC 2017 benchmarks
+- Interface compliance and template method contract tests
+- ML test function discovery for automated test coverage
+- Developer guide in documentation
 - CONTRIBUTING.md with contribution guidelines
-- `name` attribute to test functions
+
+### Changed
+- Refactored test functions into template method pattern
+- Reworked test-function methods into accessor pattern
+- Changed `check_dependencies` to decorator pattern
+- Names are now generated automatically at class definition time (removed `_name_` attribute)
+- Reworked how optional dependencies are handled
+- Moved `default_bounds` to spec
+- Refactored multi-objective test functions
+- Readded `objective` parameter to multi-objective functions
+
+### Fixed
+- Fixed example in README
+- Fixed documentation links
 
 ## [0.7.1] - 2026-01-15
 
@@ -218,7 +240,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Engineering Functions
 - CantileverBeam, PressureVessel, TensionCompressionSpring, ThreeBarTruss, WeldedBeam
 
-[Unreleased]: https://github.com/SimonBlanke/Surfaces/compare/v0.7.1...HEAD
+[Unreleased]: https://github.com/SimonBlanke/Surfaces/compare/v0.8.1...HEAD
+[0.8.1]: https://github.com/SimonBlanke/Surfaces/compare/v0.7.1...v0.8.1
 [0.7.1]: https://github.com/SimonBlanke/Surfaces/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/SimonBlanke/Surfaces/compare/v0.6.1...v0.7.0
 [0.6.1]: https://github.com/SimonBlanke/Surfaces/compare/v0.6.0...v0.6.1
