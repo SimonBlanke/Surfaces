@@ -34,13 +34,12 @@ from .multi_objective import (
 
 # Standard functions (1D, 2D, 4D, ND)
 from .standard import (
-    # 2D
     AckleyFunction,
     BealeFunction,
     BoothFunction,
     BukinFunctionN6,
+    ColvilleFunction,
     CrossInTrayFunction,
-    # 1D
     DampedSineFunction,
     DropWaveFunction,
     EasomFunction,
@@ -48,7 +47,6 @@ from .standard import (
     ForresterFunction,
     GoldsteinPriceFunction,
     GramacyAndLeeFunction,
-    # ND
     GriewankFunction,
     HimmelblausFunction,
     HölderTableFunction,
@@ -60,8 +58,6 @@ from .standard import (
     RastriginFunction,
     RosenbrockFunction,
     SchafferFunctionN2,
-    # 4D
-    ColvilleFunction,
     ShekelFunction,
     SimionescuFunction,
     SineProductFunction,

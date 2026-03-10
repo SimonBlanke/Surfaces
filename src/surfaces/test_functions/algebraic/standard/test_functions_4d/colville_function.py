@@ -1,8 +1,6 @@
 from typing import Any, Callable, Dict, List, Optional, Union
 
-import numpy as np
-
-from surfaces._array_utils import ArrayLike, get_array_namespace
+from surfaces._array_utils import ArrayLike
 from surfaces.modifiers import BaseModifier
 
 from ..._base_algebraic_function import AlgebraicFunction
@@ -111,8 +109,6 @@ class ColvilleFunction(AlgebraicFunction):
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation for Colville Function."""
-        xp = get_array_namespace(X)
-
         x0 = X[:, 0]
         x1 = X[:, 1]
         x2 = X[:, 2]
