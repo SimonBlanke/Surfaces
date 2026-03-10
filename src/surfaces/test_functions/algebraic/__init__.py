@@ -61,6 +61,7 @@ from .standard import (
     RosenbrockFunction,
     SchafferFunctionN2,
     # 4D
+    ColvilleFunction,
     ShekelFunction,
     SimionescuFunction,
     SineProductFunction,
@@ -106,6 +107,7 @@ __all__ = [
     "SimionescuFunction",
     "ThreeHumpCamelFunction",
     # Standard 4D
+    "ColvilleFunction",
     "ShekelFunction",
     # Standard ND
     "GriewankFunction",
