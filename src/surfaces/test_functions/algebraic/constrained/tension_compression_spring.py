@@ -182,7 +182,7 @@ class TensionCompressionSpringFunction(EngineeringFunction):
 
         # g2: Shear stress constraint
         # (4*C^2 - C) / (12566*(C-1)*d^3) + 1/(5108*d^2) - 1 <= 0
-        g2 = (4 * C**2 - C) / (12566 * (C - 1) * d**3 + eps) + 1 / (5108 * d**2 + eps) - 1
+        g2 = (4 * C**2 - C) / (12566 * (C - 1) * d**2 + eps) + 1 / (5108 * d**2 + eps) - 1
 
         # g3: Surge frequency constraint
         # 1 - 140.45*d / (D^2*N) <= 0
@@ -216,7 +216,7 @@ class TensionCompressionSpringFunction(EngineeringFunction):
         g1 = 1 - (D**3 * N) / (71785 * d**4 + eps)
 
         # g2: Shear stress constraint
-        g2 = (4 * C**2 - C) / (12566 * (C - 1) * d**3 + eps) + 1 / (5108 * d**2 + eps) - 1
+        g2 = (4 * C**2 - C) / (12566 * (C - 1) * d**2 + eps) + 1 / (5108 * d**2 + eps) - 1
 
         # g3: Surge frequency constraint
         g3 = 1 - (140.45 * d) / (D**2 * N + eps)

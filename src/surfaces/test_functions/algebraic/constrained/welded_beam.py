@@ -52,10 +52,10 @@ class WeldedBeamFunction(EngineeringFunction):
         Weld length (along the beam).
         Bounds: [0.1, 10.0] inches
     t : float
-        Beam thickness (width).
+        Beam depth (height).
         Bounds: [0.1, 10.0] inches
     b : float
-        Beam height (depth).
+        Beam width (thickness).
         Bounds: [0.125, 5.0] inches
 
     Objective Function
@@ -211,7 +211,7 @@ class WeldedBeamFunction(EngineeringFunction):
         )
 
         # Bending stress in beam
-        sigma = 6 * P * L / (t * b**2)
+        sigma = 6 * P * L / (b * t**2)
 
         return tau, sigma
 
@@ -232,8 +232,8 @@ class WeldedBeamFunction(EngineeringFunction):
         # g2: Bending stress constraint
         g2 = sigma - self.sigma_max
 
-        # g3: Beam thickness vs weld height
-        g3 = h - t
+        # g3: Weld size vs beam width
+        g3 = h - b
 
         # g4: Buckling constraint
         # Critical buckling load
@@ -247,7 +247,7 @@ class WeldedBeamFunction(EngineeringFunction):
         g4 = P - P_c
 
         # g5: Deflection constraint
-        delta = 4 * P * L**3 / (E * t * b**3)
+        delta = 4 * P * L**3 / (E * b * t**3)
         g5 = delta - self.delta_max
 
         return [g1, g2, g3, g4, g5]
@@ -292,7 +292,7 @@ class WeldedBeamFunction(EngineeringFunction):
         )
 
         # Bending stress in beam
-        sigma = 6 * P * L / (t * b**2)
+        sigma = 6 * P * L / (b * t**2)
 
         return tau, sigma
 
@@ -314,8 +314,8 @@ class WeldedBeamFunction(EngineeringFunction):
         # g2: Bending stress constraint
         g2 = sigma - self.sigma_max
 
-        # g3: Beam thickness vs weld height
-        g3 = h - t
+        # g3: Weld size vs beam width
+        g3 = h - b
 
         # g4: Buckling constraint
         sqrt_term = xp.sqrt(E / (4 * self.G))
@@ -323,7 +323,7 @@ class WeldedBeamFunction(EngineeringFunction):
         g4 = P - P_c
 
         # g5: Deflection constraint
-        delta = 4 * P * L**3 / (E * t * b**3)
+        delta = 4 * P * L**3 / (E * b * t**3)
         g5 = delta - self.delta_max
 
         return xp.stack([g1, g2, g3, g4, g5], axis=1)

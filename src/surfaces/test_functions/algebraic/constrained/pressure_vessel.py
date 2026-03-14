@@ -95,7 +95,7 @@ class PressureVesselFunction(EngineeringFunction):
     Attributes
     ----------
     f_global : float
-        Best known objective value: approximately 5868.76.
+        Best known objective value: approximately 6059.71.
     x_global : ndarray
         Best known solution: [0.8125, 0.4375, 42.0984, 176.6366].
 
@@ -149,7 +149,7 @@ class PressureVesselFunction(EngineeringFunction):
     reference = "Sandgren (1990)"
     reference_url = "https://doi.org/10.1115/1.2912596"
 
-    f_global = 5868.7649
+    f_global = 6059.7068
     x_global = np.array([0.8125, 0.4375, 42.0984, 176.6366])
 
     def __init__(
