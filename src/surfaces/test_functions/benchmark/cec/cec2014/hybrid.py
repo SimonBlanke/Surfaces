@@ -133,9 +133,13 @@ def _schwefel(z: np.ndarray) -> float:
         if abs(zi) <= 500:
             result += zi * np.sin(np.sqrt(abs(zi)))
         elif zi > 500:
-            result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500)))
+            result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500))) - (zi - 500) ** 2 / (
+                10000 * D
+            )
         else:
-            result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500)))
+            result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500))) - (
+                zi + 500
+            ) ** 2 / (10000 * D)
     return 418.9829 * D - result
 
 
@@ -256,7 +260,6 @@ def _batch_schwefel(Z: ArrayLike) -> ArrayLike:
     D = Z.shape[1]
     Z_shifted = Z + 4.209687462275036e2
 
-    # Handle three cases: |z| <= 500, z > 500, z < -500
     abs_z = xp.abs(Z_shifted)
 
     # Case 1: |z| <= 500
@@ -264,11 +267,11 @@ def _batch_schwefel(Z: ArrayLike) -> ArrayLike:
 
     # Case 2: z > 500
     mod_pos = 500 - xp.mod(Z_shifted, 500)
-    term2 = mod_pos * xp.sin(xp.sqrt(xp.abs(mod_pos)))
+    term2 = mod_pos * xp.sin(xp.sqrt(xp.abs(mod_pos))) - (Z_shifted - 500) ** 2 / (10000 * D)
 
     # Case 3: z < -500
     mod_neg = xp.mod(abs_z, 500) - 500
-    term3 = mod_neg * xp.sin(xp.sqrt(xp.abs(mod_neg)))
+    term3 = mod_neg * xp.sin(xp.sqrt(xp.abs(mod_neg))) - (Z_shifted + 500) ** 2 / (10000 * D)
 
     result = xp.where(
         abs_z <= 500,

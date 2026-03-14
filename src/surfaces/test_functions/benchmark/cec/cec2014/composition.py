@@ -34,12 +34,22 @@ class _CompositionBase(CEC2014Function):
     def _get_composition_optima(self) -> np.ndarray:
         """Get optima locations for each component function."""
         data = self._load_data()
-        key = f"comp_optima_{self.func_id}"
+        key = f"shift_{self.func_id}"
         if key in data:
-            return data[key]
-        # Fallback: generate deterministic optima
+            stacked = data[key]
+            return stacked[: self.n_functions, : self.n_dim]
         rng = np.random.default_rng(seed=self.func_id * 1000)
         return rng.uniform(-80, 80, size=(self.n_functions, self.n_dim))
+
+    def _get_composition_rotation(self, component_idx: int) -> np.ndarray:
+        """Get rotation matrix for a specific composition component."""
+        data = self._load_data()
+        key = f"rotation_{self.func_id}"
+        if key in data:
+            stacked = data[key]
+            D = self.n_dim
+            return stacked[component_idx * D : (component_idx + 1) * D, :]
+        return np.eye(self.n_dim)
 
     def _compute_weights(self, x: np.ndarray, optima: np.ndarray) -> np.ndarray:
         """Compute weights for each component function."""
@@ -173,9 +183,13 @@ def _schwefel(z: np.ndarray) -> float:
         if abs(zi) <= 500:
             result += zi * np.sin(np.sqrt(abs(zi)))
         elif zi > 500:
-            result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500)))
+            result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500))) - (zi - 500) ** 2 / (
+                10000 * D
+            )
         else:
-            result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500)))
+            result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500))) - (
+                zi + 500
+            ) ** 2 / (10000 * D)
     return 418.9829 * D - result
 
 
@@ -323,11 +337,11 @@ def _batch_schwefel(Z: ArrayLike) -> ArrayLike:
 
     # Case 2: z > 500
     mod_pos = 500 - xp.mod(Z_shifted, 500)
-    term2 = mod_pos * xp.sin(xp.sqrt(xp.abs(mod_pos)))
+    term2 = mod_pos * xp.sin(xp.sqrt(xp.abs(mod_pos))) - (Z_shifted - 500) ** 2 / (10000 * D)
 
     # Case 3: z < -500
     mod_neg = xp.mod(abs_z, 500) - 500
-    term3 = mod_neg * xp.sin(xp.sqrt(xp.abs(mod_neg)))
+    term3 = mod_neg * xp.sin(xp.sqrt(xp.abs(mod_neg))) - (Z_shifted + 500) ** 2 / (10000 * D)
 
     result = xp.where(
         abs_z <= 500,
@@ -468,10 +482,10 @@ class CompositionFunction1(_CompositionBase):
         x = self._params_to_array(params)
         optima = self._get_composition_optima()
         weights = self._compute_weights(x, optima)
-        M = self._get_rotation_matrix()
 
         result = 0.0
         for i in range(self.n_functions):
+            M = self._get_composition_rotation(i)
             z = M @ (x - optima[i])
             f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
             result += weights[i] * f_val
@@ -481,8 +495,7 @@ class CompositionFunction1(_CompositionBase):
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized F23: Rosenbrock + HCE + Bent Cigar + Discus + HCE."""
         xp = get_array_namespace(X)
-        optima = self._get_composition_optima()
-        M = self._get_rotation_matrix()
+        optima = xp.asarray(self._get_composition_optima(), dtype=X.dtype)
 
         # Compute weights: (n_points, n_functions)
         weights = self._batch_compute_weights(X, optima)
@@ -498,10 +511,8 @@ class CompositionFunction1(_CompositionBase):
 
         result = xp.zeros(X.shape[0], dtype=X.dtype)
         for i in range(self.n_functions):
-            # Z = M @ (X - optima[i]) for each point
-            # (X - optima[i]) has shape (n_points, n_dim)
-            # M has shape (n_dim, n_dim)
-            Z = (X - optima[i]) @ M.T  # Equivalent to M @ (x - o) for each row
+            M = xp.asarray(self._get_composition_rotation(i), dtype=X.dtype)
+            Z = (X - optima[i]) @ M.T
             f_vals = self.lambdas[i] * batch_funcs[i](Z) + self.biases[i]
             result = result + weights[:, i] * f_vals
 
@@ -540,10 +551,10 @@ class CompositionFunction2(_CompositionBase):
         x = self._params_to_array(params)
         optima = self._get_composition_optima()
         weights = self._compute_weights(x, optima)
-        M = self._get_rotation_matrix()
 
         result = 0.0
         for i in range(self.n_functions):
+            M = self._get_composition_rotation(i)
             z = M @ (x - optima[i])
             f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
             result += weights[i] * f_val
@@ -553,8 +564,7 @@ class CompositionFunction2(_CompositionBase):
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized F24: Schwefel + Rastrigin + HCE."""
         xp = get_array_namespace(X)
-        optima = self._get_composition_optima()
-        M = self._get_rotation_matrix()
+        optima = xp.asarray(self._get_composition_optima(), dtype=X.dtype)
 
         weights = self._batch_compute_weights(X, optima)
 
@@ -562,6 +572,7 @@ class CompositionFunction2(_CompositionBase):
 
         result = xp.zeros(X.shape[0], dtype=X.dtype)
         for i in range(self.n_functions):
+            M = xp.asarray(self._get_composition_rotation(i), dtype=X.dtype)
             Z = (X - optima[i]) @ M.T
             f_vals = self.lambdas[i] * batch_funcs[i](Z) + self.biases[i]
             result = result + weights[:, i] * f_vals
@@ -601,10 +612,10 @@ class CompositionFunction3(_CompositionBase):
         x = self._params_to_array(params)
         optima = self._get_composition_optima()
         weights = self._compute_weights(x, optima)
-        M = self._get_rotation_matrix()
 
         result = 0.0
         for i in range(self.n_functions):
+            M = self._get_composition_rotation(i)
             z = M @ (x - optima[i])
             f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
             result += weights[i] * f_val
@@ -614,8 +625,7 @@ class CompositionFunction3(_CompositionBase):
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized F25: Schwefel + Rastrigin + Ackley."""
         xp = get_array_namespace(X)
-        optima = self._get_composition_optima()
-        M = self._get_rotation_matrix()
+        optima = xp.asarray(self._get_composition_optima(), dtype=X.dtype)
 
         weights = self._batch_compute_weights(X, optima)
 
@@ -623,6 +633,7 @@ class CompositionFunction3(_CompositionBase):
 
         result = xp.zeros(X.shape[0], dtype=X.dtype)
         for i in range(self.n_functions):
+            M = xp.asarray(self._get_composition_rotation(i), dtype=X.dtype)
             Z = (X - optima[i]) @ M.T
             f_vals = self.lambdas[i] * batch_funcs[i](Z) + self.biases[i]
             result = result + weights[:, i] * f_vals
@@ -670,10 +681,10 @@ class CompositionFunction4(_CompositionBase):
         x = self._params_to_array(params)
         optima = self._get_composition_optima()
         weights = self._compute_weights(x, optima)
-        M = self._get_rotation_matrix()
 
         result = 0.0
         for i in range(self.n_functions):
+            M = self._get_composition_rotation(i)
             z = M @ (x - optima[i])
             f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
             result += weights[i] * f_val
@@ -683,8 +694,7 @@ class CompositionFunction4(_CompositionBase):
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized F26: Schwefel + HappyCat + HCE + Weierstrass + Griewank."""
         xp = get_array_namespace(X)
-        optima = self._get_composition_optima()
-        M = self._get_rotation_matrix()
+        optima = xp.asarray(self._get_composition_optima(), dtype=X.dtype)
 
         weights = self._batch_compute_weights(X, optima)
 
@@ -698,6 +708,7 @@ class CompositionFunction4(_CompositionBase):
 
         result = xp.zeros(X.shape[0], dtype=X.dtype)
         for i in range(self.n_functions):
+            M = xp.asarray(self._get_composition_rotation(i), dtype=X.dtype)
             Z = (X - optima[i]) @ M.T
             f_vals = self.lambdas[i] * batch_funcs[i](Z) + self.biases[i]
             result = result + weights[:, i] * f_vals
@@ -745,10 +756,10 @@ class CompositionFunction5(_CompositionBase):
         x = self._params_to_array(params)
         optima = self._get_composition_optima()
         weights = self._compute_weights(x, optima)
-        M = self._get_rotation_matrix()
 
         result = 0.0
         for i in range(self.n_functions):
+            M = self._get_composition_rotation(i)
             z = M @ (x - optima[i])
             f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
             result += weights[i] * f_val
@@ -758,8 +769,7 @@ class CompositionFunction5(_CompositionBase):
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized F27: HGBat + Rastrigin + Schwefel + Weierstrass + HCE."""
         xp = get_array_namespace(X)
-        optima = self._get_composition_optima()
-        M = self._get_rotation_matrix()
+        optima = xp.asarray(self._get_composition_optima(), dtype=X.dtype)
 
         weights = self._batch_compute_weights(X, optima)
 
@@ -773,6 +783,7 @@ class CompositionFunction5(_CompositionBase):
 
         result = xp.zeros(X.shape[0], dtype=X.dtype)
         for i in range(self.n_functions):
+            M = xp.asarray(self._get_composition_rotation(i), dtype=X.dtype)
             Z = (X - optima[i]) @ M.T
             f_vals = self.lambdas[i] * batch_funcs[i](Z) + self.biases[i]
             result = result + weights[:, i] * f_vals
@@ -820,10 +831,10 @@ class CompositionFunction6(_CompositionBase):
         x = self._params_to_array(params)
         optima = self._get_composition_optima()
         weights = self._compute_weights(x, optima)
-        M = self._get_rotation_matrix()
 
         result = 0.0
         for i in range(self.n_functions):
+            M = self._get_composition_rotation(i)
             z = M @ (x - optima[i])
             f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
             result += weights[i] * f_val
@@ -833,8 +844,7 @@ class CompositionFunction6(_CompositionBase):
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized F28: EGR + HappyCat + Schwefel + Expanded Scaffer + HCE."""
         xp = get_array_namespace(X)
-        optima = self._get_composition_optima()
-        M = self._get_rotation_matrix()
+        optima = xp.asarray(self._get_composition_optima(), dtype=X.dtype)
 
         weights = self._batch_compute_weights(X, optima)
 
@@ -848,6 +858,7 @@ class CompositionFunction6(_CompositionBase):
 
         result = xp.zeros(X.shape[0], dtype=X.dtype)
         for i in range(self.n_functions):
+            M = xp.asarray(self._get_composition_rotation(i), dtype=X.dtype)
             Z = (X - optima[i]) @ M.T
             f_vals = self.lambdas[i] * batch_funcs[i](Z) + self.biases[i]
             result = result + weights[:, i] * f_vals
@@ -908,10 +919,10 @@ class CompositionFunction7(_CompositionBase):
         x = self._params_to_array(params)
         optima = self._get_composition_optima()
         weights = self._compute_weights(x, optima)
-        M = self._get_rotation_matrix()
 
         result = 0.0
         for i in range(self.n_functions):
+            M = self._get_composition_rotation(i)
             z = M @ (x - optima[i])
             f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
             result += weights[i] * f_val
@@ -921,15 +932,12 @@ class CompositionFunction7(_CompositionBase):
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized F29: 3 hybrid functions."""
         xp = get_array_namespace(X)
-        optima = self._get_composition_optima()
-        M = self._get_rotation_matrix()
-        D_rot = M.shape[0]  # Actual dimension after rotation
+        optima = xp.asarray(self._get_composition_optima(), dtype=X.dtype)
+        D_rot = self.n_dim
 
         weights = self._batch_compute_weights(X, optima)
 
-        # Vectorized hybrid functions (D_rot is used, not self.n_dim)
         def batch_hybrid1(Z: ArrayLike) -> ArrayLike:
-            # Elliptic + Bent Cigar + Rastrigin
             g1, g2 = D_rot // 3, D_rot // 3
             return (
                 _batch_high_conditioned_elliptic(Z[:, :g1])
@@ -962,6 +970,7 @@ class CompositionFunction7(_CompositionBase):
 
         result = xp.zeros(X.shape[0], dtype=X.dtype)
         for i in range(self.n_functions):
+            M = xp.asarray(self._get_composition_rotation(i), dtype=X.dtype)
             Z = (X - optima[i]) @ M.T
             f_vals = self.lambdas[i] * batch_funcs[i](Z) + self.biases[i]
             result = result + weights[:, i] * f_vals
@@ -1030,10 +1039,10 @@ class CompositionFunction8(_CompositionBase):
         x = self._params_to_array(params)
         optima = self._get_composition_optima()
         weights = self._compute_weights(x, optima)
-        M = self._get_rotation_matrix()
 
         result = 0.0
         for i in range(self.n_functions):
+            M = self._get_composition_rotation(i)
             z = M @ (x - optima[i])
             f_val = self.lambdas[i] * functions[i](z) + self.biases[i]
             result += weights[i] * f_val
@@ -1043,15 +1052,12 @@ class CompositionFunction8(_CompositionBase):
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized F30: 3 hybrid functions."""
         xp = get_array_namespace(X)
-        optima = self._get_composition_optima()
-        M = self._get_rotation_matrix()
-        D_rot = M.shape[0]  # Actual dimension after rotation
+        optima = xp.asarray(self._get_composition_optima(), dtype=X.dtype)
+        D_rot = self.n_dim
 
         weights = self._batch_compute_weights(X, optima)
 
-        # Vectorized hybrid functions (D_rot is used, not self.n_dim)
         def batch_hybrid4(Z: ArrayLike) -> ArrayLike:
-            # HGBat + Discus + EGR + Rastrigin
             g1 = D_rot // 4
             g2 = D_rot // 4
             g3 = D_rot // 4
@@ -1088,6 +1094,7 @@ class CompositionFunction8(_CompositionBase):
 
         result = xp.zeros(X.shape[0], dtype=X.dtype)
         for i in range(self.n_functions):
+            M = xp.asarray(self._get_composition_rotation(i), dtype=X.dtype)
             Z = (X - optima[i]) @ M.T
             f_vals = self.lambdas[i] * batch_funcs[i](Z) + self.biases[i]
             result = result + weights[:, i] * f_vals

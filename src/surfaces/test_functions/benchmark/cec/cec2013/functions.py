@@ -279,7 +279,7 @@ class RotatedSchafferF7(CEC2013Function):
 
         result = 0.0
         for i in range(D - 1):
-            result += np.sqrt(s[i]) * (np.sin(50 * s[i] ** 0.2) + 1)
+            result += np.sqrt(s[i]) * (np.sin(50 * s[i] ** 0.2) ** 2 + 1)
 
         result = (result / (D - 1)) ** 2
 
@@ -297,8 +297,8 @@ class RotatedSchafferF7(CEC2013Function):
         # s[i] = sqrt(z[i]^2 + z[i+1]^2)
         S = xp.sqrt(Z[:, :-1] ** 2 + Z[:, 1:] ** 2)
 
-        # sum(sqrt(s) * (sin(50 * s^0.2) + 1))
-        result = xp.sum(xp.sqrt(S) * (xp.sin(50 * S**0.2) + 1), axis=1)
+        # sum(sqrt(s) * (sin(50 * s^0.2)^2 + 1))
+        result = xp.sum(xp.sqrt(S) * (xp.sin(50 * S**0.2) ** 2 + 1), axis=1)
         result = (result / (D - 1)) ** 2
 
         return result + self.f_global
@@ -845,8 +845,11 @@ class LunacekBiRastrigin(CEC2013Function):
 
     def _objective(self, params: Dict[str, Any]) -> float:
         x = self._params_to_array(params)
-        z = self._shift(x)
-        z = z * 10 / 100
+        shift = self._get_shift_vector()
+        y = (x - shift) * 10 / 100
+
+        z = 2 * y.copy()
+        z[shift < 0] *= -1
 
         D = self.n_dim
         mu0 = 2.5
@@ -867,8 +870,12 @@ class LunacekBiRastrigin(CEC2013Function):
         xp = get_array_namespace(X)
         D = self.n_dim
 
-        Z = self._batch_shift(X, self.shift_index)
-        Z = Z * 10 / 100
+        shift = xp.asarray(self._get_shift_vector())
+        Y = (X - shift) * 10 / 100
+
+        Z = 2 * Y
+        sign_mask = xp.where(shift < 0, -1.0, 1.0)
+        Z = Z * sign_mask
 
         mu0 = 2.5
         s = 1 - 1 / (2 * math.sqrt(D + 20) - 8.2)
@@ -905,8 +912,12 @@ class RotatedLunacekBiRastrigin(CEC2013Function):
 
     def _objective(self, params: Dict[str, Any]) -> float:
         x = self._params_to_array(params)
-        z = self._shift_rotate(x)
-        z = z * 10 / 100
+        shift = self._get_shift_vector()
+        M = self._get_rotation_matrix()
+        y = (x - shift) * 10 / 100
+
+        z = 2 * y.copy()
+        z[shift < 0] *= -1
 
         D = self.n_dim
         mu0 = 2.5
@@ -914,11 +925,11 @@ class RotatedLunacekBiRastrigin(CEC2013Function):
         mu1 = -np.sqrt((mu0**2 - 1) / s)
         d = 1
 
-        y = self._rotate(z - mu0)
+        y_rot = M @ (z - mu0)
 
         sum1 = np.sum((z - mu0) ** 2)
         sum2 = np.sum((z - mu1) ** 2)
-        sum3 = np.sum(np.cos(2 * np.pi * y))
+        sum3 = np.sum(np.cos(2 * np.pi * y_rot))
 
         result = min(sum1, d * D + s * sum2) + 10 * (D - sum3)
 
@@ -929,19 +940,25 @@ class RotatedLunacekBiRastrigin(CEC2013Function):
         xp = get_array_namespace(X)
         D = self.n_dim
 
-        Z = self._batch_shift_rotate(X)
-        Z = Z * 10 / 100
+        shift = xp.asarray(self._get_shift_vector())
+        M = xp.asarray(self._get_rotation_matrix())
+
+        Y = (X - shift) * 10 / 100
+
+        Z = 2 * Y
+        sign_mask = xp.where(shift < 0, -1.0, 1.0)
+        Z = Z * sign_mask
 
         mu0 = 2.5
         s = 1 - 1 / (2 * math.sqrt(D + 20) - 8.2)
         mu1 = -math.sqrt((mu0**2 - 1) / s)
         d = 1
 
-        Y = self._batch_rotate(Z - mu0, self.shift_index)
+        Y_rot = (Z - mu0) @ M.T
 
         sum1 = xp.sum((Z - mu0) ** 2, axis=1)
         sum2 = xp.sum((Z - mu1) ** 2, axis=1)
-        sum3 = xp.sum(xp.cos(2 * math.pi * Y), axis=1)
+        sum3 = xp.sum(xp.cos(2 * math.pi * Y_rot), axis=1)
 
         result = xp.minimum(sum1, d * D + s * sum2) + 10 * (D - sum3)
 
@@ -1183,9 +1200,9 @@ def _batch_schwefel_scaled(Z: ArrayLike) -> ArrayLike:
 
     term1 = Z_shifted * xp.sin(xp.sqrt(abs_z))
     mod_pos = 500 - xp.mod(Z_shifted, 500)
-    term2 = mod_pos * xp.sin(xp.sqrt(xp.abs(mod_pos)))
+    term2 = mod_pos * xp.sin(xp.sqrt(xp.abs(mod_pos))) - (Z_shifted - 500) ** 2 / (10000 * D)
     mod_neg = xp.mod(abs_z, 500) - 500
-    term3 = mod_neg * xp.sin(xp.sqrt(xp.abs(mod_neg)))
+    term3 = mod_neg * xp.sin(xp.sqrt(xp.abs(mod_neg))) - (Z_shifted + 500) ** 2 / (10000 * D)
 
     result = xp.where(
         abs_z <= 500,
@@ -1197,18 +1214,26 @@ def _batch_schwefel_scaled(Z: ArrayLike) -> ArrayLike:
 
 
 def _batch_schwefel_simple(Z: ArrayLike) -> ArrayLike:
-    """Vectorized simplified Schwefel (only |z| <= 500 case).
-
-    Used by F24-F28 which only compute for |z| <= 500.
-    """
+    """Vectorized Schwefel with CEC 2013 scaling."""
     xp = get_array_namespace(Z)
     D = Z.shape[1]
     Z_shifted = Z * 1000 / 100 + 4.209687462275036e2
 
     abs_z = xp.abs(Z_shifted)
 
-    # Only count where |z| <= 500
-    result = xp.where(abs_z <= 500, Z_shifted * xp.sin(xp.sqrt(abs_z)), 0.0)
+    term1 = Z_shifted * xp.sin(xp.sqrt(abs_z))
+
+    mod_pos = 500 - xp.mod(Z_shifted, 500)
+    term2 = mod_pos * xp.sin(xp.sqrt(xp.abs(mod_pos))) - (Z_shifted - 500) ** 2 / (10000 * D)
+
+    mod_neg = xp.mod(abs_z, 500) - 500
+    term3 = mod_neg * xp.sin(xp.sqrt(xp.abs(mod_neg))) - (Z_shifted + 500) ** 2 / (10000 * D)
+
+    result = xp.where(
+        abs_z <= 500,
+        term1,
+        xp.where(Z_shifted > 500, term2, term3),
+    )
 
     return 418.9829 * D - xp.sum(result, axis=1)
 
@@ -1375,9 +1400,13 @@ class CompositionFunction2(_CompositionBase):
                 if abs(zi) <= 500:
                     result += zi * np.sin(np.sqrt(abs(zi)))
                 elif zi > 500:
-                    result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500)))
+                    result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500))) - (
+                        zi - 500
+                    ) ** 2 / (10000 * D)
                 else:
-                    result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500)))
+                    result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500))) - (
+                        zi + 500
+                    ) ** 2 / (10000 * D)
             return 418.9829 * D - result
 
         def rastrigin(z: np.ndarray) -> float:
@@ -1460,9 +1489,13 @@ class CompositionFunction3(_CompositionBase):
                 if abs(zi) <= 500:
                     result += zi * np.sin(np.sqrt(abs(zi)))
                 elif zi > 500:
-                    result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500)))
+                    result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500))) - (
+                        zi - 500
+                    ) ** 2 / (10000 * D)
                 else:
-                    result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500)))
+                    result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500))) - (
+                        zi + 500
+                    ) ** 2 / (10000 * D)
             return 418.9829 * D - result
 
         def rastrigin(z: np.ndarray) -> float:
@@ -1543,9 +1576,18 @@ class CompositionFunction4(_CompositionBase):
             z = z * 1000 / 100 + 4.209687462275036e2
             D = len(z)
             result = 0.0
-            for zi in z:
+            for i in range(D):
+                zi = z[i]
                 if abs(zi) <= 500:
                     result += zi * np.sin(np.sqrt(abs(zi)))
+                elif zi > 500:
+                    result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500))) - (
+                        zi - 500
+                    ) ** 2 / (10000 * D)
+                else:
+                    result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500))) - (
+                        zi + 500
+                    ) ** 2 / (10000 * D)
             return 418.9829 * D - result
 
         def rastrigin(z: np.ndarray) -> float:
@@ -1633,9 +1675,18 @@ class CompositionFunction5(_CompositionBase):
             z = z * 1000 / 100 + 4.209687462275036e2
             D = len(z)
             result = 0.0
-            for zi in z:
+            for i in range(D):
+                zi = z[i]
                 if abs(zi) <= 500:
                     result += zi * np.sin(np.sqrt(abs(zi)))
+                elif zi > 500:
+                    result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500))) - (
+                        zi - 500
+                    ) ** 2 / (10000 * D)
+                else:
+                    result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500))) - (
+                        zi + 500
+                    ) ** 2 / (10000 * D)
             return 418.9829 * D - result
 
         def rastrigin(z: np.ndarray) -> float:
@@ -1718,9 +1769,18 @@ class CompositionFunction6(_CompositionBase):
             z = z * 1000 / 100 + 4.209687462275036e2
             D = len(z)
             result = 0.0
-            for zi in z:
+            for i in range(D):
+                zi = z[i]
                 if abs(zi) <= 500:
                     result += zi * np.sin(np.sqrt(abs(zi)))
+                elif zi > 500:
+                    result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500))) - (
+                        zi - 500
+                    ) ** 2 / (10000 * D)
+                else:
+                    result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500))) - (
+                        zi + 500
+                    ) ** 2 / (10000 * D)
             return 418.9829 * D - result
 
         def rastrigin(z: np.ndarray) -> float:
@@ -1829,9 +1889,18 @@ class CompositionFunction7(_CompositionBase):
             z = z * 1000 / 100 + 4.209687462275036e2
             D = len(z)
             result = 0.0
-            for zi in z:
+            for i in range(D):
+                zi = z[i]
                 if abs(zi) <= 500:
                     result += zi * np.sin(np.sqrt(abs(zi)))
+                elif zi > 500:
+                    result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500))) - (
+                        zi - 500
+                    ) ** 2 / (10000 * D)
+                else:
+                    result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500))) - (
+                        zi + 500
+                    ) ** 2 / (10000 * D)
             return 418.9829 * D - result
 
         def weierstrass(z: np.ndarray) -> float:
@@ -1931,9 +2000,18 @@ class CompositionFunction8(_CompositionBase):
             z = z * 1000 / 100 + 4.209687462275036e2
             D = len(z)
             result = 0.0
-            for zi in z:
+            for i in range(D):
+                zi = z[i]
                 if abs(zi) <= 500:
                     result += zi * np.sin(np.sqrt(abs(zi)))
+                elif zi > 500:
+                    result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500))) - (
+                        zi - 500
+                    ) ** 2 / (10000 * D)
+                else:
+                    result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500))) - (
+                        zi + 500
+                    ) ** 2 / (10000 * D)
             return 418.9829 * D - result
 
         def rastrigin(z: np.ndarray) -> float:
@@ -1996,6 +2074,3 @@ class CompositionFunction8(_CompositionBase):
             result = result + weights[:, i] * f_vals
 
         return result + self.f_global
-
-    name = "Composition Function 1"
-    func_id = 21

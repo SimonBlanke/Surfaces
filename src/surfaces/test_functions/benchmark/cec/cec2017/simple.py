@@ -348,11 +348,11 @@ class ShiftedRotatedNonContRastrigin(CEC2017Function):
         M = self._get_rotation_matrix()
 
         shifted = x - shift
-        x_mod = x.copy()
+        nc_shifted = shifted.copy()
         mask = np.abs(shifted) > 0.5
-        x_mod[mask] = (shift + np.floor(2 * shifted + 0.5) * 0.5)[mask]
+        nc_shifted[mask] = np.round(2 * shifted[mask]) / 2
 
-        z = 0.0512 * shifted
+        z = 0.0512 * nc_shifted
         z = M @ z
 
         result = np.sum(z**2 - 10 * np.cos(2 * np.pi * z) + 10)
@@ -367,7 +367,8 @@ class ShiftedRotatedNonContRastrigin(CEC2017Function):
         M = xp.asarray(self._get_rotation_matrix())
 
         shifted = X - shift
-        Z = 0.0512 * shifted
+        nc_shifted = xp.where(xp.abs(shifted) > 0.5, xp.round(2 * shifted) / 2, shifted)
+        Z = 0.0512 * nc_shifted
         Z = Z @ M.T
 
         result = xp.sum(Z**2 - 10 * xp.cos(2 * math.pi * Z) + 10, axis=1)
