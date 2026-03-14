@@ -86,11 +86,13 @@ class BBOBFunction(AlgebraicFunction):
         self.instance = instance
         self._rng = np.random.RandomState(self._compute_seed())
 
-        # Generate instance-specific parameters
-        self._x_opt = None
-        self._f_opt = None
-        self._Q = None
-        self._R = None
+        # Generate all RNG-dependent parameters eagerly in fixed order.
+        # Q and R first (no dependencies), then x_opt (may use self.R
+        # in subclasses like f9/f19), then f_opt.
+        self._Q = self._generate_rotation_matrix()
+        self._R = self._generate_rotation_matrix()
+        self._x_opt = self._generate_x_opt()
+        self._f_opt = self._generate_f_opt()
         self._lambda_alpha = None
 
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
