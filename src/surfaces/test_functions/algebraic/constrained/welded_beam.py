@@ -181,7 +181,7 @@ class WeldedBeamFunction(EngineeringFunction):
         b = params["b"]
 
         # Weld cost + beam material cost
-        cost = 1.10471 * h**2 * weld_len + 0.04811 * t * b * (14.0 + weld_len)
+        cost = 1.10471 * h**2 * weld_len + 0.04811 * t * b * (self.L + weld_len)
         return cost
 
     def _calculate_stresses(self, params: Dict[str, Any]) -> tuple:
@@ -260,7 +260,7 @@ class WeldedBeamFunction(EngineeringFunction):
         b = X[:, 3]
 
         # Weld cost + beam material cost
-        cost = 1.10471 * h**2 * weld_len + 0.04811 * t * b * (14.0 + weld_len)
+        cost = 1.10471 * h**2 * weld_len + 0.04811 * t * b * (self.L + weld_len)
         return cost
 
     def _batch_calculate_stresses(self, X: ArrayLike) -> tuple:
