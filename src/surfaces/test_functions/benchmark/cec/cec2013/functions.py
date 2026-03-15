@@ -270,6 +270,7 @@ class RotatedSchafferF7(CEC2013Function):
     def _objective(self, params: Dict[str, Any]) -> float:
         x = self._params_to_array(params)
         z = self._asymmetric(self._shift_rotate(x), 0.5)
+        z = self._lambda_scale(z, 10)
         z = self._rotate(z)
 
         D = self.n_dim
@@ -292,6 +293,7 @@ class RotatedSchafferF7(CEC2013Function):
 
         Z = self._batch_shift_rotate(X)
         Z = self._batch_asymmetric(Z, 0.5)
+        Z = self._batch_lambda_scale(Z, 10)
         Z = self._batch_rotate(Z, self.shift_index)
 
         # s[i] = sqrt(z[i]^2 + z[i+1]^2)
@@ -326,6 +328,7 @@ class RotatedAckley(CEC2013Function):
     def _objective(self, params: Dict[str, Any]) -> float:
         x = self._params_to_array(params)
         z = self._asymmetric(self._shift_rotate(x), 0.5)
+        z = self._lambda_scale(z, 10)
         z = self._rotate(z)
 
         D = self.n_dim
@@ -343,6 +346,7 @@ class RotatedAckley(CEC2013Function):
 
         Z = self._batch_shift_rotate(X)
         Z = self._batch_asymmetric(Z, 0.5)
+        Z = self._batch_lambda_scale(Z, 10)
         Z = self._batch_rotate(Z, self.shift_index)
 
         sum1 = xp.sum(Z**2, axis=1)
@@ -381,6 +385,7 @@ class RotatedWeierstrass(CEC2013Function):
 
         x = self._params_to_array(params)
         z = self._asymmetric(self._shift_rotate(x), 0.5)
+        z = self._lambda_scale(z, 10)
         z = self._rotate(z)
         z = z * 0.5 / 100
 
@@ -406,6 +411,7 @@ class RotatedWeierstrass(CEC2013Function):
 
         Z = self._batch_shift_rotate(X)
         Z = self._batch_asymmetric(Z, 0.5)
+        Z = self._batch_lambda_scale(Z, 10)
         Z = self._batch_rotate(Z, self.shift_index)
         Z = Z * 0.5 / 100
 
@@ -497,6 +503,7 @@ class Rastrigin(CEC2013Function):
     def _objective(self, params: Dict[str, Any]) -> float:
         x = self._params_to_array(params)
         z = self._oscillation(self._asymmetric(self._shift(x), 0.2))
+        z = self._lambda_scale(z, 10)
         z = z * 5.12 / 100
 
         D = self.n_dim
@@ -512,6 +519,7 @@ class Rastrigin(CEC2013Function):
         Z = self._batch_shift(X, self.shift_index)
         Z = self._batch_asymmetric(Z, 0.2)
         Z = self._batch_oscillation(Z)
+        Z = self._batch_lambda_scale(Z, 10)
         Z = Z * 5.12 / 100
 
         result = 10 * D + xp.sum(Z**2 - 10 * xp.cos(2 * math.pi * Z), axis=1)
@@ -541,6 +549,7 @@ class RotatedRastrigin(CEC2013Function):
     def _objective(self, params: Dict[str, Any]) -> float:
         x = self._params_to_array(params)
         z = self._oscillation(self._asymmetric(self._shift_rotate(x), 0.2))
+        z = self._lambda_scale(z, 10)
         z = self._rotate(z)
         z = z * 5.12 / 100
 
@@ -557,6 +566,7 @@ class RotatedRastrigin(CEC2013Function):
         Z = self._batch_shift_rotate(X)
         Z = self._batch_asymmetric(Z, 0.2)
         Z = self._batch_oscillation(Z)
+        Z = self._batch_lambda_scale(Z, 10)
         Z = self._batch_rotate(Z, self.shift_index)
         Z = Z * 5.12 / 100
 
@@ -588,6 +598,7 @@ class StepRastrigin(CEC2013Function):
     def _objective(self, params: Dict[str, Any]) -> float:
         x = self._params_to_array(params)
         z = self._oscillation(self._asymmetric(self._shift_rotate(x), 0.2))
+        z = self._lambda_scale(z, 10)
         z = self._rotate(z)
         z = z * 5.12 / 100
 
@@ -610,6 +621,7 @@ class StepRastrigin(CEC2013Function):
         Z = self._batch_shift_rotate(X)
         Z = self._batch_asymmetric(Z, 0.2)
         Z = self._batch_oscillation(Z)
+        Z = self._batch_lambda_scale(Z, 10)
         Z = self._batch_rotate(Z, self.shift_index)
         Z = Z * 5.12 / 100
 
@@ -1045,6 +1057,7 @@ class RotatedExpandedScafferF6(CEC2013Function):
 
         x = self._params_to_array(params)
         z = self._asymmetric(self._shift_rotate(x), 0.5)
+        z = self._lambda_scale(z, 10)
         z = self._rotate(z)
 
         D = self.n_dim
@@ -1061,6 +1074,7 @@ class RotatedExpandedScafferF6(CEC2013Function):
 
         Z = self._batch_shift_rotate(X)
         Z = self._batch_asymmetric(Z, 0.5)
+        Z = self._batch_lambda_scale(Z, 10)
         Z = self._batch_rotate(Z, self.shift_index)
 
         # z_next = roll(z, -1) for wrap-around: z_next[-1] = z[0]
@@ -1099,7 +1113,9 @@ class _CompositionBase(CEC2013Function):
             diff = x - shift
             dist_sq = np.sum(diff**2)
             if dist_sq != 0:
-                weights[i] = np.exp(-dist_sq / (2 * self.n_dim * self.sigmas[i] ** 2))
+                weights[i] = (1.0 / np.sqrt(dist_sq)) * np.exp(
+                    -dist_sq / (2 * self.n_dim * self.sigmas[i] ** 2)
+                )
             else:
                 weights[i] = 1e10
 
@@ -1131,18 +1147,15 @@ class _CompositionBase(CEC2013Function):
         """
         xp = get_array_namespace(X)
 
-        # diff[point, func, dim] = X[point, dim] - optima[func, dim]
         diff = X[:, None, :] - optima[None, :, :]  # (n_points, n_functions, n_dim)
         dist_sq = xp.sum(diff**2, axis=2)  # (n_points, n_functions)
 
-        # Compute weights: exp(-dist_sq / (2 * n_dim * sigma^2))
         sigmas = xp.asarray(self.sigmas, dtype=X.dtype)
-        weights = xp.exp(-dist_sq / (2 * self.n_dim * sigmas**2))
+        safe_dist_sq = xp.where(dist_sq == 0, 1.0, dist_sq)
+        weights = (1.0 / xp.sqrt(safe_dist_sq)) * xp.exp(-dist_sq / (2 * self.n_dim * sigmas**2))
 
-        # Handle case where dist_sq == 0 (at optimum)
         weights = xp.where(dist_sq == 0, 1e10, weights)
 
-        # Normalize weights
         max_weight = xp.max(weights, axis=1, keepdims=True)
 
         is_max = weights == max_weight
