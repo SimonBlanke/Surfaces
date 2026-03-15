@@ -64,18 +64,8 @@ class Schwefel(BBOBFunction):
         z = 100 * (Lambda @ (z_hat - 2 * abs_x_opt) + 2 * abs_x_opt)
 
         # Schwefel function: -1/(100*D) * sum(z * sin(sqrt(|z|)))
-        result = 0.0
-        for i in range(D):
-            zi = z[i]
-            if np.abs(zi) <= 500:
-                result += zi * np.sin(np.sqrt(np.abs(zi)))
-            else:
-                # Penalty for out-of-bounds
-                result += (500 - np.abs(zi) % 500) * np.sin(np.sqrt(np.abs(500 - np.abs(zi) % 500)))
-                result -= (zi - 500) ** 2 / (10000 * D) * np.sign(zi)
+        result = -np.sum(z * np.sin(np.sqrt(np.abs(z)))) / (100 * D)
 
-        result = -result / (100 * D)
-        # Penalty applies to z/100 per COCO, but simplified here
         return result + 4.189828872724339 + 100 * self.f_pen(z / 100) + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
@@ -100,23 +90,9 @@ class Schwefel(BBOBFunction):
         Z = batch_lambda_alpha(Z_hat - 2 * abs_x_opt, 10, D) + 2 * abs_x_opt
         Z = 100 * Z
 
-        # Conditional computation vectorized
-        abs_Z = xp.abs(Z)
-        in_bounds = abs_Z <= 500
+        # Schwefel function: -1/(100*D) * sum(z * sin(sqrt(|z|)))
+        result = -xp.sum(Z * xp.sin(xp.sqrt(xp.abs(Z))), axis=1) / (100 * D)
 
-        # In-bounds case: z * sin(sqrt(|z|))
-        term_in = Z * xp.sin(xp.sqrt(abs_Z))
-
-        # Out-of-bounds case
-        mod_term = 500 - abs_Z % 500
-        term_out = mod_term * xp.sin(xp.sqrt(xp.abs(mod_term)))
-        term_out = term_out - (Z - 500) ** 2 / (10000 * D) * xp.sign(Z)
-
-        # Combine using where
-        terms = xp.where(in_bounds, term_in, term_out)
-        result = -xp.sum(terms, axis=1) / (100 * D)
-
-        # Penalty applies to z/100 per COCO
         return result + 4.189828872724339 + 100 * batch_f_pen(Z / 100) + self.f_opt
 
 
@@ -160,9 +136,9 @@ class Gallagher101(BBOBFunction):
         # Weights for the peaks
         self._w = np.hstack([10, 1.1 + 8 * np.arange(n_peaks - 1) / (n_peaks - 2)])
 
-        # Alpha values for conditioning
+        # Alpha values for conditioning (alpha_1 = 1000 per Hansen 2009 for f21)
         alpha_base = np.power(1000, 2 * np.arange(n_peaks - 1) / (n_peaks - 2))
-        self._alpha = np.hstack([1000**2, self._rng.permutation(alpha_base)])
+        self._alpha = np.hstack([1000, self._rng.permutation(alpha_base)])
 
         # Peak locations
         self._y = np.vstack([self.x_opt, self._rng.uniform(-4.9, 4.9, (n_peaks - 1, self.n_dim))])
@@ -205,7 +181,6 @@ class Gallagher101(BBOBFunction):
             y_k = xp.asarray(self._y[k])
             C_k = xp.asarray(self._C[k])
             diff = X - y_k  # (n_points, n_dim)
-            # Quadratic form: sum((diff @ C) * diff, axis=1)
             quad = xp.sum((diff @ C_k) * diff, axis=1)  # (n_points,)
             exponent = -0.5 / D * quad
             peak_vals[:, k] = self._w[k] * xp.exp(exponent)
@@ -262,8 +237,8 @@ class Gallagher21(BBOBFunction):
         alpha_base = np.power(1000, 2 * np.arange(n_peaks - 1) / (n_peaks - 2))
         self._alpha = np.hstack([1000**2, self._rng.permutation(alpha_base)])
 
-        # Peak locations (narrower range for f22)
-        self._y = np.vstack([self.x_opt, self._rng.uniform(-4.0, 4.0, (n_peaks - 1, self.n_dim))])
+        # Peak locations
+        self._y = np.vstack([self.x_opt, self._rng.uniform(-4.9, 4.9, (n_peaks - 1, self.n_dim))])
 
         # Condition matrices
         self._C = []

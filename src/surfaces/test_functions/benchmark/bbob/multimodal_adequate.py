@@ -84,17 +84,16 @@ class Weierstrass(BBOBFunction):
     }
 
     def _objective(self, params: Dict[str, Any]) -> float:
-        Lambda = self.lambda_alpha(100)
+        Lambda = self.lambda_alpha(1.0 / 100)
         k_max = 12
         a = 0.5
         b = 3
 
-        # Precompute the offset
+        # Precompute the offset: f0 = sum(a^k * cos(2*pi*b^k*0.5))
         f0 = sum(a**k * np.cos(np.pi * b**k) for k in range(k_max))
 
         x = self._params_to_array(params)
-        z = self.R @ Lambda @ self.Q @ (x - self.x_opt)
-        z = z * 0.01  # Scale to [-0.5, 0.5]
+        z = self.R @ Lambda @ self.Q @ self.t_osz(self.R @ (x - self.x_opt))
 
         D = self.n_dim
         result = 0.0
@@ -103,7 +102,7 @@ class Weierstrass(BBOBFunction):
                 result += a**k * np.cos(2 * np.pi * b**k * (z[i] + 0.5))
 
         result = 10 * ((result / D - f0) ** 3)
-        return result + self.f_pen(x) / D + self.f_opt
+        return result + 10 * self.f_pen(x) / D + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -117,34 +116,28 @@ class Weierstrass(BBOBFunction):
         a = 0.5
         b = 3
 
-        # Precompute offset
+        # Precompute offset: f0 = sum(a^k * cos(2*pi*b^k*0.5))
         k = xp.arange(k_max, dtype=X.dtype)
         f0 = xp.sum(a**k * xp.cos(math.pi * b**k))
 
-        # z = R @ Lambda @ Q @ (x - x_opt)
-        Z = (X - x_opt) @ Q.T
-        Z = batch_lambda_alpha(Z, 100, self.n_dim)
+        # z = R @ Lambda^(1/100) @ Q @ T_osz(R @ (x - x_opt))
+        Z = (X - x_opt) @ R.T
+        Z = batch_t_osz(Z)
+        Z = Z @ Q.T
+        Z = batch_lambda_alpha(Z, 1.0 / 100, self.n_dim)
         Z = Z @ R.T
-        Z = Z * 0.01  # Scale
 
         # Vectorize double loop: sum over i and k
-        # For each point: sum_{i=0..D-1} sum_{k=0..k_max-1} a^k * cos(2*pi*b^k*(z_i + 0.5))
-        # Shape: Z is (n_points, D), we need (n_points, D, k_max) then sum over D and k_max
-
-        # Expand k for broadcasting
         b_pow_k = b**k  # shape (k_max,)
         a_pow_k = a**k  # shape (k_max,)
 
-        # Z[:, :, None] has shape (n_points, D, 1)
-        # (Z + 0.5)[:, :, None] * b_pow_k[None, None, :] has shape (n_points, D, k_max)
         cos_args = 2 * math.pi * (Z[:, :, None] + 0.5) * b_pow_k
         cos_terms = a_pow_k * xp.cos(cos_args)  # (n_points, D, k_max)
 
-        # Sum over D and k_max dimensions
         result = xp.sum(cos_terms, axis=(1, 2))  # (n_points,)
         result = 10 * ((result / D - f0) ** 3)
 
-        return result + batch_f_pen(X) / D + self.f_opt
+        return result + 10 * batch_f_pen(X) / D + self.f_opt
 
 
 class SchaffersF7(BBOBFunction):
@@ -175,7 +168,7 @@ class SchaffersF7(BBOBFunction):
         result = np.sum(np.sqrt(s) * (np.sin(50 * s**0.2) ** 2 + 1))
         result = (result / (self.n_dim - 1)) ** 2
 
-        return result + self.f_pen(x) + self.f_opt
+        return result + 10 * self.f_pen(x) + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -197,7 +190,7 @@ class SchaffersF7(BBOBFunction):
         result = xp.sum(xp.sqrt(S) * (xp.sin(50 * S**0.2) ** 2 + 1), axis=1)
         result = (result / (self.n_dim - 1)) ** 2
 
-        return result + batch_f_pen(X) + self.f_opt
+        return result + 10 * batch_f_pen(X) + self.f_opt
 
 
 class SchaffersF7Ill(BBOBFunction):
@@ -228,7 +221,7 @@ class SchaffersF7Ill(BBOBFunction):
         result = np.sum(np.sqrt(s) * (np.sin(50 * s**0.2) ** 2 + 1))
         result = (result / (self.n_dim - 1)) ** 2
 
-        return result + self.f_pen(x) + self.f_opt
+        return result + 10 * self.f_pen(x) + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -250,7 +243,7 @@ class SchaffersF7Ill(BBOBFunction):
         result = xp.sum(xp.sqrt(S) * (xp.sin(50 * S**0.2) ** 2 + 1), axis=1)
         result = (result / (self.n_dim - 1)) ** 2
 
-        return result + batch_f_pen(X) + self.f_opt
+        return result + 10 * batch_f_pen(X) + self.f_opt
 
 
 class GriewankRosenbrock(BBOBFunction):
@@ -288,18 +281,13 @@ class GriewankRosenbrock(BBOBFunction):
         x = self._params_to_array(params)
         z = c * self.R @ x + 0.5
 
-        # Rosenbrock-like terms
-        s = np.zeros(self.n_dim)
+        # D-1 Rosenbrock-like terms (no wrap-around per COCO spec)
+        result = 0.0
         for i in range(self.n_dim - 1):
-            s[i] = 100 * (z[i] ** 2 - z[i + 1]) ** 2 + (z[i] - 1) ** 2
-        # Wrap-around for last element
-        s[-1] = 100 * (z[-1] ** 2 - z[0]) ** 2 + (z[-1] - 1) ** 2
+            s_i = 100 * (z[i] ** 2 - z[i + 1]) ** 2 + (z[i] - 1) ** 2
+            result += s_i / 4000 - np.cos(s_i)
 
-        # Apply Griewank transformation: 10/D * sum(s/4000 - cos(s)) + 10
-        # At s=0: 10/D * D*(-1) + 10 = -10 + 10 = 0 (correct minimum)
-        result = np.sum(s / 4000 - np.cos(s))
-
-        return 10 * (result / self.n_dim + 1) + self.f_opt
+        return 10 * result / (self.n_dim - 1) + 10 + self.f_opt
 
     def _batch_objective(self, X: ArrayLike) -> ArrayLike:
         """Vectorized batch evaluation."""
@@ -311,13 +299,11 @@ class GriewankRosenbrock(BBOBFunction):
         # z = c * R @ x + 0.5 (x_opt is computed to give z = 1 at optimum)
         Z = c * (X @ R.T) + 0.5
 
-        # Rosenbrock-like terms with wrap-around
-        # s[i] = 100 * (z[i]^2 - z[i+1])^2 + (z[i] - 1)^2
-        # For wrap-around: z_next = roll(z, -1) so z_next[-1] = z[0]
-        Z_next = xp.roll(Z, -1, axis=1)
-        S = 100 * (Z**2 - Z_next) ** 2 + (Z - 1) ** 2
+        # D-1 consecutive pairs (no wrap-around per COCO spec)
+        Z_curr = Z[:, :-1]
+        Z_next = Z[:, 1:]
+        S = 100 * (Z_curr**2 - Z_next) ** 2 + (Z_curr - 1) ** 2
 
-        # Apply Griewank transformation: 10/D * sum(s/4000 - cos(s)) + 10
         result = xp.sum(S / 4000 - xp.cos(S), axis=1)
 
-        return 10 * (result / D + 1) + self.f_opt
+        return 10 * result / (D - 1) + 10 + self.f_opt
