@@ -122,6 +122,7 @@ class TensionCompressionSpringFunction(EngineeringFunction):
     _name_ = "tension_compression_spring_function"
 
     _spec = {
+        "eval_cost": 0.4,
         "n_dim": 3,
         "convex": False,
         "unimodal": False,

@@ -126,6 +126,7 @@ class PressureVesselFunction(EngineeringFunction):
     """
 
     _spec = {
+        "eval_cost": 0.3,
         "n_dim": 4,
         "convex": False,
         "unimodal": False,

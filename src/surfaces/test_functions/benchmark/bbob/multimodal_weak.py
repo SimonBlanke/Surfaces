@@ -28,6 +28,7 @@ class Schwefel(BBOBFunction):
     """
 
     _spec = {
+        "eval_cost": 3.4,
         "name": "Schwefel Function",
         "func_id": 20,
         "unimodal": False,
@@ -109,6 +110,7 @@ class Gallagher101(BBOBFunction):
     """
 
     _spec = {
+        "eval_cost": 45.3,
         "name": "Gallagher's Gaussian 101-me Peaks Function",
         "func_id": 21,
         "unimodal": False,
@@ -206,6 +208,7 @@ class Gallagher21(BBOBFunction):
     """
 
     _spec = {
+        "eval_cost": 10.6,
         "name": "Gallagher's Gaussian 21-hi Peaks Function",
         "func_id": 22,
         "unimodal": False,
@@ -305,6 +308,7 @@ class Katsuura(BBOBFunction):
     """
 
     _spec = {
+        "eval_cost": 91.3,
         "name": "Katsuura Function",
         "func_id": 23,
         "unimodal": False,
@@ -376,6 +380,7 @@ class LunacekBiRastrigin(BBOBFunction):
     """
 
     _spec = {
+        "eval_cost": 3.7,
         "name": "Lunacek Bi-Rastrigin Function",
         "func_id": 24,
         "unimodal": False,

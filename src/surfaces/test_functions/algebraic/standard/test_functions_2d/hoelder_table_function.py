@@ -51,6 +51,7 @@ class HölderTableFunction(AlgebraicFunction):
     """
 
     _spec = {
+        "eval_cost": 0.1,
         "convex": False,
         "unimodal": False,
         "separable": False,

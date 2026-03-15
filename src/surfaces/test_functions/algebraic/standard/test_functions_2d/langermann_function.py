@@ -42,6 +42,7 @@ class LangermannFunction(AlgebraicFunction):
     """
 
     _spec = {
+        "eval_cost": 0.6,
         "convex": False,
         "unimodal": False,
         "separable": False,

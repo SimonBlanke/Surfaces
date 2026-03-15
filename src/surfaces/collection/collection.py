@@ -224,4 +224,5 @@ class Collection:
             "scalable",
             "continuous",
             "differentiable",
+            "eval_cost",
         ]

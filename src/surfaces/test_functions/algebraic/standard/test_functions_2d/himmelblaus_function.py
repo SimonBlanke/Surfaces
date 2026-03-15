@@ -58,6 +58,7 @@ class HimmelblausFunction(AlgebraicFunction):
     _name_ = "himmelblaus_function"
 
     _spec = {
+        "eval_cost": 0.1,
         "convex": False,
         "unimodal": False,
         "separable": False,

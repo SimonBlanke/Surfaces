@@ -48,6 +48,7 @@ class BukinFunctionN6(AlgebraicFunction):
     name = "Bukin Function N6"
 
     _spec = {
+        "eval_cost": 0.1,
         "convex": False,
         "unimodal": True,
         "separable": False,

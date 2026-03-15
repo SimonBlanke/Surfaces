@@ -27,6 +27,7 @@ class EllipsoidalRotated(BBOBFunction):
     """
 
     _spec = {
+        "eval_cost": 2.6,
         "name": "Ellipsoidal Function",
         "func_id": 10,
         "unimodal": True,
@@ -69,6 +70,7 @@ class Discus(BBOBFunction):
     """
 
     _spec = {
+        "eval_cost": 2.1,
         "name": "Discus Function",
         "func_id": 11,
         "unimodal": True,
@@ -104,6 +106,7 @@ class BentCigar(BBOBFunction):
     """
 
     _spec = {
+        "eval_cost": 1.9,
         "name": "Bent Cigar Function",
         "func_id": 12,
         "unimodal": True,
@@ -143,6 +146,7 @@ class SharpRidge(BBOBFunction):
     """
 
     _spec = {
+        "eval_cost": 1.9,
         "name": "Sharp Ridge Function",
         "func_id": 13,
         "unimodal": True,
@@ -183,6 +187,7 @@ class DifferentPowers(BBOBFunction):
     """
 
     _spec = {
+        "eval_cost": 1.3,
         "name": "Different Powers Function",
         "func_id": 14,
         "unimodal": True,

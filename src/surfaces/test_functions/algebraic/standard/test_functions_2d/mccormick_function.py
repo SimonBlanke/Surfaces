@@ -47,6 +47,7 @@ class McCormickFunction(AlgebraicFunction):
     _name_ = "mccormick_function"
 
     _spec = {
+        "eval_cost": 0.1,
         "convex": False,
         "unimodal": True,
         "separable": False,

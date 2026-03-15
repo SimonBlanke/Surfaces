@@ -47,6 +47,7 @@ class LeviFunctionN13(AlgebraicFunction):
     name = "Levi Function N13"
 
     _spec = {
+        "eval_cost": 0.2,
         "convex": False,
         "unimodal": False,
         "separable": False,

@@ -56,6 +56,7 @@ class RastriginFunction(AlgebraicFunction):
     """
 
     _spec = {
+        "eval_cost": 0.2,
         "convex": False,
         "unimodal": False,
         "separable": True,

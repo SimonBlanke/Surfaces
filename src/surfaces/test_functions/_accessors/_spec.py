@@ -88,6 +88,11 @@ class SpecAccessor:
     # Global optimum (from class-level attrs on concrete functions)
 
     @property
+    def eval_cost(self) -> Optional[float]:
+        """Evaluation cost in Compute Units (CU)."""
+        return self.as_dict().get("eval_cost", None)
+
+    @property
     def f_global(self) -> Optional[float]:
         return getattr(self._func, "f_global", None)
 

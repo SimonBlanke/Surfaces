@@ -34,6 +34,7 @@ class Sphere(BBOBFunction):
     """
 
     _spec = {
+        "eval_cost": 0.6,
         "name": "Sphere Function",
         "func_id": 1,
         "unimodal": True,
@@ -89,6 +90,7 @@ class EllipsoidalSeparable(BBOBFunction):
     """
 
     _spec = {
+        "eval_cost": 2.5,
         "name": "Separable Ellipsoidal Function",
         "func_id": 2,
         "unimodal": True,
@@ -143,6 +145,7 @@ class RastriginSeparable(BBOBFunction):
     """
 
     _spec = {
+        "eval_cost": 4.4,
         "name": "Rastrigin Function",
         "func_id": 3,
         "unimodal": False,
@@ -197,6 +200,7 @@ class BuecheRastrigin(BBOBFunction):
     """
 
     _spec = {
+        "eval_cost": 5.1,
         "name": "Bueche-Rastrigin Function",
         "func_id": 4,
         "unimodal": False,
@@ -276,6 +280,7 @@ class LinearSlope(BBOBFunction):
     """
 
     _spec = {
+        "eval_cost": 1.7,
         "name": "Linear Slope Function",
         "func_id": 5,
         "unimodal": True,

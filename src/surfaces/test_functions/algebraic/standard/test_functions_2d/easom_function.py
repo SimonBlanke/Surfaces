@@ -57,6 +57,7 @@ class EasomFunction(AlgebraicFunction):
     """
 
     _spec = {
+        "eval_cost": 0.1,
         "convex": False,
         "unimodal": True,
         "separable": True,

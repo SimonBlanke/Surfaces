@@ -101,6 +101,7 @@ class BaseTestFunction:
         "separable": False,
         "unimodal": False,
         "scalable": False,
+        "eval_cost": None,
     }
 
     f_global: Optional[float] = None

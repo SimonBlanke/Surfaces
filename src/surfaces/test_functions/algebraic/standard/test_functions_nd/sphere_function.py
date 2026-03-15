@@ -56,6 +56,7 @@ class SphereFunction(AlgebraicFunction):
     """
 
     _spec = {
+        "eval_cost": 0.1,
         "convex": True,
         "unimodal": True,
         "separable": True,

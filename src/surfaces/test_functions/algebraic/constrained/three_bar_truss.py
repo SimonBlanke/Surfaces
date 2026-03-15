@@ -120,6 +120,7 @@ class ThreeBarTrussFunction(EngineeringFunction):
     _name_ = "three_bar_truss_function"
 
     _spec = {
+        "eval_cost": 0.6,
         "n_dim": 2,
         "convex": False,
         "unimodal": False,

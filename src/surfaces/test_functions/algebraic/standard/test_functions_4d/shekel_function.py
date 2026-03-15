@@ -58,6 +58,7 @@ class ShekelFunction(AlgebraicFunction):
     """
 
     _spec = {
+        "eval_cost": 1.4,
         "convex": False,
         "unimodal": False,
         "separable": False,

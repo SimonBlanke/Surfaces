@@ -62,6 +62,7 @@ class ZDT1(BaseMultiObjectiveTestFunction):
     name = "ZDT1"
     n_objectives = 2
     _spec = {
+        "eval_cost": 1.0,
         "continuous": True,
         "differentiable": True,
         "convex_front": True,
