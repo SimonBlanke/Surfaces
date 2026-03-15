@@ -296,6 +296,32 @@ class CECFunction(AlgebraicFunction):
                 z[i] = x[i] ** (1 + beta * i / (D - 1) * np.sqrt(x[i]))
         return z
 
+    def _lambda_scale(self, x: np.ndarray, alpha: float) -> np.ndarray:
+        """Apply Lambda diagonal scaling transformation.
+
+        Scales each dimension by alpha^(0.5 * i/(D-1)), creating
+        ill-conditioning in the landscape.
+
+        Parameters
+        ----------
+        x : np.ndarray
+            Input vector.
+        alpha : float
+            Scaling base (typically 10).
+
+        Returns
+        -------
+        np.ndarray
+            Scaled vector.
+        """
+        D = len(x)
+        if D <= 1:
+            return x.copy()
+        z = x.copy()
+        for i in range(D):
+            z[i] = alpha ** (0.5 * i / (D - 1)) * x[i]
+        return z
+
     def _params_to_array(self, params: Dict[str, Any]) -> np.ndarray:
         """Convert parameter dict to numpy array.
 
@@ -420,3 +446,29 @@ class CECFunction(AlgebraicFunction):
             exp_factor = xp.ones_like(X)
         result = xp.where(X > 0, xp.abs(X) ** exp_factor, X)
         return result
+
+    def _batch_lambda_scale(self, X: ArrayLike, alpha: float) -> ArrayLike:
+        """Apply Lambda diagonal scaling to batch.
+
+        Scales each dimension by alpha^(0.5 * i/(D-1)), creating
+        ill-conditioning in the landscape.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            Input batch of shape (n_points, n_dim).
+        alpha : float
+            Scaling base (typically 10).
+
+        Returns
+        -------
+        ArrayLike
+            Scaled batch of shape (n_points, n_dim).
+        """
+        xp = get_array_namespace(X)
+        D = X.shape[1]
+        if D <= 1:
+            return X
+        i = xp.arange(D, dtype=X.dtype)
+        scale = xp.power(float(alpha), 0.5 * i / (D - 1))
+        return X * scale
