@@ -31,6 +31,12 @@ class _CompositionBase(CEC2014Function):
     lambdas: List[float] = []
     biases: List[float] = []
 
+    @property
+    def x_global(self):
+        """Global optimum location (first component's optimum)."""
+        optima = self._get_composition_optima()
+        return optima[0]
+
     def _get_composition_optima(self) -> np.ndarray:
         """Get optima locations for each component function."""
         data = self._load_data()
@@ -59,16 +65,16 @@ class _CompositionBase(CEC2014Function):
             diff = x - optima[i]
             dist_sq = np.sum(diff**2)
             if dist_sq != 0:
-                weights[i] = np.exp(-dist_sq / (2 * self.n_dim * self.sigmas[i] ** 2))
+                weights[i] = (1.0 / np.sqrt(dist_sq)) * np.exp(
+                    -dist_sq / (2 * self.n_dim * self.sigmas[i] ** 2)
+                )
             else:
-                weights[i] = 1e10  # Very large weight if at optimum
+                weights[i] = 1e10
 
-        # Normalize weights
         max_weight = np.max(weights)
         if max_weight == 0:
             weights = np.ones(self.n_functions) / self.n_functions
         else:
-            # Only keep weights that are significant
             for i in range(self.n_functions):
                 if weights[i] != max_weight:
                     weights[i] *= 1 - max_weight**10
@@ -93,27 +99,20 @@ class _CompositionBase(CEC2014Function):
         """
         xp = get_array_namespace(X)
 
-        # X has shape (n_points, n_dim)
-        # optima has shape (n_functions, n_dim)
-        # diff[i, j, k] = X[i, k] - optima[j, k]
         diff = X[:, None, :] - optima[None, :, :]  # (n_points, n_functions, n_dim)
         dist_sq = xp.sum(diff**2, axis=2)  # (n_points, n_functions)
 
-        # Compute weights: exp(-dist_sq / (2 * n_dim * sigma^2))
         sigmas = xp.asarray(self.sigmas, dtype=X.dtype)
-        weights = xp.exp(-dist_sq / (2 * self.n_dim * sigmas**2))
+        safe_dist_sq = xp.where(dist_sq == 0, 1.0, dist_sq)
+        weights = (1.0 / xp.sqrt(safe_dist_sq)) * xp.exp(-dist_sq / (2 * self.n_dim * sigmas**2))
 
-        # Handle case where dist_sq == 0 (at optimum)
         weights = xp.where(dist_sq == 0, 1e10, weights)
 
-        # Normalize weights
-        max_weight = xp.max(weights, axis=1, keepdims=True)  # (n_points, 1)
+        max_weight = xp.max(weights, axis=1, keepdims=True)
 
-        # Apply transformation: w[i] *= (1 - max_w^10) if w[i] != max_w
         is_max = weights == max_weight
         weights = xp.where(is_max, weights, weights * (1 - max_weight**10))
 
-        # Normalize
         weight_sum = xp.sum(weights, axis=1, keepdims=True)
         weights = xp.where(weight_sum == 0, 1.0 / self.n_functions, weights / weight_sum)
 

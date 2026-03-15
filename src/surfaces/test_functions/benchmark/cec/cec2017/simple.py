@@ -392,6 +392,18 @@ class ShiftedRotatedLevy(CEC2017Function):
         "separable": False,
     }
 
+    @property
+    def x_global(self):
+        """Global optimum location.
+
+        The Levy function's minimum is at z=1 (where w=1), so the
+        actual optimum is at x = shift + M^{-1} @ ones(D).
+        """
+        shift = self._get_shift_vector()
+        M = self._get_rotation_matrix()
+        ones = np.ones(self.n_dim)
+        return shift + np.linalg.solve(M, ones)
+
     def _objective(self, params: Dict[str, Any]) -> float:
         x = self._params_to_array(params)
         z = self._shift_rotate(x)
