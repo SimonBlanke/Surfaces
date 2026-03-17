@@ -27,7 +27,7 @@ class AttractiveSector(BBOBFunction):
     """
 
     _spec = {
-        "eval_cost": 3.7,
+        "eval_cost": 3.4,
         "name": "Attractive Sector Function",
         "func_id": 6,
         "unimodal": True,
@@ -78,7 +78,7 @@ class StepEllipsoidal(BBOBFunction):
     """
 
     _spec = {
-        "eval_cost": 4.0,
+        "eval_cost": 3.8,
         "name": "Step Ellipsoidal Function",
         "func_id": 7,
         "unimodal": False,
@@ -152,7 +152,7 @@ class RosenbrockOriginal(BBOBFunction):
     """
 
     _spec = {
-        "eval_cost": 1.2,
+        "eval_cost": 1.1,
         "name": "Rosenbrock Function, Original",
         "func_id": 8,
         "unimodal": False,

@@ -146,7 +146,7 @@ class SharpRidge(BBOBFunction):
     """
 
     _spec = {
-        "eval_cost": 1.9,
+        "eval_cost": 1.8,
         "name": "Sharp Ridge Function",
         "func_id": 13,
         "unimodal": True,
@@ -187,7 +187,7 @@ class DifferentPowers(BBOBFunction):
     """
 
     _spec = {
-        "eval_cost": 1.3,
+        "eval_cost": 1.2,
         "name": "Different Powers Function",
         "func_id": 14,
         "unimodal": True,

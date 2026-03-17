@@ -25,6 +25,8 @@ class RandomForestClassifierFunction(BaseClassification):
 
     _name_ = "random_forest_classifier"
 
+    _spec = {"eval_cost": 72100.0}
+
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]
 

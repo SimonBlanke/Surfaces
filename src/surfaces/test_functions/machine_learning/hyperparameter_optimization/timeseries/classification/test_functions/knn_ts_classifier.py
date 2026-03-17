@@ -40,6 +40,7 @@ class KNNTSClassifierFunction(BaseTSClassification):
 
     name = "KNN Time-Series Classifier Function"
     _name_ = "knn_ts_classifier"
+    _spec = {"eval_cost": 847.9}
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]

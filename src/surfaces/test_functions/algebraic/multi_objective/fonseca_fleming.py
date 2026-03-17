@@ -58,7 +58,7 @@ class FonsecaFleming(BaseMultiObjectiveTestFunction):
     _name_ = "fonseca_fleming"
     n_objectives = 2
     _spec = {
-        "eval_cost": 1.3,
+        "eval_cost": 1.2,
         "continuous": True,
         "differentiable": True,
         "convex_front": False,

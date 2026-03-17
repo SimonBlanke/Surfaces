@@ -28,7 +28,7 @@ class RastriginRotated(BBOBFunction):
     """
 
     _spec = {
-        "eval_cost": 5.1,
+        "eval_cost": 4.8,
         "name": "Rastrigin Function",
         "func_id": 15,
         "unimodal": False,
@@ -77,7 +77,7 @@ class Weierstrass(BBOBFunction):
     """
 
     _spec = {
-        "eval_cost": 17.0,
+        "eval_cost": 16.6,
         "name": "Weierstrass Function",
         "func_id": 16,
         "unimodal": False,
@@ -155,7 +155,7 @@ class SchaffersF7(BBOBFunction):
     """
 
     _spec = {
-        "eval_cost": 4.2,
+        "eval_cost": 4.1,
         "name": "Schaffer's F7 Function",
         "func_id": 17,
         "unimodal": False,
@@ -209,7 +209,7 @@ class SchaffersF7Ill(BBOBFunction):
     """
 
     _spec = {
-        "eval_cost": 4.5,
+        "eval_cost": 4.1,
         "name": "Schaffer's F7 Function, Ill-Conditioned",
         "func_id": 18,
         "unimodal": False,
@@ -263,7 +263,7 @@ class GriewankRosenbrock(BBOBFunction):
     """
 
     _spec = {
-        "eval_cost": 2.0,
+        "eval_cost": 1.9,
         "name": "Composite Griewank-Rosenbrock Function F8F2",
         "func_id": 19,
         "unimodal": False,

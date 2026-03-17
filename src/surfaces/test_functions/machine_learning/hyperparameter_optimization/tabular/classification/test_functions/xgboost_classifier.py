@@ -26,6 +26,8 @@ class XGBoostClassifierFunction(BaseClassification):
     _name_ = "xgboost_classifier"
     _dependencies = {"ml": ["xgboost"]}
 
+    _spec = {"eval_cost": 329300.0}
+
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]
 

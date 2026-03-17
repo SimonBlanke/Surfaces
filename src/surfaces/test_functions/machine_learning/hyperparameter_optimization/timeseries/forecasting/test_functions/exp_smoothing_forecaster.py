@@ -38,6 +38,7 @@ class ExpSmoothingForecasterFunction(BaseForecasting):
 
     name = "Exponential Smoothing Forecaster Function"
     _name_ = "exp_smoothing_forecaster"
+    _spec = {"eval_cost": 3300.0}
     _dependencies = {"timeseries": ["sktime"]}
 
     available_datasets = list(DATASETS.keys())

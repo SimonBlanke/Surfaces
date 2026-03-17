@@ -126,7 +126,7 @@ class WeldedBeamFunction(EngineeringFunction):
     """
 
     _spec = {
-        "eval_cost": 1.1,
+        "eval_cost": 1.0,
         "n_dim": 4,
         "convex": False,
         "unimodal": False,

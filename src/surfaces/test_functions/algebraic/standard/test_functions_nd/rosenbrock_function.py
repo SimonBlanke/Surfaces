@@ -61,7 +61,7 @@ class RosenbrockFunction(AlgebraicFunction):
     """
 
     _spec = {
-        "eval_cost": 0.1,
+        "eval_cost": 0.2,
         "convex": False,
         "unimodal": True,
         "separable": False,

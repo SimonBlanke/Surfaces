@@ -72,7 +72,7 @@ class ConsecutiveReactionFunction(ODESimulationFunction):
     """
 
     _spec = {
-        "eval_cost": 201.2,
+        "eval_cost": 433.3,
         "simulation_based": True,
         "expensive": False,
         "continuous": True,

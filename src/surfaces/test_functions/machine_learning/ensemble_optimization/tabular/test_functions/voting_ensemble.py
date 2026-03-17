@@ -39,6 +39,7 @@ class VotingEnsembleFunction(BaseTabularEnsemble):
     """
 
     name = "Voting Ensemble"
+    _spec = {"eval_cost": 25400.0}
 
     available_datasets = ["digits", "iris", "wine", "breast_cancer"]
     available_cv = [2, 3, 5, 10]

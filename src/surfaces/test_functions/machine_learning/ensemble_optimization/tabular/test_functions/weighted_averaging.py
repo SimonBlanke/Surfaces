@@ -39,6 +39,7 @@ class WeightedAveragingFunction(BaseTabularEnsemble):
 
     name = "Weighted Averaging Ensemble"
     _name_ = "weighted_averaging"
+    _spec = {"eval_cost": 58900.0}
 
     available_datasets = ["diabetes", "california"]
     available_cv = [2, 3, 5, 10]

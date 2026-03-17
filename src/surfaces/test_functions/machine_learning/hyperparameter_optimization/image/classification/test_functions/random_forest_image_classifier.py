@@ -41,6 +41,7 @@ class RandomForestImageClassifierFunction(BaseImageClassification):
     """
 
     _name_ = "random_forest_image_classifier"
+    _spec = {"eval_cost": 85600.0}
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5]

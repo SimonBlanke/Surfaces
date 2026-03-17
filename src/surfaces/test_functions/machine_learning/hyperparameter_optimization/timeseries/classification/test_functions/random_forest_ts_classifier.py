@@ -75,6 +75,7 @@ class RandomForestTSClassifierFunction(BaseTSClassification):
 
     name = "Random Forest Time-Series Classifier Function"
     _name_ = "random_forest_ts_classifier"
+    _spec = {"eval_cost": 65700.0}
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]

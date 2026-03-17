@@ -69,7 +69,7 @@ class RLCCircuitFunction(ODESimulationFunction):
     """
 
     _spec = {
-        "eval_cost": 3122.7,
+        "eval_cost": 9900.0,
         "simulation_based": True,
         "expensive": False,
         "continuous": True,
@@ -278,7 +278,7 @@ class RCFilterFunction(ODESimulationFunction):
     """
 
     _spec = {
-        "eval_cost": 7542.7,
+        "eval_cost": 36300.0,
         "simulation_based": True,
         "expensive": False,
         "continuous": True,

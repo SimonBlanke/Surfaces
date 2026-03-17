@@ -23,6 +23,8 @@ class SVMClassifierFunction(BaseClassification):
 
     _name_ = "svm_classifier"
 
+    _spec = {"eval_cost": 759.9}
+
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]
 

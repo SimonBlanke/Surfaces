@@ -42,6 +42,7 @@ class XGBoostImageClassifierFunction(BaseImageClassification):
 
     name = "XGBoost Image Classifier Function"
     _name_ = "xgboost_image_classifier"
+    _spec = {"eval_cost": 181900.0}
     _dependencies = {"xgboost": ["xgboost"]}
 
     available_datasets = list(DATASETS.keys())

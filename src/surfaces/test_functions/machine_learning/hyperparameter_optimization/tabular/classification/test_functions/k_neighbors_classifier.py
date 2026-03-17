@@ -58,6 +58,8 @@ class KNeighborsClassifierFunction(BaseClassification):
     name = "KNeighbors Classifier Function"
     _name_ = "k_neighbors_classifier"
 
+    _spec = {"eval_cost": 39200.0}
+
     # Available options (for validation and documentation)
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]

@@ -38,6 +38,7 @@ class TSForestClassifierFunction(BaseTSClassification):
 
     name = "Time Series Forest Classifier Function"
     _name_ = "ts_forest_classifier"
+    _spec = {"eval_cost": 758600.0}
     _dependencies = {"timeseries": ["sktime"]}
 
     available_datasets = list(DATASETS.keys())
