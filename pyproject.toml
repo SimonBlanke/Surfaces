@@ -50,6 +50,7 @@ viz = [
 # Machine learning test functions
 ml = [
     "scikit-learn",
+    "catboost>=1.2.0",
     "xgboost>=1.7.0",
     "lightgbm>=4.0.0",
 ]

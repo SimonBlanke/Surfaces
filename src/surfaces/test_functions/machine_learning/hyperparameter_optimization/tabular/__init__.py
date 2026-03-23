@@ -3,6 +3,7 @@
 # License: MIT License
 
 from .classification import (
+    CatBoostClassifierFunction,
     DecisionTreeClassifierFunction,
     GradientBoostingClassifierFunction,
     KNeighborsClassifierFunction,
@@ -22,6 +23,7 @@ from .regression import (
 
 __all__ = [
     # Classification
+    "CatBoostClassifierFunction",
     "DecisionTreeClassifierFunction",
     "GradientBoostingClassifierFunction",
     "KNeighborsClassifierFunction",

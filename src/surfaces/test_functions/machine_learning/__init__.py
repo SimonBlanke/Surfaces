@@ -20,6 +20,7 @@ if _HAS_SKLEARN:
     )
     from .hyperparameter_optimization import (
         # Tabular - Classification
+        CatBoostClassifierFunction,
         DecisionTreeClassifierFunction,
         # Tabular - Regression
         DecisionTreeRegressorFunction,
@@ -52,6 +53,7 @@ if _HAS_SKLEARN:
 
     __all__ = [
         # Tabular - Classification
+        "CatBoostClassifierFunction",
         "DecisionTreeClassifierFunction",
         "GradientBoostingClassifierFunction",
         "KNeighborsClassifierFunction",
@@ -92,6 +94,7 @@ if _HAS_SKLEARN:
 
     machine_learning_functions = [
         # Tabular - Classification
+        CatBoostClassifierFunction,
         DecisionTreeClassifierFunction,
         GradientBoostingClassifierFunction,
         KNeighborsClassifierFunction,

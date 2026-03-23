@@ -126,6 +126,30 @@ For XGBoost-based test functions:
 
 ----
 
+CatBoost Support
+================
+
+For CatBoost-based test functions:
+
+.. code-block:: bash
+
+    pip install surfaces[ml] catboost
+
+.. code-block:: python
+
+    from surfaces.test_functions.machine_learning import CatBoostClassifierFunction
+
+    func = CatBoostClassifierFunction()
+    score = func({
+        "iterations": 100,
+        "depth": 6,
+        "learning_rate": 0.1,
+        "l2_leaf_reg": 3,
+        "random_strength": 1.0,
+    })
+
+----
+
 Usage Example
 =============
 
