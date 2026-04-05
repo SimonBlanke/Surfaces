@@ -206,12 +206,13 @@ class TestRLCCircuit:
         from surfaces.test_functions.simulation import RLCCircuitFunction
 
         # f_0 = 1/(2*pi*sqrt(L*C))
-        # For f_0=100Hz: L*C = 1/(4*pi^2*100^2) = 2.533e-6
-        # L=0.01, C=2.533e-4
-        func = RLCCircuitFunction(target_frequency=100.0, objective_type="resonance")
-        L = 0.01
-        C = 1.0 / (4 * np.pi**2 * 100**2 * L)
-        result = func({"R": 10.0, "L": L, "C": C})
+        # For f_0=50Hz: L*C = 1/(4*pi^2*50^2) ≈ 1.013e-5
+        # L=0.1, C≈1.013e-4
+        # Low R keeps damping negligible so FFT peak ≈ natural frequency
+        func = RLCCircuitFunction(target_frequency=50.0, objective_type="resonance")
+        L = 0.1
+        C = 1.0 / (4 * np.pi**2 * 50**2 * L)
+        result = func({"R": 0.1, "L": L, "C": C})
         assert result < 1.0  # Should be close to target
 
 
