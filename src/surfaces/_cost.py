@@ -13,7 +13,7 @@ Usage for benchmarking (external):
     Use ``to_cu()`` to convert wall-clock seconds to CU, enabling
     direct comparison of function eval cost and optimizer overhead.
 
-    >>> from surfaces.cost import to_cu
+    >>> from surfaces._cost import to_cu
     >>> optimizer_cu = to_cu(measured_optimizer_seconds)
 """
 
