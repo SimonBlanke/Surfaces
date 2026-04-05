@@ -36,7 +36,7 @@ from .test_functions_2d import (
 )
 
 # 4D functions
-from .test_functions_4d import ShekelFunction
+from .test_functions_4d import ColvilleFunction, ShekelFunction
 
 # ND functions
 from .test_functions_nd import (
@@ -79,6 +79,7 @@ __all__ = [
     "RosenbrockFunction",
     "SphereFunction",
     "StyblinskiTangFunction",
+    "ColvilleFunction",
     "ShekelFunction",
 ]
 
@@ -109,6 +110,7 @@ standard_functions = [
     SimionescuFunction,
     ThreeHumpCamelFunction,
     # 4D
+    ColvilleFunction,
     ShekelFunction,
     # ND
     GriewankFunction,
@@ -148,6 +150,7 @@ standard_functions_2d = [
 ]
 
 standard_functions_4d = [
+    ColvilleFunction,
     ShekelFunction,
 ]
 
