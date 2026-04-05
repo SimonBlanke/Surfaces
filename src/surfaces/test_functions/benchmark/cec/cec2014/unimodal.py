@@ -39,6 +39,7 @@ class RotatedHighConditionedElliptic(CEC2014Function):
     """
 
     _spec = {
+        "eval_cost": 1.3,
         "name": "Rotated High Conditioned Elliptic Function",
         "func_id": 1,
         "unimodal": True,
@@ -93,6 +94,7 @@ class RotatedBentCigar(CEC2014Function):
     """
 
     _spec = {
+        "eval_cost": 1.4,
         "name": "Rotated Bent Cigar Function",
         "func_id": 2,
         "unimodal": True,
@@ -138,6 +140,7 @@ class RotatedDiscus(CEC2014Function):
     """
 
     _spec = {
+        "eval_cost": 1.4,
         "name": "Rotated Discus Function",
         "func_id": 3,
         "unimodal": True,

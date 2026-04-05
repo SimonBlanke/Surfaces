@@ -27,6 +27,7 @@ class Sphere(CEC2013Function):
     uses_rotation = False
 
     _spec = {
+        "eval_cost": 0.8,
         "name": "Sphere Function",
         "func_id": 1,
         "unimodal": True,
@@ -59,6 +60,7 @@ class RotatedHighConditionedElliptic(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 2.6,
         "name": "Rotated High Conditioned Elliptic Function",
         "func_id": 2,
         "unimodal": True,
@@ -105,6 +107,7 @@ class RotatedBentCigar(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 2.0,
         "name": "Rotated Bent Cigar Function",
         "func_id": 3,
         "unimodal": True,
@@ -141,6 +144,7 @@ class RotatedDiscus(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 2.9,
         "name": "Rotated Discus Function",
         "func_id": 4,
         "unimodal": True,
@@ -175,6 +179,7 @@ class DifferentPowers(CEC2013Function):
     uses_rotation = False
 
     _spec = {
+        "eval_cost": 0.8,
         "name": "Different Powers Function",
         "func_id": 5,
         "unimodal": True,
@@ -220,6 +225,7 @@ class RotatedRosenbrock(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 1.6,
         "name": "Rotated Rosenbrock's Function",
         "func_id": 6,
         "unimodal": False,
@@ -261,6 +267,7 @@ class RotatedSchafferF7(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 3.0,
         "name": "Rotated Schaffer's F7 Function",
         "func_id": 7,
         "unimodal": False,
@@ -319,6 +326,7 @@ class RotatedAckley(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 2.7,
         "name": "Rotated Ackley's Function",
         "func_id": 8,
         "unimodal": False,
@@ -371,6 +379,7 @@ class RotatedWeierstrass(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 15.8,
         "name": "Rotated Weierstrass Function",
         "func_id": 9,
         "unimodal": False,
@@ -447,6 +456,7 @@ class RotatedGriewank(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 1.8,
         "name": "Rotated Griewank's Function",
         "func_id": 10,
         "unimodal": False,
@@ -494,6 +504,7 @@ class Rastrigin(CEC2013Function):
     uses_rotation = False
 
     _spec = {
+        "eval_cost": 3.4,
         "name": "Rastrigin's Function",
         "func_id": 11,
         "unimodal": False,
@@ -540,6 +551,7 @@ class RotatedRastrigin(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 4.3,
         "name": "Rotated Rastrigin's Function",
         "func_id": 12,
         "unimodal": False,
@@ -588,6 +600,7 @@ class StepRastrigin(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 6.2,
         "name": "Non-Continuous Rotated Rastrigin's Function",
         "func_id": 13,
         "unimodal": False,
@@ -646,6 +659,7 @@ class Schwefel(CEC2013Function):
     uses_rotation = False
 
     _spec = {
+        "eval_cost": 1.5,
         "name": "Schwefel's Function",
         "func_id": 14,
         "unimodal": False,
@@ -714,6 +728,7 @@ class RotatedSchwefel(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 2.0,
         "name": "Rotated Schwefel's Function",
         "func_id": 15,
         "unimodal": False,
@@ -782,6 +797,7 @@ class RotatedKatsuura(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 42.3,
         "name": "Rotated Katsuura Function",
         "func_id": 16,
         "unimodal": False,
@@ -849,6 +865,7 @@ class LunacekBiRastrigin(CEC2013Function):
     uses_rotation = False
 
     _spec = {
+        "eval_cost": 2.3,
         "name": "Lunacek Bi-Rastrigin Function",
         "func_id": 17,
         "unimodal": False,
@@ -916,6 +933,7 @@ class RotatedLunacekBiRastrigin(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 2.9,
         "name": "Rotated Lunacek Bi-Rastrigin Function",
         "func_id": 18,
         "unimodal": False,
@@ -990,6 +1008,7 @@ class RotatedExpandedGriewankRosenbrock(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 2.0,
         "name": "Rotated Expanded Griewank's plus Rosenbrock's Function",
         "func_id": 19,
         "unimodal": False,
@@ -1044,6 +1063,7 @@ class RotatedExpandedScafferF6(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 2.9,
         "name": "Rotated Expanded Scaffer's F6 Function",
         "func_id": 20,
         "unimodal": False,
@@ -1308,6 +1328,7 @@ class CompositionFunction1(_CompositionBase):
     """
 
     _spec = {
+        "eval_cost": 7.7,
         "name": "Composition Function 1",
         "func_id": 21,
     }
@@ -1394,6 +1415,7 @@ class CompositionFunction2(_CompositionBase):
     """
 
     _spec = {
+        "eval_cost": 5.0,
         "name": "Composition Function 2",
         "func_id": 22,
     }
@@ -1483,6 +1505,7 @@ class CompositionFunction3(_CompositionBase):
     """F23: Composition Function 3."""
 
     _spec = {
+        "eval_cost": 7.0,
         "name": "Composition Function 3",
         "func_id": 23,
     }
@@ -1575,6 +1598,7 @@ class CompositionFunction4(_CompositionBase):
     """F24: Composition Function 4."""
 
     _spec = {
+        "eval_cost": 18.7,
         "name": "Composition Function 4",
         "func_id": 24,
     }
@@ -1674,6 +1698,7 @@ class CompositionFunction5(_CompositionBase):
     """F25: Composition Function 5."""
 
     _spec = {
+        "eval_cost": 6.8,
         "name": "Composition Function 5",
         "func_id": 25,
     }
@@ -1768,6 +1793,7 @@ class CompositionFunction6(_CompositionBase):
     """F26: Composition Function 6."""
 
     _spec = {
+        "eval_cost": 21.7,
         "name": "Composition Function 6",
         "func_id": 26,
     }
@@ -1878,6 +1904,7 @@ class CompositionFunction7(_CompositionBase):
     """F27: Composition Function 7."""
 
     _spec = {
+        "eval_cost": 21.7,
         "name": "Composition Function 7",
         "func_id": 27,
     }
@@ -1988,6 +2015,7 @@ class CompositionFunction8(_CompositionBase):
     """F28: Composition Function 8."""
 
     _spec = {
+        "eval_cost": 9.9,
         "name": "Composition Function 8",
         "func_id": 28,
     }

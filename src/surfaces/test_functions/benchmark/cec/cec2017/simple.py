@@ -24,6 +24,7 @@ class ShiftedRotatedBentCigar(CEC2017Function):
     """
 
     _spec = {
+        "eval_cost": 1.4,
         "name": "Shifted and Rotated Bent Cigar Function",
         "func_id": 1,
         "unimodal": True,
@@ -66,6 +67,7 @@ class ShiftedRotatedSumDiffPow(CEC2017Function):
     """
 
     _spec = {
+        "eval_cost": 1.3,
         "name": "Shifted and Rotated Sum of Different Power Function",
         "func_id": 2,
         "unimodal": True,
@@ -102,6 +104,7 @@ class ShiftedRotatedZakharov(CEC2017Function):
     """
 
     _spec = {
+        "eval_cost": 1.8,
         "name": "Shifted and Rotated Zakharov Function",
         "func_id": 3,
         "unimodal": True,
@@ -141,6 +144,7 @@ class ShiftedRotatedRosenbrock(CEC2017Function):
     """
 
     _spec = {
+        "eval_cost": 1.7,
         "name": "Shifted and Rotated Rosenbrock's Function",
         "func_id": 4,
         "unimodal": False,
@@ -179,6 +183,7 @@ class ShiftedRotatedRastrigin(CEC2017Function):
     """
 
     _spec = {
+        "eval_cost": 1.7,
         "name": "Shifted and Rotated Rastrigin's Function",
         "func_id": 5,
         "unimodal": False,
@@ -216,6 +221,7 @@ class ShiftedRotatedSchafferF7(CEC2017Function):
     """
 
     _spec = {
+        "eval_cost": 1.9,
         "name": "Shifted and Rotated Schaffer's F7 Function",
         "func_id": 6,
         "unimodal": False,
@@ -259,6 +265,7 @@ class ShiftedRotatedLunacekBiRastrigin(CEC2017Function):
     """
 
     _spec = {
+        "eval_cost": 3.0,
         "name": "Shifted and Rotated Lunacek Bi-Rastrigin's Function",
         "func_id": 7,
         "unimodal": False,
@@ -335,6 +342,7 @@ class ShiftedRotatedNonContRastrigin(CEC2017Function):
     """
 
     _spec = {
+        "eval_cost": 2.3,
         "name": "Shifted and Rotated Non-Continuous Rastrigin's Function",
         "func_id": 8,
         "unimodal": False,
@@ -386,6 +394,7 @@ class ShiftedRotatedLevy(CEC2017Function):
     """
 
     _spec = {
+        "eval_cost": 2.3,
         "name": "Shifted and Rotated Levy Function",
         "func_id": 9,
         "unimodal": False,
@@ -442,6 +451,7 @@ class ShiftedRotatedSchwefel(CEC2017Function):
     """
 
     _spec = {
+        "eval_cost": 2.0,
         "name": "Shifted and Rotated Schwefel's Function",
         "func_id": 10,
         "unimodal": False,

@@ -465,6 +465,7 @@ class CompositionFunction1(_CompositionBase):
     biases = [0, 100, 200, 300, 400]
 
     _spec = {
+        "eval_cost": 7.4,
         "name": "Composition Function 1",
         "func_id": 23,
     }
@@ -540,6 +541,7 @@ class CompositionFunction2(_CompositionBase):
     biases = [0, 100, 200]
 
     _spec = {
+        "eval_cost": 5.6,
         "name": "Composition Function 2",
         "func_id": 24,
     }
@@ -601,6 +603,7 @@ class CompositionFunction3(_CompositionBase):
     biases = [0, 100, 200]
 
     _spec = {
+        "eval_cost": 5.9,
         "name": "Composition Function 3",
         "func_id": 25,
     }
@@ -664,6 +667,7 @@ class CompositionFunction4(_CompositionBase):
     biases = [0, 100, 200, 300, 400]
 
     _spec = {
+        "eval_cost": 20.6,
         "name": "Composition Function 4",
         "func_id": 26,
     }
@@ -739,6 +743,7 @@ class CompositionFunction5(_CompositionBase):
     biases = [0, 100, 200, 300, 400]
 
     _spec = {
+        "eval_cost": 20.4,
         "name": "Composition Function 5",
         "func_id": 27,
     }
@@ -814,6 +819,7 @@ class CompositionFunction6(_CompositionBase):
     biases = [0, 100, 200, 300, 400]
 
     _spec = {
+        "eval_cost": 9.4,
         "name": "Composition Function 6",
         "func_id": 28,
     }
@@ -882,6 +888,7 @@ class CompositionFunction7(_CompositionBase):
     biases = [0, 100, 200]
 
     _spec = {
+        "eval_cost": 16.1,
         "name": "Composition Function 7",
         "func_id": 29,
     }
@@ -994,6 +1001,7 @@ class CompositionFunction8(_CompositionBase):
     biases = [0, 100, 200]
 
     _spec = {
+        "eval_cost": 19.0,
         "name": "Composition Function 8",
         "func_id": 30,
     }

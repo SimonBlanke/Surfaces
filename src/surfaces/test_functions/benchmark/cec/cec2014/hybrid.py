@@ -402,6 +402,7 @@ class HybridFunction1(_HybridBase):
     proportions = [0.3, 0.3, 0.4]
 
     _spec = {
+        "eval_cost": 3.4,
         "name": "Hybrid Function 1",
         "func_id": 17,
     }
@@ -450,6 +451,7 @@ class HybridFunction2(_HybridBase):
     proportions = [0.3, 0.3, 0.4]
 
     _spec = {
+        "eval_cost": 8.2,
         "name": "Hybrid Function 2",
         "func_id": 18,
     }
@@ -508,6 +510,7 @@ class HybridFunction3(_HybridBase):
     proportions = [0.2, 0.2, 0.3, 0.3]
 
     _spec = {
+        "eval_cost": 7.7,
         "name": "Hybrid Function 3",
         "func_id": 19,
     }
@@ -571,6 +574,7 @@ class HybridFunction4(_HybridBase):
     proportions = [0.2, 0.2, 0.3, 0.3]
 
     _spec = {
+        "eval_cost": 4.6,
         "name": "Hybrid Function 4",
         "func_id": 20,
     }
@@ -624,6 +628,7 @@ class HybridFunction5(_HybridBase):
     proportions = [0.1, 0.2, 0.2, 0.2, 0.3]
 
     _spec = {
+        "eval_cost": 4.8,
         "name": "Hybrid Function 5",
         "func_id": 21,
     }
@@ -684,6 +689,7 @@ class HybridFunction6(_HybridBase):
     proportions = [0.1, 0.2, 0.2, 0.2, 0.3]
 
     _spec = {
+        "eval_cost": 9.5,
         "name": "Hybrid Function 6",
         "func_id": 22,
     }
