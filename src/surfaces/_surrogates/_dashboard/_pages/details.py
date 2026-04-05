@@ -230,7 +230,7 @@ def render_training_history(function_name: str):
             return "color: #17a2b8"
         return ""
 
-    styled_df = df.style.applymap(highlight_status, subset=["Status"])
+    styled_df = df.style.map(highlight_status, subset=["Status"])
     st.dataframe(styled_df, use_container_width=True, hide_index=True)
 
 
@@ -295,5 +295,5 @@ def render_validation_history(function_name: str):
         except (ValueError, TypeError):
             return ""
 
-    styled_df = df.style.applymap(highlight_r2, subset=["R2"])
+    styled_df = df.style.map(highlight_r2, subset=["R2"])
     st.dataframe(styled_df, use_container_width=True, hide_index=True)

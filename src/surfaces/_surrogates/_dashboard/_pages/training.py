@@ -188,7 +188,7 @@ def render():
                 return "color: #17a2b8"
             return ""
 
-        styled_df = df.style.applymap(highlight_status, subset=["Status"])
+        styled_df = df.style.map(highlight_status, subset=["Status"])
         st.dataframe(
             styled_df,
             use_container_width=True,
