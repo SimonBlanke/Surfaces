@@ -107,13 +107,18 @@ The collection system supports filtering by ``eval_cost``:
 Converting Optimizer Overhead
 =============================
 
+.. warning::
+
+   The ``surfaces._cost`` module is intended for your own experiments.
+   Its interface may change in future versions.
+
 To compare function eval cost with optimizer overhead, use ``to_cu()``
 to convert wall-clock seconds into the same unit:
 
 .. code-block:: python
 
     import time
-    from surfaces.cost import calibrate, to_cu
+    from surfaces._cost import calibrate, to_cu
 
     # Calibrate once per session (~1 second)
     calibrate()
@@ -139,7 +144,7 @@ A complete benchmark loop tracking total compute in CU:
 .. code-block:: python
 
     import time
-    from surfaces.cost import calibrate, to_cu
+    from surfaces._cost import calibrate, to_cu
     from surfaces.test_functions.algebraic import SphereFunction
 
     calibrate()
@@ -197,7 +202,7 @@ re-calibration:
 
 .. code-block:: python
 
-    from surfaces.cost import calibrate, reset
+    from surfaces._cost import calibrate, reset
 
     ref_time = calibrate()       # ~8e-6 seconds on a modern CPU
     reset()                      # clear cache
