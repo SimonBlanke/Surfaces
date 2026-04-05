@@ -98,6 +98,9 @@ class Collection:
             - continuous: bool - Continuous function
             - differentiable: bool - Differentiable function
 
+            Values can also be callables for custom comparisons:
+            - eval_cost: ``lambda c: c is not None and c < 10``
+
         Returns
         -------
         Collection
@@ -116,10 +119,12 @@ class Collection:
             elif key == "n_dim":
                 result = [f for f in result if get_n_dim(f) == value]
             else:
-                # Filter by spec property
                 from .utils import get_spec_value
 
-                result = [f for f in result if get_spec_value(f, key) == value]
+                if callable(value):
+                    result = [f for f in result if value(get_spec_value(f, key))]
+                else:
+                    result = [f for f in result if get_spec_value(f, key) == value]
 
         return Collection(result)
 
