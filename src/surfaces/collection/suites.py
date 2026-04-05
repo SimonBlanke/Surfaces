@@ -38,6 +38,31 @@ from ..test_functions.algebraic.constrained import (
     ThreeBarTrussFunction,
     WeldedBeamFunction,
 )
+from ..test_functions.algebraic.multi_objective import (
+    DTLZ1,
+    DTLZ2,
+    DTLZ3,
+    DTLZ4,
+    DTLZ5,
+    DTLZ6,
+    DTLZ7,
+    WFG1,
+    WFG2,
+    WFG3,
+    WFG4,
+    WFG5,
+    WFG6,
+    WFG7,
+    WFG8,
+    WFG9,
+    ZDT1,
+    ZDT2,
+    ZDT3,
+    ZDT4,
+    ZDT6,
+    FonsecaFleming,
+    Kursawe,
+)
 from ..test_functions.benchmark.bbob import (
     # Low/Moderate Conditioning (f6-f9)
     AttractiveSector,
@@ -333,6 +358,39 @@ Use case: Constrained optimization algorithm evaluation.
 Note: Functions use penalty methods; check is_feasible() for solutions.
 """
 
+multi_objective = [
+    ZDT1,
+    ZDT2,
+    ZDT3,
+    ZDT4,
+    ZDT6,
+    DTLZ1,
+    DTLZ2,
+    DTLZ3,
+    DTLZ4,
+    DTLZ5,
+    DTLZ6,
+    DTLZ7,
+    WFG1,
+    WFG2,
+    WFG3,
+    WFG4,
+    WFG5,
+    WFG6,
+    WFG7,
+    WFG8,
+    WFG9,
+    FonsecaFleming,
+    Kursawe,
+]
+"""Multi-objective optimization functions (23 functions).
+
+Purpose: Multi-objective algorithm benchmarking with diverse Pareto front geometries.
+Use case: MOEA comparison, Pareto front approximation quality evaluation.
+Selection: ZDT (bi-objective), DTLZ (scalable objectives), WFG (transformation-based).
+Note: DTLZ and WFG accept n_objectives parameter for scalable testing.
+"""
+
 # All suite names for iteration
 SUITE_NAMES = [
     "quick",
@@ -343,4 +401,5 @@ SUITE_NAMES = [
     "cec2014",
     "cec2017",
     "constrained",
+    "multi_objective",
 ]
