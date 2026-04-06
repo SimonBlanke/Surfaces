@@ -18,7 +18,7 @@ class SMACAdapter(AskTellAdapter):
 
     @property
     def name(self) -> str:
-        return "SMAC"
+        return f"smac.{self._cls.__name__}"
 
     def setup(self, search_space: dict, seed: int, budget: int) -> None:
         from ConfigSpace import ConfigurationSpace, Float
@@ -45,8 +45,6 @@ class SMACAdapter(AskTellAdapter):
 
         self._smac = self._cls(scenario, _dummy, **params)
         self._info = None
-        self._best_params: dict | None = None
-        self._best_score = float("inf")
 
     def ask(self) -> dict[str, Any]:
         self._info = self._smac.ask()
@@ -57,14 +55,6 @@ class SMACAdapter(AskTellAdapter):
 
         value = TrialValue(cost=score)
         self._smac.tell(self._info, value)
-        if score < self._best_score:
-            self._best_score = score
-            self._best_params = dict(params)
-
-    def best(self) -> tuple[dict[str, Any], float]:
-        if self._best_params is None:
-            raise RuntimeError("No evaluations recorded yet")
-        return self._best_params, self._best_score
 
 
 ADAPTER_CLASS = SMACAdapter

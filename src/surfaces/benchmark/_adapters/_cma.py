@@ -19,7 +19,7 @@ class CMAAdapter(AskTellAdapter):
 
     @property
     def name(self) -> str:
-        return "CMA-ES"
+        return "cma.CMA-ES"
 
     def setup(self, search_space: dict, seed: int, budget: int) -> None:
         bounds = extract_bounds(search_space)
@@ -39,8 +39,6 @@ class CMAAdapter(AskTellAdapter):
         self._population: list = []
         self._raw_population: list = []
         self._scores: list[float] = []
-        self._best_params: dict | None = None
-        self._best_score = float("inf")
 
     def ask(self) -> dict[str, Any]:
         if not self._population:
@@ -53,18 +51,9 @@ class CMAAdapter(AskTellAdapter):
 
     def tell(self, params: dict[str, Any], score: float) -> None:
         self._scores.append(score)
-        if score < self._best_score:
-            self._best_score = score
-            self._best_params = dict(params)
 
-        # Feed the full generation back once all members are evaluated
         if not self._population:
             self._es.tell(self._raw_population, self._scores)
-
-    def best(self) -> tuple[dict[str, Any], float]:
-        if self._best_params is None:
-            raise RuntimeError("No evaluations recorded yet")
-        return self._best_params, self._best_score
 
 
 ADAPTER_CLASS = CMAAdapter

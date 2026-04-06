@@ -18,7 +18,7 @@ class SkoptAdapter(AskTellAdapter):
 
     @property
     def name(self) -> str:
-        return "skopt"
+        return f"skopt.{self._cls.__name__}"
 
     def setup(self, search_space: dict, seed: int, budget: int) -> None:
         from skopt.space import Real
@@ -32,8 +32,6 @@ class SkoptAdapter(AskTellAdapter):
 
         self._opt = self._cls(dimensions=dimensions, **params)
         self._next_x = None
-        self._best_params: dict | None = None
-        self._best_score = float("inf")
 
     def ask(self) -> dict[str, Any]:
         self._next_x = self._opt.ask()
@@ -41,14 +39,6 @@ class SkoptAdapter(AskTellAdapter):
 
     def tell(self, params: dict[str, Any], score: float) -> None:
         self._opt.tell(self._next_x, score)
-        if score < self._best_score:
-            self._best_score = score
-            self._best_params = dict(params)
-
-    def best(self) -> tuple[dict[str, Any], float]:
-        if self._best_params is None:
-            raise RuntimeError("No evaluations recorded yet")
-        return self._best_params, self._best_score
 
 
 ADAPTER_CLASS = SkoptAdapter

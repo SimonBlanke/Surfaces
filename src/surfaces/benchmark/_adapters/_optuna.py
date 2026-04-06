@@ -19,7 +19,7 @@ class OptunaAdapter(AskTellAdapter):
 
     @property
     def name(self) -> str:
-        return self._cls.__name__
+        return f"optuna.{self._cls.__name__}"
 
     def setup(self, search_space: dict, seed: int, budget: int) -> None:
         import optuna
@@ -40,9 +40,6 @@ class OptunaAdapter(AskTellAdapter):
 
     def tell(self, params: dict[str, Any], score: float) -> None:
         self._study.tell(self._trial, score)
-
-    def best(self) -> tuple[dict[str, Any], float]:
-        return dict(self._study.best_params), self._study.best_value
 
 
 ADAPTER_CLASS = OptunaAdapter

@@ -29,16 +29,17 @@ def extract_bounds(search_space: dict) -> dict[str, tuple[float, float]]:
 class AskTellAdapter(ABC):
     """Internal adapter for optimizers with an ask/tell interface.
 
-    Subclasses must implement setup/ask/tell/best. Population-based
-    optimizers should buffer internally so that ask() always returns
-    a single point as a param dict.
+    Subclasses must implement setup/ask/tell and the name property.
+    Population-based optimizers should buffer internally so that
+    ask() always returns a single point as a param dict.
     """
 
     is_sealed = False
 
     @property
+    @abstractmethod
     def name(self) -> str:
-        return type(self).__name__.replace("Adapter", "")
+        """Unique display name in the format ``package.ClassName``."""
 
     @abstractmethod
     def setup(self, search_space: dict, seed: int, budget: int) -> None:
@@ -56,10 +57,6 @@ class AskTellAdapter(ABC):
     def tell(self, params: dict[str, Any], score: float) -> None:
         """Report the evaluation result for the last asked point."""
 
-    @abstractmethod
-    def best(self) -> tuple[dict[str, Any], float]:
-        """Return the best (params, score) found so far."""
-
 
 class SealedAdapter(ABC):
     """Internal adapter for optimizers without ask/tell.
@@ -72,8 +69,9 @@ class SealedAdapter(ABC):
     is_sealed = True
 
     @property
+    @abstractmethod
     def name(self) -> str:
-        return type(self).__name__.replace("Adapter", "")
+        """Unique display name in the format ``package.ClassName``."""
 
     @abstractmethod
     def run(

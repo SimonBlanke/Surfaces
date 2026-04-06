@@ -19,7 +19,7 @@ class PymooAdapter(AskTellAdapter):
 
     @property
     def name(self) -> str:
-        return self._cls.__name__
+        return f"pymoo.{self._cls.__name__}"
 
     def setup(self, search_space: dict, seed: int, budget: int) -> None:
         import numpy as np
@@ -38,8 +38,6 @@ class PymooAdapter(AskTellAdapter):
         self._population: list = []
         self._raw_pop = None
         self._scores: list[list[float]] = []
-        self._best_params: dict | None = None
-        self._best_score = float("inf")
 
     def ask(self) -> dict[str, Any]:
         if not self._population:
@@ -53,20 +51,12 @@ class PymooAdapter(AskTellAdapter):
 
     def tell(self, params: dict[str, Any], score: float) -> None:
         self._scores.append([score])
-        if score < self._best_score:
-            self._best_score = score
-            self._best_params = dict(params)
 
         if not self._population:
             import numpy as np
 
             self._raw_pop.set("F", np.array(self._scores))
             self._algorithm.tell(infills=self._raw_pop)
-
-    def best(self) -> tuple[dict[str, Any], float]:
-        if self._best_params is None:
-            raise RuntimeError("No evaluations recorded yet")
-        return self._best_params, self._best_score
 
 
 ADAPTER_CLASS = PymooAdapter

@@ -20,7 +20,7 @@ class GFOAdapter(SealedAdapter):
 
     @property
     def name(self) -> str:
-        return self._cls.__name__
+        return f"gfo.{self._cls.__name__}"
 
     def run(
         self,

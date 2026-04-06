@@ -19,7 +19,7 @@ class NevergradAdapter(AskTellAdapter):
 
     @property
     def name(self) -> str:
-        return self._cls.__name__
+        return f"nevergrad.{self._cls.__name__}"
 
     def setup(self, search_space: dict, seed: int, budget: int) -> None:
         import nevergrad as ng
@@ -44,8 +44,6 @@ class NevergradAdapter(AskTellAdapter):
             **self._params,
         )
         self._candidate = None
-        self._best_params: dict | None = None
-        self._best_score = float("inf")
 
     def ask(self) -> dict[str, Any]:
         self._candidate = self._opt.ask()
@@ -54,14 +52,6 @@ class NevergradAdapter(AskTellAdapter):
 
     def tell(self, params: dict[str, Any], score: float) -> None:
         self._opt.tell(self._candidate, score)
-        if score < self._best_score:
-            self._best_score = score
-            self._best_params = dict(params)
-
-    def best(self) -> tuple[dict[str, Any], float]:
-        if self._best_params is None:
-            raise RuntimeError("No evaluations recorded yet")
-        return self._best_params, self._best_score
 
 
 ADAPTER_CLASS = NevergradAdapter

@@ -22,7 +22,7 @@ class ScipyAdapter(SealedAdapter):
 
     @property
     def name(self) -> str:
-        return self._scipy_func.__name__
+        return f"scipy.{self._scipy_func.__name__}"
 
     def run(
         self,

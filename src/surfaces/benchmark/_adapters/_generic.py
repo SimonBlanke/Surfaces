@@ -19,19 +19,14 @@ class GenericAskTellAdapter(AskTellAdapter):
         self._params = dict(params)
         self._is_class = isinstance(cls_or_instance, type)
         self._opt = None
-        self._best_params: dict | None = None
-        self._best_score = float("inf")
 
     @property
     def name(self) -> str:
-        if self._is_class:
-            return self._obj.__name__
-        return type(self._obj).__name__
+        cls = self._obj if self._is_class else type(self._obj)
+        module = (cls.__module__ or "").split(".")[0]
+        return f"{module}.{cls.__name__}"
 
     def setup(self, search_space: dict, seed: int, budget: int) -> None:
-        self._best_params = None
-        self._best_score = float("inf")
-
         if self._is_class:
             self._opt = self._obj(search_space, seed=seed, **self._params)
         else:
@@ -44,16 +39,6 @@ class GenericAskTellAdapter(AskTellAdapter):
 
     def tell(self, params: dict[str, Any], score: float) -> None:
         self._opt.tell(params, score)
-        if score < self._best_score:
-            self._best_score = score
-            self._best_params = dict(params)
-
-    def best(self) -> tuple[dict[str, Any], float]:
-        if hasattr(self._opt, "best") and callable(self._opt.best):
-            return self._opt.best()
-        if self._best_params is None:
-            raise RuntimeError("No evaluations recorded yet")
-        return self._best_params, self._best_score
 
 
 ADAPTER_CLASS = GenericAskTellAdapter

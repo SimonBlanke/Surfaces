@@ -22,7 +22,7 @@ class PySwarmsAdapter(SealedAdapter):
 
     @property
     def name(self) -> str:
-        return self._cls.__name__
+        return f"pyswarms.{self._cls.__name__}"
 
     def run(
         self,
