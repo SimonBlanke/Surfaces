@@ -243,9 +243,11 @@ class ResultAccessor:
         """
         from surfaces.benchmark._statistics import compute_ert
 
+        optimal_scores = {cls.__name__: cls.f_global for cls in self._bench._functions}
+
         return compute_ert(
             self._bench._traces,
-            self._bench._optimal_scores,
+            optimal_scores,
             precision,
             targets,
         )
@@ -354,10 +356,10 @@ class IOAccessor:
                 "budget_iter": self._bench._budget_iter,
                 "n_seeds": self._bench._n_seeds,
                 "seed": self._bench._seed,
+                "catch": self._bench._catch,
             },
             "functions": functions,
             "optimizers": optimizers,
-            "optimal_scores": self._bench._optimal_scores,
             "traces": trace_list,
         }
 

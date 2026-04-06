@@ -44,6 +44,11 @@ class Benchmark:
         Number of independent runs per (function, optimizer) pair.
     seed : int
         Base random seed. Run i uses seed + i.
+    catch : str
+        Error handling for individual trials. ``"raise"`` (default)
+        propagates exceptions immediately. ``"warn"`` logs a warning
+        and continues. ``"skip"`` silently skips the failed trial.
+        Failed trials are recorded in ``bench.errors`` regardless of mode.
 
     Examples
     --------
@@ -54,25 +59,31 @@ class Benchmark:
     >>> bench.results.summary()
     """
 
+    _CATCH_MODES = frozenset({"raise", "warn", "skip"})
+
     def __init__(
         self,
         budget_cu: float | None = None,
         budget_iter: int | None = None,
         n_seeds: int = 1,
         seed: int = 0,
+        catch: str = "raise",
     ):
         if budget_cu is None and budget_iter is None:
             raise ValueError("Specify at least one of budget_cu or budget_iter")
+        if catch not in self._CATCH_MODES:
+            raise ValueError(f"catch must be one of {sorted(self._CATCH_MODES)}, got {catch!r}")
 
         self._budget_cu = budget_cu
         self._budget_iter = budget_iter
         self._n_seeds = n_seeds
         self._seed = seed
+        self._catch = catch
 
         self._functions: list[type] = []
         self._optimizers: list[tuple[Any, dict]] = []
         self._traces: dict[tuple[str, str, int], Trace] = {}
-        self._optimal_scores: dict[str, float | None] = {}
+        self._errors: dict[tuple[str, str, int], Exception] = {}
         self._calibration_ref_time: float | None = None
 
         from surfaces.benchmark._accessors import IOAccessor, PlotAccessor, ResultAccessor
@@ -110,6 +121,74 @@ class Benchmark:
             if normalized not in self._optimizers:
                 self._optimizers.append(normalized)
         return self
+
+    def remove_functions(self, functions: Any) -> Benchmark:
+        """Remove test functions and their associated traces.
+
+        Accepts a single class, a list of classes, or a Collection.
+        Classes not currently registered are silently ignored.
+        All traces recorded for removed functions are deleted.
+        """
+        resolved = resolve_functions(functions)
+        for func_cls in resolved:
+            if func_cls in self._functions:
+                self._functions.remove(func_cls)
+                func_name = func_cls.__name__
+                self._purge_traces(function=func_name)
+        return self
+
+    def remove_optimizers(self, optimizers: Any) -> Benchmark:
+        """Remove optimizer specs and their associated traces.
+
+        Accepts a single spec or a list of specs. Each spec can be a
+        bare class or a ``(class, params_dict)`` tuple.
+
+        When a bare class is passed, **all** entries using that class
+        are removed regardless of their params. When a tuple is passed,
+        only the entry with exactly matching params is removed. This
+        lets you selectively drop one configuration while keeping others::
+
+            bench.remove_optimizers(TPESampler)                # all TPESampler entries
+            bench.remove_optimizers((TPESampler, {"n": 10}))   # only this config
+
+        Specs not currently registered are silently ignored.
+        All traces recorded for removed optimizers are deleted.
+        """
+        if isinstance(optimizers, list):
+            specs = optimizers
+        else:
+            specs = [optimizers]
+
+        for spec in specs:
+            if isinstance(spec, tuple):
+                normalized = self._normalize_optimizer_spec(spec)
+                if normalized in self._optimizers:
+                    adapter = resolve_optimizer(self._to_spec(normalized))
+                    self._optimizers.remove(normalized)
+                    self._purge_traces(optimizer=adapter.name)
+            else:
+                to_remove = [(obj, p) for obj, p in self._optimizers if obj is spec]
+                for entry in to_remove:
+                    adapter = resolve_optimizer(self._to_spec(entry))
+                    self._optimizers.remove(entry)
+                    self._purge_traces(optimizer=adapter.name)
+        return self
+
+    def _purge_traces(
+        self,
+        function: str | None = None,
+        optimizer: str | None = None,
+    ) -> None:
+        """Remove traces and errors matching the given function or optimizer name."""
+        keys_to_drop = [
+            k
+            for k in self._traces
+            if (function is not None and k[0] == function)
+            or (optimizer is not None and k[1] == optimizer)
+        ]
+        for k in keys_to_drop:
+            del self._traces[k]
+            self._errors.pop(k, None)
 
     def run(
         self,
@@ -156,9 +235,6 @@ class Benchmark:
 
         for func_cls in self._functions:
             func_name = func_cls.__name__
-            if func_name not in self._optimal_scores:
-                probe = _instantiate_function(func_cls)
-                self._optimal_scores[func_name] = probe.spec.f_global
 
             for adapter in adapters:
                 for i in range(self._n_seeds):
@@ -182,20 +258,34 @@ class Benchmark:
                             callback(info)
                         continue
 
-                    func = _instantiate_function(func_cls)
+                    try:
+                        func = _instantiate_function(func_cls)
 
-                    t0 = time.perf_counter()
-                    if adapter.is_sealed:
-                        trace = _run_sealed(
-                            func, adapter, run_seed, self._budget_cu, self._budget_iter
-                        )
-                    else:
-                        trace = _run_ask_tell(
-                            func, adapter, run_seed, self._budget_cu, self._budget_iter
-                        )
-                    wall = time.perf_counter() - t0
+                        t0 = time.perf_counter()
+                        if adapter.is_sealed:
+                            trace = _run_sealed(
+                                func, adapter, run_seed, self._budget_cu, self._budget_iter
+                            )
+                        else:
+                            trace = _run_ask_tell(
+                                func, adapter, run_seed, self._budget_cu, self._budget_iter
+                            )
+                        wall = time.perf_counter() - t0
 
-                    self._traces[key] = trace
+                        self._traces[key] = trace
+
+                    except Exception as exc:
+                        if self._catch == "raise":
+                            raise
+                        self._errors[key] = exc
+                        if self._catch == "warn":
+                            warnings.warn(
+                                f"Trial {func_name} x {adapter.name} "
+                                f"(seed={run_seed}) failed: "
+                                f"{type(exc).__name__}: {exc}",
+                                stacklevel=2,
+                            )
+                        wall = None
 
                     info = TrialInfo(
                         function=func_name,
@@ -205,6 +295,7 @@ class Benchmark:
                         total=total,
                         skipped=False,
                         wall_seconds=wall,
+                        error=self._errors.get(key),
                     )
                     if progress:
                         progress.trial_complete(info)
@@ -230,6 +321,11 @@ class Benchmark:
     def plot(self) -> PlotAccessor:
         """Access benchmark visualizations."""
         return self._plot_accessor
+
+    @property
+    def errors(self) -> dict[tuple[str, str, int], Exception]:
+        """Failed trials from the last run, keyed by (function, optimizer, seed)."""
+        return dict(self._errors)
 
     @classmethod
     def load(cls, path: str | Path) -> Benchmark:
@@ -273,6 +369,7 @@ class Benchmark:
             budget_iter=config.get("budget_iter"),
             n_seeds=config.get("n_seeds", 1),
             seed=config.get("seed", 0),
+            catch=config.get("catch", "raise"),
         )
 
         for func_path in data.get("functions", []):
@@ -293,9 +390,6 @@ class Benchmark:
             module = importlib.import_module(module_path)
             opt_cls = getattr(module, class_name)
             bench._optimizers.append((opt_cls, params))
-
-        for name, val in data.get("optimal_scores", {}).items():
-            bench._optimal_scores[name] = val
 
         for entry in data.get("traces", []):
             key = (entry["function"], entry["optimizer"], entry["seed"])
@@ -371,7 +465,10 @@ class Benchmark:
         n_funcs = len(self._functions)
         n_opts = len(self._optimizers)
         n_traces = len(self._traces)
+        n_errors = len(self._errors)
         parts = [f"{n_funcs} functions", f"{n_opts} optimizers", f"{n_traces} traces"]
+        if n_errors:
+            parts.append(f"{n_errors} errors")
         if self._budget_cu is not None:
             parts.append(f"budget_cu={self._budget_cu}")
         if self._budget_iter is not None:

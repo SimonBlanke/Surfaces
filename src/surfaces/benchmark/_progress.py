@@ -36,6 +36,7 @@ class TrialInfo:
     total: int
     skipped: bool
     wall_seconds: float | None
+    error: Exception | None = None
 
 
 def _format_time(seconds: float) -> str:
@@ -85,6 +86,7 @@ class _ProgressBar:
         self._t_start = time.perf_counter()
         self._new = 0
         self._skipped = 0
+        self._failed = 0
         self._is_tty = sys.stdout.isatty()
 
         if self._is_tty:
@@ -94,6 +96,8 @@ class _ProgressBar:
     def trial_complete(self, info: TrialInfo) -> None:
         if info.skipped:
             self._skipped += 1
+        elif info.error is not None:
+            self._failed += 1
         else:
             self._new += 1
 
@@ -122,11 +126,14 @@ class _ProgressBar:
                 f"{self._n_optimizers:>{ow}}/{self._n_optimizers}",
                 f"{self._PREFIXES[2]:<{pw}}{full_bar}  " f"{self._n_seeds:>{sw}}/{self._n_seeds}",
                 "│",
-                f"│  {self._new} new, {self._skipped} skipped",
+                f"│  {self._new} new, {self._skipped} skipped, {self._failed} failed",
             ]
             self._write_lines(lines)
         else:
-            print(f"[done] {self._new} new, {self._skipped} skipped, " f"{elapsed_str} total")
+            print(
+                f"[done] {self._new} new, {self._skipped} skipped, "
+                f"{self._failed} failed, {elapsed_str} total"
+            )
 
     def _bar(self, fraction: float) -> str:
         filled = int(self._BAR_WIDTH * fraction)
@@ -165,7 +172,7 @@ class _ProgressBar:
             f"{self._bar(seed_idx / self._n_seeds)}  "
             f"{seed_idx:>{sw}}/{self._n_seeds}",
             "│",
-            f"│  {self._new} new, {self._skipped} skipped",
+            f"│  {self._new} new, {self._skipped} skipped, {self._failed} failed",
         ]
         self._write_lines(lines)
 
@@ -177,7 +184,12 @@ class _ProgressBar:
         """Fallback for non-TTY output."""
         width = len(str(self._total))
         idx = f"{info.index:>{width}}"
-        status = "-- skipped" if info.skipped else f"{info.wall_seconds:.2f}s"
+        if info.skipped:
+            status = "-- skipped"
+        elif info.error is not None:
+            status = f"!! {type(info.error).__name__}: {info.error}"
+        else:
+            status = f"{info.wall_seconds:.2f}s"
         print(
             f"[{idx}/{self._total}] {info.function} x {info.optimizer} "
             f"(seed={info.seed}) {status}"
