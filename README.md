@@ -288,6 +288,30 @@ result_fast = func_fast({"n_neighbors": 5, "algorithm": "auto"})  # ~0.1ms
 
 
 <details>
+<summary><b>Multi-Fidelity Evaluation</b></summary>
+
+```python
+from surfaces.test_functions.machine_learning import RandomForestClassifierFunction
+
+func = RandomForestClassifierFunction(dataset="digits", cv=3)
+params = {"n_estimators": 100, "max_depth": 10, "min_samples_split": 2}
+
+# Cheap evaluation on 10% of data (for Hyperband/BOHB early stopping)
+score_cheap = func(params, fidelity=0.1)
+
+# Full evaluation on all data
+score_full = func(params, fidelity=1.0)
+
+# Fidelity works with all ML functions: classification, regression,
+# time series, image. Subsampling is stratified for classification
+# and sequential for time series to preserve temporal order.
+```
+
+</details>
+
+
+
+<details>
 <summary><b>Benchmark Suites</b></summary>
 
 ```python
@@ -312,21 +336,45 @@ print(f"BBOB Sphere f_global: {bbob_sphere.f_global}")
 <summary><b>Multi-Objective Functions</b></summary>
 
 ```python
-from surfaces.test_functions.algebraic.multi_objective import (
-    ZDT1,
-    Kursawe,
+from surfaces.test_functions.algebraic.multi_objective import ZDT1, DTLZ2, WFG4
+
+# ZDT1: Two-objective, convex Pareto front
+zdt1 = ZDT1(n_dim=10)
+objectives = zdt1({f"x{i}": 0.5 for i in range(10)})
+
+# DTLZ2: Scalable to any number of objectives
+dtlz2 = DTLZ2(n_dim=12, n_objectives=3)
+
+# WFG4: Non-separable with concave Pareto front
+wfg4 = WFG4(n_dim=10, n_objectives=2)
+
+# All provide analytical Pareto fronts for comparison
+pareto = zdt1.pareto_front(n_points=100)
+```
+
+</details>
+
+
+
+<details>
+<summary><b>Benchmark Runner</b></summary>
+
+```python
+from surfaces.benchmark import run
+from surfaces import collection
+
+# Run two optimizers across the standard suite
+result = run(
+    functions=collection.quick,
+    optimizers=[HillClimbingOptimizer, RandomSearchOptimizer],
+    budget_iter=1000,
+    n_seeds=5,
+    seed=42,
 )
 
-# ZDT1: Two-objective problem with convex Pareto front
-zdt1 = ZDT1(n_dim=3)
-params = {f"x{i}": 0.5 for i in range(3)}
-objectives = zdt1(params)  # Returns tuple of objectives
-print(f"ZDT1 objectives: {objectives}")
-
-# Kursawe: Non-convex Pareto front
-kursawe = Kursawe()
-f1, f2 = kursawe({"x0": 0.0, "x1": 0.0, "x2": 0.0})
-print(f"Kursawe objectives: f1={f1:.4f}, f2={f2:.4f}")
+# Analyze results
+print(result.summary())
+df = result.to_dataframe()
 ```
 
 </details>
@@ -401,12 +449,11 @@ Contributions welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 If you use this software in your research, please cite:
 
 ```bibtex
-@software{surfaces2024,
+@software{surfaces,
   author = {Simon Blanke},
   title = {Surfaces: Test functions for optimization algorithm benchmarking},
   year = {2024},
   url = {https://github.com/SimonBlanke/Surfaces},
-  version = {0.6.1}
 }
 ```
 
