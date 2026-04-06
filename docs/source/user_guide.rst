@@ -106,6 +106,13 @@ Guide Sections
       Pre-trained models for fast evaluation
       of expensive ML test functions.
 
+   .. grid-item-card:: Multi-Fidelity
+      :link: user_guide/multi_fidelity
+      :link-type: doc
+
+      Evaluate ML functions at reduced cost
+      for Hyperband, BOHB and ASHA.
+
    .. grid-item-card:: Compute Units
       :link: user_guide/compute_units
       :link-type: doc
@@ -144,5 +151,6 @@ Quick Example
    user_guide/integrations/index
    user_guide/visualization
    user_guide/surrogates
+   user_guide/multi_fidelity
    user_guide/compute_units
    /_generated/plots/gallery
