@@ -4,10 +4,11 @@
 
 """Algebraic test functions with closed-form analytical expressions.
 
-This module contains three categories of algebraic functions:
+This module contains four categories of algebraic functions:
 - standard: Classic benchmark functions (Sphere, Rastrigin, Ackley, etc.)
 - constrained: Engineering design problems with constraints (WeldedBeam, etc.)
 - multi_objective: Multi-objective optimization problems (ZDT, Kursawe, etc.)
+- discrete: Pseudo-boolean/combinatorial functions (OneMax, NK, Trap, etc.)
 """
 
 from ._base_algebraic_function import AlgebraicFunction, MathematicalFunction
@@ -21,6 +22,17 @@ from .constrained import (
     ThreeBarTrussFunction,
     WeldedBeamFunction,
     constrained_functions,
+)
+
+# Discrete functions (pseudo-boolean/combinatorial)
+from .discrete import (
+    DiscreteFunction,
+    KnapsackFunction,
+    LeadingOnesFunction,
+    NKLandscapeFunction,
+    OneMaxFunction,
+    TrapFunction,
+    discrete_functions,
 )
 
 # Multi-objective functions
@@ -164,11 +176,19 @@ __all__ = [
     # Multi-objective: Others
     "FonsecaFleming",
     "Kursawe",
+    # Discrete
+    "DiscreteFunction",
+    "OneMaxFunction",
+    "LeadingOnesFunction",
+    "NKLandscapeFunction",
+    "TrapFunction",
+    "KnapsackFunction",
     # Function lists
     "algebraic_functions",
     "standard_functions",
     "constrained_functions",
     "multi_objective_functions",
+    "discrete_functions",
 ]
 
 # Combined list of standard algebraic functions (same as before restructuring)
