@@ -12,7 +12,7 @@ from typing import Any
 
 import numpy as np
 
-from surfaces._benchmark._adapters._base import SealedAdapter, extract_bounds
+from surfaces.benchmark._adapters._base import SealedAdapter, extract_bounds
 
 
 class PySwarmsAdapter(SealedAdapter):

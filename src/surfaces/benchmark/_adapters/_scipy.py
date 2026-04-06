@@ -12,7 +12,7 @@ import inspect
 import time
 from typing import Any
 
-from surfaces._benchmark._adapters._base import SealedAdapter, extract_bounds
+from surfaces.benchmark._adapters._base import SealedAdapter, extract_bounds
 
 
 class ScipyAdapter(SealedAdapter):

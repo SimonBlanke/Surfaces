@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from surfaces._benchmark._adapters._base import AskTellAdapter, extract_bounds
+from surfaces.benchmark._adapters._base import AskTellAdapter, extract_bounds
 
 
 class BayesOptAdapter(AskTellAdapter):

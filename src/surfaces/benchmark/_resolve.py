@@ -53,7 +53,7 @@ def resolve_optimizer(spec: Any) -> Any:
             return _load_adapter(adapter_module_name, obj, params)
 
     if _has_ask_tell(obj):
-        from surfaces._benchmark._adapters._generic import GenericAskTellAdapter
+        from surfaces.benchmark._adapters._generic import GenericAskTellAdapter
 
         return GenericAskTellAdapter(obj, params)
 
@@ -84,7 +84,7 @@ def _get_module(obj: Any) -> str:
 
 def _load_adapter(adapter_module_name: str, obj: Any, params: dict) -> Any:
     """Lazily import an adapter module and instantiate it."""
-    mod = importlib.import_module(f"surfaces._benchmark._adapters.{adapter_module_name}")
+    mod = importlib.import_module(f"surfaces.benchmark._adapters.{adapter_module_name}")
     return mod.ADAPTER_CLASS(obj, params)
 
 

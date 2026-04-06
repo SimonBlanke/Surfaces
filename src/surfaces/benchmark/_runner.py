@@ -1,4 +1,4 @@
-"""Benchmark runner: orchestrates function x optimizer x seed runs.
+"""Internal benchmark execution: ask/tell and sealed run loops.
 
 The runner handles two execution modes:
 
@@ -15,101 +15,8 @@ import inspect
 import time
 from typing import Any
 
-from surfaces._benchmark._resolve import resolve_functions, resolve_optimizer
-from surfaces._benchmark._result import BenchmarkResult
-from surfaces._benchmark._suites import Suite
-from surfaces._benchmark._trace import EvalRecord, Trace
-from surfaces._cost import calibrate, to_cu
-
-
-def run(
-    functions: Any,
-    optimizers: list,
-    budget_cu: float | None = None,
-    budget_iter: int | None = None,
-    n_seeds: int = 1,
-    seed: int = 0,
-) -> BenchmarkResult:
-    """Run a benchmark across functions, optimizers, and seeds.
-
-    Parameters
-    ----------
-    functions
-        Test functions to benchmark on. Accepts a single class,
-        a list of classes, or a Collection.
-    optimizers
-        Optimizer specs. Each element can be:
-        - A class (auto-detected by module path)
-        - A (class, params_dict) tuple
-        - An instance with ask() and tell() methods
-    budget_cu : float, optional
-        Maximum compute budget per run in Compute Units.
-    budget_iter : int, optional
-        Maximum number of function evaluations per run.
-    n_seeds : int
-        Number of independent runs per (function, optimizer) pair.
-    seed : int
-        Base random seed. Run i uses seed + i.
-
-    Returns
-    -------
-    BenchmarkResult
-    """
-    if budget_cu is None and budget_iter is None:
-        raise ValueError("Specify at least one of budget_cu or budget_iter")
-
-    calibrate()
-
-    func_classes = resolve_functions(functions)
-    adapters = [resolve_optimizer(spec) for spec in optimizers]
-
-    traces: dict[tuple[str, str, int], Trace] = {}
-
-    for func_cls in func_classes:
-        for adapter in adapters:
-            for i in range(n_seeds):
-                run_seed = seed + i
-                func = _instantiate_function(func_cls)
-
-                if adapter.is_sealed:
-                    trace = _run_sealed(func, adapter, run_seed, budget_cu, budget_iter)
-                else:
-                    trace = _run_ask_tell(func, adapter, run_seed, budget_cu, budget_iter)
-
-                key = (func_cls.__name__, adapter.name, run_seed)
-                traces[key] = trace
-
-    return BenchmarkResult(traces)
-
-
-def run_suite(
-    suite: Suite,
-    optimizers: list,
-    **overrides: Any,
-) -> BenchmarkResult:
-    """Run a pre-defined benchmark suite.
-
-    Parameters
-    ----------
-    suite : Suite
-        A predefined suite from surfaces._benchmark.suites.
-    optimizers : list
-        Optimizer specs (same format as run()).
-    **overrides
-        Override suite defaults (budget_cu, budget_iter, n_seeds, seed).
-    """
-    from surfaces import collection
-
-    functions = collection.filter(**suite.function_filter)
-
-    kwargs: dict[str, Any] = {
-        "budget_cu": suite.budget_cu,
-        "budget_iter": suite.budget_iter,
-        "n_seeds": suite.n_seeds,
-    }
-    kwargs.update(overrides)
-
-    return run(functions=functions, optimizers=optimizers, **kwargs)
+from surfaces._cost import to_cu
+from surfaces.benchmark._trace import EvalRecord, Trace
 
 
 def _instantiate_function(func_cls: type) -> Any:

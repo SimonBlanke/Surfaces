@@ -1,0 +1,308 @@
+"""Central Benchmark class for gradient-free optimizer comparison.
+
+The Benchmark object holds configuration (budget, seeds), a registry
+of test functions and optimizer specs, and accumulated trace data.
+Each call to run() executes only the missing (function, optimizer, seed)
+combinations, making incremental benchmarking natural.
+"""
+
+from __future__ import annotations
+
+import importlib
+import json
+import warnings
+from pathlib import Path
+from typing import TYPE_CHECKING, Any
+
+from surfaces._cost import calibrate
+
+if TYPE_CHECKING:
+    from surfaces.benchmark._accessors import IOAccessor, PlotAccessor, ResultAccessor
+from surfaces.benchmark._resolve import resolve_functions, resolve_optimizer
+from surfaces.benchmark._runner import _instantiate_function, _run_ask_tell, _run_sealed
+from surfaces.benchmark._suites import Suite
+from surfaces.benchmark._trace import EvalRecord, Trace
+
+
+class Benchmark:
+    """Configurable, incremental benchmark runner.
+
+    Collects test functions and optimizer specs via add methods,
+    then runs only the missing combinations on each run() call.
+    Results accumulate in the instance across runs.
+
+    Parameters
+    ----------
+    budget_cu : float, optional
+        Maximum compute budget per run in Compute Units.
+    budget_iter : int, optional
+        Maximum number of function evaluations per run.
+    n_seeds : int
+        Number of independent runs per (function, optimizer) pair.
+    seed : int
+        Base random seed. Run i uses seed + i.
+
+    Examples
+    --------
+    >>> bench = Benchmark(budget_cu=50_000, n_seeds=5)
+    >>> bench.add_functions(collection.filter(category="bbob"))
+    >>> bench.add_optimizers([HillClimbing, RandomSearch])
+    >>> bench.run()
+    >>> bench.results.summary()
+    """
+
+    def __init__(
+        self,
+        budget_cu: float | None = None,
+        budget_iter: int | None = None,
+        n_seeds: int = 1,
+        seed: int = 0,
+    ):
+        if budget_cu is None and budget_iter is None:
+            raise ValueError("Specify at least one of budget_cu or budget_iter")
+
+        self._budget_cu = budget_cu
+        self._budget_iter = budget_iter
+        self._n_seeds = n_seeds
+        self._seed = seed
+
+        self._functions: list[type] = []
+        self._optimizers: list[tuple[Any, dict]] = []
+        self._traces: dict[tuple[str, str, int], Trace] = {}
+        self._calibration_ref_time: float | None = None
+
+        from surfaces.benchmark._accessors import IOAccessor, PlotAccessor, ResultAccessor
+
+        self._results_accessor = ResultAccessor(self)
+        self._io_accessor = IOAccessor(self)
+        self._plot_accessor = PlotAccessor(self)
+
+    def add_functions(self, functions: Any) -> Benchmark:
+        """Add test functions to the benchmark.
+
+        Accepts a single class, a list of classes, or a Collection.
+        Duplicates are silently ignored.
+        """
+        resolved = resolve_functions(functions)
+        for func_cls in resolved:
+            if func_cls not in self._functions:
+                self._functions.append(func_cls)
+        return self
+
+    def add_optimizers(self, optimizers: Any) -> Benchmark:
+        """Add optimizer specs to the benchmark.
+
+        Accepts a single spec or a list of specs. Each spec can be
+        a class (auto-detected by module path) or a (class, params_dict)
+        tuple. Duplicates are silently ignored.
+        """
+        if isinstance(optimizers, list):
+            specs = optimizers
+        else:
+            specs = [optimizers]
+
+        for spec in specs:
+            normalized = self._normalize_optimizer_spec(spec)
+            if normalized not in self._optimizers:
+                self._optimizers.append(normalized)
+        return self
+
+    def run(self) -> Benchmark:
+        """Run all missing (function, optimizer, seed) combinations.
+
+        Only executes combinations that have no trace yet. New traces
+        are added to the existing results, so previous data is preserved.
+
+        Returns self for chaining: ``bench.run().results.summary()``
+        """
+        if not self._functions:
+            raise ValueError("No functions added. Call add_functions() first.")
+        if not self._optimizers:
+            raise ValueError("No optimizers added. Call add_optimizers() first.")
+
+        self._calibration_ref_time = calibrate()
+
+        adapters = [resolve_optimizer(self._to_spec(opt)) for opt in self._optimizers]
+
+        for func_cls in self._functions:
+            for adapter in adapters:
+                for i in range(self._n_seeds):
+                    run_seed = self._seed + i
+                    key = (func_cls.__name__, adapter.name, run_seed)
+
+                    if key in self._traces:
+                        continue
+
+                    func = _instantiate_function(func_cls)
+
+                    if adapter.is_sealed:
+                        trace = _run_sealed(
+                            func, adapter, run_seed, self._budget_cu, self._budget_iter
+                        )
+                    else:
+                        trace = _run_ask_tell(
+                            func, adapter, run_seed, self._budget_cu, self._budget_iter
+                        )
+
+                    self._traces[key] = trace
+
+        return self
+
+    @property
+    def results(self) -> ResultAccessor:
+        """Access benchmark results: summary, traces, dataframe export."""
+        return self._results_accessor
+
+    @property
+    def io(self) -> IOAccessor:
+        """Access save/load functionality."""
+        return self._io_accessor
+
+    @property
+    def plot(self) -> PlotAccessor:
+        """Access benchmark visualizations."""
+        return self._plot_accessor
+
+    @classmethod
+    def load(cls, path: str | Path) -> Benchmark:
+        """Load a benchmark (config + results) from a JSON file.
+
+        Functions must originate from the surfaces package.
+        A warning is emitted if the Surfaces version differs from
+        the one used when saving.
+
+        Parameters
+        ----------
+        path : str or Path
+            Path to a JSON file previously created by ``io.save()``.
+        """
+        path = Path(path)
+
+        with open(path) as f:
+            data = json.load(f)
+
+        version = data.get("format_version", 0)
+        if version != 2:
+            raise ValueError(
+                f"Unsupported format version {version}. "
+                f"This version of Surfaces supports format_version=2."
+            )
+
+        import surfaces
+
+        saved_version = data.get("surfaces_version")
+        if saved_version and saved_version != surfaces.__version__:
+            warnings.warn(
+                f"Benchmark was saved with Surfaces {saved_version}, "
+                f"current version is {surfaces.__version__}. "
+                f"Results may not be comparable.",
+                stacklevel=2,
+            )
+
+        config = data["config"]
+        bench = cls(
+            budget_cu=config.get("budget_cu"),
+            budget_iter=config.get("budget_iter"),
+            n_seeds=config.get("n_seeds", 1),
+            seed=config.get("seed", 0),
+        )
+
+        for func_path in data.get("functions", []):
+            if not func_path.startswith("surfaces."):
+                raise ValueError(
+                    f"Cannot load non-Surfaces function: {func_path}. "
+                    f"Only functions from the surfaces package are supported."
+                )
+            module_path, class_name = func_path.rsplit(".", 1)
+            module = importlib.import_module(module_path)
+            func_cls = getattr(module, class_name)
+            bench._functions.append(func_cls)
+
+        for opt_entry in data.get("optimizers", []):
+            class_path = opt_entry["class"]
+            params = opt_entry.get("params", {})
+            module_path, class_name = class_path.rsplit(".", 1)
+            module = importlib.import_module(module_path)
+            opt_cls = getattr(module, class_name)
+            bench._optimizers.append((opt_cls, params))
+
+        for entry in data.get("traces", []):
+            key = (entry["function"], entry["optimizer"], entry["seed"])
+            trace = Trace()
+            for rec in entry["records"]:
+                trace.append(
+                    EvalRecord(
+                        params=rec["params"],
+                        score=rec["score"],
+                        eval_cu=rec["eval_cu"],
+                        overhead_cu=rec["overhead_cu"],
+                        cumulative_cu=rec["cumulative_cu"],
+                        best_so_far=rec["best_so_far"],
+                        wall_seconds=rec["wall_seconds"],
+                    )
+                )
+            bench._traces[key] = trace
+
+        return bench
+
+    @classmethod
+    def from_suite(cls, suite: Suite, **overrides: Any) -> Benchmark:
+        """Create a Benchmark pre-configured from a Suite definition.
+
+        The suite provides function filters and default budget/seed
+        settings. Add optimizers and call run() to execute.
+
+        Parameters
+        ----------
+        suite : Suite
+            A predefined suite from ``surfaces.benchmark.suites``.
+        **overrides
+            Override suite defaults (budget_cu, budget_iter, n_seeds, seed).
+        """
+        from surfaces import collection
+
+        kwargs: dict[str, Any] = {
+            "budget_cu": suite.budget_cu,
+            "budget_iter": suite.budget_iter,
+            "n_seeds": suite.n_seeds,
+        }
+        kwargs.update(overrides)
+
+        bench = cls(**kwargs)
+        bench.add_functions(collection.filter(**suite.function_filter))
+        return bench
+
+    @staticmethod
+    def _normalize_optimizer_spec(spec: Any) -> tuple[Any, dict]:
+        """Normalize an optimizer spec to a (obj, params) tuple."""
+        if isinstance(spec, tuple):
+            if len(spec) != 2:
+                raise TypeError(
+                    f"Optimizer tuple must be (class, params_dict), got {len(spec)} elements"
+                )
+            obj, params = spec
+            if not isinstance(params, dict):
+                raise TypeError(
+                    f"Second element of optimizer tuple must be a dict, got {type(params).__name__}"
+                )
+            return (obj, params)
+        return (spec, {})
+
+    @staticmethod
+    def _to_spec(normalized: tuple[Any, dict]) -> Any:
+        """Convert a normalized (obj, params) back to a resolver-compatible spec."""
+        obj, params = normalized
+        if params:
+            return (obj, params)
+        return obj
+
+    def __repr__(self) -> str:
+        n_funcs = len(self._functions)
+        n_opts = len(self._optimizers)
+        n_traces = len(self._traces)
+        parts = [f"{n_funcs} functions", f"{n_opts} optimizers", f"{n_traces} traces"]
+        if self._budget_cu is not None:
+            parts.append(f"budget_cu={self._budget_cu}")
+        if self._budget_iter is not None:
+            parts.append(f"budget_iter={self._budget_iter}")
+        return f"Benchmark({', '.join(parts)})"
