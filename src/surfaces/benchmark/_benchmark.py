@@ -69,6 +69,7 @@ class Benchmark:
         self._functions: list[type] = []
         self._optimizers: list[tuple[Any, dict]] = []
         self._traces: dict[tuple[str, str, int], Trace] = {}
+        self._optimal_scores: dict[str, float | None] = {}
         self._calibration_ref_time: float | None = None
 
         from surfaces.benchmark._accessors import IOAccessor, PlotAccessor, ResultAccessor
@@ -125,10 +126,15 @@ class Benchmark:
         adapters = [resolve_optimizer(self._to_spec(opt)) for opt in self._optimizers]
 
         for func_cls in self._functions:
+            func_name = func_cls.__name__
+            if func_name not in self._optimal_scores:
+                probe = _instantiate_function(func_cls)
+                self._optimal_scores[func_name] = probe.spec.f_global
+
             for adapter in adapters:
                 for i in range(self._n_seeds):
                     run_seed = self._seed + i
-                    key = (func_cls.__name__, adapter.name, run_seed)
+                    key = (func_name, adapter.name, run_seed)
 
                     if key in self._traces:
                         continue
@@ -225,6 +231,9 @@ class Benchmark:
             module = importlib.import_module(module_path)
             opt_cls = getattr(module, class_name)
             bench._optimizers.append((opt_cls, params))
+
+        for name, val in data.get("optimal_scores", {}).items():
+            bench._optimal_scores[name] = val
 
         for entry in data.get("traces", []):
             key = (entry["function"], entry["optimizer"], entry["seed"])
