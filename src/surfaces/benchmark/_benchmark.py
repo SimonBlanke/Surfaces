@@ -10,7 +10,9 @@ from __future__ import annotations
 
 import importlib
 import json
+import time
 import warnings
+from collections.abc import Callable
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -18,6 +20,7 @@ from surfaces._cost import calibrate
 
 if TYPE_CHECKING:
     from surfaces.benchmark._accessors import IOAccessor, PlotAccessor, ResultAccessor
+from surfaces.benchmark._progress import TrialInfo, _ProgressBar
 from surfaces.benchmark._resolve import resolve_functions, resolve_optimizer
 from surfaces.benchmark._runner import _instantiate_function, _run_ask_tell, _run_sealed
 from surfaces.benchmark._suites import Suite
@@ -108,11 +111,24 @@ class Benchmark:
                 self._optimizers.append(normalized)
         return self
 
-    def run(self) -> Benchmark:
+    def run(
+        self,
+        *,
+        verbose: bool = True,
+        callback: Callable[[TrialInfo], None] | None = None,
+    ) -> Benchmark:
         """Run all missing (function, optimizer, seed) combinations.
 
         Only executes combinations that have no trace yet. New traces
         are added to the existing results, so previous data is preserved.
+
+        Parameters
+        ----------
+        verbose : bool
+            Print progress to stdout for each trial plus a summary line.
+        callback : callable, optional
+            Called with a ``TrialInfo`` after each trial (including skipped
+            ones). Useful for custom progress bars or logging.
 
         Returns self for chaining: ``bench.run().results.summary()``
         """
@@ -125,6 +141,19 @@ class Benchmark:
 
         adapters = [resolve_optimizer(self._to_spec(opt)) for opt in self._optimizers]
 
+        total = len(self._functions) * len(adapters) * self._n_seeds
+        progress = (
+            _ProgressBar(
+                n_functions=len(self._functions),
+                n_optimizers=len(adapters),
+                n_seeds=self._n_seeds,
+                total=total,
+            )
+            if verbose
+            else None
+        )
+        trial_index = 0
+
         for func_cls in self._functions:
             func_name = func_cls.__name__
             if func_name not in self._optimal_scores:
@@ -135,12 +164,27 @@ class Benchmark:
                 for i in range(self._n_seeds):
                     run_seed = self._seed + i
                     key = (func_name, adapter.name, run_seed)
+                    trial_index += 1
 
                     if key in self._traces:
+                        info = TrialInfo(
+                            function=func_name,
+                            optimizer=adapter.name,
+                            seed=run_seed,
+                            index=trial_index,
+                            total=total,
+                            skipped=True,
+                            wall_seconds=None,
+                        )
+                        if progress:
+                            progress.trial_complete(info)
+                        if callback:
+                            callback(info)
                         continue
 
                     func = _instantiate_function(func_cls)
 
+                    t0 = time.perf_counter()
                     if adapter.is_sealed:
                         trace = _run_sealed(
                             func, adapter, run_seed, self._budget_cu, self._budget_iter
@@ -149,8 +193,26 @@ class Benchmark:
                         trace = _run_ask_tell(
                             func, adapter, run_seed, self._budget_cu, self._budget_iter
                         )
+                    wall = time.perf_counter() - t0
 
                     self._traces[key] = trace
+
+                    info = TrialInfo(
+                        function=func_name,
+                        optimizer=adapter.name,
+                        seed=run_seed,
+                        index=trial_index,
+                        total=total,
+                        skipped=False,
+                        wall_seconds=wall,
+                    )
+                    if progress:
+                        progress.trial_complete(info)
+                    if callback:
+                        callback(info)
+
+        if progress:
+            progress.summary()
 
         return self
 

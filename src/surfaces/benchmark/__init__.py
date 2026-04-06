@@ -17,6 +17,7 @@ Usage::
 """
 
 from surfaces.benchmark._benchmark import Benchmark
+from surfaces.benchmark._progress import TrialInfo
 from surfaces.benchmark._suites import ALL_SUITES as suites
 from surfaces.benchmark._suites import Suite
 from surfaces.benchmark._trace import EvalRecord, Trace
@@ -25,6 +26,7 @@ __all__ = [
     "Benchmark",
     "EvalRecord",
     "Trace",
+    "TrialInfo",
     "Suite",
     "suites",
 ]
