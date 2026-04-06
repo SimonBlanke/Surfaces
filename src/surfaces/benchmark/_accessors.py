@@ -193,7 +193,7 @@ class ResultAccessor:
                     "cumulative_cu": record.cumulative_cu,
                     "wall_seconds": record.wall_seconds,
                 }
-                row.update(record.params)
+                row.update({f"param_{k}": v for k, v in record.params.items()})
                 rows.append(row)
 
         return pd.DataFrame(rows)

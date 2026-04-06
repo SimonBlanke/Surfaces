@@ -49,7 +49,7 @@ def resolve_optimizer(spec: Any) -> Any:
     module = _get_module(obj)
 
     for prefix, adapter_module_name in _PACKAGE_REGISTRY.items():
-        if module.startswith(prefix):
+        if module == prefix or module.startswith(prefix + "."):
             return _load_adapter(adapter_module_name, obj, params)
 
     if _has_ask_tell(obj):

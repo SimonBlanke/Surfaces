@@ -36,7 +36,7 @@ def _run_ask_tell(
     budget_iter: int | None,
 ) -> Trace:
     """Run a single benchmark with an ask/tell optimizer."""
-    effective_budget = budget_iter or 0
+    effective_budget = budget_iter if budget_iter is not None else 10_000
     adapter.setup(func.search_space, seed, effective_budget)
 
     trace = Trace()
