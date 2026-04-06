@@ -8,10 +8,13 @@ This module defines which ML functions can have surrogates trained,
 along with their fixed parameter grids (dataset, cv combinations).
 """
 
-from typing import Any, Dict, List, Type
+from typing import Any, Dict, List, Optional, Type
 
 # Registry: function_name -> config
 ML_SURROGATE_REGISTRY: Dict[str, Dict[str, Any]] = {}
+
+
+DEFAULT_FIDELITY_LEVELS = [0.1, 0.2, 0.3, 0.5, 0.7, 1.0]
 
 
 def register_ml_function(
@@ -19,6 +22,7 @@ def register_ml_function(
     function_class: Type,
     fixed_params: Dict[str, List],
     hyperparams: List[str],
+    fidelity_levels: Optional[List[float]] = None,
 ):
     """Register an ML function for surrogate training.
 
@@ -33,11 +37,18 @@ def register_ml_function(
         Example: {"dataset": ["iris", "digits"], "cv": [2, 3, 5, 10]}
     hyperparams : list
         Names of hyperparameters in the search space.
+    fidelity_levels : list of float, optional
+        Fidelity levels to evaluate during training. Defaults to
+        [0.1, 0.2, 0.3, 0.5, 0.7, 1.0]. Set to None or [1.0] to
+        disable fidelity-aware training.
     """
     ML_SURROGATE_REGISTRY[name] = {
         "class": function_class,
         "fixed_params": fixed_params,
         "hyperparams": hyperparams,
+        "fidelity_levels": fidelity_levels
+        if fidelity_levels is not None
+        else DEFAULT_FIDELITY_LEVELS,
     }
 
 

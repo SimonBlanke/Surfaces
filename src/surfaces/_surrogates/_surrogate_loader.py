@@ -117,6 +117,11 @@ class SurrogateLoader:
         """Mappings for categorical parameters."""
         return self.metadata.get("param_encodings", {})
 
+    @property
+    def fidelity_aware(self) -> bool:
+        """Whether this surrogate was trained with fidelity as an input."""
+        return self.metadata.get("fidelity_aware", False)
+
     def _encode_params(self, params: Dict[str, Any]) -> np.ndarray:
         """Convert parameter dict to numpy array for model input.
 
@@ -166,19 +171,27 @@ class SurrogateLoader:
         predicted_class = int(output[0][0])
         return predicted_class == 1
 
-    def predict(self, params: Dict[str, Any]) -> float:
+    def predict(self, params: Dict[str, Any], fidelity: Optional[float] = None) -> float:
         """Run inference on the surrogate model.
 
         Parameters
         ----------
         params : dict
             Parameter dictionary matching _objective signature.
+        fidelity : float or None
+            Fidelity level for fidelity-aware surrogates. Ignored for
+            non-fidelity-aware models. Defaults to 1.0 when the model
+            is fidelity-aware but no value is provided.
 
         Returns
         -------
         float
             Predicted objective value, or NaN if parameters are invalid.
         """
+        if self.fidelity_aware:
+            fidelity_val = fidelity if fidelity is not None else 1.0
+            params = {**params, "__fidelity__": fidelity_val}
+
         # Check validity first
         if not self.is_valid(params):
             return float("nan")

@@ -93,7 +93,11 @@ class MLSurrogateTrainer:
     def collect_data(
         self, max_samples_per_combo: Optional[int] = None
     ) -> Tuple[np.ndarray, np.ndarray]:
-        """Collect training data across all (HP, fixed_param) combinations.
+        """Collect training data across all (HP, fixed_param, fidelity) combinations.
+
+        When fidelity_levels contains more than just [1.0], the trainer
+        evaluates each HP combination at every fidelity level. The resulting
+        surrogate can then predict scores for arbitrary fidelity values.
 
         Parameters
         ----------
@@ -108,6 +112,9 @@ class MLSurrogateTrainer:
         FuncClass = self.config["class"]
         fixed_params = self.config["fixed_params"]
         hyperparams = self.config["hyperparams"]
+        fidelity_levels = self.config.get("fidelity_levels", [1.0])
+
+        self.fidelity_aware = len(fidelity_levels) > 1 or fidelity_levels != [1.0]
 
         # Get all fixed param combinations
         fixed_keys = list(fixed_params.keys())
@@ -116,6 +123,8 @@ class MLSurrogateTrainer:
 
         self._log(f"Collecting data for {self.function_name}")
         self._log(f"  Fixed params: {fixed_keys} ({len(fixed_combos)} combinations)")
+        if self.fidelity_aware:
+            self._log(f"  Fidelity levels: {fidelity_levels}")
 
         records = []
         start_time = time.time()
@@ -136,22 +145,22 @@ class MLSurrogateTrainer:
                 indices = np.random.choice(len(hp_combos), max_samples_per_combo, replace=False)
                 hp_combos = [hp_combos[i] for i in indices]
 
-            # Evaluate each HP combination
             for hp_combo in hp_combos:
                 hp_dict = dict(zip(hp_keys, hp_combo))
 
-                try:
-                    score = func._objective(hp_dict)
-                    if not np.isnan(score):
-                        records.append(
-                            {
-                                **hp_dict,
-                                **fixed_dict,
-                                "_score": score,
-                            }
-                        )
-                except Exception:
-                    pass  # Skip invalid combinations
+                for fidelity in fidelity_levels:
+                    try:
+                        func._active_fidelity = fidelity if fidelity < 1.0 else None
+                        score = func._objective(hp_dict)
+                        if not np.isnan(score):
+                            record = {**hp_dict, **fixed_dict, "_score": score}
+                            if self.fidelity_aware:
+                                record["__fidelity__"] = fidelity
+                            records.append(record)
+                    except Exception:
+                        pass  # Skip invalid combinations (e.g. n_neighbors > n_subsampled)
+                    finally:
+                        func._active_fidelity = None
 
         elapsed = time.time() - start_time
         self._log(f"  Collected {len(records)} samples in {elapsed:.1f}s")
@@ -162,8 +171,10 @@ class MLSurrogateTrainer:
 
     def _build_arrays(self, records: List[Dict], hyperparams: List[str], fixed_keys: List[str]):
         """Convert records to numpy arrays with encodings."""
-        # Determine param order: hyperparams first, then fixed params
+        # Determine param order: hyperparams first, then fixed params, then fidelity
         self.param_names = hyperparams + fixed_keys
+        if self.fidelity_aware:
+            self.param_names = self.param_names + ["__fidelity__"]
 
         # Build encodings for categorical params
         self.param_encodings = {}
@@ -287,6 +298,8 @@ class MLSurrogateTrainer:
             "function_name": self.function_name,
             "param_names": self.param_names,
             "param_encodings": self.param_encodings,
+            "fidelity_aware": getattr(self, "fidelity_aware", False),
+            "fidelity_levels": self.config.get("fidelity_levels", [1.0]),
             "n_samples": int(self.metrics["n_samples"]),
             "n_invalid_samples": 0,
             "has_validity_model": False,
