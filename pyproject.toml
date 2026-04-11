@@ -109,6 +109,7 @@ build = [
 surrogate-train = [
     "onnxruntime>=1.16.0",
     "skl2onnx>=1.16.0",
+    "rich>=13.0.0",
 ]
 # Surrogate dashboard (developer tool)
 dashboard = [
@@ -131,6 +132,7 @@ surfaces-dashboard = "surfaces._surrogates._dashboard:run_dashboard"
 # =============================================================================
 [tool.coverage.run]
 source = ["surfaces"]
+relative_files = true
 omit = [
     "src/surfaces/_surrogates/_dashboard/*",
     "src/surfaces/_surrogates/_surrogate_trainer.py",
