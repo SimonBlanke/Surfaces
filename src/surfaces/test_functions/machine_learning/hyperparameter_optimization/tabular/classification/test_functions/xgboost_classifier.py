@@ -79,7 +79,7 @@ class XGBoostClassifierFunction(BaseClassification):
         from sklearn.model_selection import cross_val_score
         from xgboost import XGBClassifier
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
         clf = XGBClassifier(
             n_estimators=params["n_estimators"],
             max_depth=params["max_depth"],

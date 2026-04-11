@@ -104,7 +104,7 @@ class RandomForestForecasterFunction(BaseForecasting):
         from sklearn.ensemble import RandomForestRegressor
         from sklearn.model_selection import TimeSeriesSplit
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
 
         n_lags = params["n_lags"]
         X_lagged, y_lagged = create_lagged_features(X, y, n_lags)

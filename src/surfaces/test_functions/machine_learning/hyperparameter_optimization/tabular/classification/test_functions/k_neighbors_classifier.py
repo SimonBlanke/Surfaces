@@ -119,7 +119,7 @@ class KNeighborsClassifierFunction(BaseClassification):
         from sklearn.model_selection import cross_val_score
         from sklearn.neighbors import KNeighborsClassifier
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
         knc = KNeighborsClassifier(
             n_neighbors=params["n_neighbors"],
             algorithm=params["algorithm"],

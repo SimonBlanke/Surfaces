@@ -99,7 +99,7 @@ class MutualInfoFeatureSelectionFunction(BaseTabularFeatureEngineering):
         from sklearn.model_selection import cross_val_score
         from sklearn.tree import DecisionTreeClassifier
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
 
         n_features = params["n_features"]
         selector = SelectKBest(mutual_info_classif, k=min(n_features, X.shape[1]))

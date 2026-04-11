@@ -96,7 +96,7 @@ class KNNTSClassifierFunction(BaseTSClassification):
         from sklearn.neighbors import KNeighborsClassifier
         from sklearn.preprocessing import StandardScaler
 
-        X_raw, y = self._dataset_loader()
+        X_raw, y = self._get_training_data()
         scaler = StandardScaler()
         X = scaler.fit_transform(X_raw)
 

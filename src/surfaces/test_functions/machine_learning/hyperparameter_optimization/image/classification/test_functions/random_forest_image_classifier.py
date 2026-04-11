@@ -100,7 +100,7 @@ class RandomForestImageClassifierFunction(BaseImageClassification):
         from sklearn.model_selection import cross_val_score
         from sklearn.preprocessing import StandardScaler
 
-        X_raw, y = self._dataset_loader()
+        X_raw, y = self._get_training_data()
 
         scaler = StandardScaler()
         pca = PCA(n_components=self.n_components, random_state=42)

@@ -75,7 +75,7 @@ class SVMClassifierFunction(BaseClassification):
         from sklearn.model_selection import cross_val_score
         from sklearn.svm import SVC
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
         clf = SVC(
             C=params["C"],
             kernel=params["kernel"],

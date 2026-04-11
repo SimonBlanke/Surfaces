@@ -95,7 +95,7 @@ class WeightedAveragingFunction(BaseTabularEnsemble):
         from sklearn.model_selection import cross_val_predict
         from sklearn.tree import DecisionTreeRegressor
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
 
         dt_model = DecisionTreeRegressor(random_state=42)
         rf_model = RandomForestRegressor(n_estimators=50, random_state=42)

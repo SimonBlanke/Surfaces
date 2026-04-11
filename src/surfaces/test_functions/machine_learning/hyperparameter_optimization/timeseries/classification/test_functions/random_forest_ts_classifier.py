@@ -130,7 +130,7 @@ class RandomForestTSClassifierFunction(BaseTSClassification):
         from sklearn.ensemble import RandomForestClassifier
         from sklearn.model_selection import cross_val_score
 
-        X_raw, y = self._dataset_loader()
+        X_raw, y = self._get_training_data()
         X = extract_ts_features(X_raw)
 
         model = RandomForestClassifier(

@@ -94,7 +94,7 @@ class TSForestClassifierFunction(BaseTSClassification):
         from sklearn.model_selection import cross_val_score
         from sktime.classification.interval_based import TimeSeriesForestClassifier
 
-        X_raw, y = self._dataset_loader()
+        X_raw, y = self._get_training_data()
 
         # sktime expects 3D array: (n_samples, n_channels, n_timepoints)
         X = X_raw.reshape(X_raw.shape[0], 1, X_raw.shape[1])

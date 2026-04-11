@@ -77,7 +77,7 @@ class RandomForestClassifierFunction(BaseClassification):
         from sklearn.ensemble import RandomForestClassifier
         from sklearn.model_selection import cross_val_score
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
         clf = RandomForestClassifier(
             n_estimators=params["n_estimators"],
             max_depth=params["max_depth"],

@@ -104,7 +104,7 @@ class XGBoostImageClassifierFunction(BaseImageClassification):
         from sklearn.preprocessing import StandardScaler
         from xgboost import XGBClassifier
 
-        X_raw, y = self._dataset_loader()
+        X_raw, y = self._get_training_data()
 
         scaler = StandardScaler()
         pca = PCA(n_components=self.n_components, random_state=42)

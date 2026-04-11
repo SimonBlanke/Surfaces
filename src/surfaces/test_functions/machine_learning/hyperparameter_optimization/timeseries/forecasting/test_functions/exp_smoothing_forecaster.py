@@ -93,7 +93,7 @@ class ExpSmoothingForecasterFunction(BaseForecasting):
         from sktime.forecasting.exp_smoothing import ExponentialSmoothing
         from sktime.performance_metrics.forecasting import mean_absolute_percentage_error
 
-        _, y_raw = self._dataset_loader()
+        _, y_raw = self._get_training_data()
 
         y = pd.Series(y_raw, index=pd.RangeIndex(start=0, stop=len(y_raw)))
 

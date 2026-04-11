@@ -103,7 +103,7 @@ class VotingEnsembleFunction(BaseTabularEnsemble):
         from sklearn.svm import SVC
         from sklearn.tree import DecisionTreeClassifier
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
 
         estimators = []
 

@@ -99,7 +99,7 @@ class SimpleCNNClassifierFunction(BaseImageClassification):
 
         tf.get_logger().setLevel("ERROR")
 
-        X_raw, y = self._dataset_loader()
+        X_raw, y = self._get_training_data()
 
         # Reshape for CNN (samples, height, width, channels)
         img_size = int(np.sqrt(X_raw.shape[1]))

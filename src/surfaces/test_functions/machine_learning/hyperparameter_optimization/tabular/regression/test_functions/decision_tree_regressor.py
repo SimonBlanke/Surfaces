@@ -75,7 +75,7 @@ class DecisionTreeRegressorFunction(BaseRegression):
         from sklearn.model_selection import cross_val_score
         from sklearn.tree import DecisionTreeRegressor
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
         reg = DecisionTreeRegressor(
             max_depth=params["max_depth"],
             min_samples_split=params["min_samples_split"],

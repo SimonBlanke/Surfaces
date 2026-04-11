@@ -111,7 +111,7 @@ class LightGBMClassifierFunction(BaseClassification):
         from lightgbm import LGBMClassifier
         from sklearn.model_selection import cross_val_score
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
         clf = LGBMClassifier(
             n_estimators=params["n_estimators"],
             learning_rate=params["learning_rate"],

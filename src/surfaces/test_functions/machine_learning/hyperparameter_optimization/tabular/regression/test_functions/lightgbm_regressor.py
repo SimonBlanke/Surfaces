@@ -107,7 +107,7 @@ class LightGBMRegressorFunction(BaseRegression):
         from lightgbm import LGBMRegressor
         from sklearn.model_selection import cross_val_score
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
         reg = LGBMRegressor(
             n_estimators=params["n_estimators"],
             learning_rate=params["learning_rate"],

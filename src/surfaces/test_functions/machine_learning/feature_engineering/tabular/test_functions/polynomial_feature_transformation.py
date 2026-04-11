@@ -93,7 +93,7 @@ class PolynomialFeatureTransformationFunction(BaseTabularFeatureEngineering):
         from sklearn.model_selection import cross_val_score
         from sklearn.preprocessing import PolynomialFeatures
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
 
         poly = PolynomialFeatures(
             degree=params["degree"],

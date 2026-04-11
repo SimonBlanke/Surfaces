@@ -100,7 +100,7 @@ class SVMImageClassifierFunction(BaseImageClassification):
         from sklearn.preprocessing import StandardScaler
         from sklearn.svm import SVC
 
-        X_raw, y = self._dataset_loader()
+        X_raw, y = self._get_training_data()
 
         scaler = StandardScaler()
         pca = PCA(n_components=self.n_components, random_state=42)
