@@ -120,6 +120,13 @@ Guide Sections
       Hardware-independent cost metric for
       benchmarking optimizer vs eval cost.
 
+   .. grid-item-card:: Benchmarking
+      :link: user_guide/benchmark
+      :link-type: doc
+
+      Compare optimizers systematically with
+      statistical analysis and CD diagrams.
+
 ----
 
 Quick Example
@@ -153,4 +160,5 @@ Quick Example
    user_guide/surrogates
    user_guide/multi_fidelity
    user_guide/compute_units
+   user_guide/benchmark
    /_generated/plots/gallery

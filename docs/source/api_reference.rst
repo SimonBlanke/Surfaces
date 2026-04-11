@@ -14,3 +14,4 @@ Technical documentation for all classes and functions in Surfaces.
    api_reference/test_functions/index
    api_reference/presets
    api_reference/noise
+   api_reference/benchmark
