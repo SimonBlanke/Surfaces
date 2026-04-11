@@ -86,77 +86,80 @@ def _ensure_registered():
         SVMRegressorFunction,
     )
 
-    # Dataset grids
-    classification_datasets = ["digits", "iris", "wine", "breast_cancer", "covtype"]
-    regression_datasets = ["diabetes", "california", "friedman1", "friedman2", "linear"]
+    # Dataset grids split by computational cost: KNN and SVM scale poorly
+    # with sample count (O(n) / O(n^2)), so they exclude the large datasets.
+    classification_datasets_all = ["digits", "iris", "wine", "breast_cancer", "covtype"]
+    classification_datasets_small = ["digits", "iris", "wine", "breast_cancer"]
+    regression_datasets_all = ["diabetes", "california", "friedman1", "friedman2", "linear"]
+    regression_datasets_small = ["diabetes", "friedman1", "friedman2", "linear"]
     cv_options = [2, 3, 5, 10]
 
     register_ml_function(
         name="decision_tree_classifier",
         function_class=DecisionTreeClassifierFunction,
-        fixed_params={"dataset": classification_datasets, "cv": cv_options},
+        fixed_params={"dataset": classification_datasets_all, "cv": cv_options},
         hyperparams=["max_depth", "min_samples_split", "min_samples_leaf"],
     )
 
     register_ml_function(
         name="gradient_boosting_classifier",
         function_class=GradientBoostingClassifierFunction,
-        fixed_params={"dataset": classification_datasets, "cv": cv_options},
+        fixed_params={"dataset": classification_datasets_all, "cv": cv_options},
         hyperparams=["n_estimators", "max_depth", "learning_rate"],
     )
 
     register_ml_function(
         name="k_neighbors_classifier",
         function_class=KNeighborsClassifierFunction,
-        fixed_params={"dataset": classification_datasets, "cv": cv_options},
+        fixed_params={"dataset": classification_datasets_small, "cv": cv_options},
         hyperparams=["n_neighbors", "algorithm"],
     )
 
     register_ml_function(
         name="random_forest_classifier",
         function_class=RandomForestClassifierFunction,
-        fixed_params={"dataset": classification_datasets, "cv": cv_options},
+        fixed_params={"dataset": classification_datasets_all, "cv": cv_options},
         hyperparams=["n_estimators", "max_depth", "min_samples_split"],
     )
 
     register_ml_function(
         name="svm_classifier",
         function_class=SVMClassifierFunction,
-        fixed_params={"dataset": classification_datasets, "cv": cv_options},
+        fixed_params={"dataset": classification_datasets_small, "cv": cv_options},
         hyperparams=["C", "kernel", "gamma"],
     )
 
     register_ml_function(
         name="decision_tree_regressor",
         function_class=DecisionTreeRegressorFunction,
-        fixed_params={"dataset": regression_datasets, "cv": cv_options},
+        fixed_params={"dataset": regression_datasets_all, "cv": cv_options},
         hyperparams=["max_depth", "min_samples_split", "min_samples_leaf"],
     )
 
     register_ml_function(
         name="gradient_boosting_regressor",
         function_class=GradientBoostingRegressorFunction,
-        fixed_params={"dataset": regression_datasets, "cv": cv_options},
+        fixed_params={"dataset": regression_datasets_all, "cv": cv_options},
         hyperparams=["n_estimators", "max_depth"],
     )
 
     register_ml_function(
         name="k_neighbors_regressor",
         function_class=KNeighborsRegressorFunction,
-        fixed_params={"dataset": regression_datasets, "cv": cv_options},
+        fixed_params={"dataset": regression_datasets_small, "cv": cv_options},
         hyperparams=["n_neighbors", "algorithm"],
     )
 
     register_ml_function(
         name="random_forest_regressor",
         function_class=RandomForestRegressorFunction,
-        fixed_params={"dataset": regression_datasets, "cv": cv_options},
+        fixed_params={"dataset": regression_datasets_all, "cv": cv_options},
         hyperparams=["n_estimators", "max_depth", "min_samples_split"],
     )
 
     register_ml_function(
         name="svm_regressor",
         function_class=SVMRegressorFunction,
-        fixed_params={"dataset": regression_datasets, "cv": cv_options},
+        fixed_params={"dataset": regression_datasets_small, "cv": cv_options},
         hyperparams=["C", "kernel", "gamma"],
     )
