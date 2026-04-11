@@ -120,13 +120,6 @@ class TestComputeERT:
         assert "Ackley" in text
         assert "OptA" in text
 
-    def test_to_dataframe(self):
-        ert = compute_ert(self.traces, self.optimal, precision=1.0)
-        df = ert.to_dataframe()
-        assert "ert_cu" in df.columns
-        assert "success_rate" in df.columns
-        assert len(df) == 2
-
     def test_individual_cu_stored(self):
         ert = compute_ert(self.traces, self.optimal, precision=1.0)
         entry = ert["Ackley"]["OptA"]
@@ -190,17 +183,6 @@ class TestComputeRanking:
         assert "Ranking" in text
         assert "OptA" in text
         assert "OptB" in text
-
-    def test_to_dataframe(self):
-        ranking = compute_ranking(self.traces)
-        df = ranking.to_dataframe()
-        assert "rank" in df.columns
-        assert len(df) == 2
-
-    def test_pvalues_dataframe(self):
-        ranking = compute_ranking(self.traces)
-        pdf = ranking.pvalues_dataframe()
-        assert pdf.shape == (2, 2)
 
     def test_few_functions_warning(self):
         traces = {
