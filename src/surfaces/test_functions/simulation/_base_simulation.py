@@ -168,12 +168,13 @@ class SimulationFunction(BaseSingleObjectiveTestFunction):
             return self._extract_objective(result)
 
         from concurrent.futures import ThreadPoolExecutor
+        from concurrent.futures import TimeoutError as FuturesTimeoutError
 
         pool = ThreadPoolExecutor(max_workers=1)
         future = pool.submit(self._run_simulation, params)
         try:
             result = future.result(timeout=self.timeout)
-        except TimeoutError:
+        except (TimeoutError, FuturesTimeoutError):
             pool.shutdown(wait=False)
             return self.timeout_value
 
