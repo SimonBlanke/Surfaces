@@ -360,21 +360,29 @@ pareto = zdt1.pareto_front(n_points=100)
 <summary><b>Benchmark Runner</b></summary>
 
 ```python
-from surfaces.benchmark import run
+import random
+from surfaces.benchmark import Benchmark
 from surfaces import collection
 
-# Run two optimizers across the standard suite
-result = run(
-    functions=collection.quick,
-    optimizers=[HillClimbingOptimizer, RandomSearchOptimizer],
-    budget_iter=1000,
-    n_seeds=5,
-    seed=42,
-)
+# Minimal ask/tell optimizer (any optimizer with this interface works)
+class RandomSampler:
+    def __init__(self, search_space, seed=0):
+        self._space = search_space
+        self._rng = random.Random(seed)
 
-# Analyze results
-print(result.summary())
-df = result.to_dataframe()
+    def ask(self):
+        return {k: self._rng.choice(v) for k, v in self._space.items()}
+
+    def tell(self, params, score):
+        pass
+
+# Run benchmark
+bench = Benchmark(budget_iter=50, n_seeds=2, seed=42)
+bench.add_functions(collection.quick)
+bench.add_optimizers([RandomSampler])
+bench.run()
+
+print(bench.results.summary())
 ```
 
 </details>
