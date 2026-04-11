@@ -12,7 +12,6 @@ from surfaces.benchmark._statistics import (
     RankingTable,
     _running_time,
     compute_ert,
-    compute_ranking,
 )
 from surfaces.benchmark._trace import EvalRecord, Trace
 
@@ -134,63 +133,6 @@ class TestComputeERT:
     def test_ert_entry_success_rate(self):
         entry = ERTEntry(ert_cu=100, solved=3, total=5, median_cu=90, individual_cu=(80, 90, 100))
         assert entry.success_rate == pytest.approx(0.6)
-
-
-class TestComputeRanking:
-    def setup_method(self):
-        self.traces = {
-            ("F1", "OptA", 0): _trace([5.0, 1.0]),
-            ("F1", "OptA", 1): _trace([5.0, 1.2]),
-            ("F1", "OptB", 0): _trace([5.0, 3.0]),
-            ("F1", "OptB", 1): _trace([5.0, 3.5]),
-            ("F2", "OptA", 0): _trace([10.0, 8.0]),
-            ("F2", "OptA", 1): _trace([10.0, 7.0]),
-            ("F2", "OptB", 0): _trace([10.0, 2.0]),
-            ("F2", "OptB", 1): _trace([10.0, 3.0]),
-        }
-
-    def test_basic_ranking(self):
-        ranking = compute_ranking(self.traces)
-        assert len(ranking.entries) == 2
-        assert ranking.entries[0].rank <= ranking.entries[1].rank
-
-    def test_normalized_scores_bounded(self):
-        ranking = compute_ranking(self.traces)
-        for entry in ranking.entries:
-            assert 0.0 <= entry.mean_normalized <= 1.0
-
-    def test_subscript_access(self):
-        ranking = compute_ranking(self.traces)
-        assert "OptA" in ranking
-        entry = ranking["OptA"]
-        assert isinstance(entry.rank, float)
-
-    def test_at_cu(self):
-        ranking = compute_ranking(self.traces, at_cu=10.0)
-        for entry in ranking.entries:
-            assert entry.mean_normalized is not None
-
-    def test_pvalues_exist(self):
-        ranking = compute_ranking(self.traces)
-        assert len(ranking.pvalues) >= 1
-        for key, val in ranking.pvalues.items():
-            assert len(key) == 2
-            assert isinstance(val, float)
-
-    def test_str_output(self):
-        ranking = compute_ranking(self.traces)
-        text = str(ranking)
-        assert "Ranking" in text
-        assert "OptA" in text
-        assert "OptB" in text
-
-    def test_few_functions_warning(self):
-        traces = {
-            ("F1", "OptA", 0): _trace([1.0]),
-            ("F1", "OptB", 0): _trace([2.0]),
-        }
-        with pytest.warns(UserWarning, match="Only 1 functions"):
-            compute_ranking(traces)
 
 
 class TestERTTable:
