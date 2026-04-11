@@ -256,13 +256,14 @@ class ResultAccessor:
         self,
         at_cu: float | None = None,
         alpha: float = 0.05,
+        correction: str | None = "holm",
     ) -> Any:
-        """Rank optimizers by normalized performance with Wilcoxon tests.
+        """Rank optimizers by normalized performance with pairwise tests.
 
         Scores are normalized per function (0 = worst observed,
-        1 = best observed) and averaged over seeds. Rankings are then
-        computed across functions. Pairwise Wilcoxon signed-rank tests
-        assess statistical significance.
+        1 = best observed) and averaged over seeds. Ranks use
+        tied-rank averaging within each function. Pairwise Wilcoxon
+        signed-rank tests assess statistical significance.
 
         Parameters
         ----------
@@ -271,6 +272,10 @@ class ResultAccessor:
             final best score.
         alpha : float, default=0.05
             Significance level for the Wilcoxon tests.
+        correction : str or None, default="holm"
+            Multiple comparison correction. ``"holm"`` applies the
+            Holm step-down procedure (controls family-wise error rate).
+            ``None`` returns raw uncorrected p-values.
 
         Returns
         -------
@@ -279,7 +284,39 @@ class ResultAccessor:
         """
         from surfaces.benchmark._statistics import compute_ranking
 
-        return compute_ranking(self._bench._traces, alpha, at_cu)
+        return compute_ranking(self._bench._traces, alpha, at_cu, correction)
+
+    def friedman(
+        self,
+        at_cu: float | None = None,
+        alpha: float = 0.05,
+    ) -> Any:
+        """Friedman omnibus test for comparing multiple optimizers.
+
+        Tests whether at least one optimizer's performance differs
+        significantly. This is the recommended first step before
+        pairwise comparisons: if the Friedman test does not reject,
+        pairwise differences are not statistically supported.
+
+        Requires at least 3 optimizers and 3 functions where all
+        optimizers produced results.
+
+        Parameters
+        ----------
+        at_cu : float, optional
+            Evaluate scores at this CU budget.
+        alpha : float, default=0.05
+            Significance level.
+
+        Returns
+        -------
+        FriedmanResult
+            Printable result with chi-squared and Iman-Davenport
+            statistics, average ranks, and significance verdict.
+        """
+        from surfaces.benchmark._statistics import compute_friedman
+
+        return compute_friedman(self._bench._traces, alpha, at_cu)
 
     def __repr__(self) -> str:
         return (
@@ -727,5 +764,73 @@ class PlotAccessor:
 
         return cu_grid, center_vals, lower, upper
 
+    def cd_diagram(
+        self,
+        at_cu: float | None = None,
+        alpha: float = 0.05,
+        correction: str | None = "holm",
+        title: str | None = None,
+        width: float = 8.0,
+    ) -> Any:
+        """Critical Difference diagram comparing optimizer ranks.
+
+        Visualizes average ranks on a horizontal axis with thick bars
+        connecting groups of optimizers that are not statistically
+        distinguishable (Demsar, 2006).
+
+        Average ranks are computed with proper tied-rank handling
+        using only functions where all optimizers produced results
+        (complete blocks), matching the Friedman test methodology.
+
+        Requires matplotlib (``pip install surfaces[viz]``).
+
+        Parameters
+        ----------
+        at_cu : float, optional
+            Evaluate scores at this CU budget.
+        alpha : float, default=0.05
+            Significance level for clique detection.
+        correction : str or None, default="holm"
+            P-value correction for pairwise Wilcoxon tests.
+        title : str, optional
+            Figure title. Defaults to include the alpha value.
+        width : float, default=8.0
+            Figure width in inches.
+
+        Returns
+        -------
+        matplotlib.figure.Figure
+        """
+        from surfaces.benchmark._cd_diagram import render_cd_diagram
+        from surfaces.benchmark._statistics import (
+            _build_score_matrix,
+            _compute_avg_ranks,
+            compute_ranking,
+        )
+
+        traces = self._bench._traces
+        if not traces:
+            raise ValueError("No traces recorded yet. Call run() first.")
+
+        ranking = compute_ranking(traces, alpha, at_cu, correction)
+
+        if len(ranking.entries) < 2:
+            raise ValueError("CD diagram requires at least 2 optimizers with results")
+
+        func_names, opt_names, scores = _build_score_matrix(traces, at_cu)
+        complete_funcs = [f for f in func_names if all(o in scores[f] for o in opt_names)]
+        if not complete_funcs:
+            complete_funcs = func_names
+
+        avg_ranks = _compute_avg_ranks(complete_funcs, opt_names, scores)
+
+        return render_cd_diagram(
+            avg_ranks=avg_ranks,
+            pvalues=ranking.pvalues,
+            alpha=alpha,
+            title=title,
+            width=width,
+        )
+
     def __repr__(self) -> str:
-        return "PlotAccessor(.ecdf(), .convergence())"
+        return "PlotAccessor(.ecdf(), .convergence(), .cd_diagram())"

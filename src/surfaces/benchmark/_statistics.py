@@ -15,6 +15,111 @@ from typing import Any
 from surfaces.benchmark._trace import Trace
 
 
+def _build_score_matrix(
+    traces: dict[tuple[str, str, int], Trace],
+    at_cu: float | None = None,
+) -> tuple[list[str], list[str], dict[str, dict[str, float]]]:
+    """Build per-function normalized scores from traces.
+
+    Returns (func_names, opt_names, scores) where
+    scores[func][opt] is in [0, 1] with 1 = best observed.
+    Only functions with at least 2 optimizers are included.
+    """
+    all_func_names = sorted({k[0] for k in traces})
+    all_opt_names = sorted({k[1] for k in traces})
+
+    scores: dict[str, dict[str, float]] = {}
+
+    for func in all_func_names:
+        func_scores: dict[str, list[float]] = {}
+        for opt in all_opt_names:
+            matching = [t for (f, o, _s), t in traces.items() if f == func and o == opt]
+            if not matching:
+                continue
+            vals = []
+            for t in matching:
+                s = t.score_at_cu(at_cu) if at_cu is not None else t.best_score
+                if s is not None:
+                    vals.append(s)
+            if vals:
+                func_scores[opt] = vals
+
+        if len(func_scores) < 2:
+            continue
+
+        all_vals = [s for seeds in func_scores.values() for s in seeds]
+        worst, best = max(all_vals), min(all_vals)
+        score_range = worst - best
+
+        scores[func] = {}
+        for opt, seeds in func_scores.items():
+            mean_raw = sum(seeds) / len(seeds)
+            scores[func][opt] = (1.0 - (mean_raw - best) / score_range) if score_range > 0 else 1.0
+
+    return sorted(scores.keys()), all_opt_names, scores
+
+
+def _compute_avg_ranks(
+    func_names: list[str],
+    opt_names: list[str],
+    scores: dict[str, dict[str, float]],
+) -> dict[str, float]:
+    """Average rank per optimizer across functions with tied-rank handling.
+
+    Within each function, optimizers are ranked by normalized score
+    (higher = better = lower rank number). Tied scores receive the
+    mean of the ranks they span.
+    """
+    rank_sums: dict[str, float] = {opt: 0.0 for opt in opt_names}
+    count: dict[str, int] = {opt: 0 for opt in opt_names}
+
+    for func in func_names:
+        present = [(opt, scores[func][opt]) for opt in opt_names if opt in scores[func]]
+        present.sort(key=lambda x: -x[1])
+
+        i = 0
+        while i < len(present):
+            j = i + 1
+            while j < len(present) and present[j][1] == present[i][1]:
+                j += 1
+            avg_rank = (i + 1 + j) / 2.0
+            for idx in range(i, j):
+                rank_sums[present[idx][0]] += avg_rank
+                count[present[idx][0]] += 1
+            i = j
+
+    return {opt: rank_sums[opt] / count[opt] for opt in opt_names if count[opt] > 0}
+
+
+def _holm_correction(
+    pvalues: dict[tuple[str, str], float],
+) -> dict[tuple[str, str], float]:
+    """Holm step-down correction for multiple pairwise comparisons.
+
+    Adjusts p-values upward so they can be compared directly against
+    alpha while controlling the family-wise error rate. Strictly more
+    powerful than Bonferroni.
+    """
+    valid = [(k, v) for k, v in pvalues.items() if not math.isnan(v)]
+    valid.sort(key=lambda x: x[1])
+
+    m = len(valid)
+    corrected: dict[tuple[str, str], float] = {}
+
+    prev = 0.0
+    for i, (key, p) in enumerate(valid):
+        adjusted = min(1.0, p * (m - i))
+        adjusted = max(adjusted, prev)
+        corrected[key] = adjusted
+        prev = adjusted
+
+    for k, v in pvalues.items():
+        if math.isnan(v):
+            corrected[k] = v
+
+    return corrected
+
+
 @dataclass(frozen=True)
 class ERTEntry:
     """ERT result for a single (function, optimizer) pair."""
@@ -144,12 +249,14 @@ class RankingTable:
         pvalues: dict[tuple[str, str], float],
         alpha: float,
         normalized_scores: dict[str, dict[str, float]],
+        correction: str | None = None,
     ):
         self.entries = entries
         self.pvalues = pvalues
         self.alpha = alpha
         self._normalized_scores = normalized_scores
         self._by_name = {e.optimizer: e for e in entries}
+        self.correction = correction
 
     def __getitem__(self, optimizer: str) -> RankingEntry:
         return self._by_name[optimizer]
@@ -204,7 +311,10 @@ class RankingTable:
 
         if self.pvalues:
             lines.append("")
-            lines.append(f"Pairwise Wilcoxon signed-rank (alpha={self.alpha})")
+            test_label = "Pairwise Wilcoxon signed-rank"
+            if self.correction:
+                test_label += f" with {self.correction.title()} correction"
+            lines.append(f"{test_label} (alpha={self.alpha})")
             lines.append("")
 
             col_w = max(12, *(len(n) + 2 for n in opt_names))
@@ -237,7 +347,126 @@ class RankingTable:
         return "\n".join(lines)
 
     def __repr__(self) -> str:
-        return f"RankingTable({len(self.entries)} optimizers, alpha={self.alpha})"
+        corr = f", correction={self.correction!r}" if self.correction else ""
+        return f"RankingTable({len(self.entries)} optimizers, alpha={self.alpha}{corr})"
+
+
+@dataclass(frozen=True)
+class FriedmanResult:
+    """Result of the Friedman omnibus test for comparing multiple optimizers.
+
+    The Friedman test checks whether at least one optimizer differs
+    significantly. If ``significant`` is True, proceed with post-hoc
+    pairwise tests. If False, observed differences are not statistically
+    supported.
+
+    The Iman-Davenport variant uses an F-distribution and is less
+    conservative than the chi-squared approximation.
+    """
+
+    chi2_statistic: float
+    chi2_p_value: float
+    f_statistic: float
+    f_p_value: float
+    n_functions: int
+    n_optimizers: int
+    alpha: float
+    avg_ranks: dict[str, float]
+
+    @property
+    def significant(self) -> bool:
+        """Whether the Iman-Davenport test rejects the null hypothesis."""
+        return self.f_p_value < self.alpha
+
+    def __str__(self) -> str:
+        lines = [
+            f"Friedman Test (alpha={self.alpha})",
+            "",
+            f"  N functions:      {self.n_functions}",
+            f"  k optimizers:     {self.n_optimizers}",
+            "",
+            f"  Chi-squared:      {self.chi2_statistic:.4f}  (p={self.chi2_p_value:.6f})",
+            f"  Iman-Davenport F: {self.f_statistic:.4f}  (p={self.f_p_value:.6f})",
+            "",
+        ]
+        if self.significant:
+            lines.append(f"  Result: Significant (p={self.f_p_value:.6f} < {self.alpha})")
+            lines.append("  At least one optimizer differs. Proceed with post-hoc tests.")
+        else:
+            lines.append(f"  Result: Not significant (p={self.f_p_value:.6f} >= {self.alpha})")
+            lines.append("  No evidence that optimizers differ.")
+
+        lines.append("")
+        lines.append("  Average ranks:")
+        for opt, rank in sorted(self.avg_ranks.items(), key=lambda x: x[1]):
+            lines.append(f"    {rank:5.2f}  {opt}")
+
+        return "\n".join(lines)
+
+    def __repr__(self) -> str:
+        sig = "significant" if self.significant else "not significant"
+        return (
+            f"FriedmanResult(p={self.f_p_value:.6f}, {sig}, "
+            f"k={self.n_optimizers}, N={self.n_functions})"
+        )
+
+
+def compute_friedman(
+    traces: dict[tuple[str, str, int], Trace],
+    alpha: float = 0.05,
+    at_cu: float | None = None,
+) -> FriedmanResult:
+    """Friedman omnibus test on benchmark traces.
+
+    Requires at least 3 optimizers and 3 functions where all
+    optimizers produced results. Uses normalized scores.
+
+    The Iman-Davenport correction replaces the chi-squared
+    approximation with an F-distribution, giving a less conservative
+    (more powerful) test.
+    """
+    func_names, opt_names, scores = _build_score_matrix(traces, at_cu)
+
+    complete_funcs = [f for f in func_names if all(o in scores[f] for o in opt_names)]
+
+    k = len(opt_names)
+    n = len(complete_funcs)
+
+    if k < 3:
+        raise ValueError(f"Friedman test requires at least 3 optimizers, got {k}")
+    if n < 3:
+        raise ValueError(
+            f"Friedman test requires at least 3 functions with complete data, "
+            f"got {n}. Ensure all optimizers produce results for each function."
+        )
+
+    from scipy.stats import friedmanchisquare
+
+    arrays = [[scores[f][opt] for f in complete_funcs] for opt in opt_names]
+    chi2, p_chi2 = friedmanchisquare(*arrays)
+
+    denom = n * (k - 1) - chi2
+    if denom <= 0:
+        f_stat = float("inf")
+        p_f = 0.0
+    else:
+        f_stat = ((n - 1) * chi2) / denom
+        from scipy.stats import f as f_dist
+
+        p_f = 1.0 - f_dist.cdf(f_stat, k - 1, (k - 1) * (n - 1))
+
+    avg_ranks = _compute_avg_ranks(complete_funcs, opt_names, scores)
+
+    return FriedmanResult(
+        chi2_statistic=float(chi2),
+        chi2_p_value=float(p_chi2),
+        f_statistic=float(f_stat),
+        f_p_value=float(p_f),
+        n_functions=n,
+        n_optimizers=k,
+        alpha=alpha,
+        avg_ranks=avg_ranks,
+    )
 
 
 def compute_ert(
@@ -314,79 +543,41 @@ def compute_ranking(
     traces: dict[tuple[str, str, int], Trace],
     alpha: float = 0.05,
     at_cu: float | None = None,
+    correction: str | None = "holm",
 ) -> RankingTable:
-    """Rank optimizers by normalized scores with Wilcoxon tests.
+    """Rank optimizers by normalized scores with pairwise statistical tests.
 
     Normalization is per-function: 0 = worst observed, 1 = best observed.
-    The ranking uses mean normalized scores averaged over seeds,
-    then ranks across functions.
+    Ranks use tied-rank averaging within each function, then are
+    averaged across functions. Pairwise Wilcoxon signed-rank tests
+    assess significance, with optional Holm correction for multiple
+    comparisons.
+
+    Parameters
+    ----------
+    correction : str or None
+        ``"holm"`` applies Holm step-down correction (recommended).
+        ``None`` returns raw uncorrected p-values.
     """
-    func_names = sorted({k[0] for k in traces})
-    opt_names = sorted({k[1] for k in traces})
+    func_names, opt_names, mean_scores = _build_score_matrix(traces, at_cu)
 
-    mean_scores: dict[str, dict[str, float]] = {}
-    for func in func_names:
-        func_scores: dict[str, list[float]] = {}
-        for opt in opt_names:
-            matching = [t for (f, o, _s), t in traces.items() if f == func and o == opt]
-            if not matching:
-                continue
-            scores = []
-            for t in matching:
-                if at_cu is not None:
-                    s = t.score_at_cu(at_cu)
-                else:
-                    s = t.best_score
-                if s is not None:
-                    scores.append(s)
-            if scores:
-                func_scores[opt] = scores
+    avg_ranks = _compute_avg_ranks(func_names, opt_names, mean_scores)
 
-        if len(func_scores) < 2:
-            continue
-
-        all_scores = [s for seeds in func_scores.values() for s in seeds]
-        worst = max(all_scores)
-        best = min(all_scores)
-        score_range = worst - best
-
-        if func not in mean_scores:
-            mean_scores[func] = {}
-
-        for opt, seeds in func_scores.items():
-            mean_raw = sum(seeds) / len(seeds)
-            if score_range > 0:
-                normalized = 1.0 - (mean_raw - best) / score_range
-            else:
-                normalized = 1.0
-            mean_scores[func][opt] = normalized
-
-    ranks_per_func: dict[str, dict[str, float]] = {}
-    for func, opt_scores in mean_scores.items():
-        sorted_opts = sorted(opt_scores.items(), key=lambda x: -x[1])
-        ranks_per_func[func] = {}
-        for rank_idx, (opt, _score) in enumerate(sorted_opts, 1):
-            ranks_per_func[func][opt] = float(rank_idx)
-
-    agg: dict[str, list[float]] = {opt: [] for opt in opt_names}
     norm_agg: dict[str, list[float]] = {opt: [] for opt in opt_names}
-    for func in mean_scores:
+    for func in func_names:
         for opt in opt_names:
-            if opt in ranks_per_func.get(func, {}):
-                agg[opt].append(ranks_per_func[func][opt])
             if opt in mean_scores.get(func, {}):
                 norm_agg[opt].append(mean_scores[func][opt])
 
     entries = []
     for opt in opt_names:
-        if agg[opt]:
-            mean_rank = sum(agg[opt]) / len(agg[opt])
-            mean_norm = sum(norm_agg[opt]) / len(norm_agg[opt])
-            entries.append(RankingEntry(opt, mean_rank, mean_norm))
+        if opt in avg_ranks:
+            mean_norm = sum(norm_agg[opt]) / len(norm_agg[opt]) if norm_agg[opt] else 0.0
+            entries.append(RankingEntry(opt, avg_ranks[opt], mean_norm))
     entries.sort(key=lambda e: e.rank)
 
     pvalues: dict[tuple[str, str], float] = {}
-    n_functions = len(mean_scores)
+    n_functions = len(func_names)
     if n_functions < 6:
         warnings.warn(
             f"Only {n_functions} functions. Wilcoxon test needs at least 6 "
@@ -401,7 +592,7 @@ def compute_ranking(
             for b in opt_names[i + 1 :]:
                 scores_a = []
                 scores_b = []
-                for func in mean_scores:
+                for func in func_names:
                     if a in mean_scores[func] and b in mean_scores[func]:
                         scores_a.append(mean_scores[func][a])
                         scores_b.append(mean_scores[func][b])
@@ -412,7 +603,12 @@ def compute_ranking(
                     except ValueError:
                         pvalues[(a, b)] = float("nan")
 
-    return RankingTable(entries, pvalues, alpha, mean_scores)
+    if correction is not None and correction != "holm":
+        raise ValueError(f"Unknown correction: {correction!r}. Use 'holm' or None.")
+    if correction == "holm" and pvalues:
+        pvalues = _holm_correction(pvalues)
+
+    return RankingTable(entries, pvalues, alpha, mean_scores, correction)
 
 
 def _running_time(trace: Trace, target: float) -> float:
