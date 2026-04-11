@@ -40,6 +40,7 @@ class Trace:
         self._cu_breakpoints: list[float] = []
 
     def append(self, record: EvalRecord) -> None:
+        """Append an evaluation record to the trace."""
         self._records.append(record)
         self._cu_breakpoints.append(record.cumulative_cu)
 
@@ -57,30 +58,36 @@ class Trace:
 
     @property
     def records(self) -> list[EvalRecord]:
+        """List copy of all evaluation records."""
         return list(self._records)
 
     @property
     def best_score(self) -> float | None:
+        """Best (lowest) score across all evaluations, or None if empty."""
         if not self._records:
             return None
         return self._records[-1].best_so_far
 
     @property
     def total_cu(self) -> float:
+        """Total cumulative compute units consumed."""
         if not self._records:
             return 0.0
         return self._records[-1].cumulative_cu
 
     @property
     def n_evaluations(self) -> int:
+        """Number of evaluations recorded."""
         return len(self._records)
 
     @property
     def total_overhead_cu(self) -> float:
+        """Sum of optimizer overhead CU across all evaluations."""
         return sum(r.overhead_cu for r in self._records)
 
     @property
     def total_eval_cu(self) -> float:
+        """Sum of function evaluation CU across all evaluations."""
         return sum(r.eval_cu for r in self._records)
 
     @property

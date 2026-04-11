@@ -87,6 +87,7 @@ class ProcessBackend(ParallelBackend):
     """
 
     def map(self, fn: Callable, tasks: list) -> list:
+        """Execute tasks in separate processes via multiprocessing."""
         with ProcessPoolExecutor(max_workers=self.effective_n_jobs) as pool:
             return list(pool.map(fn, tasks))
 
@@ -105,5 +106,6 @@ class ThreadBackend(ParallelBackend):
     """
 
     def map(self, fn: Callable, tasks: list) -> list:
+        """Execute tasks in threads. Useful when tasks release the GIL."""
         with ThreadPoolExecutor(max_workers=self.effective_n_jobs) as pool:
             return list(pool.map(fn, tasks))

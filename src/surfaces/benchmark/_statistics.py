@@ -132,6 +132,7 @@ class ERTEntry:
 
     @property
     def success_rate(self) -> float:
+        """Fraction of seeds that reached the target."""
         return self.solved / self.total if self.total > 0 else 0.0
 
 
@@ -164,6 +165,7 @@ class ERTTable:
         return function in self._data
 
     def to_dataframe(self) -> Any:
+        """Export ERT results as a pandas DataFrame."""
         import pandas as pd
 
         rows = []
@@ -265,6 +267,7 @@ class RankingTable:
         return optimizer in self._by_name
 
     def to_dataframe(self) -> Any:
+        """Export ranking results as a pandas DataFrame."""
         import pandas as pd
 
         rows = [
