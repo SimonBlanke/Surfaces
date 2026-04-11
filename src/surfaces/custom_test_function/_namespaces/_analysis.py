@@ -134,9 +134,7 @@ class AnalysisNamespace:
 
     def _fanova_importance(self) -> Dict[str, float]:
         """Calculate fANOVA-based parameter importance."""
-        # TODO: Implement proper fANOVA
-        # For now, fall back to variance-based
-        return self._variance_importance()
+        raise NotImplementedError("fANOVA is not yet implemented. Use method='variance' instead.")
 
     def convergence(self) -> Dict[str, Any]:
         """Analyze optimization convergence.

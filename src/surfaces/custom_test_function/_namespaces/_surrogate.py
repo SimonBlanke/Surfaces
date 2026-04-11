@@ -307,13 +307,14 @@ class SurrogateNamespace:
 
     def _generate_candidates(self, n_candidates: int) -> np.ndarray:
         """Generate random candidate points within bounds."""
+        rng = np.random.default_rng()
         bounds = self._func.bounds
         param_names = self._func.param_names
 
         candidates = np.zeros((n_candidates, len(param_names)))
         for i, name in enumerate(param_names):
             low, high = bounds[name]
-            candidates[:, i] = np.random.uniform(low, high, n_candidates)
+            candidates[:, i] = rng.uniform(low, high, n_candidates)
 
         return candidates
 
