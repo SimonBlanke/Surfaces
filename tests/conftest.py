@@ -96,6 +96,7 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "bbob: BBOB benchmark functions")
     config.addinivalue_line("markers", "algebraic: Algebraic/mathematical functions")
     config.addinivalue_line("markers", "engineering: Engineering design functions")
+    config.addinivalue_line("markers", "discrete: Discrete/combinatorial functions")
     config.addinivalue_line("markers", "viz: Visualization tests (require plotly/matplotlib)")
     config.addinivalue_line("markers", "dashboard: Streamlit dashboard tests")
     # Interface compliance markers
@@ -131,6 +132,9 @@ def pytest_collection_modifyitems(config, items):
 
         if "engineering" in test_path:
             item.add_marker(pytest.mark.engineering)
+
+        if "discrete" in test_path:
+            item.add_marker(pytest.mark.discrete)
 
         if "smoke" in test_path:
             item.add_marker(pytest.mark.smoke)
