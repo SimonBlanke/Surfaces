@@ -26,6 +26,7 @@ Developer Usage:
 """
 
 import json
+import signal
 import time
 import warnings
 from itertools import product
@@ -43,6 +44,15 @@ from ._surrogate_loader import get_surrogate_path
 # Suppress sklearn warnings during training
 warnings.filterwarnings("ignore", category=UserWarning, module="sklearn")
 
+
+class _EvalTimeout(Exception):
+    """Raised when a single evaluation exceeds its time budget."""
+
+
+def _timeout_handler(signum, frame):
+    raise _EvalTimeout()
+
+
 # Output directory for models
 MODELS_DIR = Path(__file__).parent / "models"
 
@@ -58,6 +68,9 @@ class MLSurrogateTrainer:
         Directory to save models. Defaults to _surrogates/models/.
     verbose : bool, default=True
         Print progress information.
+    logger : logging.Logger, optional
+        Logger instance for structured logging. When provided, messages
+        go to the logger instead of stdout.
 
     Examples
     --------
@@ -72,11 +85,13 @@ class MLSurrogateTrainer:
         function_name: str,
         output_dir: Optional[Path] = None,
         verbose: bool = True,
+        logger=None,
     ):
         self.function_name = function_name
         self.config = get_function_config(function_name)
         self.output_dir = output_dir or MODELS_DIR
         self.verbose = verbose
+        self._logger = logger
 
         self.X: Optional[np.ndarray] = None
         self.y: Optional[np.ndarray] = None
@@ -84,14 +99,20 @@ class MLSurrogateTrainer:
         self.param_encodings: Dict[str, Dict[str, int]] = {}
         self.model = None
         self.metrics: Dict[str, float] = {}
+        self.n_errors: int = 0
 
-    def _log(self, msg: str):
-        """Print message if verbose."""
-        if self.verbose:
+    def _log(self, msg: str, level: str = "info"):
+        """Route message to logger or stdout."""
+        if self._logger:
+            getattr(self._logger, level)(msg)
+        elif self.verbose:
             print(msg)
 
     def collect_data(
-        self, max_samples_per_combo: Optional[int] = None
+        self,
+        max_samples_per_combo: Optional[int] = None,
+        progress_callback: Optional[callable] = None,
+        eval_timeout: Optional[int] = 60,
     ) -> Tuple[np.ndarray, np.ndarray]:
         """Collect training data across all (HP, fixed_param, fidelity) combinations.
 
@@ -103,6 +124,14 @@ class MLSurrogateTrainer:
         ----------
         max_samples_per_combo : int, optional
             Max samples per fixed parameter combination.
+        progress_callback : callable, optional
+            Called as ``progress_callback(done, total)`` after each
+            evaluation. Allows callers to display a progress bar or
+            log periodic updates.
+        eval_timeout : int, optional
+            Maximum seconds per single evaluation. Evaluations exceeding
+            this limit are skipped and logged as timeouts. Set to None to
+            disable. Default: 60 seconds.
 
         Returns
         -------
@@ -116,7 +145,6 @@ class MLSurrogateTrainer:
 
         self.fidelity_aware = len(fidelity_levels) > 1 or fidelity_levels != [1.0]
 
-        # Get all fixed param combinations
         fixed_keys = list(fixed_params.keys())
         fixed_values = [fixed_params[k] for k in fixed_keys]
         fixed_combos = list(product(*fixed_values))
@@ -125,18 +153,36 @@ class MLSurrogateTrainer:
         self._log(f"  Fixed params: {fixed_keys} ({len(fixed_combos)} combinations)")
         if self.fidelity_aware:
             self._log(f"  Fidelity levels: {fidelity_levels}")
+        if eval_timeout:
+            self._log(f"  Eval timeout: {eval_timeout}s")
+
+        # Pre-compute total evaluation count for progress reporting.
+        first_func = FuncClass(**dict(zip(fixed_keys, fixed_combos[0])), use_surrogate=False)
+        n_hp = len(list(product(*[first_func.search_space[k] for k in first_func.search_space])))
+        if max_samples_per_combo and n_hp > max_samples_per_combo:
+            n_hp = max_samples_per_combo
+        total_evals = len(fixed_combos) * n_hp * len(fidelity_levels)
+        self._log(f"  Estimated evaluations: {total_evals}")
+
+        use_alarm = eval_timeout is not None and hasattr(signal, "SIGALRM")
+        if eval_timeout and not use_alarm:
+            self._log(
+                "  SIGALRM not available (Windows?), timeout disabled",
+                level="warning",
+            )
 
         records = []
+        n_errors = 0
+        n_timeouts = 0
+        n_nan = 0
+        done = 0
         start_time = time.time()
 
         for fixed_combo in fixed_combos:
             fixed_dict = dict(zip(fixed_keys, fixed_combo))
-
-            # Create function instance with fixed params
             func = FuncClass(**fixed_dict, use_surrogate=False)
             search_space = func.search_space
 
-            # Get all HP combinations
             hp_keys = list(search_space.keys())
             hp_values = [search_space[k] for k in hp_keys]
             hp_combos = list(product(*hp_values))
@@ -150,22 +196,65 @@ class MLSurrogateTrainer:
 
                 for fidelity in fidelity_levels:
                     try:
+                        if use_alarm:
+                            old_handler = signal.signal(signal.SIGALRM, _timeout_handler)
+                            signal.alarm(eval_timeout)
+
                         func._active_fidelity = fidelity if fidelity < 1.0 else None
                         score = func._objective(hp_dict)
-                        if not np.isnan(score):
+
+                        if use_alarm:
+                            signal.alarm(0)
+
+                        if np.isnan(score):
+                            n_nan += 1
+                        else:
                             record = {**hp_dict, **fixed_dict, "_score": score}
                             if self.fidelity_aware:
                                 record["__fidelity__"] = fidelity
                             records.append(record)
-                    except Exception:
-                        pass  # Skip invalid combinations (e.g. n_neighbors > n_subsampled)
+                    except _EvalTimeout:
+                        n_timeouts += 1
+                        self._log(
+                            f"  Timeout ({eval_timeout}s): {fixed_dict} | "
+                            f"{hp_dict} | fidelity={fidelity}",
+                            level="warning",
+                        )
+                    except Exception as exc:
+                        n_errors += 1
+                        self._log(
+                            f"  Eval failed: {fixed_dict} | {hp_dict} | "
+                            f"fidelity={fidelity} -> {type(exc).__name__}: {exc}",
+                            level="debug",
+                        )
                     finally:
+                        if use_alarm:
+                            signal.alarm(0)
+                            signal.signal(signal.SIGALRM, old_handler)
                         func._active_fidelity = None
 
-        elapsed = time.time() - start_time
-        self._log(f"  Collected {len(records)} samples in {elapsed:.1f}s")
+                    done += 1
+                    if progress_callback is not None:
+                        progress_callback(done, total_evals)
 
-        # Convert to arrays
+        elapsed = time.time() - start_time
+        self.n_errors = n_errors
+        self.n_timeouts = n_timeouts
+        self._log(
+            f"  Collected {len(records)} samples in {elapsed:.1f}s "
+            f"({n_errors} errors, {n_timeouts} timeouts, {n_nan} NaN)"
+        )
+        if n_errors > 0:
+            self._log(
+                f"  {n_errors} evaluations raised exceptions (see log at DEBUG level for details)",
+                level="warning",
+            )
+        if n_timeouts > 0:
+            self._log(
+                f"  {n_timeouts} evaluations exceeded {eval_timeout}s timeout",
+                level="warning",
+            )
+
         self._build_arrays(records, hyperparams, fixed_keys)
         return self.X, self.y
 
@@ -301,7 +390,7 @@ class MLSurrogateTrainer:
             "fidelity_aware": getattr(self, "fidelity_aware", False),
             "fidelity_levels": self.config.get("fidelity_levels", [1.0]),
             "n_samples": int(self.metrics["n_samples"]),
-            "n_invalid_samples": 0,
+            "n_invalid_samples": self.n_errors,
             "has_validity_model": False,
             "y_range": [float(self.y.min()), float(self.y.max())],
             "training_mse": self.metrics["mse"],
