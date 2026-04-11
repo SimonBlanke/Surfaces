@@ -48,6 +48,7 @@ class RandomForestForecasterFunction(BaseForecasting):
 
     _name_ = "random_forest_forecaster"
     _spec = {"eval_cost": 45700.0}
+    _dependencies = {"ml": ["sklearn"]}
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5]

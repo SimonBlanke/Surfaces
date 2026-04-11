@@ -40,6 +40,7 @@ class SVMImageClassifierFunction(BaseImageClassification):
 
     _name_ = "svm_image_classifier"
     _spec = {"eval_cost": 42100.0}
+    _dependencies = {"ml": ["sklearn"]}
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5]

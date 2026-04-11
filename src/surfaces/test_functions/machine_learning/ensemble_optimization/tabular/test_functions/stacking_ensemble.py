@@ -40,6 +40,7 @@ class StackingEnsembleFunction(BaseTabularEnsemble):
 
     name = "Stacking Ensemble"
     _spec = {"eval_cost": 176900.0}
+    _dependencies = {"ml": ["sklearn"]}
 
     available_datasets = ["digits", "iris", "wine", "breast_cancer"]
     available_cv = [2, 3, 5, 10]

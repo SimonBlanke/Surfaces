@@ -24,6 +24,7 @@ class SVMRegressorFunction(BaseRegression):
     _name_ = "svm_regressor"
 
     _spec = {"eval_cost": 2200.0}
+    _dependencies = {"ml": ["sklearn"]}
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]

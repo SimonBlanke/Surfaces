@@ -40,6 +40,7 @@ class MutualInfoFeatureSelectionFunction(BaseTabularFeatureEngineering):
     name = "Mutual Information Feature Selection"
     _name_ = "mutual_info_feature_selection"
     _spec = {"eval_cost": 279600.0}
+    _dependencies = {"ml": ["sklearn"]}
 
     available_datasets = ["digits", "iris", "wine", "breast_cancer"]
     available_cv = [2, 3, 5, 10]

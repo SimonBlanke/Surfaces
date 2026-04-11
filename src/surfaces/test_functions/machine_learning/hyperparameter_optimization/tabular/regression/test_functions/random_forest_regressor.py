@@ -26,6 +26,7 @@ class RandomForestRegressorFunction(BaseRegression):
     _name_ = "random_forest_regressor"
 
     _spec = {"eval_cost": 58900.0}
+    _dependencies = {"ml": ["sklearn"]}
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]

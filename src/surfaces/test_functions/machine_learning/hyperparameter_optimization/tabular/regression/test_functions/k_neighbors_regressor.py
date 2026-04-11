@@ -59,6 +59,7 @@ class KNeighborsRegressorFunction(BaseRegression):
     _name_ = "k_neighbors_regressor"
 
     _spec = {"eval_cost": 1000.0}
+    _dependencies = {"ml": ["sklearn"]}
 
     # Available options (for validation and documentation)
     available_datasets = list(DATASETS.keys())

@@ -39,6 +39,7 @@ class PolynomialFeatureTransformationFunction(BaseTabularFeatureEngineering):
 
     name = "Polynomial Feature Transformation"
     _spec = {"eval_cost": 531.0}
+    _dependencies = {"ml": ["sklearn"]}
 
     available_datasets = ["diabetes", "california_housing"]
     available_cv = [2, 3, 5, 10]

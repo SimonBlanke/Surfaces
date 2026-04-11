@@ -24,7 +24,7 @@ class XGBoostClassifierFunction(BaseClassification):
     """
 
     _name_ = "xgboost_classifier"
-    _dependencies = {"ml": ["xgboost"]}
+    _dependencies = {"ml": ["sklearn", "xgboost"]}
 
     _spec = {"eval_cost": 329300.0}
 

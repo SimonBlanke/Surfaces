@@ -23,7 +23,7 @@ class LightGBMRegressorFunction(BaseRegression):
 
     name = "LightGBM Regressor Function"
     _name_ = "lightgbm_regressor"
-    _dependencies = {"ml": ["lightgbm"]}
+    _dependencies = {"ml": ["sklearn", "lightgbm"]}
 
     _spec = {"eval_cost": 8500.0}
 

@@ -25,7 +25,7 @@ class LightGBMClassifierFunction(BaseClassification):
 
     name = "LightGBM Classifier Function"
     _name_ = "lightgbm_classifier"
-    _dependencies = {"ml": ["lightgbm"]}
+    _dependencies = {"ml": ["sklearn", "lightgbm"]}
 
     _spec = {"eval_cost": 216600.0}
 

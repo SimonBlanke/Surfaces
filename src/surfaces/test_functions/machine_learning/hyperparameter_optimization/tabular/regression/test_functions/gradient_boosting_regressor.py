@@ -58,6 +58,7 @@ class GradientBoostingRegressorFunction(BaseRegression):
     _name_ = "gradient_boosting_regressor"
 
     _spec = {"eval_cost": 73800.0}
+    _dependencies = {"ml": ["sklearn"]}
 
     # Available options (for validation and documentation)
     available_datasets = list(DATASETS.keys())
