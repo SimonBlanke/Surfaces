@@ -46,6 +46,16 @@ CREATE INDEX IF NOT EXISTS idx_eval_lookup
 """
 
 
+_IMPORT_TO_DIST = {
+    "sklearn": "scikit-learn",
+}
+
+
+def _get_dist_name(import_name: str) -> str:
+    """Map import names to pip distribution names where they differ."""
+    return _IMPORT_TO_DIST.get(import_name, import_name)
+
+
 def compute_function_hash(func_class: Type) -> str:
     """Hash a function class based on its source and dependency versions.
 
@@ -53,6 +63,8 @@ def compute_function_hash(func_class: Type) -> str:
     - The _ml_objective (or _objective) source code changes
     - A declared dependency changes its major.minor version
 
+    Reads the existing ``_dependencies`` dict format used by the test
+    function classes: ``{"extras_group": ["import_name", ...]}``.
     Patch versions are ignored since they rarely affect numerical
     results and would cause unnecessary re-evaluations.
     """
@@ -66,14 +78,21 @@ def compute_function_hash(func_class: Type) -> str:
             except (OSError, TypeError):
                 pass
 
+    deps = getattr(func_class, "_dependencies", None)
     dep_versions = {}
-    for dep in getattr(func_class, "_dependencies", ()):
-        try:
-            version = importlib.metadata.version(dep)
-            major_minor = ".".join(version.split(".")[:2])
-            dep_versions[dep] = major_minor
-        except importlib.metadata.PackageNotFoundError:
-            dep_versions[dep] = "not_installed"
+    if deps and isinstance(deps, dict):
+        all_packages = set()
+        for packages in deps.values():
+            all_packages.update(packages)
+
+        for pkg in sorted(all_packages):
+            dist_name = _get_dist_name(pkg)
+            try:
+                version = importlib.metadata.version(dist_name)
+                major_minor = ".".join(version.split(".")[:2])
+                dep_versions[dist_name] = major_minor
+            except importlib.metadata.PackageNotFoundError:
+                dep_versions[dist_name] = "not_installed"
     parts.append(json.dumps(dep_versions, sort_keys=True))
 
     raw = "\n".join(parts).encode()
