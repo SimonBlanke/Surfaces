@@ -161,6 +161,8 @@ class BaseTestFunction:
         self._errors_accessor = None
         self._meta_accessor = None
 
+        self._active_fidelity: Optional[float] = None
+
     def _check_dependencies(self):
         """Check that required optional dependencies are installed.
 
