@@ -34,8 +34,8 @@ class BealeFunction(AlgebraicFunction):
         Second coefficient.
     C : float, default=2.625
         Third coefficient.
-    metric : str, default="score"
-        Either "loss" (minimize) or "score" (maximize).
+    objective : str, default="minimize"
+        Either "minimize" or "maximize".
     modifiers : list of BaseModifier, optional
         List of modifiers to apply to function evaluations.
 

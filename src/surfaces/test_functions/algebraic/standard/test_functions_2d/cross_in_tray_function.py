@@ -36,8 +36,8 @@ class CrossInTrayFunction(AlgebraicFunction):
         Exponential base parameter.
     angle : float, default=1
         Angular frequency parameter.
-    metric : str, default="score"
-        Either "loss" (minimize) or "score" (maximize).
+    objective : str, default="minimize"
+        Either "minimize" or "maximize".
     modifiers : list of BaseModifier, optional
         List of modifiers to apply to function evaluations.
 

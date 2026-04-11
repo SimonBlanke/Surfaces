@@ -32,12 +32,10 @@ class SphereFunction(AlgebraicFunction):
         Number of dimensions.
     A : float, default=1
         Scaling parameter.
-    metric : str, default="score"
-        Either "loss" (minimize) or "score" (maximize).
+    objective : str, default="minimize"
+        Either "minimize" or "maximize".
     modifiers : list of BaseModifier, optional
         List of modifiers to apply to function evaluations.
-    validate : bool, default=True
-        Whether to validate parameters against the search space.
 
     Attributes
     ----------
