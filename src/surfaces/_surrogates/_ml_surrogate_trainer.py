@@ -35,6 +35,7 @@ from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 
+from ._error_aggregator import ErrorAggregator
 from ._ml_registry import (
     get_function_config,
     get_registered_functions,
@@ -172,7 +173,7 @@ class MLSurrogateTrainer:
             )
 
         records = []
-        n_errors = 0
+        error_agg = ErrorAggregator(logger=self._logger)
         n_timeouts = 0
         n_nan = 0
         done = 0
@@ -221,12 +222,8 @@ class MLSurrogateTrainer:
                             level="warning",
                         )
                     except Exception as exc:
-                        n_errors += 1
-                        self._log(
-                            f"  Eval failed: {fixed_dict} | {hp_dict} | "
-                            f"fidelity={fidelity} -> {type(exc).__name__}: {exc}",
-                            level="debug",
-                        )
+                        context = f"{fixed_dict} | {hp_dict} | fidelity={fidelity}"
+                        error_agg.record(exc, context)
                     finally:
                         if use_alarm:
                             signal.alarm(0)
@@ -238,17 +235,14 @@ class MLSurrogateTrainer:
                         progress_callback(done, total_evals)
 
         elapsed = time.time() - start_time
-        self.n_errors = n_errors
+        self.n_errors = error_agg.total
         self.n_timeouts = n_timeouts
         self._log(
             f"  Collected {len(records)} samples in {elapsed:.1f}s "
-            f"({n_errors} errors, {n_timeouts} timeouts, {n_nan} NaN)"
+            f"({error_agg.total} errors, {n_timeouts} timeouts, {n_nan} NaN)"
         )
-        if n_errors > 0:
-            self._log(
-                f"  {n_errors} evaluations raised exceptions (see log at DEBUG level for details)",
-                level="warning",
-            )
+        if error_agg.total > 0:
+            error_agg.log_summary()
         if n_timeouts > 0:
             self._log(
                 f"  {n_timeouts} evaluations exceeded {eval_timeout}s timeout",
