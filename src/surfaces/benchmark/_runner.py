@@ -12,11 +12,21 @@ total time and subtracts recorded eval times to estimate overhead.
 from __future__ import annotations
 
 import inspect
+import pickle
 import time
-from typing import Any
+from typing import Any, NamedTuple
 
-from surfaces._cost import to_cu
+from surfaces._cost import _inject_ref_time, to_cu
 from surfaces.benchmark._trace import EvalRecord, Trace
+
+
+class _TrialResult(NamedTuple):
+    """Result of a single benchmark trial, returned by worker functions."""
+
+    key: tuple[str, str, int]
+    trace: Trace | None
+    error: Exception | None
+    wall_seconds: float | None
 
 
 def _instantiate_function(func_cls: type) -> Any:
@@ -136,3 +146,36 @@ def _run_sealed(
         )
 
     return trace
+
+
+def _run_trial(task: tuple) -> _TrialResult:
+    """Execute one benchmark trial. Designed for parallel worker dispatch.
+
+    Accepts a flat tuple so it stays picklable across process boundaries.
+    Catches all exceptions and returns them in the result rather than
+    propagating, so the calling code can apply its own error policy.
+    """
+    key, func_cls, opt_spec, seed, budget_cu, budget_iter, ref_time = task
+
+    _inject_ref_time(ref_time)
+
+    try:
+        from surfaces.benchmark._resolve import resolve_optimizer
+
+        func = _instantiate_function(func_cls)
+        adapter = resolve_optimizer(opt_spec)
+
+        t0 = time.perf_counter()
+        if adapter.is_sealed:
+            trace = _run_sealed(func, adapter, seed, budget_cu, budget_iter)
+        else:
+            trace = _run_ask_tell(func, adapter, seed, budget_cu, budget_iter)
+        wall = time.perf_counter() - t0
+
+        return _TrialResult(key=key, trace=trace, error=None, wall_seconds=wall)
+    except Exception as exc:
+        try:
+            pickle.dumps(exc)
+        except Exception:
+            exc = RuntimeError(f"{type(exc).__name__}: {exc}")
+        return _TrialResult(key=key, trace=None, error=exc, wall_seconds=None)

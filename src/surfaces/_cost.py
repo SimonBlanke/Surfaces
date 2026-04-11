@@ -115,3 +115,13 @@ def reset() -> None:
     """
     global _ref_time
     _ref_time = None
+
+
+def _inject_ref_time(value: float) -> None:
+    """Set the calibration value without measuring.
+
+    Used by parallel benchmark workers to avoid redundant calibration
+    in each spawned process.
+    """
+    global _ref_time
+    _ref_time = value

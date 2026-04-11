@@ -20,9 +20,16 @@ from surfaces._cost import calibrate
 
 if TYPE_CHECKING:
     from surfaces.benchmark._accessors import IOAccessor, PlotAccessor, ResultAccessor
+    from surfaces.benchmark._backends import ParallelBackend
 from surfaces.benchmark._progress import TrialInfo, _ProgressBar
 from surfaces.benchmark._resolve import resolve_functions, resolve_optimizer
-from surfaces.benchmark._runner import _instantiate_function, _run_ask_tell, _run_sealed
+from surfaces.benchmark._runner import (
+    _instantiate_function,
+    _run_ask_tell,
+    _run_sealed,
+    _run_trial,
+    _TrialResult,
+)
 from surfaces.benchmark._suites import Suite
 from surfaces.benchmark._trace import EvalRecord, Trace
 
@@ -195,6 +202,7 @@ class Benchmark:
         *,
         verbose: bool = True,
         callback: Callable[[TrialInfo], None] | None = None,
+        backend: ParallelBackend | None = None,
     ) -> Benchmark:
         """Run all missing (function, optimizer, seed) combinations.
 
@@ -208,6 +216,14 @@ class Benchmark:
         callback : callable, optional
             Called with a ``TrialInfo`` after each trial (including skipped
             ones). Useful for custom progress bars or logging.
+        backend : ParallelBackend, optional
+            Parallel execution backend. When provided, pending trials are
+            dispatched to workers via ``backend.map()``. When ``None``
+            (the default), trials run sequentially in the current process.
+
+            Note: with a parallel backend and ``catch != "raise"``, all
+            trials complete before errors are collected. In sequential mode,
+            ``catch="raise"`` stops on the first failure.
 
         Returns self for chaining: ``bench.run().results.summary()``
         """
@@ -220,6 +236,20 @@ class Benchmark:
 
         adapters = [resolve_optimizer(self._to_spec(opt)) for opt in self._optimizers]
 
+        if backend is not None:
+            self._run_parallel(adapters, backend, verbose, callback)
+        else:
+            self._run_sequential(adapters, verbose, callback)
+
+        return self
+
+    def _run_sequential(
+        self,
+        adapters: list,
+        verbose: bool,
+        callback: Callable[[TrialInfo], None] | None,
+    ) -> None:
+        """Execute trials one by one in the current process."""
         total = len(self._functions) * len(adapters) * self._n_seeds
         progress = (
             _ProgressBar(
@@ -305,7 +335,124 @@ class Benchmark:
         if progress:
             progress.summary()
 
-        return self
+    def _run_parallel(
+        self,
+        adapters: list,
+        backend: ParallelBackend,
+        verbose: bool,
+        callback: Callable[[TrialInfo], None] | None,
+    ) -> None:
+        """Dispatch pending trials to a parallel backend."""
+        ref_time = self._calibration_ref_time
+
+        adapter_to_spec = {
+            adapter.name: self._to_spec(opt) for adapter, opt in zip(adapters, self._optimizers)
+        }
+
+        pending_tasks = []
+        skipped_keys = []
+
+        for func_cls in self._functions:
+            func_name = func_cls.__name__
+            for adapter in adapters:
+                opt_spec = adapter_to_spec[adapter.name]
+                for i in range(self._n_seeds):
+                    run_seed = self._seed + i
+                    key = (func_name, adapter.name, run_seed)
+
+                    if key in self._traces:
+                        skipped_keys.append(key)
+                        continue
+
+                    task = (
+                        key,
+                        func_cls,
+                        opt_spec,
+                        run_seed,
+                        self._budget_cu,
+                        self._budget_iter,
+                        ref_time,
+                    )
+                    pending_tasks.append(task)
+
+        total = len(pending_tasks) + len(skipped_keys)
+
+        if verbose:
+            n_workers = backend.effective_n_jobs
+            print(
+                f"Benchmark: dispatching {len(pending_tasks)} trials "
+                f"to {n_workers} workers ({len(skipped_keys)} skipped)"
+            )
+
+        trial_index = 0
+
+        for key in skipped_keys:
+            trial_index += 1
+            if callback:
+                callback(
+                    TrialInfo(
+                        function=key[0],
+                        optimizer=key[1],
+                        seed=key[2],
+                        index=trial_index,
+                        total=total,
+                        skipped=True,
+                        wall_seconds=None,
+                    )
+                )
+
+        if pending_tasks:
+            t_start = time.perf_counter()
+            results: list[_TrialResult] = backend.map(_run_trial, pending_tasks)
+            t_total = time.perf_counter() - t_start
+
+            first_error = None
+            for result in results:
+                trial_index += 1
+
+                if result.error is not None:
+                    self._errors[result.key] = result.error
+                    if first_error is None:
+                        first_error = result.error
+                    if self._catch == "warn":
+                        warnings.warn(
+                            f"Trial {result.key[0]} x {result.key[1]} "
+                            f"(seed={result.key[2]}) failed: "
+                            f"{type(result.error).__name__}: {result.error}",
+                            stacklevel=2,
+                        )
+                else:
+                    self._traces[result.key] = result.trace
+
+                if callback:
+                    callback(
+                        TrialInfo(
+                            function=result.key[0],
+                            optimizer=result.key[1],
+                            seed=result.key[2],
+                            index=trial_index,
+                            total=total,
+                            skipped=False,
+                            wall_seconds=result.wall_seconds,
+                            error=result.error,
+                        )
+                    )
+
+            if verbose:
+                n_new = sum(1 for r in results if r.error is None)
+                n_failed = sum(1 for r in results if r.error is not None)
+                from surfaces.benchmark._progress import _format_time
+
+                print(
+                    f"[done] {n_new} new, {len(skipped_keys)} skipped, "
+                    f"{n_failed} failed, {_format_time(t_total)} total"
+                )
+
+            if first_error is not None and self._catch == "raise":
+                raise first_error
+
+        elif verbose:
+            print("[done] all trials already cached")
 
     @property
     def results(self) -> ResultAccessor:

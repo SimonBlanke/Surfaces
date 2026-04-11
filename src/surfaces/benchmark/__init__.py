@@ -16,6 +16,7 @@ Usage::
     print(bench.results.summary())
 """
 
+from surfaces.benchmark._backends import ParallelBackend, ProcessBackend, ThreadBackend
 from surfaces.benchmark._benchmark import Benchmark
 from surfaces.benchmark._progress import TrialInfo
 from surfaces.benchmark._suites import ALL_SUITES as suites
@@ -25,8 +26,11 @@ from surfaces.benchmark._trace import EvalRecord, Trace
 __all__ = [
     "Benchmark",
     "EvalRecord",
+    "ParallelBackend",
+    "ProcessBackend",
+    "Suite",
+    "ThreadBackend",
     "Trace",
     "TrialInfo",
-    "Suite",
     "suites",
 ]
