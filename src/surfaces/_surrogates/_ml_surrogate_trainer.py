@@ -58,6 +58,17 @@ def _timeout_handler(signum, frame):
 MODELS_DIR = Path(__file__).parent / "models"
 
 
+def _serialize_value(v):
+    """Convert numpy scalars and other non-JSON types to Python natives."""
+    if isinstance(v, (np.integer,)):
+        return int(v)
+    if isinstance(v, (np.floating,)):
+        return float(v)
+    if isinstance(v, np.ndarray):
+        return v.tolist()
+    return v
+
+
 class MLSurrogateTrainer:
     """Train surrogate for an ML function across all fixed param combinations.
 
@@ -114,12 +125,17 @@ class MLSurrogateTrainer:
         max_samples_per_combo: Optional[int] = None,
         progress_callback: Optional[callable] = None,
         eval_timeout: Optional[int] = 60,
+        evaluation_store=None,
     ) -> Tuple[np.ndarray, np.ndarray]:
         """Collect training data across all (HP, fixed_param, fidelity) combinations.
 
         When fidelity_levels contains more than just [1.0], the trainer
         evaluates each HP combination at every fidelity level. The resulting
         surrogate can then predict scores for arbitrary fidelity values.
+
+        When an EvaluationStore is provided, existing evaluations are
+        loaded from the database and only missing combinations are
+        evaluated. New results are persisted back to the store.
 
         Parameters
         ----------
@@ -133,6 +149,9 @@ class MLSurrogateTrainer:
             Maximum seconds per single evaluation. Evaluations exceeding
             this limit are skipped and logged as timeouts. Set to None to
             disable. Default: 60 seconds.
+        evaluation_store : EvaluationStore, optional
+            Persistent store for caching evaluations across runs. When
+            provided, only missing combinations are evaluated.
 
         Returns
         -------
@@ -157,6 +176,17 @@ class MLSurrogateTrainer:
         if eval_timeout:
             self._log(f"  Eval timeout: {eval_timeout}s")
 
+        # Check for cached evaluations in the store
+        existing_keys = set()
+        function_hash = None
+        if evaluation_store is not None:
+            from ._evaluation_store import compute_function_hash
+
+            function_hash = compute_function_hash(FuncClass)
+            existing_keys = evaluation_store.get_existing_keys(self.function_name, function_hash)
+            if existing_keys:
+                self._log(f"  Found {len(existing_keys)} cached evaluations in store")
+
         # Pre-compute total evaluation count for progress reporting.
         first_func = FuncClass(**dict(zip(fixed_keys, fixed_combos[0])), use_surrogate=False)
         n_hp = len(list(product(*[first_func.search_space[k] for k in first_func.search_space])))
@@ -172,10 +202,12 @@ class MLSurrogateTrainer:
                 level="warning",
             )
 
-        records = []
+        new_records = []
+        new_db_records = []
         error_agg = ErrorAggregator(logger=self._logger)
         n_timeouts = 0
         n_nan = 0
+        n_cached = 0
         done = 0
         start_time = time.time()
 
@@ -196,6 +228,20 @@ class MLSurrogateTrainer:
                 hp_dict = dict(zip(hp_keys, hp_combo))
 
                 for fidelity in fidelity_levels:
+                    # Skip if we already have this evaluation in the store
+                    if existing_keys:
+                        params_json = json.dumps(
+                            {k: _serialize_value(v) for k, v in hp_dict.items()},
+                            sort_keys=True,
+                        )
+                        if (params_json, fidelity) in existing_keys:
+                            n_cached += 1
+                            done += 1
+                            if progress_callback is not None:
+                                progress_callback(done, total_evals)
+                            continue
+
+                    t_eval = time.time()
                     try:
                         if use_alarm:
                             old_handler = signal.signal(signal.SIGALRM, _timeout_handler)
@@ -207,13 +253,31 @@ class MLSurrogateTrainer:
                         if use_alarm:
                             signal.alarm(0)
 
+                        eval_time = time.time() - t_eval
+
                         if np.isnan(score):
                             n_nan += 1
                         else:
                             record = {**hp_dict, **fixed_dict, "_score": score}
                             if self.fidelity_aware:
                                 record["__fidelity__"] = fidelity
-                            records.append(record)
+                            new_records.append(record)
+
+                            if evaluation_store is not None:
+                                params_json = json.dumps(
+                                    {k: _serialize_value(v) for k, v in hp_dict.items()},
+                                    sort_keys=True,
+                                )
+                                new_db_records.append(
+                                    {
+                                        "params_json": params_json,
+                                        "fidelity": fidelity,
+                                        "score": score,
+                                        "dataset": fixed_dict.get("dataset"),
+                                        "cv": fixed_dict.get("cv"),
+                                        "eval_time_s": eval_time,
+                                    }
+                                )
                     except _EvalTimeout:
                         n_timeouts += 1
                         self._log(
@@ -221,9 +285,41 @@ class MLSurrogateTrainer:
                             f"{hp_dict} | fidelity={fidelity}",
                             level="warning",
                         )
+                        if evaluation_store is not None:
+                            params_json = json.dumps(
+                                {k: _serialize_value(v) for k, v in hp_dict.items()},
+                                sort_keys=True,
+                            )
+                            new_db_records.append(
+                                {
+                                    "params_json": params_json,
+                                    "fidelity": fidelity,
+                                    "score": None,
+                                    "error_type": "Timeout",
+                                    "dataset": fixed_dict.get("dataset"),
+                                    "cv": fixed_dict.get("cv"),
+                                    "eval_time_s": time.time() - t_eval,
+                                }
+                            )
                     except Exception as exc:
                         context = f"{fixed_dict} | {hp_dict} | fidelity={fidelity}"
                         error_agg.record(exc, context)
+                        if evaluation_store is not None:
+                            params_json = json.dumps(
+                                {k: _serialize_value(v) for k, v in hp_dict.items()},
+                                sort_keys=True,
+                            )
+                            new_db_records.append(
+                                {
+                                    "params_json": params_json,
+                                    "fidelity": fidelity,
+                                    "score": None,
+                                    "error_type": type(exc).__name__,
+                                    "dataset": fixed_dict.get("dataset"),
+                                    "cv": fixed_dict.get("cv"),
+                                    "eval_time_s": time.time() - t_eval,
+                                }
+                            )
                     finally:
                         if use_alarm:
                             signal.alarm(0)
@@ -234,11 +330,21 @@ class MLSurrogateTrainer:
                     if progress_callback is not None:
                         progress_callback(done, total_evals)
 
+            # Batch-insert after each fixed_param combo to limit memory
+            # and persist progress in case of a crash
+            if evaluation_store is not None and new_db_records:
+                evaluation_store.store_batch(self.function_name, function_hash, new_db_records)
+                new_db_records = []
+
         elapsed = time.time() - start_time
         self.n_errors = error_agg.total
         self.n_timeouts = n_timeouts
+
+        if n_cached > 0:
+            self._log(f"  Skipped {n_cached} cached evaluations")
+
         self._log(
-            f"  Collected {len(records)} samples in {elapsed:.1f}s "
+            f"  Collected {len(new_records)} new samples in {elapsed:.1f}s "
             f"({error_agg.total} errors, {n_timeouts} timeouts, {n_nan} NaN)"
         )
         if error_agg.total > 0:
@@ -249,8 +355,32 @@ class MLSurrogateTrainer:
                 level="warning",
             )
 
+        # When using the store, load ALL evaluations (cached + new)
+        # so the training data is complete
+        if evaluation_store is not None and existing_keys:
+            all_db_records = evaluation_store.load_all(self.function_name, function_hash)
+            self._log(
+                f"  Total data from store: {len(all_db_records)} evaluations "
+                f"({n_cached} cached + {len(new_records)} new)"
+            )
+            records = self._convert_db_records(all_db_records, fixed_keys)
+        else:
+            records = new_records
+
         self._build_arrays(records, hyperparams, fixed_keys)
         return self.X, self.y
+
+    def _convert_db_records(self, db_records: List[Dict], fixed_keys: List[str]) -> List[Dict]:
+        """Convert DB records back to the internal record format."""
+        records = []
+        for r in db_records:
+            record = dict(r)
+            if self.fidelity_aware:
+                record["__fidelity__"] = record.pop("fidelity", 1.0)
+            else:
+                record.pop("fidelity", None)
+            records.append(record)
+        return records
 
     def _build_arrays(self, records: List[Dict], hyperparams: List[str], fixed_keys: List[str]):
         """Convert records to numpy arrays with encodings."""
