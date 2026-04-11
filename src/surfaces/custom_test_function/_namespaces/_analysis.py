@@ -133,8 +133,109 @@ class AnalysisNamespace:
         return importances
 
     def _fanova_importance(self) -> Dict[str, float]:
-        """Calculate fANOVA-based parameter importance."""
-        raise NotImplementedError("fANOVA is not yet implemented. Use method='variance' instead.")
+        """Calculate fANOVA-based parameter importance.
+
+        Fits a Random Forest to the collected data, then decomposes
+        the predicted variance into per-parameter contributions by
+        analytically marginalizing over all other parameters in each
+        tree's leaf structure. Captures non-linear effects that the
+        correlation-based variance method misses.
+        """
+        from sklearn.ensemble import RandomForestRegressor
+
+        self._check_data(min_evaluations=30)
+
+        X, y = self._func.get_data_as_arrays()
+        param_names = self._func.param_names
+        bounds_dict = self._func.bounds
+        n_dims = len(param_names)
+
+        global_bounds = [list(bounds_dict[name]) for name in param_names]
+
+        rf = RandomForestRegressor(n_estimators=64, random_state=42)
+        rf.fit(X, y)
+
+        def get_leaves(tree, node, bounds):
+            """Recursively extract leaf predictions and their hyperrectangle bounds."""
+            if tree.feature[node] < 0:
+                return [(tree.value[node].item(), [list(b) for b in bounds])]
+
+            feat = tree.feature[node]
+            thresh = tree.threshold[node]
+
+            left_b = [list(b) for b in bounds]
+            left_b[feat] = [left_b[feat][0], min(left_b[feat][1], thresh)]
+
+            right_b = [list(b) for b in bounds]
+            right_b[feat] = [max(right_b[feat][0], thresh), right_b[feat][1]]
+
+            return get_leaves(tree, tree.children_left[node], left_b) + get_leaves(
+                tree, tree.children_right[node], right_b
+            )
+
+        def marginal_variance(leaves, dim):
+            """Variance of the marginal prediction along one dimension.
+
+            Integrates out all other dimensions analytically using the
+            piecewise-constant structure of the tree, then computes the
+            variance of the resulting one-dimensional step function.
+            """
+            g_lo, g_hi = global_bounds[dim]
+            total_range = g_hi - g_lo
+            if total_range <= 0:
+                return 0.0
+
+            cut_points = {g_lo, g_hi}
+            for _, bds in leaves:
+                cut_points.add(bds[dim][0])
+                cut_points.add(bds[dim][1])
+            cut_points = sorted(cut_points)
+
+            means = []
+            weights = []
+            for j in range(len(cut_points) - 1):
+                lo, hi = cut_points[j], cut_points[j + 1]
+                if hi <= lo:
+                    continue
+
+                pred = 0.0
+                for val, bds in leaves:
+                    if bds[dim][0] > lo or bds[dim][1] < hi:
+                        continue
+                    w = 1.0
+                    for d in range(n_dims):
+                        if d == dim:
+                            continue
+                        r = global_bounds[d][1] - global_bounds[d][0]
+                        if r > 0:
+                            w *= (bds[d][1] - bds[d][0]) / r
+                    pred += val * w
+
+                means.append(pred)
+                weights.append((hi - lo) / total_range)
+
+            if not means:
+                return 0.0
+
+            mu = sum(m * w for m, w in zip(means, weights))
+            return sum((m - mu) ** 2 * w for m, w in zip(means, weights))
+
+        importances = np.zeros(n_dims)
+        for estimator in rf.estimators_:
+            tree = estimator.tree_
+            leaves = get_leaves(tree, 0, [list(b) for b in global_bounds])
+            for i in range(n_dims):
+                importances[i] += marginal_variance(leaves, i)
+
+        importances /= len(rf.estimators_)
+
+        total = importances.sum()
+        if total > 0:
+            importances /= total
+        else:
+            importances = np.full(n_dims, 1.0 / n_dims)
+
+        return {name: float(importances[i]) for i, name in enumerate(param_names)}
 
     def convergence(self) -> Dict[str, Any]:
         """Analyze optimization convergence.

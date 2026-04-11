@@ -99,7 +99,6 @@ class SimulationFunction(BaseSingleObjectiveTestFunction):
         self.timeout = timeout
         self.timeout_value = timeout_value
         super().__init__(objective, modifiers, memory, collect_data, callbacks, catch_errors)
-        self._check_dependencies()
         self._setup_simulation()
 
     def _check_dependencies(self) -> None:
@@ -157,6 +156,26 @@ class SimulationFunction(BaseSingleObjectiveTestFunction):
         pass
 
     def _objective(self, params: Dict[str, Any]) -> float:
-        """Sub-template: run simulation and extract objective."""
-        result = self._run_simulation(params)
+        """Sub-template: run simulation and extract objective.
+
+        When timeout is set, the simulation runs in a separate thread.
+        If it exceeds the timeout, timeout_value is returned. The
+        simulation thread continues running until natural completion
+        since Python threads cannot be forcefully terminated.
+        """
+        if self.timeout is None:
+            result = self._run_simulation(params)
+            return self._extract_objective(result)
+
+        from concurrent.futures import ThreadPoolExecutor
+
+        pool = ThreadPoolExecutor(max_workers=1)
+        future = pool.submit(self._run_simulation, params)
+        try:
+            result = future.result(timeout=self.timeout)
+        except TimeoutError:
+            pool.shutdown(wait=False)
+            return self.timeout_value
+
+        pool.shutdown(wait=False)
         return self._extract_objective(result)

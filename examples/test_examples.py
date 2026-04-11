@@ -139,7 +139,7 @@ def main():
             print(f"ERROR: {e}")
             failed += 1
 
-    print(f"\n{'='*50}")
+    print(f"\n{'=' * 50}")
     print(f"Results: {passed} passed, {failed} failed")
 
     return 0 if failed == 0 else 1

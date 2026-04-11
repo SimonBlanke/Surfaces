@@ -278,7 +278,7 @@ def validate_all(
 
     results = []
     for i, name in enumerate(with_surrogate):
-        log(f"\n[{i+1}/{len(with_surrogate)}] Validating {name}...")
+        log(f"\n[{i + 1}/{len(with_surrogate)}] Validating {name}...")
         result = validate_surrogate(
             name, validation_type, n_samples, random_seed, progress_callback, db_path
         )

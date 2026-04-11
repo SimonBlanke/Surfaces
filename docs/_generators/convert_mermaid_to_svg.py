@@ -73,7 +73,7 @@ def update_rst_file(file_path: Path, svg_filename: str) -> str:
 
     # Replacement with image directive
     replacement = f""".. image:: /_static/diagrams/{svg_filename}
-   :alt: {file_path.stem.replace('_', ' ').title()} Diagram
+   :alt: {file_path.stem.replace("_", " ").title()} Diagram
    :align: center
    :class: diagram
 
@@ -90,7 +90,7 @@ def update_md_file(file_path: Path, svg_filename: str) -> str:
 
     # Replacement with image reference (MyST markdown syntax)
     replacement = f"""```{{image}} /_static/diagrams/{svg_filename}
-:alt: {file_path.stem.replace('_', ' ').title()} Diagram
+:alt: {file_path.stem.replace("_", " ").title()} Diagram
 :align: center
 :class: diagram
 ```"""

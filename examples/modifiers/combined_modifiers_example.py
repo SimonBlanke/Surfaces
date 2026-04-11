@@ -26,13 +26,13 @@ start = time.perf_counter()
 for i in range(5):
     result = realistic_sphere(point)
     results.append(result)
-    print(f"  Evaluation {i+1}: {result:.4f}")
+    print(f"  Evaluation {i + 1}: {result:.4f}")
 elapsed = time.perf_counter() - start
 
 print("\nStatistics:")
-print(f"  Mean: {sum(results)/len(results):.4f}")
-print(f"  Total time: {elapsed*1000:.1f}ms")
-print(f"  Per evaluation: {elapsed/len(results)*1000:.1f}ms")
+print(f"  Mean: {sum(results) / len(results):.4f}")
+print(f"  Total time: {elapsed * 1000:.1f}ms")
+print(f"  Per evaluation: {elapsed / len(results) * 1000:.1f}ms")
 
 # Access modifiers list
 modifiers = realistic_sphere.modifiers

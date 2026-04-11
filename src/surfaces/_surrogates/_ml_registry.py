@@ -62,7 +62,7 @@ def get_function_config(name: str) -> Dict[str, Any]:
     """Get configuration for a registered function."""
     _ensure_registered()
     if name not in ML_SURROGATE_REGISTRY:
-        raise ValueError(f"Unknown function '{name}'. " f"Available: {get_registered_functions()}")
+        raise ValueError(f"Unknown function '{name}'. Available: {get_registered_functions()}")
     return ML_SURROGATE_REGISTRY[name]
 
 

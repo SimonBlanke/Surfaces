@@ -83,9 +83,7 @@ class KNeighborsRegressorFunction(BaseRegression):
     ):
         # Validate dataset
         if dataset not in DATASETS:
-            raise ValueError(
-                f"Unknown dataset '{dataset}'. " f"Available: {self.available_datasets}"
-            )
+            raise ValueError(f"Unknown dataset '{dataset}'. Available: {self.available_datasets}")
 
         # Validate cv
         if cv not in self.available_cv:

@@ -919,9 +919,9 @@ class TestBatchEvaluationComprehensive:
         X = np.random.uniform(-1, 1, (50, n_dim))
         results = func.batch(X)
 
-        assert results.shape == (
-            50,
-        ), f"{func_class.__name__} returned wrong shape for n_dim={n_dim}"
+        assert results.shape == (50,), (
+            f"{func_class.__name__} returned wrong shape for n_dim={n_dim}"
+        )
         assert np.all(np.isfinite(results)), f"{func_class.__name__} produced non-finite values"
 
     @pytest.mark.parametrize("func_class", constrained_functions)

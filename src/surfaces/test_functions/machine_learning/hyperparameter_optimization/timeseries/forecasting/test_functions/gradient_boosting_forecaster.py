@@ -101,9 +101,7 @@ class GradientBoostingForecasterFunction(BaseForecasting):
         use_surrogate: bool = False,
     ):
         if dataset not in DATASETS:
-            raise ValueError(
-                f"Unknown dataset '{dataset}'. " f"Available: {self.available_datasets}"
-            )
+            raise ValueError(f"Unknown dataset '{dataset}'. Available: {self.available_datasets}")
 
         if cv not in self.available_cv:
             raise ValueError(f"Invalid cv={cv}. Available: {self.available_cv}")

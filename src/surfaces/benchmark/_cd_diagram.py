@@ -119,7 +119,7 @@ def render_cd_diagram(
         import matplotlib.pyplot as plt
     except ImportError:
         raise ImportError(
-            "matplotlib is required for CD diagrams. " "Install with: pip install surfaces[viz]"
+            "matplotlib is required for CD diagrams. Install with: pip install surfaces[viz]"
         ) from None
 
     sorted_items = sorted(avg_ranks.items(), key=lambda x: x[1])

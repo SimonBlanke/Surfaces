@@ -68,8 +68,7 @@ class BaseWFGFunction(BaseMultiObjectiveTestFunction):
             k = 2 * (n_objectives - 1)
         if k % (n_objectives - 1) != 0:
             raise ValueError(
-                f"k must be divisible by (n_objectives-1), "
-                f"got k={k}, n_objectives={n_objectives}"
+                f"k must be divisible by (n_objectives-1), got k={k}, n_objectives={n_objectives}"
             )
 
         if n_dim_override is not None:

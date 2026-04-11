@@ -74,7 +74,7 @@ class ShekelFunction(AlgebraicFunction):
     )
     pgfmath_formula = None
 
-    tagline = "A multimodal function with m sharp peaks (Foxholes). " "Fixed 4-dimensional problem."
+    tagline = "A multimodal function with m sharp peaks (Foxholes). Fixed 4-dimensional problem."
     display_bounds = (0.0, 10.0)
 
     display_projection = {"fixed_values": {"x2": 4.0, "x3": 4.0}}

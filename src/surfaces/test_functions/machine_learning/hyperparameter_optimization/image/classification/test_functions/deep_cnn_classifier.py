@@ -65,9 +65,7 @@ class DeepCNNClassifierFunction(BaseImageClassification):
         use_surrogate: bool = False,
     ):
         if dataset not in DATASETS:
-            raise ValueError(
-                f"Unknown dataset '{dataset}'. " f"Available: {self.available_datasets}"
-            )
+            raise ValueError(f"Unknown dataset '{dataset}'. Available: {self.available_datasets}")
 
         self.dataset = dataset
         self.epochs = epochs

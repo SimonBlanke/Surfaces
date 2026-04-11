@@ -66,7 +66,7 @@ bbob_standard = Suite(
 
 quick = Suite(
     name="quick",
-    description=("A small, fast suite for testing and CI. " "Few functions with a tight budget."),
+    description=("A small, fast suite for testing and CI. Few functions with a tight budget."),
     function_filter={
         "category": "algebraic",
         "n_dim": 2,

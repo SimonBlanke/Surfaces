@@ -21,9 +21,7 @@ def _check_matplotlib():
 
         return plt
     except ImportError:
-        raise ImportError(
-            "Visualization requires matplotlib. " "Install with: pip install matplotlib"
-        )
+        raise ImportError("Visualization requires matplotlib. Install with: pip install matplotlib")
 
 
 class PlotNamespace:

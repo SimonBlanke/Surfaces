@@ -8,3 +8,5 @@ __version__ = importlib.metadata.version("surfaces")
 __license__ = "MIT"
 
 from .collection import collection
+
+__all__ = ["collection", "__version__", "__license__"]

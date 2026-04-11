@@ -551,8 +551,7 @@ class BaseTestFunction:
 
         if not is_array_like(X):
             raise TypeError(
-                f"Expected array-like input with shape (n_points, n_dim), "
-                f"got {type(X).__name__}"
+                f"Expected array-like input with shape (n_points, n_dim), got {type(X).__name__}"
             )
 
         if X.ndim != 2:

@@ -71,7 +71,7 @@ def plot_convergence(
     if isinstance(history, (list, np.ndarray)):
         if isinstance(history, np.ndarray) and history.ndim == 2:
             # Multiple runs as 2D array
-            history = {f"Run {i+1}": list(row) for i, row in enumerate(history)}
+            history = {f"Run {i + 1}": list(row) for i, row in enumerate(history)}
         else:
             # Single run
             history = {"Optimization": list(history)}

@@ -34,11 +34,13 @@ class TestAppLoading:
 
     def test_app_runs_without_error(self, mock_db):
         """App initializes and runs without exceptions."""
-        with patch("surfaces._surrogates._dashboard.database.DB_PATH", mock_db), patch(
-            "surfaces._surrogates._dashboard.app.init_db"
-        ), patch(
-            "surfaces._surrogates._dashboard.app.sync_all",
-            return_value={"synced": 0},
+        with (
+            patch("surfaces._surrogates._dashboard.database.DB_PATH", mock_db),
+            patch("surfaces._surrogates._dashboard.app.init_db"),
+            patch(
+                "surfaces._surrogates._dashboard.app.sync_all",
+                return_value={"synced": 0},
+            ),
         ):
             at = AppTest.from_file(
                 "src/surfaces/_surrogates/_dashboard/app.py",
@@ -50,11 +52,13 @@ class TestAppLoading:
 
     def test_app_has_title(self, mock_db):
         """App displays the dashboard title."""
-        with patch("surfaces._surrogates._dashboard.database.DB_PATH", mock_db), patch(
-            "surfaces._surrogates._dashboard.app.init_db"
-        ), patch(
-            "surfaces._surrogates._dashboard.app.sync_all",
-            return_value={"synced": 0},
+        with (
+            patch("surfaces._surrogates._dashboard.database.DB_PATH", mock_db),
+            patch("surfaces._surrogates._dashboard.app.init_db"),
+            patch(
+                "surfaces._surrogates._dashboard.app.sync_all",
+                return_value={"synced": 0},
+            ),
         ):
             at = AppTest.from_file(
                 "src/surfaces/_surrogates/_dashboard/app.py",
@@ -72,20 +76,23 @@ class TestSidebar:
 
     def test_sidebar_has_metrics(self, mock_db):
         """Sidebar displays quick stats metrics."""
-        with patch("surfaces._surrogates._dashboard.database.DB_PATH", mock_db), patch(
-            "surfaces._surrogates._dashboard.app.init_db"
-        ), patch(
-            "surfaces._surrogates._dashboard.app.sync_all",
-            return_value={"synced": 0},
-        ), patch(
-            "surfaces._surrogates._dashboard.app.get_dashboard_stats",
-            return_value={
-                "total_functions": 10,
-                "with_surrogate": 7,
-                "without_surrogate": 3,
-                "total_validations": 20,
-                "total_trainings": 5,
-            },
+        with (
+            patch("surfaces._surrogates._dashboard.database.DB_PATH", mock_db),
+            patch("surfaces._surrogates._dashboard.app.init_db"),
+            patch(
+                "surfaces._surrogates._dashboard.app.sync_all",
+                return_value={"synced": 0},
+            ),
+            patch(
+                "surfaces._surrogates._dashboard.app.get_dashboard_stats",
+                return_value={
+                    "total_functions": 10,
+                    "with_surrogate": 7,
+                    "without_surrogate": 3,
+                    "total_validations": 20,
+                    "total_trainings": 5,
+                },
+            ),
         ):
             at = AppTest.from_file(
                 "src/surfaces/_surrogates/_dashboard/app.py",
@@ -98,11 +105,13 @@ class TestSidebar:
 
     def test_sidebar_has_sync_button(self, mock_db):
         """Sidebar has a sync database button."""
-        with patch("surfaces._surrogates._dashboard.database.DB_PATH", mock_db), patch(
-            "surfaces._surrogates._dashboard.app.init_db"
-        ), patch(
-            "surfaces._surrogates._dashboard.app.sync_all",
-            return_value={"synced": 0},
+        with (
+            patch("surfaces._surrogates._dashboard.database.DB_PATH", mock_db),
+            patch("surfaces._surrogates._dashboard.app.init_db"),
+            patch(
+                "surfaces._surrogates._dashboard.app.sync_all",
+                return_value={"synced": 0},
+            ),
         ):
             at = AppTest.from_file(
                 "src/surfaces/_surrogates/_dashboard/app.py",
@@ -121,11 +130,13 @@ class TestTabNavigation:
 
     def test_app_has_tabs(self, mock_db):
         """App displays the four main tabs."""
-        with patch("surfaces._surrogates._dashboard.database.DB_PATH", mock_db), patch(
-            "surfaces._surrogates._dashboard.app.init_db"
-        ), patch(
-            "surfaces._surrogates._dashboard.app.sync_all",
-            return_value={"synced": 0},
+        with (
+            patch("surfaces._surrogates._dashboard.database.DB_PATH", mock_db),
+            patch("surfaces._surrogates._dashboard.app.init_db"),
+            patch(
+                "surfaces._surrogates._dashboard.app.sync_all",
+                return_value={"synced": 0},
+            ),
         ):
             at = AppTest.from_file(
                 "src/surfaces/_surrogates/_dashboard/app.py",
@@ -166,11 +177,13 @@ class TestIntegration:
             db_path=mock_db,
         )
 
-        with patch("surfaces._surrogates._dashboard.database.DB_PATH", mock_db), patch(
-            "surfaces._surrogates._dashboard.app.init_db"
-        ), patch(
-            "surfaces._surrogates._dashboard.app.sync_all",
-            return_value={"synced": 1},
+        with (
+            patch("surfaces._surrogates._dashboard.database.DB_PATH", mock_db),
+            patch("surfaces._surrogates._dashboard.app.init_db"),
+            patch(
+                "surfaces._surrogates._dashboard.app.sync_all",
+                return_value={"synced": 1},
+            ),
         ):
             at = AppTest.from_file(
                 "src/surfaces/_surrogates/_dashboard/app.py",

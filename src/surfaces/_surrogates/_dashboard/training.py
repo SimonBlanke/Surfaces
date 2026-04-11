@@ -130,7 +130,7 @@ def train_missing(
 
     results = []
     for i, name in enumerate(missing):
-        log(f"\n[{i+1}/{len(missing)}] Training {name}...")
+        log(f"\n[{i + 1}/{len(missing)}] Training {name}...")
         result = train_surrogate(name, "missing", progress_callback, db_path)
         results.append(result)
 
@@ -179,7 +179,7 @@ def train_low_accuracy(
 
     results = []
     for i, name in enumerate(low_accuracy):
-        log(f"\n[{i+1}/{len(low_accuracy)}] Retraining {name}...")
+        log(f"\n[{i + 1}/{len(low_accuracy)}] Retraining {name}...")
         result = train_surrogate(name, "low_accuracy", progress_callback, db_path)
         results.append(result)
 
@@ -216,7 +216,7 @@ def train_all(
 
     results = []
     for i, name in enumerate(all_functions):
-        log(f"\n[{i+1}/{len(all_functions)}] Training {name}...")
+        log(f"\n[{i + 1}/{len(all_functions)}] Training {name}...")
         result = train_surrogate(name, "retrain_all", progress_callback, db_path)
         results.append(result)
 

@@ -168,9 +168,7 @@ def geodesic_arc_svg(p1, p2, center, disk_radius):
     cross = dx12 * dyc - dy12 * dxc
     sweep = 0 if cross > 0 else 1
 
-    return (
-        f"M {x1:.2f},{y1:.2f} " f"A {arc_radius:.2f},{arc_radius:.2f} 0 0,{sweep} {x2:.2f},{y2:.2f}"
-    )
+    return f"M {x1:.2f},{y1:.2f} A {arc_radius:.2f},{arc_radius:.2f} 0 0,{sweep} {x2:.2f},{y2:.2f}"
 
 
 def generate_svg(config):

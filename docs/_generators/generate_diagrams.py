@@ -61,9 +61,9 @@ Surfaces provides **{total} test functions** across five categories, each design
         TF --> ML[Machine Learning<br/>{n_ml} functions]
         TF --> ENG[Engineering<br/>{n_eng} functions]
 
-        ALG --> ALG1[1D: {counts.get('algebraic_1d', 0)}]
-        ALG --> ALG2[2D: {counts.get('algebraic_2d', 0)}]
-        ALG --> ALGN[N-D: {counts.get('algebraic_nd', 0)}]
+        ALG --> ALG1[1D: {counts.get("algebraic_1d", 0)}]
+        ALG --> ALG2[2D: {counts.get("algebraic_2d", 0)}]
+        ALG --> ALGN[N-D: {counts.get("algebraic_nd", 0)}]
 
         style TF fill:#1A1854,color:#fff
         style ALG fill:#3D3A7A,color:#fff

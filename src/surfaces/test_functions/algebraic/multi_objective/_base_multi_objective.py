@@ -93,7 +93,7 @@ class BaseMultiObjectiveTestFunction(BaseTestFunction):
         else:
             if len(objective) != self.n_objectives:
                 raise ValueError(
-                    f"objective list must have length {self.n_objectives}, " f"got {len(objective)}"
+                    f"objective list must have length {self.n_objectives}, got {len(objective)}"
                 )
             for obj in objective:
                 if obj not in ("minimize", "maximize"):

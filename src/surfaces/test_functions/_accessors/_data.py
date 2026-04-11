@@ -51,4 +51,4 @@ class DataAccessor:
         self._func._total_time = 0.0
 
     def __repr__(self) -> str:
-        return f"DataAccessor(n_evaluations={self.n_evaluations}, " f"best_score={self.best_score})"
+        return f"DataAccessor(n_evaluations={self.n_evaluations}, best_score={self.best_score})"

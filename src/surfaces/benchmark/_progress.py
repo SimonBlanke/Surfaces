@@ -124,7 +124,7 @@ class _ProgressBar:
                 f"{self._n_functions:>{fw}}/{self._n_functions}",
                 f"{self._PREFIXES[1]:<{pw}}{full_bar}  "
                 f"{self._n_optimizers:>{ow}}/{self._n_optimizers}",
-                f"{self._PREFIXES[2]:<{pw}}{full_bar}  " f"{self._n_seeds:>{sw}}/{self._n_seeds}",
+                f"{self._PREFIXES[2]:<{pw}}{full_bar}  {self._n_seeds:>{sw}}/{self._n_seeds}",
                 "│",
                 f"│  {self._new} new, {self._skipped} skipped, {self._failed} failed",
             ]
@@ -191,6 +191,5 @@ class _ProgressBar:
         else:
             status = f"{info.wall_seconds:.2f}s"
         print(
-            f"[{idx}/{self._total}] {info.function} x {info.optimizer} "
-            f"(seed={info.seed}) {status}"
+            f"[{idx}/{self._total}] {info.function} x {info.optimizer} (seed={info.seed}) {status}"
         )

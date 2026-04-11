@@ -58,7 +58,7 @@ def test_readme_example(name: str, code: str):
         )
 
         assert result.returncode == 0, (
-            f"Example '{name}' failed:\n" f"stdout: {result.stdout}\n" f"stderr: {result.stderr}"
+            f"Example '{name}' failed:\nstdout: {result.stdout}\nstderr: {result.stderr}"
         )
     finally:
         temp_path.unlink()

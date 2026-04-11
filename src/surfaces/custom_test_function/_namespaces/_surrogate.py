@@ -116,7 +116,7 @@ class SurrogateNamespace:
             from sklearn.gaussian_process.kernels import Matern
         except ImportError:
             raise ImportError(
-                "Gaussian Process requires scikit-learn. " "Install with: pip install scikit-learn"
+                "Gaussian Process requires scikit-learn. Install with: pip install scikit-learn"
             )
 
         kernel = kwargs.pop("kernel", Matern(nu=2.5))
@@ -130,7 +130,7 @@ class SurrogateNamespace:
             from sklearn.ensemble import RandomForestRegressor
         except ImportError:
             raise ImportError(
-                "Random Forest requires scikit-learn. " "Install with: pip install scikit-learn"
+                "Random Forest requires scikit-learn. Install with: pip install scikit-learn"
             )
 
         kwargs.setdefault("n_estimators", 100)
@@ -145,7 +145,7 @@ class SurrogateNamespace:
             from sklearn.ensemble import GradientBoostingRegressor
         except ImportError:
             raise ImportError(
-                "Gradient Boosting requires scikit-learn. " "Install with: pip install scikit-learn"
+                "Gradient Boosting requires scikit-learn. Install with: pip install scikit-learn"
             )
 
         kwargs.setdefault("n_estimators", 100)
@@ -214,7 +214,7 @@ class SurrogateNamespace:
 
         if self._method != "gaussian_process":
             raise ValueError(
-                f"Uncertainty is only available for Gaussian Process, " f"got {self._method}"
+                f"Uncertainty is only available for Gaussian Process, got {self._method}"
             )
 
         X = self._normalize_predict_input(params)

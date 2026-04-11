@@ -308,7 +308,7 @@ def _determine_plot_dims(
 
     for dim_name, value in params.items():
         if dim_name not in all_dims:
-            raise ValueError(f"Unknown dimension '{dim_name}'. " f"Available: {all_dims}")
+            raise ValueError(f"Unknown dimension '{dim_name}'. Available: {all_dims}")
 
         if _is_plot_marker(value):
             explicit_plot_dims.append(dim_name)
