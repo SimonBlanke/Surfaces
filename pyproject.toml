@@ -76,7 +76,7 @@ xgboost = [
 # Pre-trained ONNX surrogate models
 surrogates = [
     "surfaces-onnx-files==0.0.1",
-    "onnxruntime>=1.10.0",
+    "onnxruntime>=1.16.0",
 ]
 # All optional features
 full = [
@@ -106,10 +106,6 @@ test-minimal = [
 build = [
     "build",
 ]
-# Surrogate models
-surrogate = [
-    "onnxruntime>=1.16.0",
-]
 surrogate-train = [
     "onnxruntime>=1.16.0",
     "skl2onnx>=1.16.0",
@@ -136,7 +132,6 @@ surfaces-dashboard = "surfaces._surrogates._dashboard:run_dashboard"
 [tool.coverage.run]
 source = ["surfaces"]
 omit = [
-    "src/surfaces/_visualize.py",
     "src/surfaces/_surrogates/_dashboard/*",
     "src/surfaces/_surrogates/_surrogate_trainer.py",
     "src/surfaces/_surrogates/_ml_surrogate_trainer.py",
@@ -155,7 +150,7 @@ exclude_lines = [
 # =============================================================================
 [tool.ruff]
 line-length = 100
-target-version = "py38"
+target-version = "py310"
 exclude = [
     ".git",
     ".venv",
