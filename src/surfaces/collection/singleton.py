@@ -102,6 +102,15 @@ class _CollectionSingleton(Collection):
         except ImportError:
             pass
 
+        # Simulation functions (scipy only, always available)
+        try:
+            from ..test_functions.simulation import simulation_functions
+
+            if simulation_functions:
+                add_functions(simulation_functions)
+        except ImportError:
+            pass
+
         self._functions = functions
 
     def __iter__(self) -> Iterator[Type["BaseTestFunction"]]:
