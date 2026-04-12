@@ -2,8 +2,6 @@
 
 from typing import Any, Dict, List, Optional
 
-import numpy as np
-
 from surfaces.modifiers import BaseModifier
 
 from .._base_classification import BaseClassification
@@ -38,7 +36,7 @@ class CatBoostClassifierFunction(BaseClassification):
         "random_strength",
     ]
 
-    iterations_default = list(np.arange(50, 300, 25))
+    iterations_default = list(range(50, 300, 25))
     depth_default = list(range(3, 11))
     learning_rate_default = [0.01, 0.03, 0.05, 0.1, 0.2]
     l2_leaf_reg_default = [1, 3, 5, 7, 9]
