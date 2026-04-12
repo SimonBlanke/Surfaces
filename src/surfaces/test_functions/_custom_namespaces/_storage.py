@@ -9,8 +9,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional
 
 if TYPE_CHECKING:
+    from .._custom_storage import Storage as StorageBackend
     from .._custom_test_function import CustomTestFunction
-    from ..storage import Storage as StorageBackend
 
 
 class StorageNamespace:

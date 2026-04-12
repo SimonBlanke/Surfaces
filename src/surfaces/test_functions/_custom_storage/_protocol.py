@@ -9,7 +9,7 @@ Users can create custom storage backends by implementing this protocol.
 
 Example: Custom PostgreSQL Storage
 ----------------------------------
->>> from surfaces.custom_test_function.storage import Storage
+>>> from surfaces.test_functions._custom_storage import Storage
 >>> import psycopg2
 >>>
 >>> class PostgresStorage(Storage):

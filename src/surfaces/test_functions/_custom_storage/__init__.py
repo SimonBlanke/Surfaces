@@ -19,7 +19,7 @@ See the Storage class docstring for the required interface.
 
 Example: Custom Redis Storage
 -----------------------------
->>> from surfaces.custom_test_function.storage import Storage
+>>> from surfaces.test_functions._custom_storage import Storage
 >>> import redis
 >>>
 >>> class RedisStorage(Storage):
