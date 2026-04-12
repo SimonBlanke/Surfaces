@@ -25,7 +25,7 @@ class CatBoostClassifierFunction(BaseClassification):
 
     name = "CatBoost Classifier Function"
     _name_ = "catboost_classifier"
-    _dependencies = {"ml": ["catboost"]}
+    _dependencies = {"ml": ["sklearn", "catboost"]}
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]
@@ -44,7 +44,9 @@ class CatBoostClassifierFunction(BaseClassification):
     l2_leaf_reg_default = [1, 3, 5, 7, 9]
     random_strength_default = [0, 0.1, 0.5, 1.0, 2.0]
 
-    latex_formula = r"\text{CV-Accuracy} = f(\text{iterations}, \text{depth}, \text{learning\_rate}, \dots)"
+    latex_formula = (
+        r"\text{CV-Accuracy} = f(\text{iterations}, \text{depth}, \text{learning\_rate}, \dots)"
+    )
     tagline = (
         "Cross-validated accuracy of a CatBoost classifier. "
         "Gradient boosting with ordered boosting for categorical-friendly tree learning."
@@ -94,7 +96,7 @@ class CatBoostClassifierFunction(BaseClassification):
         from catboost import CatBoostClassifier
         from sklearn.model_selection import cross_val_score
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
         clf = CatBoostClassifier(
             iterations=params["iterations"],
             depth=params["depth"],
