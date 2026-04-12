@@ -13,8 +13,8 @@ from typing import Any, Dict, List, Optional
 
 import pytest
 
-from surfaces.custom_test_function import (
-    CustomTestFunction,
+from surfaces import CustomTestFunction
+from surfaces.test_functions._custom_storage import (
     InMemoryStorage,
     SQLiteStorage,
     Storage,
