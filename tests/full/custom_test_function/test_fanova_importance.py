@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from surfaces.custom_test_function import CustomTestFunction
+from surfaces import CustomTestFunction
 
 
 @pytest.fixture

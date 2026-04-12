@@ -128,7 +128,7 @@ class StorageNamespace:
         if state is None:
             return False
 
-        self._func.total_time = state.get("total_time", 0.0)
+        self._func._total_time = state.get("total_time", 0.0)
         if "memory_cache" in state:
             self._func._memory_cache = state["memory_cache"]
 

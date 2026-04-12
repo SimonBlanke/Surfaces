@@ -11,7 +11,7 @@ matplotlib.use("Agg")
 import numpy as np
 import pytest
 
-from surfaces.custom_test_function import CustomTestFunction
+from surfaces import CustomTestFunction
 
 
 def sphere(params):
