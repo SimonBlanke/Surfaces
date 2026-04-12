@@ -3,6 +3,7 @@
 # License: MIT License
 
 from .test_functions import (
+    CatBoostClassifierFunction,
     DecisionTreeClassifierFunction,
     GradientBoostingClassifierFunction,
     KNeighborsClassifierFunction,
@@ -13,6 +14,7 @@ from .test_functions import (
 )
 
 __all__ = [
+    "CatBoostClassifierFunction",
     "DecisionTreeClassifierFunction",
     "GradientBoostingClassifierFunction",
     "KNeighborsClassifierFunction",

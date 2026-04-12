@@ -27,6 +27,7 @@ Classification
    surfaces.test_functions.machine_learning.hyperparameter_optimization.tabular.classification.test_functions.lightgbm_classifier.LightGBMClassifierFunction
    surfaces.test_functions.machine_learning.hyperparameter_optimization.tabular.classification.test_functions.random_forest_classifier.RandomForestClassifierFunction
    surfaces.test_functions.machine_learning.hyperparameter_optimization.tabular.classification.test_functions.svm_classifier.SVMClassifierFunction
+   surfaces.test_functions.machine_learning.hyperparameter_optimization.tabular.classification.test_functions.catboost_classifier.CatBoostClassifierFunction
 
 Regression
 ----------

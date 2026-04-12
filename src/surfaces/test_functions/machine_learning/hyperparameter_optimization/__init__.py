@@ -25,6 +25,7 @@ if _HAS_SKLEARN:
     )
     from .tabular import (
         # Classification
+        CatBoostClassifierFunction,
         DecisionTreeClassifierFunction,
         # Regression
         DecisionTreeRegressorFunction,
@@ -51,6 +52,7 @@ if _HAS_SKLEARN:
 
     __all__ = [
         # Tabular - Classification
+        "CatBoostClassifierFunction",
         "DecisionTreeClassifierFunction",
         "GradientBoostingClassifierFunction",
         "KNeighborsClassifierFunction",
