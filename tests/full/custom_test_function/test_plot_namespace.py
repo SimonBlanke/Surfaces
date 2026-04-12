@@ -56,23 +56,23 @@ class TestPlotHistory:
         """history() returns matplotlib Axes."""
         import matplotlib.axes
 
-        ax = sphere_func_with_data.plot.history()
+        ax = sphere_func_with_data.custom_plots.history()
         assert isinstance(ax, matplotlib.axes.Axes)
 
     def test_history_show_best_false(self, sphere_func_with_data):
         """history() works with show_best=False."""
-        ax = sphere_func_with_data.plot.history(show_best=False)
+        ax = sphere_func_with_data.custom_plots.history(show_best=False)
         assert ax is not None
 
     def test_history_log_scale(self, sphere_func_with_data):
         """history() works with log_scale=True."""
-        ax = sphere_func_with_data.plot.history(log_scale=True)
+        ax = sphere_func_with_data.custom_plots.history(log_scale=True)
         assert ax.get_yscale() == "log"
 
     def test_history_raises_no_data(self, sphere_func):
         """history() raises with no evaluation data."""
         with pytest.raises(ValueError, match="at least 1 evaluations"):
-            sphere_func.plot.history()
+            sphere_func.custom_plots.history()
 
 
 class TestPlotImportance:
@@ -82,7 +82,7 @@ class TestPlotImportance:
         """importance() returns matplotlib Axes."""
         import matplotlib.axes
 
-        ax = sphere_func_with_data.plot.importance()
+        ax = sphere_func_with_data.custom_plots.importance()
         assert isinstance(ax, matplotlib.axes.Axes)
 
     def test_importance_raises_insufficient_data(self, sphere_func):
@@ -91,7 +91,7 @@ class TestPlotImportance:
         for i in range(3):
             sphere_func({"x": float(i), "y": float(i)})
         with pytest.raises(ValueError, match="at least 10 evaluations"):
-            sphere_func.plot.importance()
+            sphere_func.custom_plots.importance()
 
 
 class TestPlotContour:
@@ -101,19 +101,19 @@ class TestPlotContour:
         """contour() returns matplotlib Axes."""
         import matplotlib.axes
 
-        ax = sphere_func_with_data.plot.contour("x", "y")
+        ax = sphere_func_with_data.custom_plots.contour("x", "y")
         assert isinstance(ax, matplotlib.axes.Axes)
 
     def test_contour_unknown_param_raises(self, sphere_func_with_data):
         """contour() raises for unknown parameter name."""
         with pytest.raises(ValueError, match="Unknown parameter"):
-            sphere_func_with_data.plot.contour("x", "z")
+            sphere_func_with_data.custom_plots.contour("x", "z")
 
     def test_contour_insufficient_data_raises(self, sphere_func):
         """contour() raises with insufficient data."""
         sphere_func({"x": 1.0, "y": 1.0})
         with pytest.raises(ValueError, match="at least 10 evaluations"):
-            sphere_func.plot.contour("x", "y")
+            sphere_func.custom_plots.contour("x", "y")
 
 
 class TestPlotParallelCoordinates:
@@ -123,16 +123,16 @@ class TestPlotParallelCoordinates:
         """parallel_coordinates() returns matplotlib Axes."""
         import matplotlib.axes
 
-        ax = sphere_func_with_data.plot.parallel_coordinates()
+        ax = sphere_func_with_data.custom_plots.parallel_coordinates()
         assert isinstance(ax, matplotlib.axes.Axes)
 
     def test_parallel_coordinates_top_k(self, sphere_func_with_data):
         """parallel_coordinates() works with top_k filter."""
-        ax = sphere_func_with_data.plot.parallel_coordinates(top_k=10)
+        ax = sphere_func_with_data.custom_plots.parallel_coordinates(top_k=10)
         assert ax is not None
 
     def test_parallel_coordinates_insufficient_data(self, sphere_func):
         """parallel_coordinates() raises with insufficient data."""
         sphere_func({"x": 1.0, "y": 1.0})
         with pytest.raises(ValueError, match="at least 5 evaluations"):
-            sphere_func.plot.parallel_coordinates()
+            sphere_func.custom_plots.parallel_coordinates()

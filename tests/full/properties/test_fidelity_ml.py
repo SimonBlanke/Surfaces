@@ -191,6 +191,12 @@ class TestSurrogateFidelityWarning:
         if not func.use_surrogate:
             pytest.skip("No surrogate model available")
 
+        # The warning only fires for non-fidelity-aware surrogates. If the
+        # loaded surrogate natively supports fidelity, there is nothing to warn
+        # about — the fidelity value is passed through to predict().
+        if func._surrogate is not None and func._surrogate.fidelity_aware:
+            pytest.skip("Loaded surrogate is fidelity-aware; warning path N/A")
+
         params = {"n_neighbors": 5, "algorithm": "auto"}
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
