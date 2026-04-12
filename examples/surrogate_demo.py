@@ -35,7 +35,7 @@ def main():
         result = func_real({"n_neighbors": 5 + i * 10, "algorithm": "auto"})
     elapsed = time.time() - start
 
-    print(f"   10 evaluations: {elapsed*1000:.1f}ms ({elapsed/10*1000:.1f}ms/eval)")
+    print(f"   10 evaluations: {elapsed * 1000:.1f}ms ({elapsed / 10 * 1000:.1f}ms/eval)")
 
     # 3. Surrogate evaluation (fast)
     print("\n3. Surrogate Evaluation")
@@ -50,7 +50,7 @@ def main():
         result = func_surr({"n_neighbors": 5 + (i % 30) * 5, "algorithm": "auto"})
     elapsed = time.time() - start
 
-    print(f"   1000 evaluations: {elapsed*1000:.1f}ms ({elapsed/1000*1000:.3f}ms/eval)")
+    print(f"   1000 evaluations: {elapsed * 1000:.1f}ms ({elapsed / 1000 * 1000:.3f}ms/eval)")
 
     # 4. Compare accuracy
     print("\n4. Accuracy Comparison")

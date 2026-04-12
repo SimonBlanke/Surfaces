@@ -23,6 +23,9 @@ class SVMRegressorFunction(BaseRegression):
 
     _name_ = "svm_regressor"
 
+    _spec = {"eval_cost": 2200.0}
+    _dependencies = {"ml": ["sklearn"]}
+
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]
 
@@ -73,7 +76,7 @@ class SVMRegressorFunction(BaseRegression):
         from sklearn.model_selection import cross_val_score
         from sklearn.svm import SVR
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
         reg = SVR(
             C=params["C"],
             kernel=params["kernel"],

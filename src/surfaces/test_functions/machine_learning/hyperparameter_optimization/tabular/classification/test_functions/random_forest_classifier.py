@@ -25,6 +25,9 @@ class RandomForestClassifierFunction(BaseClassification):
 
     _name_ = "random_forest_classifier"
 
+    _spec = {"eval_cost": 72100.0}
+    _dependencies = {"ml": ["sklearn"]}
+
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]
 
@@ -75,7 +78,7 @@ class RandomForestClassifierFunction(BaseClassification):
         from sklearn.ensemble import RandomForestClassifier
         from sklearn.model_selection import cross_val_score
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
         clf = RandomForestClassifier(
             n_estimators=params["n_estimators"],
             max_depth=params["max_depth"],

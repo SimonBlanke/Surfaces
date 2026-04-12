@@ -39,6 +39,8 @@ class VotingEnsembleFunction(BaseTabularEnsemble):
     """
 
     name = "Voting Ensemble"
+    _spec = {"eval_cost": 25400.0}
+    _dependencies = {"ml": ["sklearn"]}
 
     available_datasets = ["digits", "iris", "wine", "breast_cancer"]
     available_cv = [2, 3, 5, 10]
@@ -102,7 +104,7 @@ class VotingEnsembleFunction(BaseTabularEnsemble):
         from sklearn.svm import SVC
         from sklearn.tree import DecisionTreeClassifier
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
 
         estimators = []
 

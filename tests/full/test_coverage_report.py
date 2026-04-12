@@ -142,7 +142,7 @@ def generate_report() -> str:
 
         lines.append(
             f"\n  Coverage: {category_mentioned}/{category_total} "
-            f"({100*category_mentioned/category_total:.1f}%)"
+            f"({100 * category_mentioned / category_total:.1f}%)"
         )
 
         total_functions += category_total
@@ -152,7 +152,7 @@ def generate_report() -> str:
     lines.append("=" * 70)
     lines.append(
         f"TOTAL: {total_mentioned}/{total_functions} functions mentioned in tests "
-        f"({100*total_mentioned/total_functions:.1f}%)"
+        f"({100 * total_mentioned / total_functions:.1f}%)"
     )
     lines.append("=" * 70)
 

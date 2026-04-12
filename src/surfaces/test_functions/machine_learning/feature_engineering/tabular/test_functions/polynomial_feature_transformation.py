@@ -38,6 +38,8 @@ class PolynomialFeatureTransformationFunction(BaseTabularFeatureEngineering):
     """
 
     name = "Polynomial Feature Transformation"
+    _spec = {"eval_cost": 531.0}
+    _dependencies = {"ml": ["sklearn"]}
 
     available_datasets = ["diabetes", "california_housing"]
     available_cv = [2, 3, 5, 10]
@@ -92,7 +94,7 @@ class PolynomialFeatureTransformationFunction(BaseTabularFeatureEngineering):
         from sklearn.model_selection import cross_val_score
         from sklearn.preprocessing import PolynomialFeatures
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
 
         poly = PolynomialFeatures(
             degree=params["degree"],

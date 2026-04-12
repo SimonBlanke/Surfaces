@@ -271,9 +271,9 @@ class TestClassAttributes:
 
     def test_has_name(self, func_class: Type[BaseTestFunction]) -> None:
         """Class must have a human-readable name."""
-        assert hasattr(func_class, "name") and isinstance(
-            func_class.name, str
-        ), f"{func_class.__name__}: Missing 'name' attribute"
+        assert hasattr(func_class, "name") and isinstance(func_class.name, str), (
+            f"{func_class.__name__}: Missing 'name' attribute"
+        )
 
     def test_has_spec_dict(self, func_class: Type[BaseTestFunction]) -> None:
         """Class must have _spec dict defining function characteristics."""
@@ -315,15 +315,15 @@ class TestStaticInterface:
         has_para_names = hasattr(func_class, "para_names") and func_class.para_names
         has_n_dim = hasattr(func_class, "n_dim") and func_class.n_dim is not None
 
-        assert (
-            has_search_space or has_para_names or has_n_dim
-        ), f"{func_class.__name__}: Must have 'search_space', 'para_names', or 'n_dim'"
+        assert has_search_space or has_para_names or has_n_dim, (
+            f"{func_class.__name__}: Must have 'search_space', 'para_names', or 'n_dim'"
+        )
 
     def test_is_callable_class(self, func_class: Type[BaseTestFunction]) -> None:
         """Class must have __call__ method (inherited from BaseTestFunction)."""
-        assert hasattr(
-            func_class, "__call__"
-        ), f"{func_class.__name__}: Must have '__call__' method"
+        assert hasattr(func_class, "__call__"), (
+            f"{func_class.__name__}: Must have '__call__' method"
+        )
 
     def test_has_tagline(self, func_class: Type[BaseTestFunction]) -> None:
         """Class should have tagline for documentation.
@@ -400,25 +400,25 @@ class TestStaticSpecification:
         missing = required - set(merged.keys())
         assert not missing, f"{func_class.__name__}: merged spec missing keys: {missing}"
 
-        assert (
-            has_default_bounds or has_variable_bounds
-        ), f"{func_class.__name__}: merged spec missing 'default_bounds' or 'variable_bounds'"
+        assert has_default_bounds or has_variable_bounds, (
+            f"{func_class.__name__}: merged spec missing 'default_bounds' or 'variable_bounds'"
+        )
 
     def test_merged_spec_continuous_is_bool(self, func_class: Type[BaseTestFunction]) -> None:
         """Merged spec['continuous'] must be boolean."""
         merged = _get_merged_spec(func_class)
         val = merged.get("continuous")
-        assert isinstance(
-            val, bool
-        ), f"{func_class.__name__}: spec['continuous'] must be bool, got {type(val).__name__}"
+        assert isinstance(val, bool), (
+            f"{func_class.__name__}: spec['continuous'] must be bool, got {type(val).__name__}"
+        )
 
     def test_merged_spec_differentiable_is_bool(self, func_class: Type[BaseTestFunction]) -> None:
         """Merged spec['differentiable'] must be boolean."""
         merged = _get_merged_spec(func_class)
         val = merged.get("differentiable")
-        assert isinstance(
-            val, bool
-        ), f"{func_class.__name__}: spec['differentiable'] must be bool, got {type(val).__name__}"
+        assert isinstance(val, bool), (
+            f"{func_class.__name__}: spec['differentiable'] must be bool, got {type(val).__name__}"
+        )
 
     def test_merged_spec_default_bounds_valid(self, func_class: Type[BaseTestFunction]) -> None:
         """Merged spec['default_bounds'] must be (min, max) tuple with min < max.
@@ -437,10 +437,10 @@ class TestStaticSpecification:
         if bounds is None:
             pytest.fail(f"{func_class.__name__}: missing default_bounds in merged spec")
 
-        assert isinstance(
-            bounds, (tuple, list)
-        ), f"{func_class.__name__}: default_bounds must be tuple/list"
+        assert isinstance(bounds, (tuple, list)), (
+            f"{func_class.__name__}: default_bounds must be tuple/list"
+        )
         assert len(bounds) == 2, f"{func_class.__name__}: default_bounds must have 2 elements"
-        assert (
-            bounds[0] < bounds[1]
-        ), f"{func_class.__name__}: default_bounds[0] must be < default_bounds[1]"
+        assert bounds[0] < bounds[1], (
+            f"{func_class.__name__}: default_bounds[0] must be < default_bounds[1]"
+        )

@@ -27,8 +27,8 @@ class EggholderFunction(AlgebraicFunction):
 
     Parameters
     ----------
-    metric : str, default="score"
-        Either "loss" (minimize) or "score" (maximize).
+    objective : str, default="minimize"
+        Either "minimize" or "maximize".
     modifiers : list of BaseModifier, optional
         List of modifiers to apply to function evaluations.
 
@@ -44,6 +44,7 @@ class EggholderFunction(AlgebraicFunction):
     """
 
     _spec = {
+        "eval_cost": 0.1,
         "convex": False,
         "unimodal": False,
         "separable": False,

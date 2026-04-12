@@ -206,12 +206,13 @@ class TestRLCCircuit:
         from surfaces.test_functions.simulation import RLCCircuitFunction
 
         # f_0 = 1/(2*pi*sqrt(L*C))
-        # For f_0=100Hz: L*C = 1/(4*pi^2*100^2) = 2.533e-6
-        # L=0.01, C=2.533e-4
-        func = RLCCircuitFunction(target_frequency=100.0, objective_type="resonance")
-        L = 0.01
-        C = 1.0 / (4 * np.pi**2 * 100**2 * L)
-        result = func({"R": 10.0, "L": L, "C": C})
+        # For f_0=50Hz: L*C = 1/(4*pi^2*50^2) ≈ 1.013e-5
+        # L=0.1, C≈1.013e-4
+        # Low R keeps damping negligible so FFT peak ≈ natural frequency
+        func = RLCCircuitFunction(target_frequency=50.0, objective_type="resonance")
+        L = 0.1
+        C = 1.0 / (4 * np.pi**2 * 50**2 * L)
+        result = func({"R": 0.1, "L": L, "C": C})
         assert result < 1.0  # Should be close to target
 
 
@@ -283,3 +284,71 @@ class TestSimulationFunctionProperties:
             spec = func_cls._spec
             assert spec.get("simulation_based") is True
             assert spec.get("ode_based") is True
+
+
+class TestSimulationTimeout:
+    """Test timeout enforcement on SimulationFunction."""
+
+    def _make_slow_func(self, sleep_duration, **kwargs):
+        """Factory for a simulation that sleeps to test timeout behavior."""
+        import time as _time
+
+        from surfaces.test_functions.simulation import SimulationFunction
+
+        class _Slow(SimulationFunction):
+            requires = []
+
+            def _default_search_space(self):
+                return {"x": np.linspace(0, 1, 10)}
+
+            def _setup_simulation(self):
+                pass
+
+            def _run_simulation(self, params):
+                _time.sleep(sleep_duration)
+                return params["x"]
+
+            def _extract_objective(self, result):
+                return float(result)
+
+        return _Slow(**kwargs)
+
+    def test_no_timeout_runs_directly(self):
+        """Without timeout, simulation takes the fast path (no thread)."""
+        from surfaces.test_functions.simulation import LotkaVolterraFunction
+
+        func = LotkaVolterraFunction(timeout=None, memory=False)
+        result = func({"alpha": 1.0, "beta": 0.1, "gamma": 1.5, "delta": 0.075})
+        assert isinstance(result, float)
+        assert not np.isnan(result)
+
+    def test_generous_timeout_produces_same_result(self):
+        """With a generous timeout, the threaded path matches the direct path."""
+        from surfaces.test_functions.simulation import LotkaVolterraFunction
+
+        params = {"alpha": 1.0, "beta": 0.1, "gamma": 1.5, "delta": 0.075}
+        baseline = LotkaVolterraFunction(memory=False)(params)
+        with_timeout = LotkaVolterraFunction(timeout=10.0, memory=False)(params)
+        assert with_timeout == baseline
+
+    def test_timeout_exceeded_returns_fallback(self):
+        """When the simulation exceeds timeout, timeout_value is returned."""
+        func = self._make_slow_func(3.0, timeout=0.5, timeout_value=-999.0, memory=False)
+        result = func({"x": 0.5})
+        assert result == -999.0
+
+    def test_timeout_returns_without_blocking(self):
+        """Caller returns promptly, not after the full simulation duration."""
+        import time
+
+        func = self._make_slow_func(5.0, timeout=0.3, timeout_value=0.0, memory=False)
+        start = time.perf_counter()
+        func({"x": 0.5})
+        elapsed = time.perf_counter() - start
+        assert elapsed < 2.0
+
+    def test_default_timeout_value_is_inf(self):
+        from surfaces.test_functions.simulation import LotkaVolterraFunction
+
+        func = LotkaVolterraFunction(timeout=5.0)
+        assert func.timeout_value == float("inf")

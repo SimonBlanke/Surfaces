@@ -39,6 +39,8 @@ class MutualInfoFeatureSelectionFunction(BaseTabularFeatureEngineering):
 
     name = "Mutual Information Feature Selection"
     _name_ = "mutual_info_feature_selection"
+    _spec = {"eval_cost": 279600.0}
+    _dependencies = {"ml": ["sklearn"]}
 
     available_datasets = ["digits", "iris", "wine", "breast_cancer"]
     available_cv = [2, 3, 5, 10]
@@ -98,7 +100,7 @@ class MutualInfoFeatureSelectionFunction(BaseTabularFeatureEngineering):
         from sklearn.model_selection import cross_val_score
         from sklearn.tree import DecisionTreeClassifier
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
 
         n_features = params["n_features"]
         selector = SelectKBest(mutual_info_classif, k=min(n_features, X.shape[1]))

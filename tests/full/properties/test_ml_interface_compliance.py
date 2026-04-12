@@ -67,7 +67,7 @@ class TestMLRequiredAttributes:
         """para_names must be a non-empty list of parameter names."""
         assert hasattr(cls, "para_names"), f"{cls.__name__}: Missing 'para_names' class attribute"
         assert isinstance(cls.para_names, list), (
-            f"{cls.__name__}: 'para_names' must be a list, " f"got {type(cls.para_names).__name__}"
+            f"{cls.__name__}: 'para_names' must be a list, got {type(cls.para_names).__name__}"
         )
         assert len(cls.para_names) > 0, f"{cls.__name__}: 'para_names' must not be empty"
 
@@ -81,26 +81,26 @@ class TestMLRequiredAttributes:
         for param in cls.para_names:
             attr = f"{param}_default"
             assert hasattr(cls, attr), (
-                f"{cls.__name__}: Missing '{attr}' for param '{param}' " f"declared in para_names"
+                f"{cls.__name__}: Missing '{attr}' for param '{param}' declared in para_names"
             )
             val = getattr(cls, attr)
             assert isinstance(val, list), (
-                f"{cls.__name__}: '{attr}' must be a list, " f"got {type(val).__name__}"
+                f"{cls.__name__}: '{attr}' must be a list, got {type(val).__name__}"
             )
             assert len(val) > 0, f"{cls.__name__}: '{attr}' must not be empty"
 
     def test_has_name_triple(self, cls):
         """Must have name (human-readable), _name_ (internal ID), __name__ (class name)."""
-        assert hasattr(cls, "name") and isinstance(
-            cls.name, str
-        ), f"{cls.__name__}: Missing or non-string 'name' attribute"
+        assert hasattr(cls, "name") and isinstance(cls.name, str), (
+            f"{cls.__name__}: Missing or non-string 'name' attribute"
+        )
         assert hasattr(cls, "_name_") and isinstance(cls._name_, str), (
             f"{cls.__name__}: Missing or non-string '_name_' attribute "
             f"(used for surrogate model loading)"
         )
-        assert hasattr(cls, "__name__") and isinstance(
-            cls.__name__, str
-        ), f"{cls.__name__}: Missing or non-string '__name__' attribute"
+        assert hasattr(cls, "__name__") and isinstance(cls.__name__, str), (
+            f"{cls.__name__}: Missing or non-string '__name__' attribute"
+        )
 
 
 @pytest.mark.ml
@@ -193,7 +193,7 @@ class TestMLUniqueIdentifiers:
             name = cls._name_
             if name in seen:
                 duplicates.append(
-                    f"  '{name}' used by both " f"{seen[name].__name__} and {cls.__name__}"
+                    f"  '{name}' used by both {seen[name].__name__} and {cls.__name__}"
                 )
             seen[name] = cls
 

@@ -23,7 +23,7 @@ elapsed = time.perf_counter() - start
 
 print("Single evaluation:")
 print(f"  Result: {result}")
-print(f"  Time: {elapsed*1000:.1f}ms (expected: ~100ms)")
+print(f"  Time: {elapsed * 1000:.1f}ms (expected: ~100ms)")
 
 # Time multiple evaluations
 n_evals = 5
@@ -33,8 +33,8 @@ for _ in range(n_evals):
 elapsed = time.perf_counter() - start
 
 print(f"\n{n_evals} evaluations:")
-print(f"  Total time: {elapsed*1000:.1f}ms (expected: ~{n_evals*100}ms)")
-print(f"  Per evaluation: {elapsed/n_evals*1000:.1f}ms")
+print(f"  Total time: {elapsed * 1000:.1f}ms (expected: ~{n_evals * 100}ms)")
+print(f"  Per evaluation: {elapsed / n_evals * 1000:.1f}ms")
 
 # pure() bypasses modifiers - useful for comparison
 print("\nBypassing delay with pure():")
@@ -42,4 +42,4 @@ start = time.perf_counter()
 true_result = slow_sphere.pure(point)
 elapsed = time.perf_counter() - start
 print(f"  Result: {true_result}")
-print(f"  Time: {elapsed*1000:.2f}ms (no delay)")
+print(f"  Time: {elapsed * 1000:.2f}ms (no delay)")

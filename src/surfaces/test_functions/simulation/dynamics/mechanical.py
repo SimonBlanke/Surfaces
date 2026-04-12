@@ -73,6 +73,7 @@ class DampedOscillatorFunction(ODESimulationFunction):
     """
 
     _spec = {
+        "eval_cost": 628.6,
         "simulation_based": True,
         "expensive": False,
         "continuous": True,

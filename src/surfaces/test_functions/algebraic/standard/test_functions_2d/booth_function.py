@@ -25,8 +25,8 @@ class BoothFunction(AlgebraicFunction):
 
     Parameters
     ----------
-    metric : str, default="score"
-        Either "loss" (minimize) or "score" (maximize).
+    objective : str, default="minimize"
+        Either "minimize" or "maximize".
     modifiers : list of BaseModifier, optional
         List of modifiers to apply to function evaluations.
 
@@ -47,6 +47,7 @@ class BoothFunction(AlgebraicFunction):
     """
 
     _spec = {
+        "eval_cost": 0.1,
         "convex": False,
         "unimodal": True,
         "separable": False,

@@ -39,6 +39,8 @@ class StackingEnsembleFunction(BaseTabularEnsemble):
     """
 
     name = "Stacking Ensemble"
+    _spec = {"eval_cost": 176900.0}
+    _dependencies = {"ml": ["sklearn"]}
 
     available_datasets = ["digits", "iris", "wine", "breast_cancer"]
     available_cv = [2, 3, 5, 10]
@@ -103,7 +105,7 @@ class StackingEnsembleFunction(BaseTabularEnsemble):
         from sklearn.svm import SVC
         from sklearn.tree import DecisionTreeClassifier
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
 
         estimators = []
 

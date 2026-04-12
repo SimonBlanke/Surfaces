@@ -7,7 +7,7 @@
 import numpy as np
 import pytest
 
-from surfaces.custom_test_function import CustomTestFunction
+from surfaces import CustomTestFunction
 
 
 @pytest.fixture
@@ -196,15 +196,15 @@ class TestNamespaces:
 
     def test_analysis_namespace_type(self, sphere_func):
         """Test analysis namespace is correct type."""
-        from surfaces.custom_test_function._namespaces import AnalysisNamespace
+        from surfaces.test_functions._custom_namespaces import AnalysisNamespace
 
         assert isinstance(sphere_func.analysis, AnalysisNamespace)
 
     def test_plot_namespace_type(self, sphere_func):
         """Test plot namespace is correct type."""
-        from surfaces.custom_test_function._namespaces import PlotNamespace
+        from surfaces.test_functions._custom_namespaces import PlotNamespace
 
-        assert isinstance(sphere_func.plot, PlotNamespace)
+        assert isinstance(sphere_func.custom_plots, PlotNamespace)
 
     def test_namespace_lazy_loading(self):
         """Test that namespaces are lazily loaded."""
@@ -213,17 +213,17 @@ class TestNamespaces:
             search_space={"x": (0, 1)},
         )
 
-        # Namespaces should not be initialized yet
-        assert func._analysis is None
-        assert func._plot is None
+        # Custom namespaces should not be initialized yet
+        assert func._analysis_ns is None
+        assert func._custom_plot_ns is None
 
         # Access triggers initialization
         _ = func.analysis
-        assert func._analysis is not None
-        assert func._plot is None  # Still not initialized
+        assert func._analysis_ns is not None
+        assert func._custom_plot_ns is None  # Still not initialized
 
-        _ = func.plot
-        assert func._plot is not None
+        _ = func.custom_plots
+        assert func._custom_plot_ns is not None
 
 
 class TestAnalysisNamespace:
@@ -328,7 +328,7 @@ class TestStateManagement:
         func.reset_cache()
 
         assert func.n_evaluations == 2  # Data preserved
-        assert func._memory_cache == {}  # Cache cleared
+        assert func.memory.size == 0  # Cache cleared
 
     def test_get_data_as_arrays(self, sphere_func_with_data):
         """Test conversion to arrays."""

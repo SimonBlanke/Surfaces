@@ -40,6 +40,8 @@ class KNNTSClassifierFunction(BaseTSClassification):
 
     name = "KNN Time-Series Classifier Function"
     _name_ = "knn_ts_classifier"
+    _spec = {"eval_cost": 847.9}
+    _dependencies = {"ml": ["sklearn"]}
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]
@@ -62,9 +64,7 @@ class KNNTSClassifierFunction(BaseTSClassification):
         use_surrogate: bool = False,
     ):
         if dataset not in DATASETS:
-            raise ValueError(
-                f"Unknown dataset '{dataset}'. " f"Available: {self.available_datasets}"
-            )
+            raise ValueError(f"Unknown dataset '{dataset}'. Available: {self.available_datasets}")
 
         if cv not in self.available_cv:
             raise ValueError(f"Invalid cv={cv}. Available: {self.available_cv}")
@@ -95,7 +95,7 @@ class KNNTSClassifierFunction(BaseTSClassification):
         from sklearn.neighbors import KNeighborsClassifier
         from sklearn.preprocessing import StandardScaler
 
-        X_raw, y = self._dataset_loader()
+        X_raw, y = self._get_training_data()
         scaler = StandardScaler()
         X = scaler.fit_transform(X_raw)
 

@@ -39,6 +39,8 @@ class SVMImageClassifierFunction(BaseImageClassification):
     """
 
     _name_ = "svm_image_classifier"
+    _spec = {"eval_cost": 42100.0}
+    _dependencies = {"ml": ["sklearn"]}
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5]
@@ -63,9 +65,7 @@ class SVMImageClassifierFunction(BaseImageClassification):
         use_surrogate: bool = False,
     ):
         if dataset not in DATASETS:
-            raise ValueError(
-                f"Unknown dataset '{dataset}'. " f"Available: {self.available_datasets}"
-            )
+            raise ValueError(f"Unknown dataset '{dataset}'. Available: {self.available_datasets}")
 
         if cv not in self.available_cv:
             raise ValueError(f"Invalid cv={cv}. Available: {self.available_cv}")
@@ -99,7 +99,7 @@ class SVMImageClassifierFunction(BaseImageClassification):
         from sklearn.preprocessing import StandardScaler
         from sklearn.svm import SVC
 
-        X_raw, y = self._dataset_loader()
+        X_raw, y = self._get_training_data()
 
         scaler = StandardScaler()
         pca = PCA(n_components=self.n_components, random_state=42)

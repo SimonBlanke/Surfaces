@@ -133,9 +133,13 @@ def _schwefel(z: np.ndarray) -> float:
         if abs(zi) <= 500:
             result += zi * np.sin(np.sqrt(abs(zi)))
         elif zi > 500:
-            result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500)))
+            result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500))) - (zi - 500) ** 2 / (
+                10000 * D
+            )
         else:
-            result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500)))
+            result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500))) - (
+                zi + 500
+            ) ** 2 / (10000 * D)
     return 418.9829 * D - result
 
 
@@ -256,7 +260,6 @@ def _batch_schwefel(Z: ArrayLike) -> ArrayLike:
     D = Z.shape[1]
     Z_shifted = Z + 4.209687462275036e2
 
-    # Handle three cases: |z| <= 500, z > 500, z < -500
     abs_z = xp.abs(Z_shifted)
 
     # Case 1: |z| <= 500
@@ -264,11 +267,11 @@ def _batch_schwefel(Z: ArrayLike) -> ArrayLike:
 
     # Case 2: z > 500
     mod_pos = 500 - xp.mod(Z_shifted, 500)
-    term2 = mod_pos * xp.sin(xp.sqrt(xp.abs(mod_pos)))
+    term2 = mod_pos * xp.sin(xp.sqrt(xp.abs(mod_pos))) - (Z_shifted - 500) ** 2 / (10000 * D)
 
     # Case 3: z < -500
     mod_neg = xp.mod(abs_z, 500) - 500
-    term3 = mod_neg * xp.sin(xp.sqrt(xp.abs(mod_neg)))
+    term3 = mod_neg * xp.sin(xp.sqrt(xp.abs(mod_neg))) - (Z_shifted + 500) ** 2 / (10000 * D)
 
     result = xp.where(
         abs_z <= 500,
@@ -399,6 +402,7 @@ class HybridFunction1(_HybridBase):
     proportions = [0.3, 0.3, 0.4]
 
     _spec = {
+        "eval_cost": 3.4,
         "name": "Hybrid Function 1",
         "func_id": 17,
     }
@@ -447,6 +451,7 @@ class HybridFunction2(_HybridBase):
     proportions = [0.3, 0.3, 0.4]
 
     _spec = {
+        "eval_cost": 8.2,
         "name": "Hybrid Function 2",
         "func_id": 18,
     }
@@ -505,6 +510,7 @@ class HybridFunction3(_HybridBase):
     proportions = [0.2, 0.2, 0.3, 0.3]
 
     _spec = {
+        "eval_cost": 7.7,
         "name": "Hybrid Function 3",
         "func_id": 19,
     }
@@ -568,6 +574,7 @@ class HybridFunction4(_HybridBase):
     proportions = [0.2, 0.2, 0.3, 0.3]
 
     _spec = {
+        "eval_cost": 4.6,
         "name": "Hybrid Function 4",
         "func_id": 20,
     }
@@ -621,6 +628,7 @@ class HybridFunction5(_HybridBase):
     proportions = [0.1, 0.2, 0.2, 0.2, 0.3]
 
     _spec = {
+        "eval_cost": 4.8,
         "name": "Hybrid Function 5",
         "func_id": 21,
     }
@@ -681,6 +689,7 @@ class HybridFunction6(_HybridBase):
     proportions = [0.1, 0.2, 0.2, 0.2, 0.3]
 
     _spec = {
+        "eval_cost": 9.5,
         "name": "Hybrid Function 6",
         "func_id": 22,
     }

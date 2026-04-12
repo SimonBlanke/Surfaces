@@ -143,9 +143,9 @@ class TestRegistryConsistency:
         from surfaces._visualize._accessor import PlotAccessor
 
         for plot_name in PLOT_REGISTRY:
-            assert hasattr(
-                PlotAccessor, plot_name
-            ), f"PLOT_REGISTRY has '{plot_name}' but PlotAccessor has no such method"
+            assert hasattr(PlotAccessor, plot_name), (
+                f"PLOT_REGISTRY has '{plot_name}' but PlotAccessor has no such method"
+            )
 
     def test_latex_requires_latex_formula(self):
         """The latex entry must gate on the latex_formula attribute.

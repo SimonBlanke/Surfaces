@@ -29,6 +29,10 @@ class BaseMultiObjectiveTestFunction(BaseTestFunction):
     ----------
     n_dim : int, default=2
         Number of input dimensions.
+    n_objectives : int, optional
+        Number of objectives. If provided, overrides the class-level
+        ``n_objectives`` attribute. Useful for scalable problems like
+        DTLZ and WFG where the number of objectives is configurable.
     objective : str or list of str, default="minimize"
         Optimization direction(s). A single string is broadcast to all
         objectives. A list must have length ``n_objectives``.
@@ -69,6 +73,7 @@ class BaseMultiObjectiveTestFunction(BaseTestFunction):
     def __init__(
         self,
         n_dim: int = 2,
+        n_objectives: Optional[int] = None,
         objective: Union[str, List[str]] = "minimize",
         modifiers: Optional[List[BaseModifier]] = None,
         memory: bool = False,
@@ -76,6 +81,8 @@ class BaseMultiObjectiveTestFunction(BaseTestFunction):
         callbacks=None,
         catch_errors=None,
     ):
+        if n_objectives is not None:
+            self.n_objectives = n_objectives
         self.n_dim = n_dim
 
         # Normalize objective to a list of per-objective directions
@@ -86,7 +93,7 @@ class BaseMultiObjectiveTestFunction(BaseTestFunction):
         else:
             if len(objective) != self.n_objectives:
                 raise ValueError(
-                    f"objective list must have length {self.n_objectives}, " f"got {len(objective)}"
+                    f"objective list must have length {self.n_objectives}, got {len(objective)}"
                 )
             for obj in objective:
                 if obj not in ("minimize", "maximize"):

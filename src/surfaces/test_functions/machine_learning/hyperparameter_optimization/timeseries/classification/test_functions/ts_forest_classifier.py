@@ -38,7 +38,8 @@ class TSForestClassifierFunction(BaseTSClassification):
 
     name = "Time Series Forest Classifier Function"
     _name_ = "ts_forest_classifier"
-    _dependencies = {"timeseries": ["sktime"]}
+    _spec = {"eval_cost": 758600.0}
+    _dependencies = {"timeseries": ["sklearn", "sktime"]}
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5]
@@ -61,9 +62,7 @@ class TSForestClassifierFunction(BaseTSClassification):
         use_surrogate: bool = False,
     ):
         if dataset not in DATASETS:
-            raise ValueError(
-                f"Unknown dataset '{dataset}'. " f"Available: {self.available_datasets}"
-            )
+            raise ValueError(f"Unknown dataset '{dataset}'. Available: {self.available_datasets}")
 
         if cv not in self.available_cv:
             raise ValueError(f"Invalid cv={cv}. Available: {self.available_cv}")
@@ -93,7 +92,7 @@ class TSForestClassifierFunction(BaseTSClassification):
         from sklearn.model_selection import cross_val_score
         from sktime.classification.interval_based import TimeSeriesForestClassifier
 
-        X_raw, y = self._dataset_loader()
+        X_raw, y = self._get_training_data()
 
         # sktime expects 3D array: (n_samples, n_channels, n_timepoints)
         X = X_raw.reshape(X_raw.shape[0], 1, X_raw.shape[1])

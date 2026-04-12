@@ -36,9 +36,9 @@ class RLCCircuitFunction(ODESimulationFunction):
         Target resonant frequency (Hz). Used for "resonance" objective.
     objective_type : str, default="resonance"
         Type of objective:
-        - "resonance": Match target resonant frequency
-        - "damping": Achieve critical damping
-        - "bandwidth": Maximize bandwidth around resonance
+        - "resonance": Match target resonant frequency (from FFT of step response)
+        - "damping": Achieve critical damping (from transient overshoot and settling)
+        - "bandwidth": Maximize -3dB bandwidth (from FFT of step response)
     **kwargs
         Additional arguments passed to ODESimulationFunction.
 
@@ -69,6 +69,7 @@ class RLCCircuitFunction(ODESimulationFunction):
     """
 
     _spec = {
+        "eval_cost": 9900.0,
         "simulation_based": True,
         "expensive": False,
         "continuous": True,
@@ -108,13 +109,14 @@ class RLCCircuitFunction(ODESimulationFunction):
         return np.array([0.0, 0.0])
 
     def _voltage_input(self, t: float) -> float:
-        """Generate input voltage signal."""
-        if self.V_frequency == 0:
-            # Step input
+        """Generate input voltage signal.
+
+        Built-in objectives use step input for transient and spectral
+        analysis of the circuit's natural response.
+        """
+        if self.V_frequency == 0 or self.objective_type in ("resonance", "damping", "bandwidth"):
             return self.V_amplitude
-        else:
-            # Sinusoidal input
-            return self.V_amplitude * np.sin(2 * np.pi * self.V_frequency * t)
+        return self.V_amplitude * np.sin(2 * np.pi * self.V_frequency * t)
 
     def _ode_system(self, t: float, y: np.ndarray, params: Dict[str, Any]) -> np.ndarray:
         """RLC circuit ODE system.
@@ -135,51 +137,88 @@ class RLCCircuitFunction(ODESimulationFunction):
         return np.array([dQ_dt, dI_dt])
 
     def _compute_objective(self, t: np.ndarray, y: np.ndarray, params: Dict[str, Any]) -> float:
-        """Compute objective from circuit response."""
-        # y[0, :] = Charge, y[1, :] = Current (extracted in subclasses if needed)
+        """Compute objective from circuit step response.
 
-        R = params["R"]
-        L = params["L"]
-        C = params["C"]
+        All objectives analyze the actual simulation waveform rather than
+        using closed-form formulas.
+        """
+        current = y[1, :]
 
-        # Check for numerical issues
         if np.any(np.isnan(y)) or np.any(np.isinf(y)):
             return float("inf")
 
         if self.objective_type == "resonance":
-            # Match target resonant frequency
-            # Natural frequency: f_0 = 1 / (2*pi*sqrt(L*C))
-            actual_freq = 1.0 / (2 * np.pi * np.sqrt(L * C))
-            freq_error = abs(actual_freq - self.target_frequency)
+            # Measure resonant frequency from FFT of step response current
+            dt = t[1] - t[0]
+            window = np.hanning(len(current))
+            spectrum = np.abs(np.fft.rfft(current * window))
+            freqs = np.fft.rfftfreq(len(current), d=dt)
+            spectrum[0] = 0  # skip DC
 
-            # Also penalize high damping (want good resonance)
-            Q_factor = (1 / R) * np.sqrt(L / C)
-            damping_penalty = max(0, 1.0 - Q_factor)  # Penalize Q < 1
+            if np.max(spectrum) < 1e-12:
+                return float("inf")
 
-            return freq_error + 0.1 * damping_penalty
+            peak_idx = np.argmax(spectrum)
+            measured_freq = freqs[peak_idx]
+
+            return abs(measured_freq - self.target_frequency)
 
         elif self.objective_type == "damping":
-            # Achieve critical damping: R = 2*sqrt(L/C)
-            critical_R = 2 * np.sqrt(L / C)
-            damping_ratio = R / critical_R
+            # Measure critical damping from actual transient behavior:
+            # no overshoot (current stays positive) + fastest settling
+            peak_val = np.max(np.abs(current))
+            if peak_val < 1e-12:
+                return float("inf")
 
-            # Want damping_ratio = 1 (critical damping)
-            return abs(damping_ratio - 1.0)
+            # Overshoot: for step input, current should rise then decay
+            # to zero without going negative (critically damped)
+            peak_idx = np.argmax(current)
+            post_peak_min = np.min(current[peak_idx:])
+            overshoot = max(0, -post_peak_min) / peak_val
+
+            # Settling time (2% of peak value)
+            threshold = 0.02 * peak_val
+            settled_mask = np.abs(current) < threshold
+            settling_time = t[-1]
+            for i in range(len(settled_mask)):
+                if settled_mask[i] and np.all(settled_mask[i:]):
+                    settling_time = t[i]
+                    break
+
+            norm_settling = settling_time / t[-1]
+
+            return overshoot + norm_settling
 
         elif self.objective_type == "bandwidth":
-            # Maximize bandwidth (lower Q factor means wider bandwidth)
-            # But not too low (need some resonance)
-            Q_factor = (1 / R) * np.sqrt(L / C)
+            # Measure -3dB bandwidth from FFT of step response current
+            dt = t[1] - t[0]
+            window = np.hanning(len(current))
+            spectrum = np.abs(np.fft.rfft(current * window))
+            freqs = np.fft.rfftfreq(len(current), d=dt)
+            spectrum[0] = 0  # skip DC
 
-            # Optimal Q_factor around 0.5-2 for good bandwidth
-            if Q_factor < 0.1:
-                return float("inf")  # Too overdamped
+            peak_mag = np.max(spectrum)
+            if peak_mag < 1e-12:
+                return float("inf")
 
-            # Bandwidth = f_0 / Q
-            f_0 = 1.0 / (2 * np.pi * np.sqrt(L * C))
-            bandwidth = f_0 / Q_factor
+            peak_idx = np.argmax(spectrum)
+            threshold_3db = peak_mag / np.sqrt(2)
+            above_3db = spectrum >= threshold_3db
 
-            # Maximize bandwidth (minimize negative)
+            # Walk outward from peak to find -3dB edges
+            left = peak_idx
+            while left > 0 and above_3db[left - 1]:
+                left -= 1
+
+            right = peak_idx
+            while right < len(above_3db) - 1 and above_3db[right + 1]:
+                right += 1
+
+            bandwidth = freqs[right] - freqs[left]
+
+            if bandwidth < 1e-12:
+                return float("inf")
+
             return -bandwidth
 
         else:
@@ -210,7 +249,7 @@ class RCFilterFunction(ODESimulationFunction):
         Target cutoff frequency (Hz).
     objective_type : str, default="cutoff"
         Type of objective:
-        - "cutoff": Match target cutoff frequency
+        - "cutoff": Match target cutoff frequency (from measured output gain)
         - "ripple": Minimize output ripple at input frequency
         - "settling": Minimize settling time for step response
     **kwargs
@@ -239,6 +278,7 @@ class RCFilterFunction(ODESimulationFunction):
     """
 
     _spec = {
+        "eval_cost": 36300.0,
         "simulation_based": True,
         "expensive": False,
         "continuous": True,
@@ -260,9 +300,10 @@ class RCFilterFunction(ODESimulationFunction):
     ) -> None:
         self.V_in_dc = V_in_dc
         self.V_in_ac = V_in_ac
-        self.input_frequency = input_frequency
         self.target_cutoff = target_cutoff
         self.objective_type = objective_type
+        # For cutoff measurement, drive at target frequency to test -3dB gain
+        self.input_frequency = target_cutoff if objective_type == "cutoff" else input_frequency
         # High resolution for ripple measurement
         t_eval = np.linspace(t_span[0], t_span[1], 2000)
         super().__init__(t_span=t_span, t_eval=t_eval, **kwargs)
@@ -301,21 +342,25 @@ class RCFilterFunction(ODESimulationFunction):
     def _compute_objective(self, t: np.ndarray, y: np.ndarray, params: Dict[str, Any]) -> float:
         """Compute objective from filter response."""
         V_out = y[0, :]
-        R = params["R"]
-        C = params["C"]
 
         # Check for numerical issues
         if np.any(np.isnan(y)) or np.any(np.isinf(y)):
             return float("inf")
 
         if self.objective_type == "cutoff":
-            # Match target cutoff frequency
-            # Cutoff: f_c = 1 / (2*pi*R*C)
-            actual_cutoff = 1.0 / (2 * np.pi * R * C)
+            # Measure actual gain from simulation output in steady state.
+            # The simulation drives at the target cutoff frequency, so
+            # the gain should be 1/sqrt(2) (-3dB) when R,C match.
+            n = len(V_out)
+            steady_out = V_out[n // 2 :]
+            out_ac = (np.max(steady_out) - np.min(steady_out)) / 2
 
-            # Use relative error for better scaling
-            relative_error = abs(actual_cutoff - self.target_cutoff) / self.target_cutoff
-            return relative_error
+            if self.V_in_ac < 1e-12:
+                return float("inf")
+
+            gain = out_ac / self.V_in_ac
+            target_gain = 1.0 / np.sqrt(2.0)
+            return abs(gain - target_gain)
 
         elif self.objective_type == "ripple":
             # Minimize output ripple (peak-to-peak variation in steady state)

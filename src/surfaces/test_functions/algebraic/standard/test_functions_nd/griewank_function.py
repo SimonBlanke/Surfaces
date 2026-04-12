@@ -30,8 +30,8 @@ class GriewankFunction(AlgebraicFunction):
     ----------
     n_dim : int
         Number of dimensions.
-    metric : str, default="score"
-        Either "loss" (minimize) or "score" (maximize).
+    objective : str, default="minimize"
+        Either "minimize" or "maximize".
     modifiers : list of BaseModifier, optional
         List of modifiers to apply to function evaluations.
 
@@ -50,6 +50,7 @@ class GriewankFunction(AlgebraicFunction):
     """
 
     _spec = {
+        "eval_cost": 0.2,
         "convex": False,
         "unimodal": False,
         "separable": False,

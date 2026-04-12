@@ -58,6 +58,7 @@ class Kursawe(BaseMultiObjectiveTestFunction):
     name = "Kursawe"
     n_objectives = 2
     _spec = {
+        "eval_cost": 1.4,
         "continuous": True,
         "differentiable": False,  # |x|^0.8 is not differentiable at 0
         "convex_front": False,

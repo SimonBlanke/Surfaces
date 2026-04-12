@@ -125,6 +125,7 @@ class CantileverBeamFunction(EngineeringFunction):
     """
 
     _spec = {
+        "eval_cost": 0.3,
         "n_dim": 5,
         "convex": False,
         "unimodal": True,

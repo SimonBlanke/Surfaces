@@ -23,6 +23,9 @@ class SVMClassifierFunction(BaseClassification):
 
     _name_ = "svm_classifier"
 
+    _spec = {"eval_cost": 759.9}
+    _dependencies = {"ml": ["sklearn"]}
+
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]
 
@@ -73,7 +76,7 @@ class SVMClassifierFunction(BaseClassification):
         from sklearn.model_selection import cross_val_score
         from sklearn.svm import SVC
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
         clf = SVC(
             C=params["C"],
             kernel=params["kernel"],

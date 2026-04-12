@@ -27,6 +27,7 @@ class Sphere(CEC2013Function):
     uses_rotation = False
 
     _spec = {
+        "eval_cost": 0.8,
         "name": "Sphere Function",
         "func_id": 1,
         "unimodal": True,
@@ -59,6 +60,7 @@ class RotatedHighConditionedElliptic(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 2.6,
         "name": "Rotated High Conditioned Elliptic Function",
         "func_id": 2,
         "unimodal": True,
@@ -105,6 +107,7 @@ class RotatedBentCigar(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 2.0,
         "name": "Rotated Bent Cigar Function",
         "func_id": 3,
         "unimodal": True,
@@ -141,6 +144,7 @@ class RotatedDiscus(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 2.9,
         "name": "Rotated Discus Function",
         "func_id": 4,
         "unimodal": True,
@@ -175,6 +179,7 @@ class DifferentPowers(CEC2013Function):
     uses_rotation = False
 
     _spec = {
+        "eval_cost": 0.8,
         "name": "Different Powers Function",
         "func_id": 5,
         "unimodal": True,
@@ -220,6 +225,7 @@ class RotatedRosenbrock(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 1.6,
         "name": "Rotated Rosenbrock's Function",
         "func_id": 6,
         "unimodal": False,
@@ -261,6 +267,7 @@ class RotatedSchafferF7(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 3.0,
         "name": "Rotated Schaffer's F7 Function",
         "func_id": 7,
         "unimodal": False,
@@ -270,6 +277,7 @@ class RotatedSchafferF7(CEC2013Function):
     def _objective(self, params: Dict[str, Any]) -> float:
         x = self._params_to_array(params)
         z = self._asymmetric(self._shift_rotate(x), 0.5)
+        z = self._lambda_scale(z, 10)
         z = self._rotate(z)
 
         D = self.n_dim
@@ -279,7 +287,7 @@ class RotatedSchafferF7(CEC2013Function):
 
         result = 0.0
         for i in range(D - 1):
-            result += np.sqrt(s[i]) * (np.sin(50 * s[i] ** 0.2) + 1)
+            result += np.sqrt(s[i]) * (np.sin(50 * s[i] ** 0.2) ** 2 + 1)
 
         result = (result / (D - 1)) ** 2
 
@@ -292,13 +300,14 @@ class RotatedSchafferF7(CEC2013Function):
 
         Z = self._batch_shift_rotate(X)
         Z = self._batch_asymmetric(Z, 0.5)
+        Z = self._batch_lambda_scale(Z, 10)
         Z = self._batch_rotate(Z, self.shift_index)
 
         # s[i] = sqrt(z[i]^2 + z[i+1]^2)
         S = xp.sqrt(Z[:, :-1] ** 2 + Z[:, 1:] ** 2)
 
-        # sum(sqrt(s) * (sin(50 * s^0.2) + 1))
-        result = xp.sum(xp.sqrt(S) * (xp.sin(50 * S**0.2) + 1), axis=1)
+        # sum(sqrt(s) * (sin(50 * s^0.2)^2 + 1))
+        result = xp.sum(xp.sqrt(S) * (xp.sin(50 * S**0.2) ** 2 + 1), axis=1)
         result = (result / (D - 1)) ** 2
 
         return result + self.f_global
@@ -317,6 +326,7 @@ class RotatedAckley(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 2.7,
         "name": "Rotated Ackley's Function",
         "func_id": 8,
         "unimodal": False,
@@ -326,6 +336,7 @@ class RotatedAckley(CEC2013Function):
     def _objective(self, params: Dict[str, Any]) -> float:
         x = self._params_to_array(params)
         z = self._asymmetric(self._shift_rotate(x), 0.5)
+        z = self._lambda_scale(z, 10)
         z = self._rotate(z)
 
         D = self.n_dim
@@ -343,6 +354,7 @@ class RotatedAckley(CEC2013Function):
 
         Z = self._batch_shift_rotate(X)
         Z = self._batch_asymmetric(Z, 0.5)
+        Z = self._batch_lambda_scale(Z, 10)
         Z = self._batch_rotate(Z, self.shift_index)
 
         sum1 = xp.sum(Z**2, axis=1)
@@ -367,6 +379,7 @@ class RotatedWeierstrass(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 15.8,
         "name": "Rotated Weierstrass Function",
         "func_id": 9,
         "unimodal": False,
@@ -381,6 +394,7 @@ class RotatedWeierstrass(CEC2013Function):
 
         x = self._params_to_array(params)
         z = self._asymmetric(self._shift_rotate(x), 0.5)
+        z = self._lambda_scale(z, 10)
         z = self._rotate(z)
         z = z * 0.5 / 100
 
@@ -406,6 +420,7 @@ class RotatedWeierstrass(CEC2013Function):
 
         Z = self._batch_shift_rotate(X)
         Z = self._batch_asymmetric(Z, 0.5)
+        Z = self._batch_lambda_scale(Z, 10)
         Z = self._batch_rotate(Z, self.shift_index)
         Z = Z * 0.5 / 100
 
@@ -441,6 +456,7 @@ class RotatedGriewank(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 1.8,
         "name": "Rotated Griewank's Function",
         "func_id": 10,
         "unimodal": False,
@@ -488,6 +504,7 @@ class Rastrigin(CEC2013Function):
     uses_rotation = False
 
     _spec = {
+        "eval_cost": 3.4,
         "name": "Rastrigin's Function",
         "func_id": 11,
         "unimodal": False,
@@ -497,6 +514,7 @@ class Rastrigin(CEC2013Function):
     def _objective(self, params: Dict[str, Any]) -> float:
         x = self._params_to_array(params)
         z = self._oscillation(self._asymmetric(self._shift(x), 0.2))
+        z = self._lambda_scale(z, 10)
         z = z * 5.12 / 100
 
         D = self.n_dim
@@ -512,6 +530,7 @@ class Rastrigin(CEC2013Function):
         Z = self._batch_shift(X, self.shift_index)
         Z = self._batch_asymmetric(Z, 0.2)
         Z = self._batch_oscillation(Z)
+        Z = self._batch_lambda_scale(Z, 10)
         Z = Z * 5.12 / 100
 
         result = 10 * D + xp.sum(Z**2 - 10 * xp.cos(2 * math.pi * Z), axis=1)
@@ -532,6 +551,7 @@ class RotatedRastrigin(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 4.3,
         "name": "Rotated Rastrigin's Function",
         "func_id": 12,
         "unimodal": False,
@@ -541,6 +561,7 @@ class RotatedRastrigin(CEC2013Function):
     def _objective(self, params: Dict[str, Any]) -> float:
         x = self._params_to_array(params)
         z = self._oscillation(self._asymmetric(self._shift_rotate(x), 0.2))
+        z = self._lambda_scale(z, 10)
         z = self._rotate(z)
         z = z * 5.12 / 100
 
@@ -557,6 +578,7 @@ class RotatedRastrigin(CEC2013Function):
         Z = self._batch_shift_rotate(X)
         Z = self._batch_asymmetric(Z, 0.2)
         Z = self._batch_oscillation(Z)
+        Z = self._batch_lambda_scale(Z, 10)
         Z = self._batch_rotate(Z, self.shift_index)
         Z = Z * 5.12 / 100
 
@@ -578,6 +600,7 @@ class StepRastrigin(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 6.2,
         "name": "Non-Continuous Rotated Rastrigin's Function",
         "func_id": 13,
         "unimodal": False,
@@ -588,6 +611,7 @@ class StepRastrigin(CEC2013Function):
     def _objective(self, params: Dict[str, Any]) -> float:
         x = self._params_to_array(params)
         z = self._oscillation(self._asymmetric(self._shift_rotate(x), 0.2))
+        z = self._lambda_scale(z, 10)
         z = self._rotate(z)
         z = z * 5.12 / 100
 
@@ -610,6 +634,7 @@ class StepRastrigin(CEC2013Function):
         Z = self._batch_shift_rotate(X)
         Z = self._batch_asymmetric(Z, 0.2)
         Z = self._batch_oscillation(Z)
+        Z = self._batch_lambda_scale(Z, 10)
         Z = self._batch_rotate(Z, self.shift_index)
         Z = Z * 5.12 / 100
 
@@ -634,6 +659,7 @@ class Schwefel(CEC2013Function):
     uses_rotation = False
 
     _spec = {
+        "eval_cost": 1.5,
         "name": "Schwefel's Function",
         "func_id": 14,
         "unimodal": False,
@@ -702,6 +728,7 @@ class RotatedSchwefel(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 2.0,
         "name": "Rotated Schwefel's Function",
         "func_id": 15,
         "unimodal": False,
@@ -770,6 +797,7 @@ class RotatedKatsuura(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 42.3,
         "name": "Rotated Katsuura Function",
         "func_id": 16,
         "unimodal": False,
@@ -837,6 +865,7 @@ class LunacekBiRastrigin(CEC2013Function):
     uses_rotation = False
 
     _spec = {
+        "eval_cost": 2.3,
         "name": "Lunacek Bi-Rastrigin Function",
         "func_id": 17,
         "unimodal": False,
@@ -845,8 +874,11 @@ class LunacekBiRastrigin(CEC2013Function):
 
     def _objective(self, params: Dict[str, Any]) -> float:
         x = self._params_to_array(params)
-        z = self._shift(x)
-        z = z * 10 / 100
+        shift = self._get_shift_vector()
+        y = (x - shift) * 10 / 100
+
+        z = 2 * y.copy()
+        z[shift < 0] *= -1
 
         D = self.n_dim
         mu0 = 2.5
@@ -867,8 +899,12 @@ class LunacekBiRastrigin(CEC2013Function):
         xp = get_array_namespace(X)
         D = self.n_dim
 
-        Z = self._batch_shift(X, self.shift_index)
-        Z = Z * 10 / 100
+        shift = xp.asarray(self._get_shift_vector())
+        Y = (X - shift) * 10 / 100
+
+        Z = 2 * Y
+        sign_mask = xp.where(shift < 0, -1.0, 1.0)
+        Z = Z * sign_mask
 
         mu0 = 2.5
         s = 1 - 1 / (2 * math.sqrt(D + 20) - 8.2)
@@ -897,6 +933,7 @@ class RotatedLunacekBiRastrigin(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 2.9,
         "name": "Rotated Lunacek Bi-Rastrigin Function",
         "func_id": 18,
         "unimodal": False,
@@ -905,8 +942,12 @@ class RotatedLunacekBiRastrigin(CEC2013Function):
 
     def _objective(self, params: Dict[str, Any]) -> float:
         x = self._params_to_array(params)
-        z = self._shift_rotate(x)
-        z = z * 10 / 100
+        shift = self._get_shift_vector()
+        M = self._get_rotation_matrix()
+        y = (x - shift) * 10 / 100
+
+        z = 2 * y.copy()
+        z[shift < 0] *= -1
 
         D = self.n_dim
         mu0 = 2.5
@@ -914,11 +955,11 @@ class RotatedLunacekBiRastrigin(CEC2013Function):
         mu1 = -np.sqrt((mu0**2 - 1) / s)
         d = 1
 
-        y = self._rotate(z - mu0)
+        y_rot = M @ (z - mu0)
 
         sum1 = np.sum((z - mu0) ** 2)
         sum2 = np.sum((z - mu1) ** 2)
-        sum3 = np.sum(np.cos(2 * np.pi * y))
+        sum3 = np.sum(np.cos(2 * np.pi * y_rot))
 
         result = min(sum1, d * D + s * sum2) + 10 * (D - sum3)
 
@@ -929,19 +970,25 @@ class RotatedLunacekBiRastrigin(CEC2013Function):
         xp = get_array_namespace(X)
         D = self.n_dim
 
-        Z = self._batch_shift_rotate(X)
-        Z = Z * 10 / 100
+        shift = xp.asarray(self._get_shift_vector())
+        M = xp.asarray(self._get_rotation_matrix())
+
+        Y = (X - shift) * 10 / 100
+
+        Z = 2 * Y
+        sign_mask = xp.where(shift < 0, -1.0, 1.0)
+        Z = Z * sign_mask
 
         mu0 = 2.5
         s = 1 - 1 / (2 * math.sqrt(D + 20) - 8.2)
         mu1 = -math.sqrt((mu0**2 - 1) / s)
         d = 1
 
-        Y = self._batch_rotate(Z - mu0, self.shift_index)
+        Y_rot = (Z - mu0) @ M.T
 
         sum1 = xp.sum((Z - mu0) ** 2, axis=1)
         sum2 = xp.sum((Z - mu1) ** 2, axis=1)
-        sum3 = xp.sum(xp.cos(2 * math.pi * Y), axis=1)
+        sum3 = xp.sum(xp.cos(2 * math.pi * Y_rot), axis=1)
 
         result = xp.minimum(sum1, d * D + s * sum2) + 10 * (D - sum3)
 
@@ -961,6 +1008,7 @@ class RotatedExpandedGriewankRosenbrock(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 2.0,
         "name": "Rotated Expanded Griewank's plus Rosenbrock's Function",
         "func_id": 19,
         "unimodal": False,
@@ -1015,6 +1063,7 @@ class RotatedExpandedScafferF6(CEC2013Function):
     uses_rotation = True
 
     _spec = {
+        "eval_cost": 2.9,
         "name": "Rotated Expanded Scaffer's F6 Function",
         "func_id": 20,
         "unimodal": False,
@@ -1028,6 +1077,7 @@ class RotatedExpandedScafferF6(CEC2013Function):
 
         x = self._params_to_array(params)
         z = self._asymmetric(self._shift_rotate(x), 0.5)
+        z = self._lambda_scale(z, 10)
         z = self._rotate(z)
 
         D = self.n_dim
@@ -1044,6 +1094,7 @@ class RotatedExpandedScafferF6(CEC2013Function):
 
         Z = self._batch_shift_rotate(X)
         Z = self._batch_asymmetric(Z, 0.5)
+        Z = self._batch_lambda_scale(Z, 10)
         Z = self._batch_rotate(Z, self.shift_index)
 
         # z_next = roll(z, -1) for wrap-around: z_next[-1] = z[0]
@@ -1082,7 +1133,9 @@ class _CompositionBase(CEC2013Function):
             diff = x - shift
             dist_sq = np.sum(diff**2)
             if dist_sq != 0:
-                weights[i] = np.exp(-dist_sq / (2 * self.n_dim * self.sigmas[i] ** 2))
+                weights[i] = (1.0 / np.sqrt(dist_sq)) * np.exp(
+                    -dist_sq / (2 * self.n_dim * self.sigmas[i] ** 2)
+                )
             else:
                 weights[i] = 1e10
 
@@ -1114,18 +1167,15 @@ class _CompositionBase(CEC2013Function):
         """
         xp = get_array_namespace(X)
 
-        # diff[point, func, dim] = X[point, dim] - optima[func, dim]
         diff = X[:, None, :] - optima[None, :, :]  # (n_points, n_functions, n_dim)
         dist_sq = xp.sum(diff**2, axis=2)  # (n_points, n_functions)
 
-        # Compute weights: exp(-dist_sq / (2 * n_dim * sigma^2))
         sigmas = xp.asarray(self.sigmas, dtype=X.dtype)
-        weights = xp.exp(-dist_sq / (2 * self.n_dim * sigmas**2))
+        safe_dist_sq = xp.where(dist_sq == 0, 1.0, dist_sq)
+        weights = (1.0 / xp.sqrt(safe_dist_sq)) * xp.exp(-dist_sq / (2 * self.n_dim * sigmas**2))
 
-        # Handle case where dist_sq == 0 (at optimum)
         weights = xp.where(dist_sq == 0, 1e10, weights)
 
-        # Normalize weights
         max_weight = xp.max(weights, axis=1, keepdims=True)
 
         is_max = weights == max_weight
@@ -1183,9 +1233,9 @@ def _batch_schwefel_scaled(Z: ArrayLike) -> ArrayLike:
 
     term1 = Z_shifted * xp.sin(xp.sqrt(abs_z))
     mod_pos = 500 - xp.mod(Z_shifted, 500)
-    term2 = mod_pos * xp.sin(xp.sqrt(xp.abs(mod_pos)))
+    term2 = mod_pos * xp.sin(xp.sqrt(xp.abs(mod_pos))) - (Z_shifted - 500) ** 2 / (10000 * D)
     mod_neg = xp.mod(abs_z, 500) - 500
-    term3 = mod_neg * xp.sin(xp.sqrt(xp.abs(mod_neg)))
+    term3 = mod_neg * xp.sin(xp.sqrt(xp.abs(mod_neg))) - (Z_shifted + 500) ** 2 / (10000 * D)
 
     result = xp.where(
         abs_z <= 500,
@@ -1197,18 +1247,26 @@ def _batch_schwefel_scaled(Z: ArrayLike) -> ArrayLike:
 
 
 def _batch_schwefel_simple(Z: ArrayLike) -> ArrayLike:
-    """Vectorized simplified Schwefel (only |z| <= 500 case).
-
-    Used by F24-F28 which only compute for |z| <= 500.
-    """
+    """Vectorized Schwefel with CEC 2013 scaling."""
     xp = get_array_namespace(Z)
     D = Z.shape[1]
     Z_shifted = Z * 1000 / 100 + 4.209687462275036e2
 
     abs_z = xp.abs(Z_shifted)
 
-    # Only count where |z| <= 500
-    result = xp.where(abs_z <= 500, Z_shifted * xp.sin(xp.sqrt(abs_z)), 0.0)
+    term1 = Z_shifted * xp.sin(xp.sqrt(abs_z))
+
+    mod_pos = 500 - xp.mod(Z_shifted, 500)
+    term2 = mod_pos * xp.sin(xp.sqrt(xp.abs(mod_pos))) - (Z_shifted - 500) ** 2 / (10000 * D)
+
+    mod_neg = xp.mod(abs_z, 500) - 500
+    term3 = mod_neg * xp.sin(xp.sqrt(xp.abs(mod_neg))) - (Z_shifted + 500) ** 2 / (10000 * D)
+
+    result = xp.where(
+        abs_z <= 500,
+        term1,
+        xp.where(Z_shifted > 500, term2, term3),
+    )
 
     return 418.9829 * D - xp.sum(result, axis=1)
 
@@ -1270,6 +1328,7 @@ class CompositionFunction1(_CompositionBase):
     """
 
     _spec = {
+        "eval_cost": 7.7,
         "name": "Composition Function 1",
         "func_id": 21,
     }
@@ -1356,6 +1415,7 @@ class CompositionFunction2(_CompositionBase):
     """
 
     _spec = {
+        "eval_cost": 5.0,
         "name": "Composition Function 2",
         "func_id": 22,
     }
@@ -1375,9 +1435,13 @@ class CompositionFunction2(_CompositionBase):
                 if abs(zi) <= 500:
                     result += zi * np.sin(np.sqrt(abs(zi)))
                 elif zi > 500:
-                    result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500)))
+                    result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500))) - (
+                        zi - 500
+                    ) ** 2 / (10000 * D)
                 else:
-                    result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500)))
+                    result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500))) - (
+                        zi + 500
+                    ) ** 2 / (10000 * D)
             return 418.9829 * D - result
 
         def rastrigin(z: np.ndarray) -> float:
@@ -1441,6 +1505,7 @@ class CompositionFunction3(_CompositionBase):
     """F23: Composition Function 3."""
 
     _spec = {
+        "eval_cost": 7.0,
         "name": "Composition Function 3",
         "func_id": 23,
     }
@@ -1460,9 +1525,13 @@ class CompositionFunction3(_CompositionBase):
                 if abs(zi) <= 500:
                     result += zi * np.sin(np.sqrt(abs(zi)))
                 elif zi > 500:
-                    result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500)))
+                    result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500))) - (
+                        zi - 500
+                    ) ** 2 / (10000 * D)
                 else:
-                    result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500)))
+                    result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500))) - (
+                        zi + 500
+                    ) ** 2 / (10000 * D)
             return 418.9829 * D - result
 
         def rastrigin(z: np.ndarray) -> float:
@@ -1529,6 +1598,7 @@ class CompositionFunction4(_CompositionBase):
     """F24: Composition Function 4."""
 
     _spec = {
+        "eval_cost": 18.7,
         "name": "Composition Function 4",
         "func_id": 24,
     }
@@ -1543,9 +1613,18 @@ class CompositionFunction4(_CompositionBase):
             z = z * 1000 / 100 + 4.209687462275036e2
             D = len(z)
             result = 0.0
-            for zi in z:
+            for i in range(D):
+                zi = z[i]
                 if abs(zi) <= 500:
                     result += zi * np.sin(np.sqrt(abs(zi)))
+                elif zi > 500:
+                    result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500))) - (
+                        zi - 500
+                    ) ** 2 / (10000 * D)
+                else:
+                    result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500))) - (
+                        zi + 500
+                    ) ** 2 / (10000 * D)
             return 418.9829 * D - result
 
         def rastrigin(z: np.ndarray) -> float:
@@ -1619,6 +1698,7 @@ class CompositionFunction5(_CompositionBase):
     """F25: Composition Function 5."""
 
     _spec = {
+        "eval_cost": 6.8,
         "name": "Composition Function 5",
         "func_id": 25,
     }
@@ -1633,9 +1713,18 @@ class CompositionFunction5(_CompositionBase):
             z = z * 1000 / 100 + 4.209687462275036e2
             D = len(z)
             result = 0.0
-            for zi in z:
+            for i in range(D):
+                zi = z[i]
                 if abs(zi) <= 500:
                     result += zi * np.sin(np.sqrt(abs(zi)))
+                elif zi > 500:
+                    result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500))) - (
+                        zi - 500
+                    ) ** 2 / (10000 * D)
+                else:
+                    result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500))) - (
+                        zi + 500
+                    ) ** 2 / (10000 * D)
             return 418.9829 * D - result
 
         def rastrigin(z: np.ndarray) -> float:
@@ -1704,6 +1793,7 @@ class CompositionFunction6(_CompositionBase):
     """F26: Composition Function 6."""
 
     _spec = {
+        "eval_cost": 21.7,
         "name": "Composition Function 6",
         "func_id": 26,
     }
@@ -1718,9 +1808,18 @@ class CompositionFunction6(_CompositionBase):
             z = z * 1000 / 100 + 4.209687462275036e2
             D = len(z)
             result = 0.0
-            for zi in z:
+            for i in range(D):
+                zi = z[i]
                 if abs(zi) <= 500:
                     result += zi * np.sin(np.sqrt(abs(zi)))
+                elif zi > 500:
+                    result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500))) - (
+                        zi - 500
+                    ) ** 2 / (10000 * D)
+                else:
+                    result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500))) - (
+                        zi + 500
+                    ) ** 2 / (10000 * D)
             return 418.9829 * D - result
 
         def rastrigin(z: np.ndarray) -> float:
@@ -1805,6 +1904,7 @@ class CompositionFunction7(_CompositionBase):
     """F27: Composition Function 7."""
 
     _spec = {
+        "eval_cost": 21.7,
         "name": "Composition Function 7",
         "func_id": 27,
     }
@@ -1829,9 +1929,18 @@ class CompositionFunction7(_CompositionBase):
             z = z * 1000 / 100 + 4.209687462275036e2
             D = len(z)
             result = 0.0
-            for zi in z:
+            for i in range(D):
+                zi = z[i]
                 if abs(zi) <= 500:
                     result += zi * np.sin(np.sqrt(abs(zi)))
+                elif zi > 500:
+                    result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500))) - (
+                        zi - 500
+                    ) ** 2 / (10000 * D)
+                else:
+                    result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500))) - (
+                        zi + 500
+                    ) ** 2 / (10000 * D)
             return 418.9829 * D - result
 
         def weierstrass(z: np.ndarray) -> float:
@@ -1906,6 +2015,7 @@ class CompositionFunction8(_CompositionBase):
     """F28: Composition Function 8."""
 
     _spec = {
+        "eval_cost": 9.9,
         "name": "Composition Function 8",
         "func_id": 28,
     }
@@ -1931,9 +2041,18 @@ class CompositionFunction8(_CompositionBase):
             z = z * 1000 / 100 + 4.209687462275036e2
             D = len(z)
             result = 0.0
-            for zi in z:
+            for i in range(D):
+                zi = z[i]
                 if abs(zi) <= 500:
                     result += zi * np.sin(np.sqrt(abs(zi)))
+                elif zi > 500:
+                    result += (500 - zi % 500) * np.sin(np.sqrt(abs(500 - zi % 500))) - (
+                        zi - 500
+                    ) ** 2 / (10000 * D)
+                else:
+                    result += (abs(zi) % 500 - 500) * np.sin(np.sqrt(abs(abs(zi) % 500 - 500))) - (
+                        zi + 500
+                    ) ** 2 / (10000 * D)
             return 418.9829 * D - result
 
         def rastrigin(z: np.ndarray) -> float:
@@ -1996,6 +2115,3 @@ class CompositionFunction8(_CompositionBase):
             result = result + weights[:, i] * f_vals
 
         return result + self.f_global
-
-    name = "Composition Function 1"
-    func_id = 21

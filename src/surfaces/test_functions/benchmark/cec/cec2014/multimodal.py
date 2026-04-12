@@ -36,6 +36,7 @@ class ShiftedRotatedRosenbrock(CEC2014Function):
     """
 
     _spec = {
+        "eval_cost": 1.8,
         "name": "Shifted and Rotated Rosenbrock's Function",
         "func_id": 4,
         "unimodal": False,
@@ -84,6 +85,7 @@ class ShiftedRotatedAckley(CEC2014Function):
     """
 
     _spec = {
+        "eval_cost": 1.8,
         "name": "Shifted and Rotated Ackley's Function",
         "func_id": 5,
         "unimodal": False,
@@ -134,6 +136,7 @@ class ShiftedRotatedWeierstrass(CEC2014Function):
     """
 
     _spec = {
+        "eval_cost": 13.1,
         "name": "Shifted and Rotated Weierstrass Function",
         "func_id": 6,
         "unimodal": False,
@@ -204,6 +207,7 @@ class ShiftedRotatedGriewank(CEC2014Function):
     """
 
     _spec = {
+        "eval_cost": 2.0,
         "name": "Shifted and Rotated Griewank's Function",
         "func_id": 7,
         "unimodal": False,
@@ -252,6 +256,7 @@ class ShiftedRastrigin(CEC2014Function):
     """
 
     _spec = {
+        "eval_cost": 1.2,
         "name": "Shifted Rastrigin's Function",
         "func_id": 8,
         "unimodal": False,
@@ -295,6 +300,7 @@ class ShiftedRotatedRastrigin(CEC2014Function):
     """
 
     _spec = {
+        "eval_cost": 1.8,
         "name": "Shifted and Rotated Rastrigin's Function",
         "func_id": 9,
         "unimodal": False,
@@ -340,6 +346,7 @@ class ShiftedSchwefel(CEC2014Function):
     """
 
     _spec = {
+        "eval_cost": 1.7,
         "name": "Shifted Schwefel's Function",
         "func_id": 10,
         "unimodal": False,
@@ -415,6 +422,7 @@ class ShiftedRotatedSchwefel(CEC2014Function):
     """
 
     _spec = {
+        "eval_cost": 2.2,
         "name": "Shifted and Rotated Schwefel's Function",
         "func_id": 11,
         "unimodal": False,
@@ -490,6 +498,7 @@ class ShiftedRotatedKatsuura(CEC2014Function):
     """
 
     _spec = {
+        "eval_cost": 42.4,
         "name": "Shifted and Rotated Katsuura Function",
         "func_id": 12,
         "unimodal": False,
@@ -558,6 +567,7 @@ class ShiftedRotatedHappyCat(CEC2014Function):
     """
 
     _spec = {
+        "eval_cost": 2.0,
         "name": "Shifted and Rotated HappyCat Function",
         "func_id": 13,
         "unimodal": False,
@@ -611,6 +621,7 @@ class ShiftedRotatedHGBat(CEC2014Function):
     """
 
     _spec = {
+        "eval_cost": 1.9,
         "name": "Shifted and Rotated HGBat Function",
         "func_id": 14,
         "unimodal": False,
@@ -661,6 +672,7 @@ class ShiftedRotatedExpandedGriewankRosenbrock(CEC2014Function):
     """
 
     _spec = {
+        "eval_cost": 2.2,
         "name": "Shifted and Rotated Expanded Griewank's plus Rosenbrock's Function",
         "func_id": 15,
         "unimodal": False,
@@ -719,6 +731,7 @@ class ShiftedRotatedExpandedScafferF6(CEC2014Function):
     """
 
     _spec = {
+        "eval_cost": 2.1,
         "name": "Shifted and Rotated Expanded Scaffer's F6 Function",
         "func_id": 16,
         "unimodal": False,

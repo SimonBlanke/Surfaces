@@ -38,6 +38,7 @@ class ExpSmoothingForecasterFunction(BaseForecasting):
 
     name = "Exponential Smoothing Forecaster Function"
     _name_ = "exp_smoothing_forecaster"
+    _spec = {"eval_cost": 3300.0}
     _dependencies = {"timeseries": ["sktime"]}
 
     available_datasets = list(DATASETS.keys())
@@ -61,9 +62,7 @@ class ExpSmoothingForecasterFunction(BaseForecasting):
         use_surrogate: bool = False,
     ):
         if dataset not in DATASETS:
-            raise ValueError(
-                f"Unknown dataset '{dataset}'. " f"Available: {self.available_datasets}"
-            )
+            raise ValueError(f"Unknown dataset '{dataset}'. Available: {self.available_datasets}")
 
         self.dataset = dataset
         self.forecast_horizon = forecast_horizon
@@ -92,7 +91,7 @@ class ExpSmoothingForecasterFunction(BaseForecasting):
         from sktime.forecasting.exp_smoothing import ExponentialSmoothing
         from sktime.performance_metrics.forecasting import mean_absolute_percentage_error
 
-        _, y_raw = self._dataset_loader()
+        _, y_raw = self._get_training_data()
 
         y = pd.Series(y_raw, index=pd.RangeIndex(start=0, stop=len(y_raw)))
 

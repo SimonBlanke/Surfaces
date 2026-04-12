@@ -79,13 +79,20 @@ class SpecAccessor:
 
     @property
     def n_objectives(self) -> int:
-        return self.as_dict().get("n_objectives", 1)
+        # Prefer instance/class attribute (set by __init__ or class-level)
+        # over _spec dict, so configurable n_objectives (DTLZ, WFG) works
+        return getattr(self._func, "n_objectives", self.as_dict().get("n_objectives", 1))
 
     @property
     def default_bounds(self) -> tuple:
         return self.as_dict().get("default_bounds", (-5.0, 5.0))
 
     # Global optimum (from class-level attrs on concrete functions)
+
+    @property
+    def eval_cost(self) -> Optional[float]:
+        """Evaluation cost in Compute Units (CU)."""
+        return self.as_dict().get("eval_cost", None)
 
     @property
     def f_global(self) -> Optional[float]:

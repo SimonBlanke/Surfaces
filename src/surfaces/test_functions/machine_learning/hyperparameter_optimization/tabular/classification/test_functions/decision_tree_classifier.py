@@ -23,6 +23,9 @@ class DecisionTreeClassifierFunction(BaseClassification):
 
     _name_ = "decision_tree_classifier"
 
+    _spec = {"eval_cost": 5400.0}
+    _dependencies = {"ml": ["sklearn"]}
+
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]
 
@@ -87,7 +90,7 @@ class DecisionTreeClassifierFunction(BaseClassification):
         from sklearn.model_selection import cross_val_score
         from sklearn.tree import DecisionTreeClassifier
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
         clf = DecisionTreeClassifier(
             max_depth=params["max_depth"],
             min_samples_split=params["min_samples_split"],

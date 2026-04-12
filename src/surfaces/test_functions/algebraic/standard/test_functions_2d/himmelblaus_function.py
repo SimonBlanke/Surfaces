@@ -35,8 +35,8 @@ class HimmelblausFunction(AlgebraicFunction):
         First constant term.
     B : float, default=-7
         Second constant term.
-    metric : str, default="score"
-        Either "loss" (minimize) or "score" (maximize).
+    objective : str, default="minimize"
+        Either "minimize" or "maximize".
     modifiers : list of BaseModifier, optional
         List of modifiers to apply to function evaluations.
 
@@ -58,6 +58,7 @@ class HimmelblausFunction(AlgebraicFunction):
     _name_ = "himmelblaus_function"
 
     _spec = {
+        "eval_cost": 0.1,
         "convex": False,
         "unimodal": False,
         "separable": False,

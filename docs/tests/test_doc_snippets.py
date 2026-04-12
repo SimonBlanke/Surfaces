@@ -241,7 +241,7 @@ def main():
         finally:
             os.unlink(tmp_path)
 
-    print(f"\n{'='*50}")
+    print(f"\n{'=' * 50}")
     print(f"Results: {passed} passed, {failed} failed, {skipped} skipped")
 
     return 0 if failed == 0 else 1

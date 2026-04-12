@@ -24,6 +24,7 @@ class ShiftedRotatedBentCigar(CEC2017Function):
     """
 
     _spec = {
+        "eval_cost": 1.4,
         "name": "Shifted and Rotated Bent Cigar Function",
         "func_id": 1,
         "unimodal": True,
@@ -66,6 +67,7 @@ class ShiftedRotatedSumDiffPow(CEC2017Function):
     """
 
     _spec = {
+        "eval_cost": 1.3,
         "name": "Shifted and Rotated Sum of Different Power Function",
         "func_id": 2,
         "unimodal": True,
@@ -102,6 +104,7 @@ class ShiftedRotatedZakharov(CEC2017Function):
     """
 
     _spec = {
+        "eval_cost": 1.8,
         "name": "Shifted and Rotated Zakharov Function",
         "func_id": 3,
         "unimodal": True,
@@ -141,6 +144,7 @@ class ShiftedRotatedRosenbrock(CEC2017Function):
     """
 
     _spec = {
+        "eval_cost": 1.7,
         "name": "Shifted and Rotated Rosenbrock's Function",
         "func_id": 4,
         "unimodal": False,
@@ -179,6 +183,7 @@ class ShiftedRotatedRastrigin(CEC2017Function):
     """
 
     _spec = {
+        "eval_cost": 1.7,
         "name": "Shifted and Rotated Rastrigin's Function",
         "func_id": 5,
         "unimodal": False,
@@ -216,6 +221,7 @@ class ShiftedRotatedSchafferF7(CEC2017Function):
     """
 
     _spec = {
+        "eval_cost": 1.9,
         "name": "Shifted and Rotated Schaffer's F7 Function",
         "func_id": 6,
         "unimodal": False,
@@ -259,6 +265,7 @@ class ShiftedRotatedLunacekBiRastrigin(CEC2017Function):
     """
 
     _spec = {
+        "eval_cost": 3.0,
         "name": "Shifted and Rotated Lunacek Bi-Rastrigin's Function",
         "func_id": 7,
         "unimodal": False,
@@ -335,6 +342,7 @@ class ShiftedRotatedNonContRastrigin(CEC2017Function):
     """
 
     _spec = {
+        "eval_cost": 2.3,
         "name": "Shifted and Rotated Non-Continuous Rastrigin's Function",
         "func_id": 8,
         "unimodal": False,
@@ -348,11 +356,11 @@ class ShiftedRotatedNonContRastrigin(CEC2017Function):
         M = self._get_rotation_matrix()
 
         shifted = x - shift
-        x_mod = x.copy()
+        nc_shifted = shifted.copy()
         mask = np.abs(shifted) > 0.5
-        x_mod[mask] = (shift + np.floor(2 * shifted + 0.5) * 0.5)[mask]
+        nc_shifted[mask] = np.round(2 * shifted[mask]) / 2
 
-        z = 0.0512 * shifted
+        z = 0.0512 * nc_shifted
         z = M @ z
 
         result = np.sum(z**2 - 10 * np.cos(2 * np.pi * z) + 10)
@@ -367,7 +375,8 @@ class ShiftedRotatedNonContRastrigin(CEC2017Function):
         M = xp.asarray(self._get_rotation_matrix())
 
         shifted = X - shift
-        Z = 0.0512 * shifted
+        nc_shifted = xp.where(xp.abs(shifted) > 0.5, xp.round(2 * shifted) / 2, shifted)
+        Z = 0.0512 * nc_shifted
         Z = Z @ M.T
 
         result = xp.sum(Z**2 - 10 * xp.cos(2 * math.pi * Z) + 10, axis=1)
@@ -385,11 +394,24 @@ class ShiftedRotatedLevy(CEC2017Function):
     """
 
     _spec = {
+        "eval_cost": 2.3,
         "name": "Shifted and Rotated Levy Function",
         "func_id": 9,
         "unimodal": False,
         "separable": False,
     }
+
+    @property
+    def x_global(self):
+        """Global optimum location.
+
+        The Levy function's minimum is at z=1 (where w=1), so the
+        actual optimum is at x = shift + M^{-1} @ ones(D).
+        """
+        shift = self._get_shift_vector()
+        M = self._get_rotation_matrix()
+        ones = np.ones(self.n_dim)
+        return shift + np.linalg.solve(M, ones)
 
     def _objective(self, params: Dict[str, Any]) -> float:
         x = self._params_to_array(params)
@@ -429,6 +451,7 @@ class ShiftedRotatedSchwefel(CEC2017Function):
     """
 
     _spec = {
+        "eval_cost": 2.0,
         "name": "Shifted and Rotated Schwefel's Function",
         "func_id": 10,
         "unimodal": False,

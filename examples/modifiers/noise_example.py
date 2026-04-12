@@ -13,7 +13,7 @@ print("Gaussian Noise (sigma=0.1):")
 print(f"  True value at {point}: {noisy_sphere.pure(point)}")
 for i in range(5):
     result = noisy_sphere(point)
-    print(f"  Evaluation {i+1}: {result:.4f}")
+    print(f"  Evaluation {i + 1}: {result:.4f}")
 
 # Access the noise modifier to see last noise value
 print(f"  Last noise added: {gaussian_noise.last_noise:.4f}")
@@ -25,7 +25,7 @@ print("\nUniform Noise (low=-0.5, high=0.5):")
 print(f"  True value at {point}: {uniform_sphere.pure(point)}")
 for i in range(5):
     result = uniform_sphere(point)
-    print(f"  Evaluation {i+1}: {result:.4f}")
+    print(f"  Evaluation {i + 1}: {result:.4f}")
 
 # Multiplicative noise - scales with function value
 mult_sphere = SphereFunction(n_dim=2, modifiers=[MultiplicativeNoise(sigma=0.1, seed=42)])
@@ -34,7 +34,7 @@ print("\nMultiplicative Noise (sigma=0.1):")
 print(f"  True value at {point}: {mult_sphere.pure(point)}")
 for i in range(5):
     result = mult_sphere(point)
-    print(f"  Evaluation {i+1}: {result:.4f}")
+    print(f"  Evaluation {i + 1}: {result:.4f}")
 
 # Noise scheduling - decay noise over evaluations
 scheduled_noise = GaussianNoise(

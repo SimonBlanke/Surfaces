@@ -42,7 +42,8 @@ class XGBoostImageClassifierFunction(BaseImageClassification):
 
     name = "XGBoost Image Classifier Function"
     _name_ = "xgboost_image_classifier"
-    _dependencies = {"xgboost": ["xgboost"]}
+    _spec = {"eval_cost": 181900.0}
+    _dependencies = {"xgboost": ["sklearn", "xgboost"]}
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5]
@@ -67,9 +68,7 @@ class XGBoostImageClassifierFunction(BaseImageClassification):
         use_surrogate: bool = False,
     ):
         if dataset not in DATASETS:
-            raise ValueError(
-                f"Unknown dataset '{dataset}'. " f"Available: {self.available_datasets}"
-            )
+            raise ValueError(f"Unknown dataset '{dataset}'. Available: {self.available_datasets}")
 
         if cv not in self.available_cv:
             raise ValueError(f"Invalid cv={cv}. Available: {self.available_cv}")
@@ -103,7 +102,7 @@ class XGBoostImageClassifierFunction(BaseImageClassification):
         from sklearn.preprocessing import StandardScaler
         from xgboost import XGBClassifier
 
-        X_raw, y = self._dataset_loader()
+        X_raw, y = self._get_training_data()
 
         scaler = StandardScaler()
         pca = PCA(n_components=self.n_components, random_state=42)

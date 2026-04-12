@@ -54,9 +54,9 @@ Test functions for benchmarking optimization algorithms in Python.
   <img src="./docs/source/_static/drop_wave_surface.svg" width="240" align="right" alt="Bayesian Optimization on Ackley Function">
 </a>
 
-**Surfaces** is a Python library providing standardized test functions for evaluating and comparing optimization algorithms. It includes algebraic benchmark functions from optimization literature, machine learning hyperparameter optimization problems, and constrained engineering design problems.
+**Surfaces** is a Python library for benchmarking optimization algorithms. It provides test functions across a wide range of problem types: algebraic benchmarks, multi-objective problems, BBOB and CEC competition suites, real ML hyperparameter landscapes, constrained engineering design, discrete combinatorial problems, and ODE-based simulations. All functions share a single callable interface with automatic search space generation.
 
-Designed for researchers benchmarking new optimization algorithms, practitioners comparing optimizer performance, and educators teaching optimization concepts. All functions provide a consistent interface: callable with dictionary parameters and automatic search space generation.
+ML test functions support surrogate model acceleration and multi-fidelity evaluation for algorithms like Hyperband and BOHB. A built-in benchmark runner with adapters for common optimizer frameworks handles systematic comparison across function suites.
 
 <p>
   <a href="https://linkedin.com/in/simonblanke"><img src="https://img.shields.io/badge/LinkedIn-Follow-0A66C2?style=flat-square&logo=linkedin" alt="LinkedIn"></a>
@@ -92,9 +92,9 @@ pip install surfaces[full]        # All optional features
 
 ## Key Features
 
-| [**30+ Algebraic Test Functions**](https://surfaces.readthedocs.io/en/latest/user_guide/test_functions/algebraic/index.html)<br><sub>Classic benchmarks from optimization literature: Sphere, Rastrigin, Ackley, Rosenbrock, and more.</sub> | [**ML Hyperparameter Test Functions**](https://surfaces.readthedocs.io/en/latest/user_guide/test_functions/machine_learning.html)<br><sub>Real hyperparameter optimization problems using scikit-learn models with cross-validation.</sub> | [**Constrained Engineering Test Functions**](https://surfaces.readthedocs.io/en/latest/user_guide/test_functions/engineering.html)<br><sub>Constrained optimization from engineering literature: welded beams, pressure vessels, spring design.</sub> |
+| [**Diverse Test Functions**](https://surfaces.readthedocs.io/en/latest/user_guide/test_functions/index.html)<br><sub>Algebraic benchmarks, BBOB and CEC competition suites, discrete combinatorial and ODE-based simulation problems.</sub> | [**ML Hyperparameter Test Functions**](https://surfaces.readthedocs.io/en/latest/user_guide/test_functions/machine_learning.html)<br><sub>Optimization landscapes from model training with cross-validation. Multi-fidelity evaluation for Hyperband and BOHB.</sub> | [**Multi-Objective & Constrained**](https://surfaces.readthedocs.io/en/latest/user_guide/test_functions/index.html)<br><sub>ZDT, DTLZ and WFG suites with Pareto fronts. Engineering design problems with constraint handling.</sub> |
 | :--- | :--- | :--- |
-| [**Surrogate Models**](https://surfaces.readthedocs.io/en/latest/user_guide/surrogates.html)<br><sub>Pre-trained neural networks for fast ML test function evaluation. 100-1000x faster with realistic characteristics.</sub> | [**BBOB and CEC Suites**](https://surfaces.readthedocs.io/en/latest/user_guide/test_functions/bbob.html)<br><sub>Standard academic benchmark suites used in optimization competitions.</sub> | [**Optimizer Integration**](https://surfaces.readthedocs.io/en/latest/user_guide/integrations/index.html)<br><sub>Works with Optuna, Ray Tune, scipy, Gradient-Free-Optimizers and any optimizer that accepts a callable.</sub> |
+| [**Surrogate Models**](https://surfaces.readthedocs.io/en/latest/user_guide/surrogates.html)<br><sub>Pre-trained neural networks for fast ML test function evaluation. 100-1000x faster with realistic characteristics.</sub> | [**Benchmark Runner**](https://surfaces.readthedocs.io/en/latest/user_guide.html)<br><sub>Systematic optimizer comparison across function suites. Persistent storage, statistics, comparison and visualization.</sub> | [**Optimizer Integration**](https://surfaces.readthedocs.io/en/latest/user_guide/integrations/index.html)<br><sub>Works with Optuna, Ray Tune, scipy, Gradient-Free-Optimizers and any optimizer that accepts a callable.</sub> |
 
 <br>
 
@@ -288,6 +288,30 @@ result_fast = func_fast({"n_neighbors": 5, "algorithm": "auto"})  # ~0.1ms
 
 
 <details>
+<summary><b>Multi-Fidelity Evaluation</b></summary>
+
+```python
+from surfaces.test_functions.machine_learning import RandomForestClassifierFunction
+
+func = RandomForestClassifierFunction(dataset="digits", cv=3)
+params = {"n_estimators": 100, "max_depth": 10, "min_samples_split": 2}
+
+# Cheap evaluation on 10% of data (for Hyperband/BOHB early stopping)
+score_cheap = func(params, fidelity=0.1)
+
+# Full evaluation on all data
+score_full = func(params, fidelity=1.0)
+
+# Fidelity works with all ML functions: classification, regression,
+# time series, image. Subsampling is stratified for classification
+# and sequential for time series to preserve temporal order.
+```
+
+</details>
+
+
+
+<details>
 <summary><b>Benchmark Suites</b></summary>
 
 ```python
@@ -312,21 +336,53 @@ print(f"BBOB Sphere f_global: {bbob_sphere.f_global}")
 <summary><b>Multi-Objective Functions</b></summary>
 
 ```python
-from surfaces.test_functions.algebraic.multi_objective import (
-    ZDT1,
-    Kursawe,
-)
+from surfaces.test_functions.algebraic.multi_objective import ZDT1, DTLZ2, WFG4
 
-# ZDT1: Two-objective problem with convex Pareto front
-zdt1 = ZDT1(n_dim=3)
-params = {f"x{i}": 0.5 for i in range(3)}
-objectives = zdt1(params)  # Returns tuple of objectives
-print(f"ZDT1 objectives: {objectives}")
+# ZDT1: Two-objective, convex Pareto front
+zdt1 = ZDT1(n_dim=10)
+objectives = zdt1({f"x{i}": 0.5 for i in range(10)})
 
-# Kursawe: Non-convex Pareto front
-kursawe = Kursawe()
-f1, f2 = kursawe({"x0": 0.0, "x1": 0.0, "x2": 0.0})
-print(f"Kursawe objectives: f1={f1:.4f}, f2={f2:.4f}")
+# DTLZ2: Scalable to any number of objectives
+dtlz2 = DTLZ2(n_dim=12, n_objectives=3)
+
+# WFG4: Non-separable with concave Pareto front
+wfg4 = WFG4(n_dim=10, n_objectives=2)
+
+# All provide analytical Pareto fronts for comparison
+pareto = zdt1.pareto_front(n_points=100)
+```
+
+</details>
+
+
+
+<details>
+<summary><b>Benchmark Runner</b></summary>
+
+```python
+import random
+from surfaces.benchmark import Benchmark
+from surfaces import collection
+
+# Minimal ask/tell optimizer (any optimizer with this interface works)
+class RandomSampler:
+    def __init__(self, search_space, seed=0):
+        self._space = search_space
+        self._rng = random.Random(seed)
+
+    def ask(self):
+        return {k: self._rng.choice(v) for k, v in self._space.items()}
+
+    def tell(self, params, score):
+        pass
+
+# Run benchmark
+bench = Benchmark(budget_iter=50, n_seeds=2, seed=42)
+bench.add_functions(collection.quick)
+bench.add_optimizers([RandomSampler])
+bench.run()
+
+print(bench.results.summary())
 ```
 
 </details>
@@ -401,12 +457,11 @@ Contributions welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 If you use this software in your research, please cite:
 
 ```bibtex
-@software{surfaces2024,
+@software{surfaces,
   author = {Simon Blanke},
   title = {Surfaces: Test functions for optimization algorithm benchmarking},
   year = {2024},
   url = {https://github.com/SimonBlanke/Surfaces},
-  version = {0.6.1}
 }
 ```
 

@@ -76,6 +76,11 @@ class _CollectionSingleton(Collection):
 
         add_functions(constrained_functions)
 
+        # Multi-objective functions (always available)
+        from ..test_functions.algebraic.multi_objective import multi_objective_functions
+
+        add_functions(multi_objective_functions)
+
         # CEC functions (require cec data package)
         try:
             from ..test_functions.benchmark.cec.cec2013 import cec2013_functions
@@ -94,6 +99,15 @@ class _CollectionSingleton(Collection):
 
             if machine_learning_functions:
                 add_functions(machine_learning_functions)
+        except ImportError:
+            pass
+
+        # Simulation functions (scipy only, always available)
+        try:
+            from ..test_functions.simulation import simulation_functions
+
+            if simulation_functions:
+                add_functions(simulation_functions)
         except ImportError:
             pass
 
@@ -183,6 +197,11 @@ class _CollectionSingleton(Collection):
     def constrained(self) -> Collection:
         """Constrained engineering problems (5 functions)."""
         return self._get_predefined("constrained")
+
+    @property
+    def multi_objective(self) -> Collection:
+        """Multi-objective optimization functions (23 functions)."""
+        return self._get_predefined("multi_objective")
 
     @property
     def algebraic_2d(self) -> Collection:

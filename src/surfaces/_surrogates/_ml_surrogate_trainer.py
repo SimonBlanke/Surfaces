@@ -26,6 +26,7 @@ Developer Usage:
 """
 
 import json
+import signal
 import time
 import warnings
 from itertools import product
@@ -34,6 +35,7 @@ from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 
+from ._error_aggregator import ErrorAggregator
 from ._ml_registry import (
     get_function_config,
     get_registered_functions,
@@ -43,8 +45,28 @@ from ._surrogate_loader import get_surrogate_path
 # Suppress sklearn warnings during training
 warnings.filterwarnings("ignore", category=UserWarning, module="sklearn")
 
+
+class _EvalTimeout(Exception):
+    """Raised when a single evaluation exceeds its time budget."""
+
+
+def _timeout_handler(signum, frame):
+    raise _EvalTimeout()
+
+
 # Output directory for models
 MODELS_DIR = Path(__file__).parent / "models"
+
+
+def _serialize_value(v):
+    """Convert numpy scalars and other non-JSON types to Python natives."""
+    if isinstance(v, (np.integer,)):
+        return int(v)
+    if isinstance(v, (np.floating,)):
+        return float(v)
+    if isinstance(v, np.ndarray):
+        return v.tolist()
+    return v
 
 
 class MLSurrogateTrainer:
@@ -58,6 +80,9 @@ class MLSurrogateTrainer:
         Directory to save models. Defaults to _surrogates/models/.
     verbose : bool, default=True
         Print progress information.
+    logger : logging.Logger, optional
+        Logger instance for structured logging. When provided, messages
+        go to the logger instead of stdout.
 
     Examples
     --------
@@ -72,11 +97,13 @@ class MLSurrogateTrainer:
         function_name: str,
         output_dir: Optional[Path] = None,
         verbose: bool = True,
+        logger=None,
     ):
         self.function_name = function_name
         self.config = get_function_config(function_name)
         self.output_dir = output_dir or MODELS_DIR
         self.verbose = verbose
+        self._logger = logger
 
         self.X: Optional[np.ndarray] = None
         self.y: Optional[np.ndarray] = None
@@ -84,21 +111,47 @@ class MLSurrogateTrainer:
         self.param_encodings: Dict[str, Dict[str, int]] = {}
         self.model = None
         self.metrics: Dict[str, float] = {}
+        self.n_errors: int = 0
 
-    def _log(self, msg: str):
-        """Print message if verbose."""
-        if self.verbose:
+    def _log(self, msg: str, level: str = "info"):
+        """Route message to logger or stdout."""
+        if self._logger:
+            getattr(self._logger, level)(msg)
+        elif self.verbose:
             print(msg)
 
     def collect_data(
-        self, max_samples_per_combo: Optional[int] = None
+        self,
+        max_samples_per_combo: Optional[int] = None,
+        progress_callback: Optional[callable] = None,
+        eval_timeout: Optional[int] = 60,
+        evaluation_store=None,
     ) -> Tuple[np.ndarray, np.ndarray]:
-        """Collect training data across all (HP, fixed_param) combinations.
+        """Collect training data across all (HP, fixed_param, fidelity) combinations.
+
+        When fidelity_levels contains more than just [1.0], the trainer
+        evaluates each HP combination at every fidelity level. The resulting
+        surrogate can then predict scores for arbitrary fidelity values.
+
+        When an EvaluationStore is provided, existing evaluations are
+        loaded from the database and only missing combinations are
+        evaluated. New results are persisted back to the store.
 
         Parameters
         ----------
         max_samples_per_combo : int, optional
             Max samples per fixed parameter combination.
+        progress_callback : callable, optional
+            Called as ``progress_callback(done, total)`` after each
+            evaluation. Allows callers to display a progress bar or
+            log periodic updates.
+        eval_timeout : int, optional
+            Maximum seconds per single evaluation. Evaluations exceeding
+            this limit are skipped and logged as timeouts. Set to None to
+            disable. Default: 60 seconds.
+        evaluation_store : EvaluationStore, optional
+            Persistent store for caching evaluations across runs. When
+            provided, only missing combinations are evaluated.
 
         Returns
         -------
@@ -108,26 +161,61 @@ class MLSurrogateTrainer:
         FuncClass = self.config["class"]
         fixed_params = self.config["fixed_params"]
         hyperparams = self.config["hyperparams"]
+        fidelity_levels = self.config.get("fidelity_levels", [1.0])
 
-        # Get all fixed param combinations
+        self.fidelity_aware = len(fidelity_levels) > 1 or fidelity_levels != [1.0]
+
         fixed_keys = list(fixed_params.keys())
         fixed_values = [fixed_params[k] for k in fixed_keys]
         fixed_combos = list(product(*fixed_values))
 
         self._log(f"Collecting data for {self.function_name}")
         self._log(f"  Fixed params: {fixed_keys} ({len(fixed_combos)} combinations)")
+        if self.fidelity_aware:
+            self._log(f"  Fidelity levels: {fidelity_levels}")
+        if eval_timeout:
+            self._log(f"  Eval timeout: {eval_timeout}s")
 
-        records = []
+        # Check for cached evaluations in the store
+        existing_keys = set()
+        function_hash = None
+        if evaluation_store is not None:
+            from ._evaluation_store import compute_function_hash
+
+            function_hash = compute_function_hash(FuncClass)
+            existing_keys = evaluation_store.get_existing_keys(self.function_name, function_hash)
+            if existing_keys:
+                self._log(f"  Found {len(existing_keys)} cached evaluations in store")
+
+        # Pre-compute total evaluation count for progress reporting.
+        first_func = FuncClass(**dict(zip(fixed_keys, fixed_combos[0])), use_surrogate=False)
+        n_hp = len(list(product(*[first_func.search_space[k] for k in first_func.search_space])))
+        if max_samples_per_combo and n_hp > max_samples_per_combo:
+            n_hp = max_samples_per_combo
+        total_evals = len(fixed_combos) * n_hp * len(fidelity_levels)
+        self._log(f"  Estimated evaluations: {total_evals}")
+
+        use_alarm = eval_timeout is not None and hasattr(signal, "SIGALRM")
+        if eval_timeout and not use_alarm:
+            self._log(
+                "  SIGALRM not available (Windows?), timeout disabled",
+                level="warning",
+            )
+
+        new_records = []
+        new_db_records = []
+        error_agg = ErrorAggregator(logger=self._logger)
+        n_timeouts = 0
+        n_nan = 0
+        n_cached = 0
+        done = 0
         start_time = time.time()
 
         for fixed_combo in fixed_combos:
             fixed_dict = dict(zip(fixed_keys, fixed_combo))
-
-            # Create function instance with fixed params
             func = FuncClass(**fixed_dict, use_surrogate=False)
             search_space = func.search_space
 
-            # Get all HP combinations
             hp_keys = list(search_space.keys())
             hp_values = [search_space[k] for k in hp_keys]
             hp_combos = list(product(*hp_values))
@@ -136,34 +224,170 @@ class MLSurrogateTrainer:
                 indices = np.random.choice(len(hp_combos), max_samples_per_combo, replace=False)
                 hp_combos = [hp_combos[i] for i in indices]
 
-            # Evaluate each HP combination
             for hp_combo in hp_combos:
                 hp_dict = dict(zip(hp_keys, hp_combo))
 
-                try:
-                    score = func._objective(hp_dict)
-                    if not np.isnan(score):
-                        records.append(
-                            {
-                                **hp_dict,
-                                **fixed_dict,
-                                "_score": score,
-                            }
+                for fidelity in fidelity_levels:
+                    # Skip if we already have this evaluation in the store
+                    if existing_keys:
+                        params_json = json.dumps(
+                            {k: _serialize_value(v) for k, v in hp_dict.items()},
+                            sort_keys=True,
                         )
-                except Exception:
-                    pass  # Skip invalid combinations
+                        if (params_json, fidelity) in existing_keys:
+                            n_cached += 1
+                            done += 1
+                            if progress_callback is not None:
+                                progress_callback(done, total_evals)
+                            continue
+
+                    t_eval = time.time()
+                    try:
+                        if use_alarm:
+                            old_handler = signal.signal(signal.SIGALRM, _timeout_handler)
+                            signal.alarm(eval_timeout)
+
+                        func._active_fidelity = fidelity if fidelity < 1.0 else None
+                        score = func._objective(hp_dict)
+
+                        if use_alarm:
+                            signal.alarm(0)
+
+                        eval_time = time.time() - t_eval
+
+                        if np.isnan(score):
+                            n_nan += 1
+                        else:
+                            record = {**hp_dict, **fixed_dict, "_score": score}
+                            if self.fidelity_aware:
+                                record["__fidelity__"] = fidelity
+                            new_records.append(record)
+
+                            if evaluation_store is not None:
+                                params_json = json.dumps(
+                                    {k: _serialize_value(v) for k, v in hp_dict.items()},
+                                    sort_keys=True,
+                                )
+                                new_db_records.append(
+                                    {
+                                        "params_json": params_json,
+                                        "fidelity": fidelity,
+                                        "score": score,
+                                        "dataset": fixed_dict.get("dataset"),
+                                        "cv": fixed_dict.get("cv"),
+                                        "eval_time_s": eval_time,
+                                    }
+                                )
+                    except _EvalTimeout:
+                        n_timeouts += 1
+                        self._log(
+                            f"  Timeout ({eval_timeout}s): {fixed_dict} | "
+                            f"{hp_dict} | fidelity={fidelity}",
+                            level="warning",
+                        )
+                        if evaluation_store is not None:
+                            params_json = json.dumps(
+                                {k: _serialize_value(v) for k, v in hp_dict.items()},
+                                sort_keys=True,
+                            )
+                            new_db_records.append(
+                                {
+                                    "params_json": params_json,
+                                    "fidelity": fidelity,
+                                    "score": None,
+                                    "error_type": "Timeout",
+                                    "dataset": fixed_dict.get("dataset"),
+                                    "cv": fixed_dict.get("cv"),
+                                    "eval_time_s": time.time() - t_eval,
+                                }
+                            )
+                    except Exception as exc:
+                        context = f"{fixed_dict} | {hp_dict} | fidelity={fidelity}"
+                        error_agg.record(exc, context)
+                        if evaluation_store is not None:
+                            params_json = json.dumps(
+                                {k: _serialize_value(v) for k, v in hp_dict.items()},
+                                sort_keys=True,
+                            )
+                            new_db_records.append(
+                                {
+                                    "params_json": params_json,
+                                    "fidelity": fidelity,
+                                    "score": None,
+                                    "error_type": type(exc).__name__,
+                                    "dataset": fixed_dict.get("dataset"),
+                                    "cv": fixed_dict.get("cv"),
+                                    "eval_time_s": time.time() - t_eval,
+                                }
+                            )
+                    finally:
+                        if use_alarm:
+                            signal.alarm(0)
+                            signal.signal(signal.SIGALRM, old_handler)
+                        func._active_fidelity = None
+
+                    done += 1
+                    if progress_callback is not None:
+                        progress_callback(done, total_evals)
+
+            # Batch-insert after each fixed_param combo to limit memory
+            # and persist progress in case of a crash
+            if evaluation_store is not None and new_db_records:
+                evaluation_store.store_batch(self.function_name, function_hash, new_db_records)
+                new_db_records = []
 
         elapsed = time.time() - start_time
-        self._log(f"  Collected {len(records)} samples in {elapsed:.1f}s")
+        self.n_errors = error_agg.total
+        self.n_timeouts = n_timeouts
 
-        # Convert to arrays
+        if n_cached > 0:
+            self._log(f"  Skipped {n_cached} cached evaluations")
+
+        self._log(
+            f"  Collected {len(new_records)} new samples in {elapsed:.1f}s "
+            f"({error_agg.total} errors, {n_timeouts} timeouts, {n_nan} NaN)"
+        )
+        if error_agg.total > 0:
+            error_agg.log_summary()
+        if n_timeouts > 0:
+            self._log(
+                f"  {n_timeouts} evaluations exceeded {eval_timeout}s timeout",
+                level="warning",
+            )
+
+        # When using the store, load ALL evaluations (cached + new)
+        # so the training data is complete
+        if evaluation_store is not None and existing_keys:
+            all_db_records = evaluation_store.load_all(self.function_name, function_hash)
+            self._log(
+                f"  Total data from store: {len(all_db_records)} evaluations "
+                f"({n_cached} cached + {len(new_records)} new)"
+            )
+            records = self._convert_db_records(all_db_records, fixed_keys)
+        else:
+            records = new_records
+
         self._build_arrays(records, hyperparams, fixed_keys)
         return self.X, self.y
 
+    def _convert_db_records(self, db_records: List[Dict], fixed_keys: List[str]) -> List[Dict]:
+        """Convert DB records back to the internal record format."""
+        records = []
+        for r in db_records:
+            record = dict(r)
+            if self.fidelity_aware:
+                record["__fidelity__"] = record.pop("fidelity", 1.0)
+            else:
+                record.pop("fidelity", None)
+            records.append(record)
+        return records
+
     def _build_arrays(self, records: List[Dict], hyperparams: List[str], fixed_keys: List[str]):
         """Convert records to numpy arrays with encodings."""
-        # Determine param order: hyperparams first, then fixed params
+        # Determine param order: hyperparams first, then fixed params, then fidelity
         self.param_names = hyperparams + fixed_keys
+        if self.fidelity_aware:
+            self.param_names = self.param_names + ["__fidelity__"]
 
         # Build encodings for categorical params
         self.param_encodings = {}
@@ -287,8 +511,10 @@ class MLSurrogateTrainer:
             "function_name": self.function_name,
             "param_names": self.param_names,
             "param_encodings": self.param_encodings,
+            "fidelity_aware": getattr(self, "fidelity_aware", False),
+            "fidelity_levels": self.config.get("fidelity_levels", [1.0]),
             "n_samples": int(self.metrics["n_samples"]),
-            "n_invalid_samples": 0,
+            "n_invalid_samples": self.n_errors,
             "has_validity_model": False,
             "y_range": [float(self.y.min()), float(self.y.max())],
             "training_mse": self.metrics["mse"],

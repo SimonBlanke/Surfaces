@@ -23,6 +23,9 @@ class DecisionTreeRegressorFunction(BaseRegression):
 
     _name_ = "decision_tree_regressor"
 
+    _spec = {"eval_cost": 862.3}
+    _dependencies = {"ml": ["sklearn"]}
+
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]
 
@@ -73,7 +76,7 @@ class DecisionTreeRegressorFunction(BaseRegression):
         from sklearn.model_selection import cross_val_score
         from sklearn.tree import DecisionTreeRegressor
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
         reg = DecisionTreeRegressor(
             max_depth=params["max_depth"],
             min_samples_split=params["min_samples_split"],

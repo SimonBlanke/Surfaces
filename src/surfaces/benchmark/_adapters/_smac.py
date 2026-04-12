@@ -1,0 +1,60 @@
+"""Adapter for SMAC3.
+
+The user passes a facade class (e.g. smac.HyperparameterOptimizationFacade).
+The adapter builds ConfigSpace and Scenario from search space bounds.
+"""
+
+from __future__ import annotations
+
+from typing import Any
+
+from surfaces.benchmark._adapters._base import AskTellAdapter, extract_bounds
+
+
+class SMACAdapter(AskTellAdapter):
+    def __init__(self, cls: type, params: dict):
+        self._cls = cls
+        self._params = dict(params)
+
+    @property
+    def name(self) -> str:
+        return f"smac.{self._cls.__name__}"
+
+    def setup(self, search_space: dict, seed: int, budget: int) -> None:
+        from ConfigSpace import ConfigurationSpace, Float
+        from smac import Scenario
+
+        bounds = extract_bounds(search_space)
+        cs = ConfigurationSpace(seed=seed)
+        for param_name, (lo, hi) in bounds.items():
+            cs.add(Float(param_name, (lo, hi)))
+
+        scenario = Scenario(
+            cs,
+            deterministic=True,
+            n_trials=budget,
+            seed=seed,
+        )
+
+        # SMAC requires a target function at init even in ask/tell mode
+        def _dummy(config, seed=0):
+            return 0.0
+
+        params = dict(self._params)
+        params.setdefault("overwrite", True)
+
+        self._smac = self._cls(scenario, _dummy, **params)
+        self._info = None
+
+    def ask(self) -> dict[str, Any]:
+        self._info = self._smac.ask()
+        return dict(self._info.config)
+
+    def tell(self, params: dict[str, Any], score: float) -> None:
+        from smac.runhistory.dataclasses import TrialValue
+
+        value = TrialValue(cost=score)
+        self._smac.tell(self._info, value)
+
+
+ADAPTER_CLASS = SMACAdapter

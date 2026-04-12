@@ -58,6 +58,9 @@ class KNeighborsClassifierFunction(BaseClassification):
     name = "KNeighbors Classifier Function"
     _name_ = "k_neighbors_classifier"
 
+    _spec = {"eval_cost": 39200.0}
+    _dependencies = {"ml": ["sklearn"]}
+
     # Available options (for validation and documentation)
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]
@@ -81,9 +84,7 @@ class KNeighborsClassifierFunction(BaseClassification):
     ):
         # Validate dataset
         if dataset not in DATASETS:
-            raise ValueError(
-                f"Unknown dataset '{dataset}'. " f"Available: {self.available_datasets}"
-            )
+            raise ValueError(f"Unknown dataset '{dataset}'. Available: {self.available_datasets}")
 
         # Validate cv
         if cv not in self.available_cv:
@@ -117,7 +118,7 @@ class KNeighborsClassifierFunction(BaseClassification):
         from sklearn.model_selection import cross_val_score
         from sklearn.neighbors import KNeighborsClassifier
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
         knc = KNeighborsClassifier(
             n_neighbors=params["n_neighbors"],
             algorithm=params["algorithm"],

@@ -57,6 +57,9 @@ class GradientBoostingRegressorFunction(BaseRegression):
 
     _name_ = "gradient_boosting_regressor"
 
+    _spec = {"eval_cost": 73800.0}
+    _dependencies = {"ml": ["sklearn"]}
+
     # Available options (for validation and documentation)
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]
@@ -80,9 +83,7 @@ class GradientBoostingRegressorFunction(BaseRegression):
     ):
         # Validate dataset
         if dataset not in DATASETS:
-            raise ValueError(
-                f"Unknown dataset '{dataset}'. " f"Available: {self.available_datasets}"
-            )
+            raise ValueError(f"Unknown dataset '{dataset}'. Available: {self.available_datasets}")
 
         # Validate cv
         if cv not in self.available_cv:
@@ -116,7 +117,7 @@ class GradientBoostingRegressorFunction(BaseRegression):
         from sklearn.ensemble import GradientBoostingRegressor
         from sklearn.model_selection import cross_val_score
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
         gbr = GradientBoostingRegressor(
             n_estimators=params["n_estimators"],
             max_depth=params["max_depth"],

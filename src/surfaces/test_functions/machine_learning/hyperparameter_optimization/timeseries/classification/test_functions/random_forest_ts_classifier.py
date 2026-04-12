@@ -75,6 +75,8 @@ class RandomForestTSClassifierFunction(BaseTSClassification):
 
     name = "Random Forest Time-Series Classifier Function"
     _name_ = "random_forest_ts_classifier"
+    _spec = {"eval_cost": 65700.0}
+    _dependencies = {"ml": ["sklearn"]}
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]
@@ -97,9 +99,7 @@ class RandomForestTSClassifierFunction(BaseTSClassification):
         use_surrogate: bool = False,
     ):
         if dataset not in DATASETS:
-            raise ValueError(
-                f"Unknown dataset '{dataset}'. " f"Available: {self.available_datasets}"
-            )
+            raise ValueError(f"Unknown dataset '{dataset}'. Available: {self.available_datasets}")
 
         if cv not in self.available_cv:
             raise ValueError(f"Invalid cv={cv}. Available: {self.available_cv}")
@@ -129,7 +129,7 @@ class RandomForestTSClassifierFunction(BaseTSClassification):
         from sklearn.ensemble import RandomForestClassifier
         from sklearn.model_selection import cross_val_score
 
-        X_raw, y = self._dataset_loader()
+        X_raw, y = self._get_training_data()
         X = extract_ts_features(X_raw)
 
         model = RandomForestClassifier(

@@ -275,12 +275,12 @@ class TestSurrogateValidator:
             raise
 
         # Verify surrogate function has same fixed parameters
-        assert (
-            validator._surrogate_func.dataset == "wine"
-        ), "Surrogate should have dataset='wine' copied from real function"
-        assert (
-            validator._surrogate_func.cv == 10
-        ), "Surrogate should have cv=10 copied from real function"
+        assert validator._surrogate_func.dataset == "wine", (
+            "Surrogate should have dataset='wine' copied from real function"
+        )
+        assert validator._surrogate_func.cv == 10, (
+            "Surrogate should have cv=10 copied from real function"
+        )
 
         # Verify surrogate is enabled
         assert validator._surrogate_func.use_surrogate is True
@@ -384,9 +384,9 @@ class TestSurrogatePrediction:
         surr_time = (time.time() - start) / 10
 
         # Surrogate should be at least 10x faster
-        assert (
-            surr_time < real_time
-        ), f"Surrogate ({surr_time:.4f}s) not faster than real ({real_time:.4f}s)"
+        assert surr_time < real_time, (
+            f"Surrogate ({surr_time:.4f}s) not faster than real ({real_time:.4f}s)"
+        )
 
     def test_surrogate_results_reasonable(self):
         """Surrogate results are within reasonable range."""

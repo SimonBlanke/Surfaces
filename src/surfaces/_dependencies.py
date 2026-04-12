@@ -20,5 +20,5 @@ def check_dependency(package: str, extras: str) -> None:
     """
     if importlib.util.find_spec(package) is None:
         raise ImportError(
-            f"This function requires '{package}'. " f"Install with: pip install surfaces[{extras}]"
+            f"This function requires '{package}'. Install with: pip install surfaces[{extras}]"
         )

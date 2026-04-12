@@ -39,6 +39,8 @@ class WeightedAveragingFunction(BaseTabularEnsemble):
 
     name = "Weighted Averaging Ensemble"
     _name_ = "weighted_averaging"
+    _spec = {"eval_cost": 58900.0}
+    _dependencies = {"ml": ["sklearn"]}
 
     available_datasets = ["diabetes", "california"]
     available_cv = [2, 3, 5, 10]
@@ -94,7 +96,7 @@ class WeightedAveragingFunction(BaseTabularEnsemble):
         from sklearn.model_selection import cross_val_predict
         from sklearn.tree import DecisionTreeRegressor
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
 
         dt_model = DecisionTreeRegressor(random_state=42)
         rf_model = RandomForestRegressor(n_estimators=50, random_state=42)

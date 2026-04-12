@@ -5,6 +5,8 @@
 import functools
 from typing import Any, Callable, Dict, List, Optional, Union
 
+import numpy as np
+
 from surfaces.modifiers import BaseModifier
 
 from ..._surrogates import load_surrogate
@@ -149,19 +151,77 @@ class MachineLearningFunction(BaseSingleObjectiveTestFunction):
             return -value
         return value
 
-    def _evaluate(self, params: Dict[str, Any]) -> float:
-        """Evaluate with surrogate support and direction handling.
+    def _get_training_data(self):
+        """Load training data with optional fidelity-based subsampling.
+
+        Reads ``self._active_fidelity`` (set by ``_evaluate`` during the
+        current call). When fidelity is None or 1.0 the full dataset is
+        returned. Otherwise a fraction of the data is selected.
+
+        Subclasses can override ``_subsample_data`` to control the
+        subsampling strategy (stratified for classification, sequential
+        for time-series, etc.).
+
+        Raises
+        ------
+        ValueError
+            If the subsampled data would have fewer samples than required
+            for cross-validation (controlled by ``self.cv`` if present).
+        """
+        X, y = self._dataset_loader()
+        fidelity = getattr(self, "_active_fidelity", None)
+        if fidelity is not None and fidelity < 1.0:
+            X, y = self._subsample_data(X, y, fidelity)
+            min_samples = getattr(self, "cv", 2)
+            if len(X) < min_samples:
+                raise ValueError(
+                    f"fidelity={fidelity} produces only {len(X)} samples, "
+                    f"but at least {min_samples} are required (cv={min_samples}). "
+                    f"Use a higher fidelity value."
+                )
+        return X, y
+
+    def _subsample_data(self, X, y, fidelity: float):
+        """Select a fraction of the training data.
+
+        Default: deterministic shuffled sampling. Override in subclasses
+        for task-specific strategies (stratified, sequential, etc.).
+        """
+        n_samples = max(1, int(len(X) * fidelity))
+        rng = np.random.RandomState(42)
+        indices = rng.permutation(len(X))[:n_samples]
+        return X[indices], y[indices]
+
+    def _evaluate(self, params: Dict[str, Any], fidelity: Optional[float] = None) -> float:
+        """Evaluate with surrogate support, fidelity, and direction handling.
 
         ML functions naturally return scores (higher is better),
         so direction is inverted compared to algebraic functions.
         """
-        if self.use_surrogate and self._surrogate is not None:
-            surrogate_params = self._get_surrogate_params(params)
-            raw_value = self._surrogate.predict(surrogate_params)
-        else:
-            raw_value = self._objective(params)
+        self._active_fidelity = fidelity
+        try:
+            if self.use_surrogate and self._surrogate is not None:
+                surrogate_params = self._get_surrogate_params(params)
+                if self._surrogate.fidelity_aware:
+                    raw_value = self._surrogate.predict(surrogate_params, fidelity=fidelity)
+                else:
+                    if fidelity is not None and fidelity < 1.0:
+                        import warnings
 
-        if self._modifiers:
-            raw_value = self._apply_modifiers(raw_value, params)
+                        warnings.warn(
+                            f"fidelity={fidelity} has no effect with this surrogate model. "
+                            "Retrain the surrogate with fidelity support to enable "
+                            "multi-fidelity predictions.",
+                            UserWarning,
+                            stacklevel=3,
+                        )
+                    raw_value = self._surrogate.predict(surrogate_params)
+            else:
+                raw_value = self._objective(params)
 
-        return self._apply_direction(raw_value)
+            if self._modifiers:
+                raw_value = self._apply_modifiers(raw_value, params)
+
+            return self._apply_direction(raw_value)
+        finally:
+            self._active_fidelity = None

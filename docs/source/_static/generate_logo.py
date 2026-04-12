@@ -259,7 +259,7 @@ def build_solid_overlay_path():
 def build_cutaway_edge_path():
     """Build SVG path for just the cutaway edge (bezier curve from A to B)."""
     ax, ay, bx, by, cp1x, cp1y, cp2x, cp2y = build_cutaway_boundary()
-    d = f"M {ax:.1f},{ay:.1f} " f"C {cp1x:.1f},{cp1y:.1f} {cp2x:.1f},{cp2y:.1f} {bx:.1f},{by:.1f}"
+    d = f"M {ax:.1f},{ay:.1f} C {cp1x:.1f},{cp1y:.1f} {cp2x:.1f},{cp2y:.1f} {bx:.1f},{by:.1f}"
     return d
 
 
@@ -294,9 +294,7 @@ def generate_svg(colors, output_path):
     svg.append('    <clipPath id="sphere-clip">')
     svg.append(f'      <circle cx="{CENTER_X}" cy="{CENTER_Y}" r="{BASE_RADIUS}"/>')
     svg.append("    </clipPath>")
-    svg.append(
-        '    <radialGradient id="sphere-grad" ' 'cx="40%" cy="35%" r="65%" fx="40%" fy="35%">'
-    )
+    svg.append('    <radialGradient id="sphere-grad" cx="40%" cy="35%" r="65%" fx="40%" fy="35%">')
     for offset, opacity in GRADIENT_STOPS:
         svg.append(
             f'      <stop offset="{offset:.0%}" '

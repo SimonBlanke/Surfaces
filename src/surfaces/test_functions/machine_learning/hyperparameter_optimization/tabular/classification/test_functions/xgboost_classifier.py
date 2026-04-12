@@ -24,7 +24,9 @@ class XGBoostClassifierFunction(BaseClassification):
     """
 
     _name_ = "xgboost_classifier"
-    _dependencies = {"ml": ["xgboost"]}
+    _dependencies = {"ml": ["sklearn", "xgboost"]}
+
+    _spec = {"eval_cost": 329300.0}
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]
@@ -77,7 +79,7 @@ class XGBoostClassifierFunction(BaseClassification):
         from sklearn.model_selection import cross_val_score
         from xgboost import XGBClassifier
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
         clf = XGBClassifier(
             n_estimators=params["n_estimators"],
             max_depth=params["max_depth"],

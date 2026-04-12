@@ -25,6 +25,9 @@ class RandomForestRegressorFunction(BaseRegression):
 
     _name_ = "random_forest_regressor"
 
+    _spec = {"eval_cost": 58900.0}
+    _dependencies = {"ml": ["sklearn"]}
+
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]
 
@@ -75,7 +78,7 @@ class RandomForestRegressorFunction(BaseRegression):
         from sklearn.ensemble import RandomForestRegressor
         from sklearn.model_selection import cross_val_score
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
         reg = RandomForestRegressor(
             n_estimators=params["n_estimators"],
             max_depth=params["max_depth"],

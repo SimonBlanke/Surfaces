@@ -101,6 +101,7 @@ class BaseTestFunction:
         "separable": False,
         "unimodal": False,
         "scalable": False,
+        "eval_cost": None,
     }
 
     f_global: Optional[float] = None
@@ -159,6 +160,8 @@ class BaseTestFunction:
         self._memory_accessor = None
         self._errors_accessor = None
         self._meta_accessor = None
+
+        self._active_fidelity: Optional[float] = None
 
     def _check_dependencies(self):
         """Check that required optional dependencies are installed.
@@ -298,37 +301,49 @@ class BaseTestFunction:
     def __call__(
         self,
         params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None,
+        *,
+        fidelity: Optional[float] = None,
         **kwargs,
     ):
         """Evaluate the objective function.
 
         Args:
             params: Parameter values as dict, array, list, or tuple
+            fidelity: Optional fidelity level in (0, 1]. Controls evaluation
+                cost vs accuracy trade-off for multi-fidelity optimization
+                (e.g. Hyperband, BOHB). None means full-fidelity evaluation.
+                Only supported by ML test functions; ignored by algebraic functions.
             **kwargs: Parameters as keyword arguments (only with dict input)
 
         Returns:
             The objective function value
         """
+        if fidelity is not None:
+            if not isinstance(fidelity, (int, float)):
+                raise TypeError(f"fidelity must be a number, got {type(fidelity).__name__}")
+            if not (0 < fidelity <= 1.0):
+                raise ValueError(f"fidelity must be in (0, 1], got {fidelity}")
+
         params = self._normalize_input(params, **kwargs)
 
         if self._memory_enabled:
-            cache_key = self._params_to_cache_key(params)
+            cache_key = self._params_to_cache_key(params, fidelity=fidelity)
             if cache_key in self._memory_cache:
                 result = self._memory_cache[cache_key]
                 if self.collect_data or self._callbacks:
-                    self._record_evaluation(params, result, from_cache=True)
+                    self._record_evaluation(params, result, from_cache=True, fidelity=fidelity)
                 return result
 
         start_time = time.perf_counter()
-        result = self._evaluate(params)
+        result = self._evaluate(params, fidelity=fidelity)
         elapsed_time = time.perf_counter() - start_time
 
         if self._memory_enabled:
-            cache_key = self._params_to_cache_key(params)
+            cache_key = self._params_to_cache_key(params, fidelity=fidelity)
             self._memory_cache[cache_key] = result
 
         if self.collect_data or self._callbacks:
-            self._record_evaluation(params, result, elapsed_time=elapsed_time)
+            self._record_evaluation(params, result, elapsed_time=elapsed_time, fidelity=fidelity)
 
         return result
 
@@ -348,9 +363,14 @@ class BaseTestFunction:
             params = {}
         return {**params, **kwargs}
 
-    def _params_to_cache_key(self, params: Dict[str, Any]) -> Tuple:
+    def _params_to_cache_key(
+        self, params: Dict[str, Any], fidelity: Optional[float] = None
+    ) -> Tuple:
         """Convert params dict to a hashable cache key (sorted tuple of values)."""
-        return tuple(params[k] for k in sorted(params.keys()))
+        key = tuple(params[k] for k in sorted(params.keys()))
+        if fidelity is not None:
+            key = (*key, ("__fidelity__", fidelity))
+        return key
 
     def _apply_direction(self, value):
         """Apply objective-direction transformation.
@@ -372,10 +392,19 @@ class BaseTestFunction:
         """
         return value
 
-    def _evaluate(self, params: Dict[str, Any]):
+    def _evaluate(self, params: Dict[str, Any], fidelity: Optional[float] = None):
         """Evaluate with error handling, modifiers, and direction.
 
         Pipeline: _objective -> error handling -> _apply_modifiers -> _apply_direction
+
+        Parameters
+        ----------
+        params : dict
+            Parameter values to evaluate.
+        fidelity : float or None
+            Fidelity level in (0, 1]. Passed through from __call__ but
+            ignored by default. Subclasses (e.g. MachineLearningFunction)
+            override to use it for data subsampling.
         """
         try:
             raw_value = self._objective(params)
@@ -412,9 +441,12 @@ class BaseTestFunction:
         score,
         elapsed_time: float = 0.0,
         from_cache: bool = False,
+        fidelity: Optional[float] = None,
     ) -> None:
         """Record an evaluation and invoke callbacks."""
         record = {**params, "score": score}
+        if fidelity is not None:
+            record["fidelity"] = fidelity
 
         if self.collect_data:
             self._n_evaluations += 1
@@ -438,6 +470,8 @@ class BaseTestFunction:
     def pure(
         self,
         params: Optional[Union[Dict[str, Any], np.ndarray, list, tuple]] = None,
+        *,
+        fidelity: Optional[float] = None,
         **kwargs,
     ):
         """Evaluate the function without modifiers.
@@ -450,6 +484,8 @@ class BaseTestFunction:
         ----------
         params : dict, array, list, or tuple
             Parameter values to evaluate.
+        fidelity : float or None
+            Fidelity level in (0, 1] for multi-fidelity evaluation.
         **kwargs : dict
             Parameters as keyword arguments.
 
@@ -459,7 +495,12 @@ class BaseTestFunction:
             The true function value without modifiers, with direction applied.
         """
         params = self._normalize_input(params, **kwargs)
-        raw_value = self._objective(params)
+        # Temporarily set fidelity for ML functions that read it during _objective
+        self._active_fidelity = fidelity
+        try:
+            raw_value = self._objective(params)
+        finally:
+            self._active_fidelity = None
         return self._apply_direction(raw_value)
 
     def reset(self) -> None:
@@ -510,8 +551,7 @@ class BaseTestFunction:
 
         if not is_array_like(X):
             raise TypeError(
-                f"Expected array-like input with shape (n_points, n_dim), "
-                f"got {type(X).__name__}"
+                f"Expected array-like input with shape (n_points, n_dim), got {type(X).__name__}"
             )
 
         if X.ndim != 2:

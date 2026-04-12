@@ -65,9 +65,7 @@ class DeepCNNClassifierFunction(BaseImageClassification):
         use_surrogate: bool = False,
     ):
         if dataset not in DATASETS:
-            raise ValueError(
-                f"Unknown dataset '{dataset}'. " f"Available: {self.available_datasets}"
-            )
+            raise ValueError(f"Unknown dataset '{dataset}'. Available: {self.available_datasets}")
 
         self.dataset = dataset
         self.epochs = epochs
@@ -99,7 +97,7 @@ class DeepCNNClassifierFunction(BaseImageClassification):
 
         tf.get_logger().setLevel("ERROR")
 
-        X_raw, y = self._dataset_loader()
+        X_raw, y = self._get_training_data()
 
         # Reshape for CNN (samples, height, width, channels)
         img_size = int(np.sqrt(X_raw.shape[1]))

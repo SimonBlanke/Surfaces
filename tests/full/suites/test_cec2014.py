@@ -90,9 +90,9 @@ class TestCEC2014GlobalOptimum:
         """Test global optimum for unimodal and multimodal functions (F1-F16)."""
         func = func_class(n_dim=10)
         result = func(func.x_global)
-        assert np.isclose(
-            result, func.f_global, rtol=1e-6
-        ), f"{func.name}: f(x_global)={result}, expected {func.f_global}"
+        assert np.isclose(result, func.f_global, rtol=1e-6), (
+            f"{func.name}: f(x_global)={result}, expected {func.f_global}"
+        )
 
 
 class TestCEC2014FunctionProperties:

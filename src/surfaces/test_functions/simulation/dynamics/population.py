@@ -74,6 +74,7 @@ class LotkaVolterraFunction(ODESimulationFunction):
     _name_ = "lotka_volterra_function"
 
     _spec = {
+        "eval_cost": 1700.0,
         "simulation_based": True,
         "expensive": False,
         "continuous": True,

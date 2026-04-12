@@ -25,7 +25,9 @@ class LightGBMClassifierFunction(BaseClassification):
 
     name = "LightGBM Classifier Function"
     _name_ = "lightgbm_classifier"
-    _dependencies = {"ml": ["lightgbm"]}
+    _dependencies = {"ml": ["sklearn", "lightgbm"]}
+
+    _spec = {"eval_cost": 216600.0}
 
     available_datasets = list(DATASETS.keys())
     available_cv = [2, 3, 5, 10]
@@ -109,7 +111,7 @@ class LightGBMClassifierFunction(BaseClassification):
         from lightgbm import LGBMClassifier
         from sklearn.model_selection import cross_val_score
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
         clf = LGBMClassifier(
             n_estimators=params["n_estimators"],
             learning_rate=params["learning_rate"],

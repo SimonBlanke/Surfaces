@@ -38,6 +38,8 @@ class FeatureScalingPipelineFunction(BaseTabularFeatureEngineering):
     """
 
     name = "Feature Scaling Pipeline"
+    _spec = {"eval_cost": 57300.0}
+    _dependencies = {"ml": ["sklearn"]}
 
     available_datasets = ["digits", "iris", "wine", "breast_cancer"]
     available_cv = [2, 3, 5, 10]
@@ -91,7 +93,7 @@ class FeatureScalingPipelineFunction(BaseTabularFeatureEngineering):
         from sklearn.preprocessing import MinMaxScaler, RobustScaler, StandardScaler
         from sklearn.svm import SVC
 
-        X, y = self._dataset_loader()
+        X, y = self._get_training_data()
 
         scaler_type = params["scaler"]
         if scaler_type == "standard":
