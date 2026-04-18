@@ -7,6 +7,71 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-04-18
+
+### Added
+- **Benchmark module** (`surfaces.benchmark`) for structured optimizer comparison:
+  - `Benchmark` class with budget management (Compute Units), multi-seed runs, and incremental execution
+  - Trace storage and result aggregation via accessor pattern (`results.summary`, `results.dataframe`)
+  - Statistical analysis: ranking, Critical Difference diagrams, multiple-comparison correction (Bonferroni, Holm, etc.)
+  - Expected Running Time (ERT) computation
+  - Progress bars and callback hooks during runs
+  - Parallel execution backend
+  - Optimizer resolution via duck typing (works with GFO, Optuna, scipy interfaces)
+  - Error handling via catch-feature (failed evaluations do not abort the run)
+- **Multi-Fidelity support**:
+  - `fidelity` parameter on all ML test functions controls the fraction of training data used
+  - `_active_fidelity` state for inspection during runs
+  - Fidelity is forwarded through surrogate models for approximate low-fidelity evaluation
+  - Hyperband / BOHB / ASHA compatible interface
+- **Compute Units (CU)** as hardware-independent cost metric:
+  - `eval_cost` attribute on every test function category
+  - Calibration helper maps wall-clock times to CU
+  - CU integration into CEC functions and into `collection.filter`
+- **Multi-objective test functions** (new module `algebraic.multi_objective`):
+  - ZDT1, ZDT2, ZDT3, ZDT4, ZDT6
+  - DTLZ1 through DTLZ7
+  - WFG1 through WFG9 with shared transformation primitives
+  - `n_objectives` is now an instance parameter
+- **Discrete / combinatorial test functions** (new module `algebraic.discrete`):
+  - OneMaxFunction, LeadingOnesFunction, NKLandscapeFunction, TrapFunction, KnapsackFunction
+  - Shared `_base_discrete_function` base class
+- **ML test function**: CatBoostClassifierFunction (#19)
+- **Algebraic 4D test function**: ColvilleFunction (closes #12, #18)
+- **Simulation robustness**: `FuturesTimeoutError` handling for long-running ODE integrations
+- **Surrogate infrastructure**:
+  - `_dependencies` attribute on test functions so the surrogate collector can resolve required inputs
+  - Dependency-aware training-data collection
+  - Fidelity passthrough on pretrained ONNX surrogates
+  - `_get_training_data` hook for custom trainers
+  - Improved surrogate-trainer CLI (progress, collection scripts)
+- **Docs**:
+  - User guide for Benchmarking
+  - User guide for Multi-Fidelity
+  - User guide for Compute Units
+  - Docstrings added across new modules
+
+### Changed
+- Reworked benchmark API (pre-0.9 prototype is not compatible)
+- Renamed `metric` parameter to `objective` across benchmark and statistics modules
+- Moved custom test function module to its new location
+- BBOB internals:
+  - `x_global` attribute added and used consistently
+  - `_lambda_scale` method replaces ad-hoc scaling
+  - `L` attribute now drives rotation handling
+  - RNG-based attribute initialization reworked for reproducibility
+- CEC function calculation fixes across multiple functions
+- Removed a duplicate optional-dependency entry in `pyproject.toml`
+- Updated README with new examples and benchmark quickstart
+- Updated CITATION.cff
+- Replaced a deprecated upstream method in simulation code
+
+### Fixed
+- Multiple correctness fixes in BBOB test functions
+- Multiple correctness fixes in CEC functions
+- `RLCCircuitFunction` numerical calculation
+- Simulation test flakiness
+
 ## [0.8.1] - 2026-03-01
 
 ### Added
@@ -240,7 +305,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Engineering Functions
 - CantileverBeam, PressureVessel, TensionCompressionSpring, ThreeBarTruss, WeldedBeam
 
-[Unreleased]: https://github.com/SimonBlanke/Surfaces/compare/v0.8.1...HEAD
+[Unreleased]: https://github.com/SimonBlanke/Surfaces/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/SimonBlanke/Surfaces/compare/v0.8.1...v0.9.0
 [0.8.1]: https://github.com/SimonBlanke/Surfaces/compare/v0.7.1...v0.8.1
 [0.7.1]: https://github.com/SimonBlanke/Surfaces/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/SimonBlanke/Surfaces/compare/v0.6.1...v0.7.0
