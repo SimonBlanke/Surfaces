@@ -9,7 +9,8 @@ Module Structure
 algebraic/
     standard/       - Classic benchmark functions (Sphere, Rastrigin, etc.)
     constrained/    - Constrained problems (WeldedBeam, etc.)
-    multi_objective/ - Multi-objective functions (ZDT, Kursawe, etc.)
+    multi_objective/ - Multi-objective functions (ZDT, DTLZ, WFG, etc.)
+    discrete/       - Binary / pseudo-boolean functions (OneMax, NK, Trap, etc.)
 
 benchmark/
     bbob/           - COCO/BBOB benchmark suite (24 functions)
