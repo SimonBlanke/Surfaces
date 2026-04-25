@@ -239,7 +239,6 @@ class TimeSeriesPipelineForecasterFunction(BaseForecasting):
             Negative MAE — higher is better, compatible with maximisation.
         """
         # model and preprocessing
-        from sklearn.preprocessing import StandardScaler, MinMaxScaler
         from sklearn.metrics import mean_absolute_error
 
         # 1. Raw data
