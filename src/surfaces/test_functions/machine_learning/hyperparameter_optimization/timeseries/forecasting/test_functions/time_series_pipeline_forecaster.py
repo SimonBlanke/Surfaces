@@ -2,16 +2,10 @@ import numpy as np
 from typing import Any, Dict, List, Optional
 from numpy.lib.stride_tricks import sliding_window_view
 
-# model and preprocessing
-from sklearn.linear_model import Ridge
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
-from sklearn.metrics import mean_absolute_error
-
 # Surfaces library base class and data
 from .._base_forecasting import BaseForecasting
 from ..datasets import DATASETS
-from surfaces.modifiers import BaseModifier
+
 
 def apply_time_series_features(
     y: np.ndarray,
@@ -90,22 +84,42 @@ class TimeSeriesPipelineForecasterFunction(BaseForecasting):
     _name_ = "time_series_pipeline_forecaster"
     _dependencies = {"ml": ["sklearn"]}
 
-    search_space_default = {
-        # Feature engineering
-        "n_lags": [3, 5, 7, 10, 14, 21],
-        "rolling_window": [0, 3, 7, 14],
-        "differencing": [0, 1, 2],
-        # Preprocessing
-        "scaler": ["none", "standard", "minmax"],
-        # Model selection
-        "model": ["ridge", "rf", "gb"],
-        # Model-specific regularization
-        # Ridge  -> alpha       (larger = stronger regularisation)
-        # RF     -> max_depth   (cast to int; larger = more complex)
-        # GB     -> learning_rate (smaller = more conservative)
-        "model__regularization": [0.001, 0.01, 0.1, 1.0, 10.0],
-    }
+    para_names = [
+        "n_lags",
+        "rolling_window",
+        "differencing",
+        "scaler",
+        "model",
+        "model__regularization"
+    ]
 
+    n_lags_default = [3, 5, 7, 10, 14, 21]
+    rolling_window_default = [0, 3, 7, 14]
+    differencing_default = [0, 1, 2]
+    scaler_default = ["none", "standard", "minmax"]
+    model_default = ["ridge", "rf", "gb"]
+    model__regularization_default = [0.001, 0.01, 0.1, 1.0, 10.0]
+
+    def _default_search_space(self) -> Dict[str, List]:
+        """Define the default hyperparameter search space for this function."""
+
+        return {
+            "n_lags": [3, 5, 7, 10, 14, 21],
+            "rolling_window": [0, 3, 7, 14],
+            "differencing": [0, 1, 2],
+            "scaler": ["none", "standard", "minmax"],
+            "model": ["ridge", "rf", "gb"],
+            "model__regularization": [0.001, 0.01, 0.1, 1.0, 10.0],
+        }
+    
+    def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        """Include fixed parameters for surrogate model support."""
+        return {
+            **params,
+            "dataset": self.dataset,
+            "train_size": self.train_size
+        }
+    
     def __init__(
         self,
         dataset: str = "airline",
@@ -139,9 +153,9 @@ class TimeSeriesPipelineForecasterFunction(BaseForecasting):
             **kwargs,
         )
 
-    # ------------------------------------------------------------------
+
     # Data loading
-    # ------------------------------------------------------------------
+
 
     def _get_training_data(self) -> tuple[np.ndarray, np.ndarray]:
         """
@@ -152,9 +166,9 @@ class TimeSeriesPipelineForecasterFunction(BaseForecasting):
             self._cached_data = self._dataset_loader()
         return self._cached_data
 
-    # ------------------------------------------------------------------
+
     # Scaler factory
-    # ------------------------------------------------------------------
+
 
     @staticmethod
     def _build_scaler(scaler_type: str):
@@ -167,9 +181,9 @@ class TimeSeriesPipelineForecasterFunction(BaseForecasting):
             return None
         raise ValueError(f"Unknown scaler type: {scaler_type!r}")
 
-    # ------------------------------------------------------------------
+
     # Model factory
-    # ------------------------------------------------------------------
+
 
     @staticmethod
     def _build_model(model_type: str, reg: float):
@@ -181,6 +195,9 @@ class TimeSeriesPipelineForecasterFunction(BaseForecasting):
             rf    -> max_depth    (int cast of reg, clipped to >= 1)
             gb    -> learning_rate (float, e.g. 0.001 – 1.0)
         """
+        from sklearn.linear_model import Ridge
+        from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+
         if model_type == "ridge":
             return Ridge(alpha=reg)
 
@@ -200,9 +217,9 @@ class TimeSeriesPipelineForecasterFunction(BaseForecasting):
 
         raise ValueError(f"Unknown model type: {model_type!r}")
 
-    # ------------------------------------------------------------------
+
     # Objective
-    # ------------------------------------------------------------------
+
 
     def _ml_objective(self, params: Dict[str, Any]) -> float:
         """
@@ -221,6 +238,10 @@ class TimeSeriesPipelineForecasterFunction(BaseForecasting):
         float
             Negative MAE — higher is better, compatible with maximisation.
         """
+        # model and preprocessing
+        from sklearn.preprocessing import StandardScaler, MinMaxScaler
+        from sklearn.metrics import mean_absolute_error
+
         # 1. Raw data
         _, y_raw = self._get_training_data()
 
@@ -259,9 +280,9 @@ class TimeSeriesPipelineForecasterFunction(BaseForecasting):
 
         return -mae
 
-    # ------------------------------------------------------------------
+
     # Dunder helpers
-    # ------------------------------------------------------------------
+
 
     def __repr__(self) -> str:
         return (
