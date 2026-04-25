@@ -47,8 +47,6 @@ def apply_time_series_features(
     # Vectorised rolling statistics
     if rolling_window > 0:
         windows = sliding_window_view(y, window_shape=rolling_window)
-        # windows has shape (n_samples - rolling_window + 1, rolling_window)
-        # align to the same offset used by lag features
         start = offset - rolling_window
         features.append(windows[start:].mean(axis=1))
         features.append(windows[start:].std(axis=1, ddof=1))
@@ -58,27 +56,12 @@ def apply_time_series_features(
 
     return X, y_target
 
+
 class TimeSeriesPipelineForecasterFunction(BaseForecasting):
     """
-    A hyperparameter-searchable time series forecasting pipeline that combines:
-      - Lag features and rolling statistics for feature engineering
-      - Optional differencing for stationarity
-      - Choice of scaler (none / standard / minmax)
-      - Choice of model (Ridge / RandomForest / GradientBoosting)
-      - Model-specific regularization parameters
+    A hyperparameter-searchable time series forecasting pipeline.
 
-    The objective function returns negative MAE (higher = better),
-    compatible with a maximising optimiser.
-
-    Parameters
-    ----------
-    dataset      : Name of the dataset to load (must be a key in DATASETS).
-    objective    : Optimisation direction, default "maximize".
-    modifiers    : Optional list of BaseModifier instances.
-    memory       : Whether to enable caching in the base class.
-    collect_data : Whether to collect evaluation data in the base class.
-    train_size   : Fraction of data used for training (default 0.8).
-    **kwargs     : Passed through to BaseForecasting.
+    The objective function returns negative MAE (higher = better).
     """
 
     _name_ = "time_series_pipeline_forecaster"
@@ -101,8 +84,7 @@ class TimeSeriesPipelineForecasterFunction(BaseForecasting):
     model__regularization_default = [0.001, 0.01, 0.1, 1.0, 10.0]
 
     def _default_search_space(self) -> Dict[str, List]:
-        """Define the default hyperparameter search space for this function."""
-
+        """Define the default hyperparameter search space."""
         return {
             "n_lags": [3, 5, 7, 10, 14, 21],
             "rolling_window": [0, 3, 7, 14],
@@ -111,7 +93,7 @@ class TimeSeriesPipelineForecasterFunction(BaseForecasting):
             "model": ["ridge", "rf", "gb"],
             "model__regularization": [0.001, 0.01, 0.1, 1.0, 10.0],
         }
-    
+
     def _get_surrogate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Include fixed parameters for surrogate model support."""
         return {
@@ -119,7 +101,7 @@ class TimeSeriesPipelineForecasterFunction(BaseForecasting):
             "dataset": self.dataset,
             "train_size": self.train_size
         }
-    
+
     def __init__(
         self,
         dataset: str = "airline",
@@ -131,14 +113,9 @@ class TimeSeriesPipelineForecasterFunction(BaseForecasting):
         **kwargs: Any,
     ) -> None:
         if dataset not in DATASETS:
-            raise ValueError(
-                f"Unknown dataset '{dataset}'. "
-                f"Available datasets: {list(DATASETS.keys())}"
-            )
+            raise ValueError(f"Unknown dataset '{dataset}'.")
         if not 0.0 < train_size < 1.0:
-            raise ValueError(
-                f"train_size must be between 0 and 1 exclusive, got {train_size}."
-            )
+            raise ValueError("train_size must be between 0 and 1 exclusive.")
 
         self.dataset = dataset
         self.train_size = train_size
@@ -153,26 +130,16 @@ class TimeSeriesPipelineForecasterFunction(BaseForecasting):
             **kwargs,
         )
 
-
-    # Data loading
-
-
     def _get_training_data(self) -> tuple[np.ndarray, np.ndarray]:
-        """
-        Load and cache the dataset.  Returns (X_raw, y_raw) where
-        y_raw is the univariate target series used for feature engineering.
-        """
+        """Load and cache the dataset."""
         if self._cached_data is None:
             self._cached_data = self._dataset_loader()
         return self._cached_data
 
-
-    # Scaler factory
-
-
     @staticmethod
     def _build_scaler(scaler_type: str):
-        """Return a fitted-ready scaler instance, or None for 'none'."""
+        """Return a fitted-ready scaler instance with Lazy Import."""
+        from sklearn.preprocessing import StandardScaler, MinMaxScaler
         if scaler_type == "standard":
             return StandardScaler()
         if scaler_type == "minmax":
@@ -181,70 +148,37 @@ class TimeSeriesPipelineForecasterFunction(BaseForecasting):
             return None
         raise ValueError(f"Unknown scaler type: {scaler_type!r}")
 
-
-    # Model factory
-
-
     @staticmethod
     def _build_model(model_type: str, reg: float):
-        """
-        Construct a scikit-learn regressor from the model type and the
-        shared regularization parameter, mapped per-model as follows:
-
-            ridge -> alpha        (float, e.g. 0.001 – 10.0)
-            rf    -> max_depth    (int cast of reg, clipped to >= 1)
-            gb    -> learning_rate (float, e.g. 0.001 – 1.0)
-        """
+        """Construct a scikit-learn regressor."""
         from sklearn.linear_model import Ridge
-        from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+        from sklearn.ensemble import (
+            RandomForestRegressor,
+            GradientBoostingRegressor
+        )
 
         if model_type == "ridge":
             return Ridge(alpha=reg)
-
         if model_type == "rf":
             return RandomForestRegressor(
                 n_estimators=100,
                 max_depth=max(1, int(reg)),
                 random_state=42,
             )
-
         if model_type == "gb":
             return GradientBoostingRegressor(
                 n_estimators=100,
                 learning_rate=float(np.clip(reg, 1e-4, 1.0)),
                 random_state=42,
             )
-
         raise ValueError(f"Unknown model type: {model_type!r}")
 
-
-    # Objective
-
-
     def _ml_objective(self, params: Dict[str, Any]) -> float:
-        """
-        Evaluate a single hyperparameter configuration.
-
-        Steps
-        -----
-        1. Load (cached) raw series.
-        2. Apply differencing, lag features, and rolling statistics.
-        3. Chronological train/test split.
-        4. Optionally scale features.
-        5. Fit the chosen model and return negative MAE.
-
-        Returns
-        -------
-        float
-            Negative MAE — higher is better, compatible with maximisation.
-        """
-        # model and preprocessing
+        """Evaluate a single hyperparameter configuration."""
         from sklearn.metrics import mean_absolute_error
 
-        # 1. Raw data
         _, y_raw = self._get_training_data()
 
-        # 2. Feature engineering
         try:
             X, y = apply_time_series_features(
                 y_raw,
@@ -252,36 +186,26 @@ class TimeSeriesPipelineForecasterFunction(BaseForecasting):
                 rolling_window=params["rolling_window"],
                 differencing=params["differencing"],
             )
-        except ValueError as exc:
-            # Config produced an unusable feature matrix (e.g. series too short)
-            # Return a very poor score so the optimiser discards this config.
+        except ValueError:
             return -float("inf")
 
-        # 3. Chronological split
         split_idx = int(len(X) * self.train_size)
         if split_idx == 0 or split_idx == len(X):
-            # Degenerate split — not enough data for this param combination
             return -float("inf")
 
         X_train, X_test = X[:split_idx], X[split_idx:]
         y_train, y_test = y[:split_idx], y[split_idx:]
 
-        # 4. Scaling
         scaler = self._build_scaler(params["scaler"])
         if scaler is not None:
             X_train = scaler.fit_transform(X_train)
             X_test = scaler.transform(X_test)
 
-        # 5. Model training and evaluation
         model = self._build_model(params["model"], params["model__regularization"])
         model.fit(X_train, y_train)
         mae = mean_absolute_error(y_test, model.predict(X_test))
 
         return -mae
-
-
-    # Dunder helpers
-
 
     def __repr__(self) -> str:
         return (
