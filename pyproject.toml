@@ -76,7 +76,7 @@ xgboost = [
 
 # Pre-trained ONNX surrogate models
 surrogates = [
-    "surfaces-onnx-files==0.0.1",
+    "surfaces-surrogates>=0.1,<1.0",
     "onnxruntime>=1.16.0",
 ]
 # All optional features
@@ -108,20 +108,15 @@ build = [
     "build",
 ]
 surrogate-train = [
-    "onnxruntime>=1.16.0",
-    "skl2onnx>=1.16.0",
-    "rich>=13.0.0",
+    "surfaces-surrogates[train]",
 ]
 # Surrogate dashboard (developer tool)
 dashboard = [
-    "surfaces[ml,surrogate-train]",
-    "streamlit>=1.28.0",
-    "plotly>=5.0.0",
-    "pandas>=1.3.0",
+    "surfaces-surrogates[dashboard]",
 ]
 
 [project.scripts]
-surfaces-dashboard = "surfaces._surrogates._dashboard:run_dashboard"
+surfaces-dashboard = "surfaces_surrogates.dashboard:run_dashboard"
 
 [project.urls]
 "Homepage" = "https://github.com/SimonBlanke/Surfaces"
@@ -139,6 +134,10 @@ omit = [
     "src/surfaces/_surrogates/_surrogate_trainer.py",
     "src/surfaces/_surrogates/_ml_surrogate_trainer.py",
     "src/surfaces/_surrogates/_surrogate_validator.py",
+    "src/surfaces/_surrogates/_ml_registry.py",
+    "src/surfaces/_surrogates/_manifest.py",
+    "src/surfaces/_surrogates/_evaluation_store.py",
+    "src/surfaces/_surrogates/_error_aggregator.py",
 ]
 
 [tool.coverage.report]
