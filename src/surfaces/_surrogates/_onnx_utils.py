@@ -6,12 +6,14 @@
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 from typing import Optional
 
-# Data package name for ONNX surrogate models
-_ONNX_PACKAGE = "surfaces_onnx_files"
+# Primary package for ONNX surrogate models (surfaces-surrogates)
+_ONNX_PACKAGE = "surfaces_surrogates.models"
+
+# Legacy package for backwards compatibility during transition
+_ONNX_PACKAGE_LEGACY = "surfaces_onnx_files"
 
 # Local models directory (for newly trained models)
 _LOCAL_MODELS_DIR = Path(__file__).parent / "models"
@@ -44,60 +46,38 @@ def _get_local_onnx_path(filename: str) -> Optional[Path]:
 
 
 def _get_installed_onnx_path(filename: str) -> Optional[Path]:
-    """Get file path from the installed surfaces-onnx-files package."""
-    try:
-        if sys.version_info >= (3, 9):
+    """Get file path from the installed surrogate models package."""
+    for package_name in (_ONNX_PACKAGE, _ONNX_PACKAGE_LEGACY):
+        try:
             from importlib.resources import as_file, files
 
-            resource = files(_ONNX_PACKAGE).joinpath(filename)
+            resource = files(package_name).joinpath(filename)
             try:
                 with as_file(resource) as path:
                     if path.exists():
                         return path
             except (TypeError, FileNotFoundError):
-                return None
-        else:
-            # Python 3.8 fallback
-            try:
-                from importlib_resources import as_file, files
-
-                resource = files(_ONNX_PACKAGE).joinpath(filename)
-                with as_file(resource) as path:
-                    if path.exists():
-                        return path
-            except ImportError:
-                import importlib.resources as pkg_resources
-
-                try:
-                    with pkg_resources.path(_ONNX_PACKAGE, filename) as path:
-                        if path.exists():
-                            return path
-                except (ModuleNotFoundError, FileNotFoundError, TypeError):
-                    return None
-    except ModuleNotFoundError:
-        return None
+                continue
+        except ModuleNotFoundError:
+            continue
     return None
 
 
 def _is_onnx_package_installed() -> bool:
-    """Check if the surfaces-onnx-files package is installed."""
-    try:
-        if sys.version_info >= (3, 9):
-            from importlib.resources import files
+    """Check if a surrogate models package is installed.
 
-            files(_ONNX_PACKAGE)
-        else:
-            try:
-                from importlib_resources import files
+    Returns True if either surfaces-surrogates or the legacy
+    surfaces-onnx-files package is available.
+    """
+    from importlib.resources import files
 
-                files(_ONNX_PACKAGE)
-            except ImportError:
-                import importlib
-
-                importlib.import_module(_ONNX_PACKAGE)
-        return True
-    except ModuleNotFoundError:
-        return False
+    for package_name in (_ONNX_PACKAGE, _ONNX_PACKAGE_LEGACY):
+        try:
+            files(package_name)
+            return True
+        except ModuleNotFoundError:
+            continue
+    return False
 
 
 def get_onnx_file(filename: str) -> Optional[Path]:
@@ -106,7 +86,8 @@ def get_onnx_file(filename: str) -> Optional[Path]:
     Checks in order:
     1. Local models directory (for newly trained models)
     2. Local data package directory (for development)
-    3. Installed surfaces-onnx-files package
+    3. Installed surfaces-surrogates package (surfaces_surrogates.models)
+    4. Installed surfaces-onnx-files package (legacy fallback)
 
     Parameters
     ----------
