@@ -173,7 +173,7 @@ Surrogates require the ``surrogates`` extra and ONNX runtime:
 
 This installs:
 
-- ``surfaces-onnx-files``: Pre-trained model files
+- ``surfaces-surrogates``: Pre-trained ONNX surrogate models
 - ``onnxruntime``: Fast ONNX model inference
 
 Performance Tips
