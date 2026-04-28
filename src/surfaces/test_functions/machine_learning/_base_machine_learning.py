@@ -97,6 +97,23 @@ class MachineLearningFunction(BaseSingleObjectiveTestFunction):
                 UserWarning,
             )
             self.use_surrogate = False
+            return
+
+        stored_fp = self._surrogate.interface_fingerprint
+        if stored_fp is not None:
+            from ..._surrogates._surrogate_loader import compute_interface_fingerprint
+
+            current_fp = compute_interface_fingerprint(self)
+            if current_fp != stored_fp:
+                import warnings
+
+                warnings.warn(
+                    f"Surrogate interface mismatch for '{function_name}'. "
+                    f"The function's interface has changed since the surrogate was trained "
+                    f"(expected {stored_fp}, got {current_fp}). "
+                    f"Predictions may be inaccurate. Retrain the surrogate.",
+                    UserWarning,
+                )
 
     def _check_dependencies(self):
         """Skip dependency check when using a surrogate model."""

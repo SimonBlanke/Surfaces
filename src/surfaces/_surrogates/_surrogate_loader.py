@@ -122,6 +122,14 @@ class SurrogateLoader:
         """Whether this surrogate was trained with fidelity as an input."""
         return self.metadata.get("fidelity_aware", False)
 
+    @property
+    def interface_fingerprint(self) -> Optional[str]:
+        """Fingerprint of the function interface at training time.
+
+        Returns None for models trained before fingerprinting was introduced.
+        """
+        return self.metadata.get("interface_fingerprint")
+
     def _encode_params(self, params: Dict[str, Any]) -> np.ndarray:
         """Convert parameter dict to numpy array for model input.
 
@@ -210,6 +218,59 @@ class SurrogateLoader:
             Function that takes a params dict and returns a float.
         """
         return self.predict
+
+
+def compute_interface_fingerprint(function) -> str:
+    """Compute a hash of a function's surrogate-facing interface.
+
+    Captures the function name, hyperparameter names, search space
+    structure, and fixed parameter names added by _get_surrogate_params.
+    The fingerprint changes when any of these change, signaling that
+    a pre-trained surrogate may no longer match the live function.
+
+    All inputs are class attributes or instance attributes that are
+    available without importing sklearn, so the fingerprint can be
+    computed even when use_surrogate=True skips dependency checks.
+
+    Parameters
+    ----------
+    function : MachineLearningFunction
+        An instantiated ML test function.
+
+    Returns
+    -------
+    str
+        16-character hex digest.
+    """
+    import hashlib
+
+    func_class = type(function)
+
+    parts = {
+        "name": getattr(function, "_name_", func_class.__name__),
+        "para_names": sorted(getattr(func_class, "para_names", [])),
+    }
+
+    search_space_info = {}
+    for param_name in parts["para_names"]:
+        default_attr = f"{param_name}_default"
+        if hasattr(func_class, default_attr):
+            values = getattr(func_class, default_attr)
+            search_space_info[param_name] = {"n_values": len(values)}
+            if values and isinstance(values[0], str):
+                search_space_info[param_name]["values"] = sorted(values)
+    parts["search_space"] = search_space_info
+
+    dummy_params = {name: None for name in parts["para_names"]}
+    try:
+        surrogate_params = function._get_surrogate_params(dummy_params)
+        fixed_names = sorted(set(surrogate_params.keys()) - set(parts["para_names"]))
+        parts["fixed_param_names"] = fixed_names
+    except Exception:
+        parts["fixed_param_names"] = []
+
+    raw = json.dumps(parts, sort_keys=True).encode()
+    return hashlib.sha256(raw).hexdigest()[:16]
 
 
 def get_surrogate_path(function_name: str) -> Optional[Path]:
