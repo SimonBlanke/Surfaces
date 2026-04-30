@@ -413,3 +413,20 @@ class TestFeatureEngineering:
 
         assert isinstance(result, (int, float))
         assert np.isfinite(result)
+
+@pytest.mark.ml
+class TestTimeSeriesFunctions:
+    """Test time-series ML functions."""
+
+    def test_time_series_pipeline_forecaster(self):
+        """TimeSeriesPipelineForecasterFunction evaluates correctly."""
+
+        from surfaces.test_functions.machine_learning.hyperparameter_optimization.timeseries.forecasting.test_functions.time_series_pipeline_forecaster import TimeSeriesPipelineForecasterFunction
+
+        func = TimeSeriesPipelineForecasterFunction()
+        params = get_sample_params(func)
+
+        result = func(params)
+
+        assert isinstance(result, (int, float))
+        assert np.isfinite(result)
