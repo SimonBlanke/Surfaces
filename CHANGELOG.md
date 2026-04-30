@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- GitHub Actions workflow to sync the [Unreleased] changelog section to a GitHub Release draft
+
 ## [0.9.0] - 2026-04-18
 
 ### Added
