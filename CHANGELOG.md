@@ -8,7 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Surrogate fingerprinting for integrity checks when loading ONNX models
+- Tests for ML import isolation and registry consistency
 - GitHub Actions workflow to sync the [Unreleased] changelog section to a GitHub Release draft
+- Coverage token for CI reporting
+
+### Changed
+- Extracted surrogate training infrastructure (dashboard, trainer, validator, registry, manifest) into separate `surfaces-surrogates` package
+- Simplified optional dependency declarations based on external surrogates package
+
+### Removed
+- Built-in surrogate dashboard, trainer, and validator (now in `surfaces-surrogates`)
+- Internal dashboard tests (moved with the extracted code)
 
 ## [0.9.0] - 2026-04-18
 
