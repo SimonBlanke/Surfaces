@@ -11,6 +11,7 @@ from .forecasting import (
     ExpSmoothingForecasterFunction,
     GradientBoostingForecasterFunction,
     RandomForestForecasterFunction,
+    TimeSeriesPipelineForecasterFunction,
 )
 
 __all__ = [
@@ -18,6 +19,7 @@ __all__ = [
     "GradientBoostingForecasterFunction",
     "RandomForestForecasterFunction",
     "ExpSmoothingForecasterFunction",
+    "TimeSeriesPipelineForecasterFunction",
     # Classification
     "RandomForestTSClassifierFunction",
     "KNNTSClassifierFunction",
