@@ -191,7 +191,7 @@ print(f"Global optimum at: {ackley.x_global}")
 <summary><b>Machine Learning Functions</b></summary>
 
 ```python
-from surfaces.test_functions.machine_learning.hyperparameter_optimization.tabular import (
+from surfaces.test_functions.machine_learning import (
     KNeighborsClassifierFunction,
     RandomForestClassifierFunction,
 )

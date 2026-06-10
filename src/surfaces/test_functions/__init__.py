@@ -19,23 +19,22 @@ cec/
     CEC competition test function families (2013, 2014, 2017)
 
 machine_learning/
-    tabular/        - Tabular ML model HPO
-    image/          - Image classification HPO
-    timeseries/     - Time series HPO
+    hyperparameter_optimization/ - Model HPO (tabular, image, time series)
+    ensemble_optimization/       - Ensemble construction (stacking, voting)
+    feature_engineering/         - Feature selection and transformation
 
 simulation/
-    structural/     - FEM/topology optimization (FEniCS)
-    molecular/      - Molecular dynamics (OpenMM)
-    chemical/       - Chemical kinetics (Cantera)
-    electromagnetic/ - FDTD simulation (Meep)
-    dynamics/       - Multibody dynamics (MuJoCo/PyBullet)
+    chemical/        - Chemical reaction kinetics (scipy ODE)
+    dynamics/        - Mechanical and population dynamics (scipy ODE)
+    electromagnetic/ - Circuit simulation (scipy ODE)
 
 Note
 ----
 Functions are NOT imported at this level to avoid dependency issues.
-Import directly from submodules:
+The canonical import paths are the family namespaces; ML functions are
+re-exported flat at ``machine_learning`` regardless of their category:
 
     from surfaces.test_functions.algebraic import SphereFunction
     from surfaces.test_functions.bbob import RosenbrockOriginal
-    from surfaces.test_functions.machine_learning.tabular import KNeighborsClassifierFunction
+    from surfaces.test_functions.machine_learning import KNeighborsClassifierFunction
 """
