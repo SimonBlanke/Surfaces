@@ -30,12 +30,34 @@ class _TrialResult(NamedTuple):
 
 
 def _instantiate_function(func_cls: type) -> Any:
-    """Create a function instance configured for benchmarking."""
+    """Create a function instance configured for benchmarking.
+
+    The benchmark stack assumes minimization throughout: the run loops
+    track ``best_so_far`` with ``min()``, ERT targets are
+    ``f_global + precision``, and the adapters set up their optimizers
+    to minimize. Default directions differ per function family (ML
+    functions default to ``objective="maximize"``), so ``"minimize"``
+    is requested explicitly. A function that still evaluates in another
+    direction is rejected; recording its scores would silently invert
+    every downstream statistic.
+    """
     sig = inspect.signature(func_cls.__init__)
     kwargs: dict[str, Any] = {}
     if "collect_data" in sig.parameters:
         kwargs["collect_data"] = False
-    return func_cls(**kwargs)
+    if "objective" in sig.parameters:
+        kwargs["objective"] = "minimize"
+    func = func_cls(**kwargs)
+
+    objective = getattr(func, "objective", None)
+    if isinstance(objective, str) and objective != "minimize":
+        raise ValueError(
+            f"{func_cls.__name__} evaluates with objective={objective!r}, but the "
+            "benchmark requires minimization. Expose an 'objective' parameter in "
+            "__init__ (forwarded to the test function base class) so the runner "
+            "can request 'minimize'."
+        )
+    return func
 
 
 def _run_ask_tell(
