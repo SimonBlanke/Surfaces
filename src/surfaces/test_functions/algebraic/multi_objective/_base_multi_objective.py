@@ -5,8 +5,8 @@
 """Base class for multi-objective test functions.
 
 This intermediate base extends :class:`BaseTestFunction` with multi-objective
-specifics: vector-valued returns, Pareto front/set methods, and modifier
-handling that preserves the objective vector.
+specifics: vector-valued returns, Pareto front/set methods, and per-objective
+direction handling.
 """
 
 from typing import Any, Dict, List, Optional, Union
@@ -37,10 +37,10 @@ class BaseMultiObjectiveTestFunction(BaseTestFunction):
         Optimization direction(s). A single string is broadcast to all
         objectives. A list must have length ``n_objectives``.
     modifiers : list of BaseModifier, optional
-        List of modifiers to apply to function evaluations.
-        Note: Value-modifying modifiers (like noise) are not supported for
-        multi-objective functions. Only side-effect modifiers (like delay)
-        work correctly.
+        List of modifiers to apply to function evaluations. Modifiers
+        receive the full objective vector; noise modifiers draw one
+        independent value per objective. Pareto front/set methods are
+        analytical and remain unaffected by modifiers.
     memory : bool, default=False
         If True, caches evaluated positions.
     collect_data : bool, default=True
@@ -147,23 +147,6 @@ class BaseMultiObjectiveTestFunction(BaseTestFunction):
             search_space[dim_str] = values
 
         return search_space
-
-    # -----------------------------------------------------------------
-    # Modifier handling: side-effects only, preserve objective vector
-    # -----------------------------------------------------------------
-
-    def _apply_modifiers(self, raw_value, params):
-        """Apply modifiers for side-effects only.
-
-        The first objective value is passed through the modifier pipeline
-        (triggering side-effects like delays), but the original objective
-        vector is returned unchanged.
-        """
-        context = {}
-        value = raw_value[0]
-        for modifier in self._modifiers:
-            value = modifier.apply(value, params, context)
-        return raw_value
 
     # -----------------------------------------------------------------
     # Helpers

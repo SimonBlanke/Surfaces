@@ -471,8 +471,9 @@ class BaseTestFunction:
     def _apply_modifiers(self, raw_value, params):
         """Apply modifier pipeline to the raw value.
 
-        Override in subclasses to change how modifiers interact with the
-        result (e.g. multi-objective passes only the first element).
+        ``raw_value`` is a scalar for single-objective functions and an
+        objective vector for multi-objective functions; modifiers receive
+        it unchanged in both cases.
         """
         context = {
             "evaluation_count": self._n_evaluations,

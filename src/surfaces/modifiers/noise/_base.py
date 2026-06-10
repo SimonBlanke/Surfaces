@@ -5,7 +5,7 @@
 """Base class for noise layers."""
 
 from abc import abstractmethod
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 
 import numpy as np
 
@@ -35,8 +35,9 @@ class BaseNoise(BaseModifier):
 
     Attributes
     ----------
-    last_noise : float or None
-        The noise value from the most recent apply() call.
+    last_noise : float, np.ndarray, or None
+        The noise value from the most recent apply() call. A scalar for
+        single-objective values, an array for multi-objective vectors.
         None if apply() has not been called yet.
 
     Examples
@@ -66,7 +67,7 @@ class BaseNoise(BaseModifier):
         self._schedule = schedule
         self._total_evaluations = total_evaluations
         self._evaluation_count = 0
-        self.last_noise: Optional[float] = None
+        self.last_noise: Optional[Union[float, np.ndarray]] = None
 
     def _get_schedule_factor(self) -> float:
         """Get the current schedule factor in [0, 1].
@@ -96,13 +97,14 @@ class BaseNoise(BaseModifier):
 
         return 1.0
 
-    def apply(self, value: float, params: Dict[str, Any], context: Dict[str, Any]) -> float:
+    def apply(self, value, params: Dict[str, Any], context: Dict[str, Any]):
         """Apply noise to a function value.
 
         Parameters
         ----------
-        value : float
-            The original function value.
+        value : float or np.ndarray
+            The original function value. Multi-objective functions pass
+            their objective vector; noise is drawn per component.
         params : dict
             The input parameters (available for heteroscedastic noise).
         context : dict
@@ -110,27 +112,27 @@ class BaseNoise(BaseModifier):
 
         Returns
         -------
-        float
-            The noisy function value.
+        float or np.ndarray
+            The noisy function value, same shape as *value*.
         """
         self._evaluation_count += 1
         return self._apply_noise(value, params)
 
     @abstractmethod
-    def _apply_noise(self, value: float, params: Dict[str, Any]) -> float:
+    def _apply_noise(self, value, params: Dict[str, Any]):
         """Apply noise to a value. Override in subclasses.
 
         Parameters
         ----------
-        value : float
+        value : float or np.ndarray
             The original function value.
         params : dict
             The input parameters.
 
         Returns
         -------
-        float
-            The noisy function value.
+        float or np.ndarray
+            The noisy function value, same shape as *value*.
         """
         pass
 

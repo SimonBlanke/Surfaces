@@ -6,6 +6,8 @@
 
 from typing import Any, Dict, Optional
 
+import numpy as np
+
 from ._base import BaseNoise
 
 
@@ -36,8 +38,10 @@ class UniformNoise(BaseNoise):
 
     Attributes
     ----------
-    last_noise : float or None
-        The noise value added in the most recent apply() call.
+    last_noise : float, np.ndarray, or None
+        The noise added in the most recent apply() call. A scalar for
+        single-objective values, an array with one independent draw per
+        objective for multi-objective vectors.
 
     Examples
     --------
@@ -101,7 +105,13 @@ class UniformNoise(BaseNoise):
         factor = self._get_schedule_factor()
         return self._high_final + (self._high_initial - self._high_final) * factor
 
-    def _apply_noise(self, value: float, params: Dict[str, Any]) -> float:
-        """Apply uniform noise to the value."""
-        self.last_noise = self._rng.uniform(self.low, self.high)
+    def _apply_noise(self, value, params: Dict[str, Any]):
+        """Apply uniform noise, one independent draw per component.
+
+        Scalars keep the single-draw call so seeded random streams stay
+        identical to earlier releases; objective vectors get one draw
+        per objective.
+        """
+        size = None if np.ndim(value) == 0 else np.shape(value)
+        self.last_noise = self._rng.uniform(self.low, self.high, size=size)
         return value + self.last_noise

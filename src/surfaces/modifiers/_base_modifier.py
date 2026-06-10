@@ -27,13 +27,14 @@ class BaseModifier(ABC):
     """
 
     @abstractmethod
-    def apply(self, value: float, params: Dict[str, Any], context: Dict[str, Any]) -> float:
+    def apply(self, value, params: Dict[str, Any], context: Dict[str, Any]):
         """Apply the modifier to a function value.
 
         Parameters
         ----------
-        value : float
-            The function value to modify.
+        value : float or np.ndarray
+            The function value to modify. Single-objective functions pass
+            a scalar, multi-objective functions their objective vector.
         params : dict
             The input parameters that produced this value.
         context : dict

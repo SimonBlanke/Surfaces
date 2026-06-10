@@ -6,6 +6,8 @@
 
 from typing import Any, Dict, Optional
 
+import numpy as np
+
 from ._base import BaseNoise
 
 
@@ -33,10 +35,12 @@ class MultiplicativeNoise(BaseNoise):
 
     Attributes
     ----------
-    last_noise : float or None
+    last_noise : float, np.ndarray, or None
         The multiplicative factor (not the final noise contribution)
         from the most recent apply() call. The actual noise added
-        is value * last_noise.
+        is value * last_noise. A scalar for single-objective values,
+        an array with one independent draw per objective for
+        multi-objective vectors.
 
     Examples
     --------
@@ -80,7 +84,13 @@ class MultiplicativeNoise(BaseNoise):
         factor = self._get_schedule_factor()
         return self._sigma_final + (self._sigma_initial - self._sigma_final) * factor
 
-    def _apply_noise(self, value: float, params: Dict[str, Any]) -> float:
-        """Apply multiplicative noise to the value."""
-        self.last_noise = self._rng.normal(0.0, self.sigma)
+    def _apply_noise(self, value, params: Dict[str, Any]):
+        """Apply multiplicative noise, one independent factor per component.
+
+        Scalars keep the single-draw call so seeded random streams stay
+        identical to earlier releases; objective vectors get one factor
+        per objective.
+        """
+        size = None if np.ndim(value) == 0 else np.shape(value)
+        self.last_noise = self._rng.normal(0.0, self.sigma, size=size)
         return value * (1.0 + self.last_noise)
