@@ -209,36 +209,32 @@ class MachineLearningFunction(BaseSingleObjectiveTestFunction):
         indices = rng.permutation(len(X))[:n_samples]
         return X[indices], y[indices]
 
-    def _evaluate(self, params: Dict[str, Any], fidelity: Optional[float] = None) -> float:
-        """Evaluate with surrogate support, fidelity, and direction handling.
+    def _compute_raw(self, params: Dict[str, Any], fidelity: Optional[float] = None) -> float:
+        """Produce the raw score, from the surrogate model when active.
 
-        ML functions naturally return scores (higher is better),
-        so direction is inverted compared to algebraic functions.
+        Sets ``_active_fidelity`` for the duration of the evaluation so
+        ``_get_training_data`` sees the current fidelity inside
+        ``_objective``. Error handling, modifiers, and direction are
+        applied by ``BaseTestFunction._evaluate``, so ``catch_errors``
+        covers both the real evaluation and the surrogate path.
         """
         self._active_fidelity = fidelity
         try:
             if self.use_surrogate and self._surrogate is not None:
                 surrogate_params = self._get_surrogate_params(params)
                 if self._surrogate.fidelity_aware:
-                    raw_value = self._surrogate.predict(surrogate_params, fidelity=fidelity)
-                else:
-                    if fidelity is not None and fidelity < 1.0:
-                        import warnings
+                    return self._surrogate.predict(surrogate_params, fidelity=fidelity)
+                if fidelity is not None and fidelity < 1.0:
+                    import warnings
 
-                        warnings.warn(
-                            f"fidelity={fidelity} has no effect with this surrogate model. "
-                            "Retrain the surrogate with fidelity support to enable "
-                            "multi-fidelity predictions.",
-                            UserWarning,
-                            stacklevel=3,
-                        )
-                    raw_value = self._surrogate.predict(surrogate_params)
-            else:
-                raw_value = self._objective(params)
-
-            if self._modifiers:
-                raw_value = self._apply_modifiers(raw_value, params)
-
-            return self._apply_direction(raw_value)
+                    warnings.warn(
+                        f"fidelity={fidelity} has no effect with this surrogate model. "
+                        "Retrain the surrogate with fidelity support to enable "
+                        "multi-fidelity predictions.",
+                        UserWarning,
+                        stacklevel=4,
+                    )
+                return self._surrogate.predict(surrogate_params)
+            return self._objective(params)
         finally:
             self._active_fidelity = None

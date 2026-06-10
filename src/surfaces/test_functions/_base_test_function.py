@@ -422,22 +422,40 @@ class BaseTestFunction:
         """
         return value
 
-    def _evaluate(self, params: Dict[str, Any], fidelity: Optional[float] = None):
-        """Evaluate with error handling, modifiers, and direction.
+    def _compute_raw(self, params: Dict[str, Any], fidelity: Optional[float] = None):
+        """Produce the raw objective value for a single evaluation.
 
-        Pipeline: _objective -> error handling -> _apply_modifiers -> _apply_direction
+        Default: delegate to ``_objective``; ``fidelity`` is ignored.
+        Subclasses that source values differently (e.g.
+        ``MachineLearningFunction`` with surrogate models and
+        fidelity-based subsampling) override this hook instead of
+        ``_evaluate``, so that error handling, modifiers, and direction
+        stay in one place for every function family.
 
         Parameters
         ----------
         params : dict
             Parameter values to evaluate.
         fidelity : float or None
-            Fidelity level in (0, 1]. Passed through from __call__ but
-            ignored by default. Subclasses (e.g. MachineLearningFunction)
-            override to use it for data subsampling.
+            Fidelity level in (0, 1], or None for full fidelity.
+        """
+        return self._objective(params)
+
+    def _evaluate(self, params: Dict[str, Any], fidelity: Optional[float] = None):
+        """Evaluate with error handling, modifiers, and direction.
+
+        Pipeline: _compute_raw -> error handling -> _apply_modifiers -> _apply_direction
+
+        Parameters
+        ----------
+        params : dict
+            Parameter values to evaluate.
+        fidelity : float or None
+            Fidelity level in (0, 1]. Passed through from __call__ to
+            ``_compute_raw``, which ignores it by default.
         """
         try:
-            raw_value = self._objective(params)
+            raw_value = self._compute_raw(params, fidelity=fidelity)
         except Exception as e:
             if self._error_handlers is not None:
                 for exc_type, return_value in self._error_handlers.items():
