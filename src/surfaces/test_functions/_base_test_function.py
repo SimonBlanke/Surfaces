@@ -174,6 +174,16 @@ class BaseTestFunction:
 
         self._active_fidelity: Optional[float] = None
 
+    def __repr__(self) -> str:
+        """Show class name, dimensionality, and optimization direction."""
+        parts = []
+        n_dim = getattr(self, "n_dim", None)
+        if n_dim is not None:
+            parts.append(f"n_dim={n_dim}")
+        if self.objective is not None:
+            parts.append(f"objective={self.objective!r}")
+        return f"{type(self).__name__}({', '.join(parts)})"
+
     def _check_dependencies(self):
         """Check that required optional dependencies are installed.
 
