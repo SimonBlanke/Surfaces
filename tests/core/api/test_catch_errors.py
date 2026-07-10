@@ -8,8 +8,12 @@ import math
 
 import pytest
 
+from surfaces.modifiers import GaussianNoise
 from surfaces.test_functions.algebraic import SphereFunction
 from surfaces.test_functions.algebraic.constrained import CantileverBeamFunction
+from surfaces.test_functions.machine_learning._base_machine_learning import (
+    MachineLearningFunction,
+)
 
 
 class FailingSphereFunction(SphereFunction):
@@ -332,3 +336,78 @@ class TestCatchErrorsWithEngineeringFunctions:
             catch_errors={ValueError: float("inf")},
         )
         assert func._error_handlers == {ValueError: float("inf")}
+
+
+class FailingMLFunction(MachineLearningFunction):
+    """ML-family function (maximize default) that raises based on input."""
+
+    para_names = ["x0"]
+    x0_default = [0.0, 1.0, 2.0]
+
+    def _ml_objective(self, params):
+        x = params["x0"]
+        if x < 0:
+            raise ValueError("invalid hyperparameter")
+        if x > 10:
+            raise RuntimeError("training diverged")
+        return 0.5 + 0.1 * x
+
+
+class TestCatchErrorsWithMLFunctions:
+    """catch_errors must work for ML functions.
+
+    Regression tests: the former MachineLearningFunction._evaluate
+    override replicated modifiers and direction but dropped the error
+    handling, so catch_errors was accepted and silently ignored.
+    """
+
+    def test_catch_specific_error_type(self):
+        func = FailingMLFunction(catch_errors={ValueError: 0.0})
+        assert func({"x0": -1.0}) == 0.0
+
+    def test_uncaught_error_propagates(self):
+        func = FailingMLFunction(catch_errors={ValueError: 0.0})
+        with pytest.raises(RuntimeError, match="training diverged"):
+            func({"x0": 11.0})
+
+    def test_error_propagates_when_disabled(self):
+        func = FailingMLFunction()
+        with pytest.raises(ValueError, match="invalid hyperparameter"):
+            func({"x0": -1.0})
+
+    def test_ellipsis_catch_all(self):
+        func = FailingMLFunction(catch_errors={...: -1.0})
+        assert func({"x0": -1.0}) == -1.0
+        assert func({"x0": 11.0}) == -1.0
+
+    def test_normal_evaluation_unaffected(self):
+        func = FailingMLFunction(catch_errors={ValueError: 0.0})
+        assert func({"x0": 2.0}) == pytest.approx(0.7)
+
+    def test_direction_still_applied(self):
+        assert FailingMLFunction()({"x0": 2.0}) == pytest.approx(0.7)
+        assert FailingMLFunction(objective="minimize")({"x0": 2.0}) == pytest.approx(-0.7)
+
+    def test_modifiers_still_applied(self):
+        func = FailingMLFunction(modifiers=[GaussianNoise(sigma=1.0, seed=42)])
+        noisy = func({"x0": 2.0})
+        assert abs(noisy - 0.7) > 1e-12
+        assert func.pure({"x0": 2.0}) == pytest.approx(0.7)
+
+    def test_fidelity_state_cleared_after_caught_error(self):
+        func = FailingMLFunction(catch_errors={ValueError: 0.0})
+        assert func({"x0": -1.0}, fidelity=0.5) == 0.0
+        assert func._active_fidelity is None
+
+    def test_surrogate_errors_are_caught(self):
+        class ExplodingSurrogate:
+            fidelity_aware = False
+            interface_fingerprint = None
+
+            def predict(self, params):
+                raise RuntimeError("onnx session failed")
+
+        func = FailingMLFunction(catch_errors={RuntimeError: -5.0})
+        func.use_surrogate = True
+        func._surrogate = ExplodingSurrogate()
+        assert func({"x0": 2.0}) == -5.0

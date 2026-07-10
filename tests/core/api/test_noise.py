@@ -441,3 +441,106 @@ class TestBaseModifierReset:
         noise.reset()
         values2 = [noise.apply(0.0, {}, {}) for _ in range(5)]
         assert values1 == values2
+
+
+class TestNoiseMultiObjective:
+    """Noise on multi-objective functions.
+
+    Regression tests: BaseMultiObjectiveTestFunction used to run the
+    modifier pipeline on the first objective for side effects only and
+    return the objective vector unchanged, so value-modifying modifiers
+    were silently ignored.
+    """
+
+    @staticmethod
+    def _make_zdt1(n_dim=3, **kwargs):
+        from surfaces.test_functions.algebraic.multi_objective import ZDT1
+
+        return ZDT1(n_dim=n_dim, **kwargs)
+
+    @staticmethod
+    def _params(n_dim=3):
+        return {f"x{i}": 0.5 for i in range(n_dim)}
+
+    def test_noise_changes_objective_vector(self):
+        noise = GaussianNoise(sigma=0.5, seed=42)
+        func = self._make_zdt1(modifiers=[noise])
+
+        noisy = func(self._params())
+        clean = func.pure(self._params())
+
+        assert noisy.shape == clean.shape == (2,)
+        assert not np.allclose(noisy, clean)
+        np.testing.assert_allclose(noisy, clean + noise.last_noise)
+
+    def test_independent_draw_per_objective(self):
+        noise = GaussianNoise(sigma=0.5, seed=42)
+        func = self._make_zdt1(modifiers=[noise])
+
+        func(self._params())
+
+        assert np.shape(noise.last_noise) == (2,)
+        assert noise.last_noise[0] != noise.last_noise[1]
+
+    def test_seeded_reproducibility(self):
+        func1 = self._make_zdt1(modifiers=[GaussianNoise(sigma=0.5, seed=7)])
+        func2 = self._make_zdt1(modifiers=[GaussianNoise(sigma=0.5, seed=7)])
+
+        np.testing.assert_allclose(func1(self._params()), func2(self._params()))
+
+    def test_noise_applied_before_direction(self):
+        noise = GaussianNoise(sigma=0.5, seed=42)
+        func = self._make_zdt1(modifiers=[noise], objective=["minimize", "maximize"])
+
+        noisy = func(self._params())
+        clean = func.pure(self._params())
+
+        assert noisy[0] - clean[0] == pytest.approx(noise.last_noise[0])
+        assert noisy[1] - clean[1] == pytest.approx(-noise.last_noise[1])
+
+    def test_evaluation_count_increments_once_per_call(self):
+        noise = GaussianNoise(sigma=0.5, seed=42)
+        func = self._make_zdt1(modifiers=[noise])
+
+        func(self._params())
+        func(self._params())
+
+        assert noise.evaluation_count == 2
+
+    def test_pareto_front_unaffected_by_noise(self):
+        func_noisy = self._make_zdt1(modifiers=[GaussianNoise(sigma=0.5, seed=42)])
+        func_clean = self._make_zdt1()
+
+        np.testing.assert_allclose(
+            func_noisy.pareto_front(n_points=10),
+            func_clean.pareto_front(n_points=10),
+        )
+
+    def test_uniform_and_multiplicative_support_vectors(self):
+        for noise in (
+            UniformNoise(low=-0.5, high=0.5, seed=42),
+            MultiplicativeNoise(sigma=0.5, seed=42),
+        ):
+            func = self._make_zdt1(modifiers=[noise])
+            noisy = func(self._params())
+            clean = func.pure(self._params())
+
+            assert noisy.shape == (2,)
+            assert not np.allclose(noisy, clean)
+            assert np.shape(noise.last_noise) == (2,)
+
+
+class TestNoiseScalarRegression:
+    """Scalar noise behavior must stay identical to earlier releases."""
+
+    def test_scalar_draw_stream_unchanged(self):
+        noise = GaussianNoise(sigma=0.1, seed=42)
+        result = noise.apply(5.0, {}, {})
+
+        expected = 5.0 + np.random.default_rng(42).normal(0.0, 0.1)
+        assert result == pytest.approx(expected)
+
+    def test_scalar_last_noise_stays_scalar(self):
+        noise = GaussianNoise(sigma=0.1, seed=42)
+        noise.apply(5.0, {}, {})
+        assert np.ndim(noise.last_noise) == 0
